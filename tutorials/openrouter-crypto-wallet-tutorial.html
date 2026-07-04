@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<title>آموزش گام‌به‌گام: ساخت کیف پول، شارژ از نوبیتکس و گرفتن API از اوپن‌روتر</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1e3a8a;
+  --blue2:#2563eb;
+  --orange:#f97316;
+  --green:#16a34a;
+  --red:#dc2626;
+  --yellow-bg:#fef9c3;
+  --green-bg:#dcfce7;
+  --red-bg:#fee2e2;
+  --blue-bg:#dbeafe;
+  --purple:#7c3aed;
+  --purple-bg:#ede9fe;
+  --card:#ffffff;
+  --page:#f1f5f9;
+  --ink:#1e293b;
+  --muted:#475569;
+  --radius:16px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  direction:rtl;
+  text-align:right;
+  background:var(--page);
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.9;
+}
+.wrap{max-width:860px;margin-inline:auto;padding:16px;}
+/* ---------- hero ---------- */
+header.hero{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--purple) 100%);
+  color:#fff;
+  border-radius:0 0 32px 32px;
+  padding:40px 20px 48px;
+  text-align:center;
+}
+header.hero .emoji{font-size:56px;}
+header.hero h1{font-size:clamp(22px,4vw,34px);font-weight:900;margin:12px 0 8px;line-height:1.6;}
+header.hero p.promise{
+  background:rgba(255,255,255,.15);
+  display:inline-block;
+  padding:10px 22px;
+  border-radius:999px;
+  margin-top:14px;
+  font-size:16px;
+}
+.journey{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px;font-size:14px;
+}
+.journey span{
+  background:rgba(255,255,255,.18);padding:6px 14px;border-radius:999px;
+}
+.journey .arrow{background:none;font-weight:900;}
+/* ---------- boxes ---------- */
+.box{border-radius:var(--radius);padding:16px 18px;margin:18px 0;border:2px solid transparent;}
+.box .btitle{font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.tip{background:var(--blue-bg);border-color:#93c5fd;}
+.warn{background:var(--red-bg);border-color:#fca5a5;}
+.note{background:var(--yellow-bg);border-color:#fde047;}
+.check{background:var(--green-bg);border-color:#86efac;}
+.foot{background:var(--purple-bg);border-color:#c4b5fd;font-size:15.5px;}
+.why{background:#fff7ed;border-color:#fdba74;font-size:15.5px;}
+/* ---------- cards / steps ---------- */
+section.stage{
+  background:var(--card);
+  border-radius:22px;
+  padding:26px 22px;
+  margin:28px 0;
+  box-shadow:0 4px 18px rgba(30,58,138,.08);
+}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.badge{
+  min-width:56px;height:56px;border-radius:18px;
+  background:linear-gradient(135deg,var(--orange),#fb923c);
+  color:#fff;font-size:26px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(249,115,22,.35);
+  flex-shrink:0;
+}
+.stage h2{margin:0;font-size:clamp(19px,3vw,25px);font-weight:900;color:var(--blue);}
+.chip{
+  margin-inline-start:auto;background:var(--blue-bg);color:var(--blue);
+  font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap;
+}
+.progress{height:8px;background:#e2e8f0;border-radius:999px;margin:14px 0 4px;overflow:hidden;}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#4ade80);border-radius:999px;}
+ol.steps{list-style:none;counter-reset:st;padding:0;margin:18px 0 0;}
+ol.steps>li{
+  counter-increment:st;
+  position:relative;
+  padding:12px 54px 12px 12px;
+  margin:10px 0;
+  background:#f8fafc;
+  border:1.5px solid #e2e8f0;
+  border-radius:14px;
+}
+ol.steps>li::before{
+  content:counter(st);
+  position:absolute;
+  inset-inline-start:12px;top:12px;
+  width:30px;height:30px;border-radius:10px;
+  background:var(--blue2);color:#fff;font-weight:900;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+code, .ltr{direction:ltr;unicode-bidi:isolate;}
+code{
+  font-family:'Consolas','Courier New',monospace;
+  background:#eef2ff;color:#3730a3;
+  padding:2px 8px;border-radius:8px;font-size:15px;
+  text-align:left;
+}
+pre{
+  direction:ltr;text-align:left;
+  background:#0f172a;color:#e2e8f0;
+  padding:14px 16px;border-radius:14px;overflow-x:auto;
+  font-family:'Consolas','Courier New',monospace;font-size:14px;line-height:1.7;
+}
+a{color:var(--blue2);font-weight:700;}
+/* ---------- TOC ---------- */
+nav.toc{
+  background:var(--card);border-radius:22px;padding:22px;margin-top:-30px;
+  box-shadow:0 8px 24px rgba(30,58,138,.12);
+}
+nav.toc h2{margin:0 0 12px;font-size:20px;color:var(--blue);}
+nav.toc ol{margin:0;padding-inline-start:22px;}
+nav.toc li{margin:6px 0;}
+/* ---------- diagram ---------- */
+.flow{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:stretch;margin:18px 0;
+}
+.flow .node{
+  background:linear-gradient(135deg,#eff6ff,#e0e7ff);
+  border:2px solid #93c5fd;border-radius:16px;
+  padding:12px 14px;text-align:center;min-width:130px;flex:1;
+  font-size:14.5px;font-weight:700;color:var(--blue);
+}
+.flow .node small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:4px;}
+.flow .fa{align-self:center;font-size:22px;color:var(--orange);font-weight:900;}
+table.simple{width:100%;border-collapse:collapse;margin:14px 0;font-size:15.5px;}
+table.simple th{background:var(--blue);color:#fff;padding:8px;border-radius:0;}
+table.simple td{border:1.5px solid #e2e8f0;padding:8px;background:#fff;}
+/* ---------- finale ---------- */
+.finale{
+  background:linear-gradient(135deg,var(--green),#22c55e);
+  color:#fff;border-radius:22px;padding:30px 24px;text-align:center;margin:30px 0;
+}
+.finale h2{font-size:26px;margin:0 0 10px;}
+.finale ul{text-align:right;display:inline-block;margin:10px auto;}
+footer{
+  text-align:center;color:var(--muted);font-size:13px;padding:20px 10px 34px;
+}
+footer .sig{opacity:.65;font-size:12.5px;margin-top:6px;}
+@media (max-width:700px){
+  .flow{flex-direction:column;}
+  .flow .fa{transform:rotate(90deg);}
+  .chip{margin-inline-start:0;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="emoji">🦊💳🤖</div>
+  <h1>از صفر تا گرفتن کلید API هوش مصنوعی<br>کیف پول متامسک + شارژ از نوبیتکس + حساب اوپن‌روتر</h1>
+  <p class="promise">قراره چی یاد بگیریم؟ می‌خوایم قدم‌به‌قدم یاد بگیریم چطور یک کیف پول دیجیتال بسازیم، از صرافی نوبیتکس شارژش کنیم، با آن حساب <span dir="ltr">OpenRouter</span> را شارژ کنیم و در آخر یک کلید <span dir="ltr">API</span> بگیریم. 🚀</p>
+  <div class="journey">
+    <span>🦊 کیف پول</span><span class="arrow">←</span>
+    <span>🏦 نوبیتکس</span><span class="arrow">←</span>
+    <span>💸 انتقال پول</span><span class="arrow">←</span>
+    <span>🤖 اوپن‌روتر</span><span class="arrow">←</span>
+    <span>🔑 کلید API</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <h2>🗺️ فهرست مراحل سفر ما</h2>
+  <ol>
+    <li><a href="#pre">پیش‌نیازها — چی لازم داریم؟</a></li>
+    <li><a href="#concepts">مفهوم‌های پایه — با زبان ساده</a></li>
+    <li><a href="#s1">مرحله ۱: نصب متامسک روی مرورگر</a></li>
+    <li><a href="#s2">مرحله ۲: ساخت کیف پول و نگهداری «کلمات طلایی»</a></li>
+    <li><a href="#s3">مرحله ۳: ثبت‌نام و احراز هویت در نوبیتکس</a></li>
+    <li><a href="#s4">مرحله ۴: شارژ تومانی و خرید ارز دیجیتال</a></li>
+    <li><a href="#s5">مرحله ۵: انتقال ارز از نوبیتکس به متامسک</a></li>
+    <li><a href="#s6">مرحله ۶: ساخت حساب در اوپن‌روتر</a></li>
+    <li><a href="#s7">مرحله ۷: شارژ اعتبار اوپن‌روتر با کیف پول</a></li>
+    <li><a href="#s8">مرحله ۸: گرفتن کلید <span dir="ltr">API</span> و تست آن</a></li>
+    <li><a href="#fix">🔧 رفع اشکال — اگر گیر کردی اینجا را بخوان</a></li>
+  </ol>
+</nav>
+
+<div class="box note">
+  <div class="btitle">📌 فرض‌های این آموزش</div>
+  در این آموزش فرض کرده‌ایم که با یک <b>کامپیوتر ویندوزی</b> و مرورگر <b>گوگل کروم</b> کار می‌کنی و هیچ دانش قبلی از ارز دیجیتال نداری. برای کیف پول، <b>متامسک (<span dir="ltr">MetaMask</span>)</b> را انتخاب کرده‌ایم چون معروف‌ترین کیف پولِ مخصوص مرورگر است. (تراست ولت هم افزونه‌ی مرورگر دارد و مراحلش تقریباً همین است، اما متامسک برای این کار رایج‌تر است.) همچنین چون شکل ظاهری سایت‌ها گاهی عوض می‌شود، اگر نام دقیق یک دکمه کمی فرق داشت نگران نشو؛ دنبال دکمه‌ای با معنیِ مشابه بگرد.
+</div>
+
+<div class="box warn">
+  <div class="btitle">⚠️ یک هشدار مهم قبل از شروع</div>
+  در دنیای ارز دیجیتال، <b>اگر پول را به آدرس یا شبکه‌ی اشتباه بفرستی، هیچ‌کس نمی‌تواند آن را برگرداند.</b> مثل این است که نامه‌ای را در صندوق پستیِ خانه‌ی اشتباهی بیندازی و آن خانه هم قفل باشد! پس در این آموزش هر جا گفتیم «اول با مبلغ کم تست کن»، حتماً جدی بگیر. همچنین این کارها با پول واقعی سروکار دارد؛ عجله نکن و هر مرحله را با دقت انجام بده.
+</div>
+
+<!-- ================= PREREQ ================= -->
+<section class="stage" id="pre">
+  <div class="stage-head">
+    <div class="badge">🎒</div>
+    <h2>پیش‌نیازها — چی لازم داریم؟</h2>
+  </div>
+  <ol class="steps">
+    <li>یک <b>کامپیوتر</b> با مرورگر <b>گوگل کروم</b> (یا مرورگرهای مشابه مثل اج و فایرفاکس).</li>
+    <li>یک <b>ایمیل فعال</b> که رمزش را بلد باشی (مثلاً جیمیل).</li>
+    <li>یک <b>شماره موبایل به نام خودت</b> (برای ثبت‌نام در نوبیتکس لازم است).</li>
+    <li><b>کارت ملی</b> (برای احراز هویت<sup>۱</sup> در نوبیتکس).</li>
+    <li>یک <b>کارت بانکی به نام خودت</b> که رمز اینترنتی (رمز پویا) داشته باشد، برای واریز تومان به نوبیتکس.</li>
+    <li>مقداری پول؛ برای شروع و تست، چیزی حدود <b>۱۵ تا ۲۰ دلار</b> (به تومان) کافی است. بخشی از آن خرجِ کارمزدها می‌شود.</li>
+    <li>یک <b>دفترچه و خودکار</b>! باور کن لازم می‌شود؛ برای نوشتن «کلمات طلایی» کیف پول روی کاغذ.</li>
+    <li>اگر اینترنت‌ات به سایت‌های خارجی مثل <span dir="ltr">metamask.io</span> یا <span dir="ltr">openrouter.ai</span> دسترسی نداشت، ممکن است به ابزار تغییر آی‌پی<sup>۲</sup> نیاز پیدا کنی. این آموزش واردِ آن موضوع نمی‌شود.</li>
+  </ol>
+  <div class="box foot">
+    <div class="btitle">📖 پاورقی‌ها</div>
+    <b>۱. احراز هویت:</b> یعنی به سایت ثابت کنی خودت هستی؛ مثل وقتی که برای گرفتن کارت کتابخانه، کارت ملی نشان می‌دهی.<br>
+    <b>۲. تغییر آی‌پی:</b> ابزاری که مسیر اینترنت تو را عوض می‌کند تا بعضی سایت‌ها باز شوند. توجه: هنگام کار با <b>نوبیتکس</b> معمولاً بهتر است این ابزار <b>خاموش</b> باشد، چون نوبیتکس یک سایت ایرانی است.
+  </div>
+</section>
+
+<!-- ================= CONCEPTS ================= -->
+<section class="stage" id="concepts">
+  <div class="stage-head">
+    <div class="badge">🧠</div>
+    <h2>مفهوم‌های پایه — با زبان ساده</h2>
+  </div>
+
+  <p><b>🦊 کیف پول دیجیتال (مثل متامسک) چیست؟</b><br>
+  فکر کن یک <b>قلک شیشه‌ای جادویی</b> داری که همه می‌توانند داخلش را ببینند و به آن پول بریزند، اما فقط تو <b>کلیدش</b> را داری و فقط تو می‌توانی از آن برداری. متامسک همین قلک است، منتها داخل مرورگرت. «آدرس کیف پول» مثل <b>پلاک خانه</b> است (دادنش به دیگران اشکالی ندارد) و «کلمات طلایی» مثل <b>کلید خانه</b> است (هرگز به کسی نده!).</p>
+
+  <p><b>🏦 صرافی (مثل نوبیتکس) چیست؟</b><br>
+  جایی مثل <b>صرافیِ سر خیابان</b> که تومان می‌دهی و به جایش دلار می‌گیری؛ فقط اینجا به جای دلار کاغذی، <b>ارز دیجیتال</b> می‌گیری. نوبیتکس یکی از صرافی‌های اینترنتی ایرانی است.</p>
+
+  <p><b>💵 استیبل‌کوین (مثل <span dir="ltr">USDC</span> و <span dir="ltr">USDT</span>) چیست؟</b><br>
+  ارز دیجیتالی که قیمتش <b>همیشه تقریباً ۱ دلار</b> است؛ مثل یک اسکناس یک‌دلاریِ اینترنتی. برای پرداخت به اوپن‌روتر ما به <b><span dir="ltr">USDC</span></b> نیاز داریم، چون اوپن‌روتر پرداخت رمزارزی را با همین ارز قبول می‌کند.</p>
+
+  <p><b>🛣️ شبکه‌ی بلاکچین چیست؟</b><br>
+  ارزهای دیجیتال روی «جاده‌های» مختلفی جابه‌جا می‌شوند که به آن‌ها <b>شبکه</b> می‌گویند (مثل اتریوم، پالیگان، بیس و…). مهم‌ترین قانونِ کل این آموزش: <b>مبدأ و مقصد باید روی یک جاده باشند.</b> اگر از جاده‌ی «الف» بفرستی ولی گیرنده در جاده‌ی «ب» منتظر باشد، پولت گم می‌شود!</p>
+
+  <p><b>⛽ کارمزد شبکه (گس) چیست؟</b><br>
+  هر جابه‌جایی در بلاکچین یک <b>هزینه‌ی کوچک</b> دارد؛ مثل پول بنزینِ ماشینی که پولت را جابه‌جا می‌کند. به آن «گس»<sup>۳</sup> می‌گویند.</p>
+
+  <p><b>🤖 اوپن‌روتر و <span dir="ltr">API</span> چیست؟</b><br>
+  اوپن‌روتر (<span dir="ltr">OpenRouter</span>) مثل یک <b>فروشگاه بزرگ هوش مصنوعی</b> است: با یک حساب، به ده‌ها مدل هوش مصنوعی مختلف دسترسی می‌دهد. «کلید <span dir="ltr">API</span>»<sup>۴</sup> هم مثل <b>کارت عضویت باشگاه</b> است: یک رمز مخصوص که وقتی برنامه‌ای آن را نشان دهد، اوپن‌روتر می‌فهمد «این درخواست مال توست» و هزینه‌اش را از اعتبار<sup>۵</sup> حسابت کم می‌کند.</p>
+
+  <div class="flow">
+    <div class="node">🏦 نوبیتکس<small>تومان → USDC</small></div>
+    <div class="fa">←</div>
+    <div class="node">🦊 متامسک<small>کیف پول شخصی تو</small></div>
+    <div class="fa">←</div>
+    <div class="node">🤖 اوپن‌روتر<small>اعتبار حساب</small></div>
+    <div class="fa">←</div>
+    <div class="node">🔑 کلید API<small>استفاده در برنامه‌ها</small></div>
+  </div>
+
+  <div class="box foot">
+    <div class="btitle">📖 پاورقی‌ها</div>
+    <b>۳. گس (<span dir="ltr">Gas</span>):</b> کارمزدی که به خودِ شبکه‌ی بلاکچین می‌دهی، نه به سایت‌ها. مقدارش بسته به شلوغی جاده کم و زیاد می‌شود.<br>
+    <b>۴. <span dir="ltr">API</span>:</b> راهی که برنامه‌ها با آن با یک سرویس حرف می‌زنند؛ مثل پیشخوانِ رستوران که سفارش می‌گیری و غذا تحویل می‌گیری.<br>
+    <b>۵. اعتبار (<span dir="ltr">Credits</span>):</b> پولی که در حساب اوپن‌روتر شارژ می‌کنی و هر بار استفاده از هوش مصنوعی، کمی از آن کم می‌شود؛ مثل شارژ سیم‌کارت.
+  </div>
+</section>
+
+<!-- ================= STAGE 1 ================= -->
+<section class="stage" id="s1">
+  <div class="stage-head">
+    <div class="badge">۱</div>
+    <h2>نصب متامسک روی مرورگر</h2>
+    <span class="chip">مرحله ۱ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:12.5%"></i></div>
+
+  <div class="box warn">
+    <div class="btitle">⚠️ مواظب سایت‌های تقلبی باش!</div>
+    کلاهبردارها سایت‌هایی <b>شبیه</b> متامسک می‌سازند تا پولت را بدزدند. آدرس را <b>خودت تایپ کن</b> و قبل از دانلود، مطمئن شو نوار آدرس مرورگر دقیقاً این باشد: <code>https://metamask.io</code>
+  </div>
+
+  <ol class="steps">
+    <li>مرورگر کروم را باز کن.</li>
+    <li>در نوار آدرس بالای مرورگر، تایپ کن: <code>metamask.io</code> و کلید <span dir="ltr">Enter</span> را بزن.</li>
+    <li>در سایت متامسک، دنبال دکمه‌ای با نوشته‌ای شبیه <b><span dir="ltr">Download</span></b> یا <b><span dir="ltr">Get MetaMask</span></b> بگرد و رویش کلیک کن.</li>
+    <li>گزینه‌ی مربوط به مرورگر خودت (مثلاً <b><span dir="ltr">Install MetaMask for Chrome</span></b>) را انتخاب کن. این کار تو را به فروشگاه افزونه‌های کروم<sup>۶</sup> می‌برد.</li>
+    <li>در صفحه‌ی فروشگاه کروم، روی دکمه‌ی آبیِ <b><span dir="ltr">Add to Chrome</span></b> کلیک کن.</li>
+    <li>در پنجره‌ی کوچکی که باز می‌شود، روی <b><span dir="ltr">Add extension</span></b> کلیک کن تا نصب شروع شود.</li>
+    <li>چند لحظه صبر کن تا نصب تمام شود؛ معمولاً صفحه‌ی خوش‌آمدگویی متامسک خودش باز می‌شود.</li>
+    <li>حالا متامسک را «سنجاق» کن تا همیشه دم دستت باشد: بالای مرورگر، روی آیکون <b>پازل 🧩</b> کلیک کن.</li>
+    <li>در فهرستی که باز شد، کنار نام <span dir="ltr">MetaMask</span> روی علامت <b>پونز 📌</b> کلیک کن. حالا آیکون روباه نارنجی 🦊 کنار نوار آدرس دیده می‌شود.</li>
+  </ol>
+
+  <div class="box foot">
+    <div class="btitle">📖 پاورقی</div>
+    <b>۶. افزونه (<span dir="ltr">Extension</span>):</b> برنامه‌ی کوچکی که <b>داخل مرورگر</b> نصب می‌شود و به آن قابلیت جدید اضافه می‌کند؛ مثل آویز جدیدی که به کیفت وصل می‌کنی.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید آیکون <b>روباه نارنجی 🦊</b> را بالای مرورگرت ببینی. اگر نمی‌بینی، برو به بخش <a href="#fix">رفع اشکال</a>.
+  </div>
+</section>
+
+<!-- ================= STAGE 2 ================= -->
+<section class="stage" id="s2">
+  <div class="stage-head">
+    <div class="badge">۲</div>
+    <h2>ساخت کیف پول و نگهداری «کلمات طلایی»</h2>
+    <span class="chip">مرحله ۲ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:25%"></i></div>
+
+  <ol class="steps">
+    <li>روی آیکون روباه 🦊 کلیک کن تا متامسک باز شود.</li>
+    <li>تیک موافقت با قوانین را بزن و روی دکمه‌ای شبیه <b><span dir="ltr">Create a new wallet</span></b> (ساخت کیف پول جدید) کلیک کن.</li>
+    <li>اگر سؤالی درباره‌ی جمع‌آوری اطلاعات پرسید، هر کدام را خواستی انتخاب کن (روی کارکرد کیف پول اثری ندارد).</li>
+    <li>یک <b>رمز عبور</b> قوی بساز و دو بار وارد کن. این رمز فقط قفلِ متامسک <b>روی همین کامپیوتر</b> است. آن را در دفترچه‌ات بنویس.</li>
+    <li>حالا مهم‌ترین قسمت: متامسک می‌خواهد <b>«عبارت بازیابی مخفی»</b><sup>۷</sup> را نشانت بدهد. گزینه‌ای شبیه <b><span dir="ltr">Secure my wallet</span></b> یا <b><span dir="ltr">Reveal Secret Recovery Phrase</span></b> را بزن.</li>
+    <li><b>۱۲ کلمه‌ی انگلیسی</b> نمایش داده می‌شود. آن‌ها را <b>به ترتیب و با شماره</b> روی کاغذِ دفترچه‌ات بنویس (۱، ۲، ۳…). عکس نگیر! در فایل کامپیوتری ذخیره نکن!</li>
+    <li>یک بار نوشته‌ات را با صفحه مقایسه کن که غلط املایی نداشته باشد.</li>
+    <li>روی <b><span dir="ltr">Next</span></b> بزن. متامسک برای امتحان، جای چند کلمه را خالی می‌گذارد؛ از روی کاغذت کلمه‌های درست را وارد کن.</li>
+    <li>روی دکمه‌ی پایانی (چیزی شبیه <b><span dir="ltr">Confirm</span></b> یا <b><span dir="ltr">Done</span></b>) بزن. 🎉 کیف پولت ساخته شد!</li>
+    <li>حالا آدرس کیف پولت را ببین: بالای پنجره‌ی متامسک، نام حساب (مثلاً <span dir="ltr">Account 1</span>) نوشته شده و زیر یا کنار آن یک عبارت کوتاه‌شده شبیه <code>0x12a4...9fE3</code> هست. با یک کلیک روی آن، آدرس کامل کپی می‌شود.</li>
+  </ol>
+
+  <div class="box warn">
+    <div class="btitle">⚠️ قانون طلایی — هرگز فراموشش نکن</div>
+    آن ۱۲ کلمه <b>خودِ پولِ توست</b>. هر کسی آن‌ها را داشته باشد، از هر جای دنیا می‌تواند همه‌ی موجودی‌ات را بردارد. <b>هیچ سایت، هیچ پشتیبانی و هیچ آدم واقعیِ درستکاری هرگز این کلمات را از تو نمی‌خواهد.</b> اگر کسی خواست، ۱۰۰٪ دزد است. کاغذ را جایی امن مثل لای یک کتاب در خانه نگه دار.
+  </div>
+
+  <div class="box foot">
+    <div class="btitle">📖 پاورقی</div>
+    <b>۷. عبارت بازیابی مخفی (<span dir="ltr">Secret Recovery Phrase</span>)</b> که به آن «سید» هم می‌گویند: ۱۲ کلمه‌ای که مثل شاه‌کلیدِ کیف پول است. اگر کامپیوترت خراب شود، با همین کلمات می‌توانی کیف پولت را روی دستگاه دیگری زنده کنی.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید: ۱) صفحه‌ی اصلی متامسک را ببینی که موجودی <b>صفر</b> نشان می‌دهد، ۲) ۱۲ کلمه روی کاغذ نوشته باشی، ۳) بتوانی با کلیک، آدرس <code>0x...</code> خودت را کپی کنی.
+  </div>
+</section>
+
+<!-- ================= STAGE 3 ================= -->
+<section class="stage" id="s3">
+  <div class="stage-head">
+    <div class="badge">۳</div>
+    <h2>ثبت‌نام و احراز هویت در نوبیتکس</h2>
+    <span class="chip">مرحله ۳ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:37.5%"></i></div>
+
+  <div class="box tip">
+    <div class="btitle">💡 نکته</div>
+    نوبیتکس سایت ایرانی است؛ اگر ابزار تغییر آی‌پی روشن داری، برای این مرحله <b>خاموشش کن</b>. همچنین آدرس درست سایت این است: <code>https://nobitex.ir</code>
+  </div>
+
+  <ol class="steps">
+    <li>به آدرس <code>nobitex.ir</code> برو.</li>
+    <li>روی دکمه‌ی <b>«ثبت‌نام»</b> کلیک کن.</li>
+    <li>شماره موبایل (یا ایمیل) و یک رمز عبور قوی وارد کن و ثبت‌نام را کامل کن.</li>
+    <li>کدی که پیامک می‌شود را وارد کن تا شماره‌ات تأیید شود.</li>
+    <li>وارد حساب شو و به بخش <b>«احراز هویت»</b> برو (معمولاً از منوی پروفایل پیدا می‌شود).</li>
+    <li>اطلاعات هویتی (نام، کد ملی، تاریخ تولد و…) را <b>دقیقاً مطابق کارت ملی</b> وارد کن.</li>
+    <li>مراحل خواسته‌شده مثل بارگذاری عکس مدارک یا تأیید ویدیویی را طبق راهنمای خود سایت انجام بده. (شکل دقیق این مراحل گاهی تغییر می‌کند؛ راهنمای روی صفحه را دنبال کن.)</li>
+    <li>صبر کن تا احراز هویتت تأیید شود؛ ممکن است از چند دقیقه تا یکی‌دو روز طول بکشد.</li>
+    <li>بعد از تأیید، برای امنیت بیشتر، از بخش تنظیمات امنیتی، <b>«کد دوعاملی»</b><sup>۸</sup> را هم فعال کن.</li>
+  </ol>
+
+  <div class="box foot">
+    <div class="btitle">📖 پاورقی</div>
+    <b>۸. کد دوعاملی (<span dir="ltr">2FA</span>):</b> قفل دوم روی حسابت. علاوه بر رمز عبور، یک کد چندرقمیِ لحظه‌ای هم لازم می‌شود؛ مثل دری که دو قفل جدا دارد.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید بتوانی وارد نوبیتکس شوی و در پروفایلت ببینی که احراز هویتت <b>تأیید شده</b> است. بدون این تأیید، اجازه‌ی واریز و برداشت نداری.
+  </div>
+</section>
+
+<!-- ================= STAGE 4 ================= -->
+<section class="stage" id="s4">
+  <div class="stage-head">
+    <div class="badge">۴</div>
+    <h2>شارژ تومانی و خرید ارز دیجیتال</h2>
+    <span class="chip">مرحله ۴ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:50%"></i></div>
+
+  <div class="box why">
+    <div class="btitle">🤔 چرا <span dir="ltr">USDC</span> می‌خریم؟</div>
+    چون اوپن‌روتر پرداخت رمزارزی را با <b><span dir="ltr">USDC</span></b> (یک دلارِ دیجیتال) انجام می‌دهد. پس نقشه‌ی ما این است: تومان ← <span dir="ltr">USDC</span> ← کیف پول ← اوپن‌روتر. اگر در نوبیتکس نتوانستی <span dir="ltr">USDC</span> را با شبکه‌ی مناسب برداشت کنی، در مرحله‌ی بعد یک راه جایگزین هم گفته‌ایم.
+  </div>
+
+  <ol class="steps">
+    <li>در نوبیتکس، دکمه‌ی <b>«واریز»</b> را پیدا کن و بزن.</li>
+    <li>گزینه‌ی واریز <b>تومان</b> را انتخاب کن (معمولاً با درگاه بانکی شتابی).</li>
+    <li>مبلغ دلخواه را وارد کن (برای شروع، معادل حدود ۱۵ تا ۲۰ دلار کافی است) و پرداخت را با کارت بانکی و رمز پویا انجام بده.</li>
+    <li>برگرد به نوبیتکس و مطمئن شو موجودی تومانی‌ات اضافه شده است.</li>
+    <li>حالا به بخش <b>«بازارها»</b> یا <b>«خرید سریع / خرید آسان»</b> برو.</li>
+    <li>ارز <b><span dir="ltr">USDC</span></b> (یو‌اس‌دی‌کوین) را جست‌وجو و انتخاب کن.</li>
+    <li>مقدار موردنظر را وارد کن (مثلاً ۱۲ تا ۱۵ دلار) و خرید را ثبت کن.</li>
+    <li>چند لحظه صبر کن تا سفارش انجام شود؛ سپس در «کیف پول» نوبیتکس، موجودی <span dir="ltr">USDC</span> را ببین.</li>
+  </ol>
+
+  <div class="box tip">
+    <div class="btitle">💡 نکته درباره‌ی کارمزدها</div>
+    کمی <b>بیشتر</b> از مبلغی که می‌خواهی به اوپن‌روتر بدهی بخر؛ چون هم نوبیتکس برای برداشت کارمزد می‌گیرد و هم شبکه‌ی بلاکچین «گس» می‌خواهد. مثلاً اگر می‌خواهی ۱۰ دلار به اوپن‌روتر بدهی، حدود ۱۵ دلار بخر تا وسط راه کم نیاوری.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید در کیف پولِ نوبیتکس، موجودی <b><span dir="ltr">USDC</span></b> (یا ارزی که خریدی) را ببینی.
+  </div>
+</section>
+
+<!-- ================= STAGE 5 ================= -->
+<section class="stage" id="s5">
+  <div class="stage-head">
+    <div class="badge">۵</div>
+    <h2>انتقال ارز از نوبیتکس به متامسک</h2>
+    <span class="chip">مرحله ۵ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:62.5%"></i></div>
+
+  <div class="box warn">
+    <div class="btitle">⚠️ حساس‌ترین مرحله‌ی کل آموزش</div>
+    اینجا همان جایی است که «قانون جاده» حیاتی می‌شود: <b>شبکه‌ای که در نوبیتکس برای برداشت انتخاب می‌کنی، باید همان شبکه‌ای باشد که متامسک و اوپن‌روتر می‌فهمند.</b> متامسک فقط شبکه‌های خانواده‌ی اتریوم را می‌فهمد (مثل <span dir="ltr">Ethereum</span>، <span dir="ltr">Polygon</span>، <span dir="ltr">Base</span>). شبکه‌ی <b><span dir="ltr">TRC20</span> (ترون) به درد متامسک نمی‌خورد</b> — هرگز آن را انتخاب نکن، چون پولت گم می‌شود.
+  </div>
+
+  <p><b>قدم اول: ببین اوپن‌روتر و نوبیتکس روی کدام «جاده‌ی مشترک» هستند.</b> اوپن‌روتر پرداخت <span dir="ltr">USDC</span> را روی چند شبکه‌ی خانواده‌ی اتریوم قبول می‌کند (هنگام پرداخت، فهرست دقیق شبکه‌ها را خودش نشانت می‌دهد — معمولاً گزینه‌هایی مثل <span dir="ltr">Ethereum</span>، <span dir="ltr">Base</span> یا <span dir="ltr">Polygon</span>). نوبیتکس هم هنگام برداشت، فهرست شبکه‌های پشتیبانی‌شده‌اش را نشان می‌دهد. باید شبکه‌ای را انتخاب کنی که <b>در هر دو فهرست</b> باشد.</p>
+
+  <table class="simple">
+    <tr><th>شبکه</th><th>هزینه‌ی گس</th><th>ارز لازم برای گس در متامسک</th></tr>
+    <tr><td><span dir="ltr">Ethereum (ERC20)</span></td><td>گران (گاهی چند دلار)</td><td><span dir="ltr">ETH</span></td></tr>
+    <tr><td><span dir="ltr">Polygon</span></td><td>خیلی ارزان</td><td><span dir="ltr">POL</span></td></tr>
+    <tr><td><span dir="ltr">Base</span></td><td>ارزان</td><td><span dir="ltr">ETH</span> (روی شبکه‌ی <span dir="ltr">Base</span>)</td></tr>
+  </table>
+
+  <div class="box tip">
+    <div class="btitle">💡 دو راه برای پرداخت گس — یکی را انتخاب کن</div>
+    <b>راه ۱ (ساده‌تر):</b> علاوه بر <span dir="ltr">USDC</span>، مقدار کمی (۲ تا ۳ دلار) از <b>ارزِ گسِ همان شبکه</b> (طبق جدول بالا) هم از نوبیتکس بخر و با همان شبکه به متامسک بفرست.<br>
+    <b>راه ۲:</b> بعضی وقت‌ها صفحه‌ی پرداخت اوپن‌روتر خودش گس را مدیریت می‌کند؛ ولی روی این حساب نکن و راه ۱ را انجام بده تا وسط پرداخت گیر نکنی.
+  </div>
+
+  <p><b>قدم دوم: آدرس متامسک را آماده کن.</b></p>
+  <ol class="steps">
+    <li>روی آیکون روباه 🦊 کلیک کن و روی آدرس حسابت (شبیه <code>0x12a4...9fE3</code>) کلیک کن تا کپی شود.</li>
+    <li>برای اطمینان، آدرس کپی‌شده را یک‌جا (مثلاً <span dir="ltr">Notepad</span>) بچسبان و ببین با ابتدای آدرسِ داخل متامسک یکی است. (آدرس متامسک روی همه‌ی شبکه‌های خانواده‌ی اتریوم یکسان است.)</li>
+  </ol>
+
+  <p><b>قدم سوم: برداشت از نوبیتکس — اول تستی!</b></p>
+  <ol class="steps">
+    <li>در نوبیتکس، دکمه‌ی <b>«برداشت»</b> را بزن.</li>
+    <li>ارز <b><span dir="ltr">USDC</span></b> را انتخاب کن.</li>
+    <li><b>شبکه‌ی برداشت</b> را انتخاب کن — همان جاده‌ی مشترکی که در قدم اول تصمیم گرفتی. اگر نوبیتکس برای <span dir="ltr">USDC</span> شبکه‌ی مناسبی نداشت، به کادر «راه جایگزین» پایین همین بخش نگاه کن.</li>
+    <li>در قسمت «آدرس مقصد»، آدرس متامسک را <b>بچسبان (<span dir="ltr">Paste</span>)</b> — هرگز دستی تایپ نکن.</li>
+    <li><b>۴ حرف اول و ۴ حرف آخرِ</b> آدرس چسبانده‌شده را با متامسک مقایسه کن که یکی باشند.</li>
+    <li>برای بار اول، فقط یک <b>مقدار کوچک</b> (مثلاً ۲ دلار) وارد کن. این «تراکنش تستی» است.</li>
+    <li>روی <b>«درخواست برداشت»</b> بزن و کد تأییدی که به ایمیل یا موبایلت می‌آید (و کد دوعاملی، اگر فعال کرده‌ای) را وارد کن.</li>
+    <li>چند دقیقه صبر کن (معمولاً ۵ تا ۳۰ دقیقه). بعد متامسک را باز کن و ببین رسیده یا نه.</li>
+    <li>اگر <span dir="ltr">USDC</span> در متامسک دیده نشد ولی تراکنش در نوبیتکس «موفق» بود، نگران نشو: باید در متامسک شبکه‌ی درست را انتخاب کنی (منوی بالای متامسک ← انتخاب شبکه) و اگر باز دیده نشد، از گزینه‌ی <b><span dir="ltr">Import tokens</span></b> استفاده کنی تا <span dir="ltr">USDC</span> نمایش داده شود.</li>
+    <li>وقتی تست موفق بود، <b>بقیه‌ی مبلغ</b> را با همان روش و همان شبکه بفرست. مقدار گس (راه ۱ کادر بالا) را هم بفرست.</li>
+  </ol>
+
+  <div class="box note">
+    <div class="btitle">🧭 راه جایگزین (اگر نوبیتکس شبکه‌ی مناسبی برای <span dir="ltr">USDC</span> نداشت)</div>
+    فهرست شبکه‌های قابل‌برداشتِ هر ارز در نوبیتکس گاهی تغییر می‌کند. اگر برای <span dir="ltr">USDC</span> شبکه‌ی مشترکی با اوپن‌روتر پیدا نکردی، این کار را بکن: به‌جایش ارزی مثل <b><span dir="ltr">ETH</span></b> یا <b><span dir="ltr">POL</span></b> را (که هم گس است و هم راحت برداشت می‌شود) روی یک شبکه‌ی خانواده‌ی اتریوم به متامسک بفرست؛ سپس داخل خود متامسک از دکمه‌ی <b><span dir="ltr">Swap</span></b> (تبدیل) استفاده کن تا بخشی از آن را به <span dir="ltr">USDC</span> روی همان شبکه تبدیل کنی. کمی از ارز اصلی را برای گس نگه دار.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید در متامسک: ۱) موجودی <b><span dir="ltr">USDC</span></b> را ببینی، ۲) مقدار کمی از <b>ارز گسِ</b> همان شبکه هم داشته باشی. اگر نه، برو به <a href="#fix">رفع اشکال</a>.
+  </div>
+</section>
+
+<!-- ================= STAGE 6 ================= -->
+<section class="stage" id="s6">
+  <div class="stage-head">
+    <div class="badge">۶</div>
+    <h2>ساخت حساب در اوپن‌روتر</h2>
+    <span class="chip">مرحله ۶ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:75%"></i></div>
+
+  <ol class="steps">
+    <li>در مرورگر به آدرس <code>https://openrouter.ai</code> برو.</li>
+    <li>روی دکمه‌ی <b><span dir="ltr">Sign in</span></b> یا <b><span dir="ltr">Sign up</span></b> (گوشه‌ی بالای صفحه) کلیک کن.</li>
+    <li>ساده‌ترین راه: گزینه‌ی ورود با <b>گوگل</b> را بزن و با جیمیلت وارد شو. (می‌توانی با ایمیل و رمز هم ثبت‌نام کنی.)</li>
+    <li>اگر ایمیلی برای تأیید حساب آمد، روی لینک داخل آن کلیک کن.</li>
+    <li>وارد که شدی، یک نگاه به منوی حساب (معمولاً بالای صفحه) بینداز؛ بخش‌هایی مثل <b><span dir="ltr">Credits</span></b> (اعتبار) و <b><span dir="ltr">Keys</span></b> (کلیدها) را پیدا کن — در دو مرحله‌ی بعد به همین دو بخش می‌رویم.</li>
+  </ol>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید وارد حساب اوپن‌روتر شده باشی و بتوانی صفحه‌ی <b><span dir="ltr">Credits</span></b> را باز کنی (احتمالاً موجودی‌اش صفر یا خیلی کم است — طبیعی است!).
+  </div>
+</section>
+
+<!-- ================= STAGE 7 ================= -->
+<section class="stage" id="s7">
+  <div class="stage-head">
+    <div class="badge">۷</div>
+    <h2>شارژ اعتبار اوپن‌روتر با کیف پول</h2>
+    <span class="chip">مرحله ۷ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:87.5%"></i></div>
+
+  <div class="box warn">
+    <div class="btitle">⚠️ قبل از پرداخت بدان</div>
+    طبق قوانین اوپن‌روتر، <b>پرداخت‌های رمزارزی قابل بازگشت نیستند</b>. پس مبلغ را با دقت وارد کن و اولین بار مبلغ کمی (مثلاً ۵ دلار) شارژ کن. کارمزد کوچکی هم روی خرید اعتبار اضافه می‌شود.
+  </div>
+
+  <ol class="steps">
+    <li>در همان مرورگری که متامسک نصب است، وارد اوپن‌روتر شو.</li>
+    <li>به صفحه‌ی <b><span dir="ltr">Credits</span></b> برو (از منوی حساب یا آدرس <code>openrouter.ai/settings/credits</code>).</li>
+    <li>روی دکمه‌ای شبیه <b><span dir="ltr">Add Credits</span></b> (افزودن اعتبار) کلیک کن.</li>
+    <li>در میان روش‌های پرداخت، گزینه‌ی <b>رمزارز / کریپتو</b> (چیزی شبیه <b><span dir="ltr">Pay with crypto</span></b>) را انتخاب کن.</li>
+    <li>مبلغ دلاری موردنظر را وارد کن (برای بار اول: کم!).</li>
+    <li>صفحه‌ی پرداخت، شبکه‌های قابل‌قبول را نشان می‌دهد؛ <b>همان شبکه‌ای را انتخاب کن که <span dir="ltr">USDC</span> تو در متامسک روی آن است.</b></li>
+    <li>روی گزینه‌ی <b>اتصال کیف پول</b> (چیزی شبیه <b><span dir="ltr">Connect Wallet</span></b>) کلیک کن و از فهرست، <b><span dir="ltr">MetaMask</span></b> را انتخاب کن.</li>
+    <li>پنجره‌ی متامسک باز می‌شود؛ روی <b><span dir="ltr">Connect</span></b> کلیک کن تا سایت به آدرس کیف پولت وصل شود (این فقط «دیدن آدرس» است، نه برداشت پول).</li>
+    <li>حالا پرداخت را تأیید کن: متامسک دوباره باز می‌شود و جزئیات تراکنش (مبلغ + گس) را نشان می‌دهد. مبلغ را بررسی کن و روی <b><span dir="ltr">Confirm</span></b> بزن. (گاهی دو تأیید پشت‌سرهم لازم است: یکی «اجازه‌ی خرج <span dir="ltr">USDC</span>» و یکی خودِ پرداخت — هر دو را تأیید کن.)</li>
+    <li>صبر کن تا صفحه‌ی اوپن‌روتر پیام موفقیت نشان دهد و موجودی <b><span dir="ltr">Credits</span></b> زیاد شود. اگر چند دقیقه طول کشید طبیعی است؛ صفحه را رفرش کن.</li>
+  </ol>
+
+  <div class="box tip">
+    <div class="btitle">💡 اگر خطای «گس کافی نیست» دیدی</div>
+    یعنی از ارزِ بومی شبکه (مثل <span dir="ltr">ETH</span> یا <span dir="ltr">POL</span>) به‌اندازه‌ی کافی در متامسک نداری. برگرد به مرحله‌ی ۵ و مقدار کمی از آن ارز را روی همان شبکه از نوبیتکس بفرست.
+  </div>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی</div>
+    الان باید در صفحه‌ی <b><span dir="ltr">Credits</span></b> اوپن‌روتر، موجودی دلاری‌ات را ببینی. تبریک — سخت‌ترین بخش تمام شد! 🎊
+  </div>
+</section>
+
+<!-- ================= STAGE 8 ================= -->
+<section class="stage" id="s8">
+  <div class="stage-head">
+    <div class="badge">۸</div>
+    <h2>گرفتن کلید <span dir="ltr">API</span> و تست آن</h2>
+    <span class="chip">مرحله ۸ از ۸</span>
+  </div>
+  <div class="progress"><i style="width:100%"></i></div>
+
+  <ol class="steps">
+    <li>در اوپن‌روتر به بخش <b><span dir="ltr">Keys</span></b> برو (از منوی حساب یا آدرس <code>openrouter.ai/settings/keys</code>).</li>
+    <li>روی دکمه‌ای شبیه <b><span dir="ltr">Create Key</span></b> (ساخت کلید) کلیک کن.</li>
+    <li>یک <b>نام</b> برای کلیدت بنویس؛ مثلاً <code>my-first-key</code>. (نام فقط برای خودت است تا یادت بماند این کلید برای چیست.)</li>
+    <li>اگر خواست، می‌توانی <b>سقف خرج</b> (<span dir="ltr">Credit limit</span>) هم برای کلید بگذاری — برای شروع مثلاً ۲ دلار. این یعنی حتی اگر کلید لو برود، بیشتر از این مبلغ خرج نمی‌شود.</li>
+    <li>روی دکمه‌ی ساخت بزن. کلیدت نمایش داده می‌شود؛ چیزی شبیه: <code>sk-or-v1-XXXXXXXXXXXX</code></li>
+    <li><b>همین الان کلید را کپی کن</b> و در جای امنی ذخیره کن (مثلاً یک فایل شخصی یا برنامه‌ی مدیریت رمز). معمولاً بعد از بستن این صفحه، دیگر کاملش نشان داده نمی‌شود.</li>
+  </ol>
+
+  <div class="box warn">
+    <div class="btitle">⚠️ کلید <span dir="ltr">API</span> مثل رمز کارت بانکی است</div>
+    هر کس این کلید را داشته باشد می‌تواند از اعتبار حسابت خرج کند. آن را در گروه‌ها و سایت‌ها نگذار و داخل کدهایی که منتشر می‌کنی ننویس. اگر شک کردی لو رفته، از همان صفحه‌ی <span dir="ltr">Keys</span> حذفش کن و کلید جدید بساز.
+  </div>
+
+  <p><b>🧪 تست کلید — مطمئن شویم کار می‌کند.</b> ساده‌ترین راه بدون برنامه‌نویسی: در خود سایت اوپن‌روتر بخش <b><span dir="ltr">Chat</span></b> را باز کن، یک مدل انتخاب کن و یک پیام بفرست؛ اگر جواب گرفتی و از اعتبارت چند صدم سنت کم شد، همه‌چیز درست است. اگر اهل خط فرمان هستی، این دستور را (با گذاشتن کلید خودت به‌جای <span dir="ltr">YOUR_KEY</span>) در <span dir="ltr">PowerShell</span> یا ترمینال اجرا کن:</p>
+
+<pre>curl https://openrouter.ai/api/v1/chat/completions ^
+  -H "Content-Type: application/json" ^
+  -H "Authorization: Bearer YOUR_KEY" ^
+  -d "{\"model\": \"openrouter/auto\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello!\"}]}"</pre>
+
+  <p>اگر در جواب، متنی از هوش مصنوعی برگشت، یعنی کلیدت زنده و حسابت شارژ است. 🎯 همین کلید را می‌توانی در برنامه‌هایی که از اوپن‌روتر پشتیبانی می‌کنند (ویرایشگرهای کد، ابزارهای چت و…) در قسمت تنظیماتِ <span dir="ltr">API Key</span> وارد کنی.</p>
+
+  <div class="box check">
+    <div class="btitle">✅ ایست بازرسی نهایی</div>
+    الان باید: ۱) یک کلید با پیشوند <code>sk-or-</code> ذخیره کرده باشی، ۲) یک پیام آزمایشی جواب گرفته باشی، ۳) در صفحه‌ی <span dir="ltr">Activity</span> یا <span dir="ltr">Credits</span> ببینی که ذره‌ای از اعتبارت مصرف شده است.
+  </div>
+</section>
+
+<!-- ================= TROUBLESHOOT ================= -->
+<section class="stage" id="fix">
+  <div class="stage-head">
+    <div class="badge">🔧</div>
+    <h2>رفع اشکال — رایج‌ترین گیرها</h2>
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۱) آیکون روباه 🦊 بعد از نصب دیده نمی‌شود</div>
+    <b>علت:</b> افزونه نصب شده ولی سنجاق نشده. <b>راه‌حل:</b> روی آیکون پازل 🧩 بالای کروم کلیک کن، کنار <span dir="ltr">MetaMask</span> پونز 📌 را بزن.
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۲) پول را از نوبیتکس فرستادم ولی در متامسک نیست</div>
+    <b>علت الف:</b> هنوز در راه است — برداشت‌ها گاهی تا ۳۰ دقیقه طول می‌کشند؛ وضعیت را در «تاریخچه‌ی تراکنش‌ها»ی نوبیتکس ببین.<br>
+    <b>علت ب:</b> متامسک روی شبکه‌ی دیگری است — از منوی انتخاب شبکه در متامسک، همان شبکه‌ای را انتخاب کن که موقع برداشت زدی.<br>
+    <b>علت ج:</b> توکن نمایش داده نمی‌شود — در متامسک گزینه‌ی <b><span dir="ltr">Import tokens</span></b> را بزن و <span dir="ltr">USDC</span> را اضافه کن.<br>
+    <b>علت د (بدترین حالت):</b> شبکه‌ی اشتباه (مثل <span dir="ltr">TRC20</span>) انتخاب شده — با پشتیبانی نوبیتکس تماس بگیر و درخواست بازیابی بده؛ متأسفانه همیشه قابل بازگشت نیست. برای همین گفتیم اول تراکنش تستیِ کوچک!
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۳) موقع پرداخت در اوپن‌روتر خطای کمبود گس می‌گیرم</div>
+    <b>علت:</b> ارز بومی شبکه (مثل <span dir="ltr">ETH</span> یا <span dir="ltr">POL</span>) در متامسک نداری. <b>راه‌حل:</b> ۲ تا ۳ دلار از آن ارز را روی همان شبکه از نوبیتکس بفرست و دوباره امتحان کن.
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۴) پرداخت کردم ولی اعتبار اوپن‌روتر زیاد نشد</div>
+    <b>علت:</b> تأخیر شبکه یا مشکل ثبت پرداخت. <b>راه‌حل:</b> ۱۰ تا ۱۵ دقیقه صبر کن و صفحه را رفرش کن. اگر درست نشد، به آدرس <code>support@openrouter.ai</code> ایمیل بزن و مشخصات تراکنش (زمان، مبلغ و کد تراکنش که در متامسک ← <span dir="ltr">Activity</span> دیده می‌شود) را بفرست.
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۵) کلید <span dir="ltr">API</span> کار نمی‌کند و خطای <span dir="ltr">401</span> یا <span dir="ltr">402</span> می‌گیرم</div>
+    <b>خطای <span dir="ltr">401</span>:</b> کلید غلط کپی شده — دوباره از صفحه‌ی <span dir="ltr">Keys</span> یک کلید نو بساز و کامل کپی کن (اول و آخرش جا نیفتد).<br>
+    <b>خطای <span dir="ltr">402</span>:</b> اعتبار حسابت تمام شده یا سقف خرجِ کلید پر شده — صفحه‌ی <span dir="ltr">Credits</span> و تنظیمات کلید را چک کن.
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۶) نوبیتکس اجازه‌ی برداشت نمی‌دهد</div>
+    <b>علت:</b> احراز هویت ناقص است، یا حسابت تازه شارژ شده و محدودیت زمانی برداشت دارد، یا کد دوعاملی لازم است. <b>راه‌حل:</b> پیام خطای روی صفحه را بخوان؛ معمولاً خودش می‌گوید چه چیزی کم است. راهنمای کامل در <code>help.nobitex.ir</code> هست.
+  </div>
+
+  <div class="box tip">
+    <div class="btitle">۷) سایت متامسک یا اوپن‌روتر باز نمی‌شود</div>
+    <b>علت:</b> محدودیت دسترسی اینترنتی. <b>راه‌حل:</b> از ابزار تغییر آی‌پیِ مطمئن استفاده کن؛ ولی یادت باشد موقع کار با نوبیتکس آن را خاموش کنی.
+  </div>
+</section>
+
+<!-- ================= FINALE ================= -->
+<div class="finale">
+  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+  <ul>
+    <li>🦊 یک کیف پول متامسک بسازی و از «کلمات طلایی» مثل جانت مراقبت کنی</li>
+    <li>🏦 در نوبیتکس ثبت‌نام و احراز هویت کنی و با تومان، دلار دیجیتال (<span dir="ltr">USDC</span>) بخری</li>
+    <li>🛣️ با انتخاب شبکه‌ی درست و تراکنش تستی، ارز را امن به کیف پول خودت منتقل کنی</li>
+    <li>💳 اعتبار حساب اوپن‌روتر را با کیف پولت شارژ کنی</li>
+    <li>🔑 کلید <span dir="ltr">API</span> بسازی، امتحانش کنی و امن نگهش داری</li>
+  </ul>
+  <p>از این به بعد، هر وقت اعتبارت تمام شد، فقط مرحله‌های ۴، ۵ و ۷ را تکرار می‌کنی — بقیه یک‌بار برای همیشه انجام شد. آفرین به خودت! 🚀</p>
+</div>
+
+<footer>
+  این آموزش جنبه‌ی آموزشی دارد؛ ظاهر سایت‌ها، کارمزدها و شبکه‌های پشتیبانی‌شده ممکن است در طول زمان تغییر کنند — همیشه اطلاعات روی صفحه را ملاک نهایی بگیر.
+  <div class="sig">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+</footer>
+
+</div>
+</body>
+</html>

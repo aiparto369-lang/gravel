@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<title>آموزش OpenClaw از صفر — دستیار هوش مصنوعی شخصی خودت را بساز! 🦞</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<style>
+:root{
+  --blue:#123a6b;
+  --blue-dark:#0c2647;
+  --orange:#ff5a36;
+  --orange-soft:#ffe8e2;
+  --teal:#0e8f83;
+  --teal-soft:#e0f5f2;
+  --yellow-soft:#fff6d9;
+  --yellow-border:#e5b800;
+  --purple:#6a3fb5;
+  --purple-soft:#f0e9fb;
+  --green:#1e8f4d;
+  --green-soft:#e3f6ea;
+  --red:#c0392b;
+  --red-soft:#fdeceb;
+  --card:#ffffff;
+  --bg:#f2f6fc;
+  --text:#1c2733;
+  --muted:#5a6b7d;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  direction:rtl;
+  text-align:right;
+  background:var(--bg);
+  color:var(--text);
+  font-size:17.5px;
+  line-height:1.9;
+}
+.wrap{max-width:880px;margin-inline:auto;padding-inline:16px;padding-block-end:60px;}
+
+/* ---------- Hero ---------- */
+header.hero{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 60%,#081a33 100%);
+  color:#fff;
+  padding-block:44px 56px;
+  padding-inline:16px;
+  text-align:center;
+  border-end-start-radius:40px;
+  border-end-end-radius:40px;
+}
+header.hero .lobster{font-size:72px;line-height:1.2;}
+header.hero h1{font-size:clamp(24px,4.5vw,38px);font-weight:900;margin-block-start:10px;}
+header.hero p.promise{
+  margin-block-start:14px;
+  background:rgba(255,255,255,.12);
+  display:inline-block;
+  padding:10px 22px;
+  border-radius:999px;
+  font-size:18px;
+}
+header.hero p.sub{margin-block-start:16px;color:#cfe0f5;font-size:16px;max-width:640px;margin-inline:auto;}
+
+/* ---------- Intro / assumptions ---------- */
+.intro-box{
+  background:var(--card);
+  border:2px solid var(--blue);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  margin-block-start:-28px;
+  box-shadow:0 6px 20px rgba(12,38,71,.12);
+}
+.intro-box h2{color:var(--blue);font-size:20px;margin-block-end:8px;}
+.intro-box ul{padding-inline-start:22px;}
+.intro-box li{margin-block:4px;}
+
+/* ---------- TOC ---------- */
+nav.toc{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  margin-block-start:24px;
+  box-shadow:0 3px 12px rgba(12,38,71,.08);
+}
+nav.toc h2{color:var(--blue);font-size:20px;margin-block-end:10px;}
+nav.toc ol{padding-inline-start:24px;}
+nav.toc a{color:var(--teal);text-decoration:none;font-weight:700;}
+nav.toc a:hover{text-decoration:underline;}
+nav.toc li{margin-block:5px;}
+
+/* ---------- Stage cards ---------- */
+section.stage{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:26px 26px 22px;
+  margin-block-start:30px;
+  box-shadow:0 3px 14px rgba(12,38,71,.08);
+  position:relative;
+}
+.stage-chip{
+  display:inline-block;
+  background:var(--orange-soft);
+  color:var(--orange);
+  font-weight:900;
+  font-size:14px;
+  padding:4px 14px;
+  border-radius:999px;
+  margin-block-end:8px;
+}
+.progress{
+  height:10px;background:#e4ebf5;border-radius:999px;overflow:hidden;margin-block:8px 18px;
+}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--teal));border-radius:999px;}
+section.stage h2{
+  color:var(--blue);
+  font-size:clamp(20px,3.5vw,26px);
+  font-weight:900;
+  display:flex;align-items:center;gap:10px;
+}
+.badge{
+  min-inline-size:46px;block-size:46px;
+  background:var(--orange);color:#fff;
+  border-radius:14px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;flex-shrink:0;
+}
+section.stage h3{color:var(--teal);font-size:19px;margin-block-start:18px;}
+
+/* ---------- Steps ---------- */
+.step{
+  display:flex;gap:14px;align-items:flex-start;
+  background:#f8fafd;
+  border:1.5px solid #dfe8f4;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-block-start:12px;
+}
+.step .num{
+  min-inline-size:34px;block-size:34px;
+  background:var(--teal);color:#fff;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;flex-shrink:0;margin-block-start:4px;
+}
+.step p{flex:1;}
+
+/* ---------- Boxes ---------- */
+.box{border-radius:14px;padding:14px 18px;margin-block-start:14px;border:2px solid transparent;}
+.box .box-title{font-weight:900;margin-block-end:4px;display:block;}
+.box.tip{background:var(--teal-soft);border-color:var(--teal);}
+.box.tip .box-title{color:var(--teal);}
+.box.warn{background:var(--yellow-soft);border-color:var(--yellow-border);}
+.box.warn .box-title{color:#8a6d00;}
+.box.foot{background:var(--purple-soft);border-color:var(--purple);}
+.box.foot .box-title{color:var(--purple);}
+.box.check{background:var(--green-soft);border-color:var(--green);}
+.box.check .box-title{color:var(--green);}
+.box.fix{background:var(--red-soft);border-color:var(--red);}
+.box.fix .box-title{color:var(--red);}
+.box.why{background:#eef4ff;border-color:#4d7cc7;}
+.box.why .box-title{color:#2b5aa6;}
+
+/* ---------- Code ---------- */
+code, pre{
+  direction:ltr;text-align:left;
+  font-family:'Consolas','Courier New',monospace;
+}
+code{
+  background:#eef2f8;border:1px solid #d6e0ef;
+  border-radius:6px;padding:2px 7px;font-size:15px;
+  unicode-bidi:isolate;
+}
+pre{
+  background:#0c2647;color:#e8f0ff;
+  border-radius:12px;padding:16px 18px;
+  overflow-x:auto;font-size:15.5px;line-height:1.7;
+  margin-block-start:10px;
+}
+pre code{background:none;border:none;color:inherit;padding:0;}
+
+/* ---------- Diagram ---------- */
+.diagram{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:8px;margin-block:18px;
+}
+.diagram .node{
+  background:var(--teal-soft);border:2px solid var(--teal);color:var(--teal);
+  border-radius:12px;padding:10px 16px;font-weight:700;text-align:center;font-size:15px;
+}
+.diagram .node.hot{background:var(--orange-soft);border-color:var(--orange);color:var(--orange);}
+.diagram .arrow{font-size:24px;color:var(--muted);}
+
+/* ---------- Footnote list ---------- */
+sup{color:var(--purple);font-weight:900;}
+
+/* ---------- Celebration ---------- */
+section.party{
+  background:linear-gradient(135deg,var(--teal) 0%,#0a6e64 100%);
+  color:#fff;border-radius:var(--radius);
+  padding:30px 26px;margin-block-start:34px;text-align:center;
+}
+section.party h2{font-size:26px;font-weight:900;}
+section.party ul{
+  text-align:right;max-width:560px;margin-inline:auto;margin-block-start:14px;
+  padding-inline-start:24px;
+}
+section.party li{margin-block:6px;}
+
+footer{
+  text-align:center;margin-block-start:30px;color:var(--muted);font-size:13.5px;
+}
+footer .sig{opacity:.65;font-size:12.5px;margin-block-start:6px;}
+
+@media (max-width:700px){
+  section.stage{padding:20px 16px;}
+  .step{flex-direction:row;}
+  body{font-size:17px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="lobster">🦞🤖</div>
+  <h1>آموزش <span dir="ltr">OpenClaw</span> از صفرِ صفر</h1>
+  <p class="promise">قراره چی یاد بگیریم؟ می‌خواهیم یک «دستیار هوش مصنوعی شخصی» روی کامپیوتر خودمان راه بیندازیم!</p>
+  <p class="sub">این آموزش قدم‌به‌قدم است؛ یعنی حتی اگر تا حالا اسم این چیزها به گوشَت نخورده باشد، اگر مرحله‌ها را به ترتیب انجام بدهی، آخرش یک ربات باهوش داری که با تو حرف می‌زند و برایت کار انجام می‌دهد. 🚀</p>
+</header>
+
+<div class="wrap">
+
+<!-- ================= INTRO ================= -->
+<div class="intro-box">
+  <h2>📌 قبل از شروع، این‌ها را بدان</h2>
+  <ul>
+    <li>در این آموزش فرض کرده‌ایم کامپیوترت <b>ویندوز ۱۰ یا ۱۱</b> دارد. (اگر مک یا لینوکس داری، دستورش کمی فرق می‌کند؛ در پاورقی گفته‌ایم.)</li>
+    <li>فرض کرده‌ایم فقط بلدی کامپیوتر را روشن کنی، کلیک کنی و تایپ کنی — همین کافی است!</li>
+    <li>بعضی مرحله‌ها (مثل گرفتن «کلید <span dir="ltr">API</span>») به حساب کاربری یا پرداخت نیاز دارند؛ آن‌ها را <b>حتماً با کمک یک بزرگ‌تر</b> انجام بده. ⚠️</li>
+    <li>اطلاعات این آموزش در تیرِ ۱۴۰۵ (ژوئیهٔ ۲۰۲۶) از سایت رسمی <span dir="ltr">openclaw.ai</span> برداشته شده. این برنامه سریع به‌روز می‌شود، پس ممکن است بعضی جزئیات کمی فرق کرده باشند.</li>
+  </ul>
+</div>
+
+<!-- ================= TOC ================= -->
+<nav class="toc">
+  <h2>🗺️ فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s1">مرحله ۱ — <span dir="ltr">OpenClaw</span> اصلاً چی هست؟</a></li>
+    <li><a href="#s2">مرحله ۲ — پیش‌نیازها: چه چیزهایی لازم داریم؟</a></li>
+    <li><a href="#s3">مرحله ۳ — آشنایی با «پنجرهٔ دستور» (<span dir="ltr">PowerShell</span>)</a></li>
+    <li><a href="#s4">مرحله ۴ — نصب <span dir="ltr">OpenClaw</span></a></li>
+    <li><a href="#s5">مرحله ۵ — راه‌اندازی اولیه و دادن کلید <span dir="ltr">API</span></a></li>
+    <li><a href="#s6">مرحله ۶ — بررسی اینکه همه‌چیز روشن است</a></li>
+    <li><a href="#s7">مرحله ۷ — اولین گفت‌وگو با دستیارت! 🎈</a></li>
+    <li><a href="#s8">مرحله ۸ — (اختیاری) وصل کردن به تلگرام</a></li>
+    <li><a href="#s9">مرحله ۹ — نکات امنیتی خیلی مهم</a></li>
+    <li><a href="#s10">🔧 رفع اشکال — اگر چیزی کار نکرد</a></li>
+  </ol>
+</nav>
+
+<!-- ================= STAGE 1 ================= -->
+<section class="stage" id="s1">
+  <span class="stage-chip">مرحله ۱ از ۱۰</span>
+  <div class="progress"><span style="width:10%"></span></div>
+  <h2><span class="badge">۱</span> <span dir="ltr">OpenClaw</span> اصلاً چی هست؟ 🦞</h2>
+
+  <p style="margin-block-start:12px">
+    تصور کن یک <b>دوست ربات خیلی باهوش</b> داری که داخل کامپیوترت زندگی می‌کند.
+    به او پیام می‌دهی: «ایمیل‌هایم را مرتب کن»، «برایم یادآوری بگذار»، «این سایت را برایم بخوان» —
+    و او واقعاً این کارها را <b>انجام می‌دهد</b>، نه اینکه فقط جواب بدهد.
+    <span dir="ltr">OpenClaw</span> (بخوان: اوپِن‌کلاو، یعنی «چنگالِ باز» 🦞) دقیقاً همین است:
+    یک برنامهٔ <b>رایگان و متن‌باز</b><sup>۱</sup> که یک <b>دستیار هوش مصنوعی</b><sup>۲</sup> شخصی برایت می‌سازد.
+  </p>
+
+  <div class="box why">
+    <span class="box-title">🤔 چه فرقی با چت‌بات‌های معمولی دارد؟</span>
+    چت‌بات‌های معمولی مثل یک دوستِ پشتِ تلفن هستند: فقط <b>حرف</b> می‌زنند.
+    اما <span dir="ltr">OpenClaw</span> مثل دوستی است که <b>کنار کامپیوترت نشسته</b>:
+    هم حرف می‌زند، هم دست دارد! می‌تواند فایل باز کند، در اینترنت بگردد و کارها را خودش انجام بدهد.
+  </div>
+
+  <h3>نقشهٔ کلی: این سیستم چطور کار می‌کند؟</h3>
+  <div class="diagram">
+    <div class="node">📱 تو (از تلگرام، واتساپ یا مرورگر)</div>
+    <div class="arrow">⬅️</div>
+    <div class="node hot">🦞 OpenClaw روی کامپیوتر تو</div>
+    <div class="arrow">⬅️</div>
+    <div class="node">🧠 مغز هوش مصنوعی (مثلاً Claude یا GPT)</div>
+  </div>
+  <p>یعنی: تو پیام می‌دهی ← <span dir="ltr">OpenClaw</span> پیام را می‌گیرد ← از یک «مغز» هوش مصنوعی کمک می‌گیرد ← بعد کار را روی کامپیوترت انجام می‌دهد و جوابت را می‌فرستد.</p>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی‌های این بخش</span>
+    <b>۱. متن‌باز (<span dir="ltr">Open Source</span>):</b> یعنی «دستور پختِ» برنامه برای همه آزاد است؛ هرکس می‌تواند ببیند داخلش چه خبر است و آن را بهتر کند — مثل دستور کیکی که سرآشپز آن را مخفی نکرده.
+    <br>
+    <b>۲. هوش مصنوعی (<span dir="ltr">AI</span>):</b> برنامه‌ای کامپیوتری که می‌تواند مثل آدم‌ها متن بفهمد، جواب بدهد و تصمیم بگیرد.
+  </div>
+</section>
+
+<!-- ================= STAGE 2 ================= -->
+<section class="stage" id="s2">
+  <span class="stage-chip">مرحله ۲ از ۱۰</span>
+  <div class="progress"><span style="width:20%"></span></div>
+  <h2><span class="badge">۲</span> پیش‌نیازها: چه چیزهایی لازم داریم؟ 🎒</h2>
+
+  <p style="margin-block-start:12px">مثل درست‌کردن کیک که اول مواد لازم را روی میز می‌چینیم، ما هم اول وسایلمان را آماده می‌کنیم:</p>
+
+  <div class="step"><span class="num">۱</span><p><b>یک کامپیوتر</b> با ویندوز ۱۰ یا ۱۱ (یا مک/لینوکس) که به تو اجازهٔ نصب برنامه بدهد.</p></div>
+  <div class="step"><span class="num">۲</span><p><b>اینترنت وصل و پایدار</b> — چون هم برای نصب و هم برای حرف‌زدن با «مغز» هوش مصنوعی لازم است.</p></div>
+  <div class="step"><span class="num">۳</span><p><b>یک کلید <span dir="ltr">API</span></b><sup>۳</sup> از یک شرکت هوش مصنوعی (مثل <span dir="ltr">Anthropic</span> سازندهٔ <span dir="ltr">Claude</span>، یا <span dir="ltr">OpenAI</span> سازندهٔ <span dir="ltr">GPT</span>). این را در مرحله ۵ لازم داریم.</p></div>
+  <div class="step"><span class="num">۴</span><p><b>حدود ۳۰ دقیقه وقت</b> و کمی حوصله. 😊</p></div>
+
+  <div class="box warn">
+    <span class="box-title">⚠️ مواظب باش — فقط با کمک یک بزرگ‌تر!</span>
+    گرفتن کلید <span dir="ltr">API</span> معمولاً به <b>حساب کاربری، ایمیل و گاهی کارت بانکی</b> نیاز دارد و استفاده از آن ممکن است <b>هزینه</b> داشته باشد (مثل شارژ سیم‌کارت که با مصرف کم می‌شود). این بخش را حتماً با پدر، مادر یا یک بزرگ‌ترِ مطمئن انجام بده.
+  </div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۳. کلید <span dir="ltr">API</span> (<span dir="ltr">API Key</span>):</b> یک رمز طولانی مثل <code>sk-abc123...</code> که مثل «کارت عضویت باشگاه» است: با نشان‌دادنش، شرکت هوش مصنوعی می‌فهمد تو اجازهٔ استفاده داری. آن را مثل رمز عبور، <b>به هیچ‌کس نگو</b> و جایی عمومی ننویس.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ خودت را امتحان کن</span>
+    الان باید بدانی: کامپیوترت روشن می‌شود؟ اینترنت داری؟ یک بزرگ‌تر برای مرحلهٔ کلید <span dir="ltr">API</span> کنارت هست؟ اگر هر سه «بله» است، برو مرحلهٔ بعد!
+  </div>
+</section>
+
+<!-- ================= STAGE 3 ================= -->
+<section class="stage" id="s3">
+  <span class="stage-chip">مرحله ۳ از ۱۰</span>
+  <div class="progress"><span style="width:30%"></span></div>
+  <h2><span class="badge">۳</span> آشنایی با «پنجرهٔ دستور» 💻</h2>
+
+  <p style="margin-block-start:12px">
+    برای نصب <span dir="ltr">OpenClaw</span> از چیزی به اسم <b><span dir="ltr">PowerShell</span></b><sup>۴</sup> استفاده می‌کنیم.
+    نترس! این فقط یک پنجرهٔ ساده است که به جای کلیک‌کردن، <b>جمله‌های دستوری تایپ می‌کنی</b> و کامپیوتر انجامشان می‌دهد —
+    مثل اینکه به جای اشاره‌کردن به غذا در رستوران، اسمش را بلند بگویی!
+  </p>
+
+  <h3>باز کردن PowerShell در ویندوز</h3>
+  <div class="step"><span class="num">۱</span><p>روی دکمهٔ <b>استارت</b> (علامت ویندوز ⊞ پایین صفحه) کلیک کن.</p></div>
+  <div class="step"><span class="num">۲</span><p>تایپ کن: <code>powershell</code></p></div>
+  <div class="step"><span class="num">۳</span><p>روی نتیجه‌ای که نوشته <span dir="ltr">Windows PowerShell</span> <b>راست‌کلیک</b> کن.</p></div>
+  <div class="step"><span class="num">۴</span><p>گزینه‌ای شبیه به <span dir="ltr">«Run as administrator»</span> (اجرا به‌عنوان مدیر) را انتخاب کن.</p></div>
+  <div class="step"><span class="num">۵</span><p>اگر پنجره‌ای پرسید «اجازه می‌دهی؟»، روی <span dir="ltr">Yes</span> کلیک کن.</p></div>
+
+  <div class="box tip">
+    <span class="box-title">💡 نکته</span>
+    یک پنجرهٔ آبی یا مشکی باز می‌شود که داخلش می‌شود تایپ کرد. همین است! قرار نیست چیز ترسناکی ببینی. 😄
+  </div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۴. <span dir="ltr">PowerShell</span> / ترمینال:</b> برنامه‌ای که در آن «دستور»<sup>۵</sup> تایپ می‌کنیم. در مک و لینوکس اسمش <span dir="ltr">Terminal</span> است.
+    <br>
+    <b>۵. دستور (<span dir="ltr">Command</span>):</b> جمله‌ای که کامپیوتر زبانش را می‌فهمد؛ آن را تایپ می‌کنی و کلید <span dir="ltr">Enter</span> را می‌زنی تا اجرا شود.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ ایست بازرسی</span>
+    الان باید یک پنجرهٔ <span dir="ltr">PowerShell</span> باز جلویت باشد که یک خط چشمک‌زن دارد و منتظر تایپ توست. اگر باز نشد، برو بخش «رفع اشکال».
+  </div>
+</section>
+
+<!-- ================= STAGE 4 ================= -->
+<section class="stage" id="s4">
+  <span class="stage-chip">مرحله ۴ از ۱۰</span>
+  <div class="progress"><span style="width:40%"></span></div>
+  <h2><span class="badge">۴</span> نصب <span dir="ltr">OpenClaw</span> 📦</h2>
+
+  <p style="margin-block-start:12px">حالا جادوی اصلی! فقط <b>یک خط</b> باید تایپ کنی و بقیه‌اش خودکار انجام می‌شود — نصب‌کننده حتی برنامهٔ کمکی <span dir="ltr">Node.js</span><sup>۶</sup> را هم خودش برایت نصب می‌کند.</p>
+
+  <h3>در ویندوز (داخل PowerShell)</h3>
+  <div class="step"><span class="num">۱</span><p>این دستور را <b>عیناً</b> تایپ کن (یا کپی کن و با راست‌کلیک داخل پنجره بچسبان):</p></div>
+  <pre><code>iwr -useb https://openclaw.ai/install.ps1 | iex</code></pre>
+  <div class="step"><span class="num">۲</span><p>کلید <span dir="ltr">Enter</span> را بزن.</p></div>
+  <div class="step"><span class="num">۳</span><p>صبر کن تا نوشته‌ها تمام شوند. (ممکن است چند دقیقه طول بکشد — این عادی است، دارد برنامه را دانلود و نصب می‌کند.)</p></div>
+
+  <div class="box tip">
+    <span class="box-title">💡 اگر مک یا لینوکس داری</span>
+    به‌جای دستور بالا، در <span dir="ltr">Terminal</span> این را بزن:
+    <pre style="margin-block-start:8px"><code>curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+    در مک ممکن است بار اول رمز کاربرِ مدیر (بزرگ‌ترِ خانه!) لازم شود.
+  </div>
+
+  <div class="box why">
+    <span class="box-title">🤔 چرا این دستور؟</span>
+    این خط به کامپیوتر می‌گوید: «برو از سایت رسمی <span dir="ltr">openclaw.ai</span> برنامهٔ نصب را بیاور و اجرایش کن.» مثل اینکه به پیک بگویی: برو از فلان مغازهٔ مشخص، فلان بسته را بگیر و بیاور.
+  </div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۶. <span dir="ltr">Node.js</span>:</b> یک «موتور» رایگان که خیلی از برنامه‌ها برای روشن‌شدن به آن نیاز دارند — مثل باتری برای اسباب‌بازی. خوشبختانه نصب‌کنندهٔ <span dir="ltr">OpenClaw</span> خودش آن را برایت آماده می‌کند.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ ایست بازرسی</span>
+    وقتی نصب تمام شد، تایپ کن <code>openclaw --version</code> و <span dir="ltr">Enter</span> بزن. باید یک شمارهٔ نسخه (چیزی شبیه چند عدد با نقطه) ببینی. اگر خطای «شناخته نشد» دیدی، پنجره را ببند، دوباره باز کن و همین را امتحان کن. باز هم نشد؟ برو «رفع اشکال».
+  </div>
+</section>
+
+<!-- ================= STAGE 5 ================= -->
+<section class="stage" id="s5">
+  <span class="stage-chip">مرحله ۵ از ۱۰</span>
+  <div class="progress"><span style="width:50%"></span></div>
+  <h2><span class="badge">۵</span> راه‌اندازی اولیه و دادن کلید <span dir="ltr">API</span> 🔑</h2>
+
+  <p style="margin-block-start:12px">
+    حالا باید به دستیارمان «جان» بدهیم! این کار با یک <b>راهنمای پرسش‌وپاسخ</b> انجام می‌شود که خودِ برنامه قدم‌به‌قدم از تو سؤال می‌پرسد. این بخش را <b>کنار بزرگ‌ترت</b> انجام بده چون کلید <span dir="ltr">API</span> لازم است.
+  </p>
+
+  <div class="step"><span class="num">۱</span><p>در همان پنجره، این دستور را تایپ کن و <span dir="ltr">Enter</span> بزن:</p></div>
+  <pre><code>openclaw onboard --install-daemon</code></pre>
+  <div class="step"><span class="num">۲</span><p>راهنما از تو می‌پرسد کدام «مغز» هوش مصنوعی را می‌خواهی (مثلاً <span dir="ltr">Anthropic</span> یا <span dir="ltr">OpenAI</span>). با کلیدهای بالا/پایین یکی را انتخاب کن و <span dir="ltr">Enter</span> بزن.</p></div>
+  <div class="step"><span class="num">۳</span><p>وقتی کلید <span dir="ltr">API</span> را خواست، بزرگ‌ترت آن را از سایت همان شرکت گرفته و اینجا می‌چسباند.</p></div>
+  <div class="step"><span class="num">۴</span><p>بقیهٔ سؤال‌ها را با <span dir="ltr">Enter</span> رد کن تا از تنظیمات پیشنهادیِ خودش استفاده شود. (بعداً هر وقت خواستی می‌توانی با دستور <code>openclaw configure</code> تغییرشان بدهی.)</p></div>
+
+  <div class="box tip">
+    <span class="box-title">💡 نکته: «daemon» چیست؟</span>
+    آن تکهٔ <code>--install-daemon</code> یعنی: «این دستیار را طوری نصب کن که <b>همیشه در پس‌زمینه بیدار</b> باشد» — مثل نگهبانی که حتی وقتی تو خوابی، سر پستش است. اسم فنی‌اش «دیمِن»<sup>۷</sup> است.
+  </div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۷. دیمن (<span dir="ltr">Daemon</span>):</b> برنامه‌ای که بی‌سروصدا در پس‌زمینهٔ کامپیوتر کار می‌کند، بدون اینکه پنجره‌ای ببینی.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ ایست بازرسی</span>
+    راهنما باید بدون پیغام خطای قرمز تمام شده باشد و پیامی شبیه «تمام شد / آماده است» دیده باشی. اگر وسطش گیر کردی، نگران نباش: دوباره <code>openclaw onboard</code> را اجرا کن؛ از همان‌جا ادامه می‌دهد.
+  </div>
+</section>
+
+<!-- ================= STAGE 6 ================= -->
+<section class="stage" id="s6">
+  <span class="stage-chip">مرحله ۶ از ۱۰</span>
+  <div class="progress"><span style="width:60%"></span></div>
+  <h2><span class="badge">۶</span> بررسی اینکه همه‌چیز روشن است 🔍</h2>
+
+  <p style="margin-block-start:12px">قبل از اولین گفت‌وگو، مطمئن شویم «قلب» سیستم می‌تپد! قلبِ <span dir="ltr">OpenClaw</span> چیزی است به اسم <b>گِیت‌وی</b><sup>۸</sup>.</p>
+
+  <div class="step"><span class="num">۱</span><p>این دستور را تایپ کن و <span dir="ltr">Enter</span> بزن:</p></div>
+  <pre><code>openclaw gateway status</code></pre>
+  <div class="step"><span class="num">۲</span><p>در جواب، دنبال کلمه‌ای شبیه <span dir="ltr">running</span> (در حال اجرا) و عددی مثل <span dir="ltr">18789</span> بگرد.</p></div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۸. گیت‌وی (<span dir="ltr">Gateway</span>):</b> یعنی «دروازه». همان بخشی از <span dir="ltr">OpenClaw</span> که همهٔ پیام‌ها از آن رد می‌شوند — مثل نگهبانِ درِ مدرسه که همه از جلوی او وارد و خارج می‌شوند.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ ایست بازرسی</span>
+    اگر کلمهٔ <span dir="ltr">running</span> را دیدی: عالی است، قلب می‌تپد! ❤️ اگر ندیدی، دستور <code>openclaw gateway start</code> را بزن و دوباره وضعیت را چک کن.
+  </div>
+</section>
+
+<!-- ================= STAGE 7 ================= -->
+<section class="stage" id="s7">
+  <span class="stage-chip">مرحله ۷ از ۱۰</span>
+  <div class="progress"><span style="width:70%"></span></div>
+  <h2><span class="badge">۷</span> اولین گفت‌وگو با دستیارت! 🎈</h2>
+
+  <p style="margin-block-start:12px">لحظهٔ هیجان‌انگیز رسید! <span dir="ltr">OpenClaw</span> یک صفحهٔ مخصوص گفت‌وگو به اسم <b>داشبورد</b><sup>۹</sup> دارد که در مرورگرت باز می‌شود.</p>
+
+  <div class="step"><span class="num">۱</span><p>این دستور را تایپ کن و <span dir="ltr">Enter</span> بزن:</p></div>
+  <pre><code>openclaw dashboard</code></pre>
+  <div class="step"><span class="num">۲</span><p>صبر کن تا مرورگرت (مثل کروم یا اِج) خودش باز شود و صفحهٔ <span dir="ltr">OpenClaw</span> را نشان بدهد.</p></div>
+  <div class="step"><span class="num">۳</span><p>در جعبهٔ گفت‌وگو، اولین پیامت را بنویس. مثلاً: «سلام! تو کی هستی و چه کارهایی بلدی؟»</p></div>
+  <div class="step"><span class="num">۴</span><p><span dir="ltr">Enter</span> بزن و جوابش را بخوان! 🥳</p></div>
+
+  <div class="box tip">
+    <span class="box-title">💡 چند ایدهٔ بامزه برای شروع</span>
+    «برای فردا ساعت ۵ یادآوری بگذار که به مادربزرگ زنگ بزنم» ·
+    «یک اسم بامزه برای خودت انتخاب کن» ·
+    «امروز هوای شهر ما چطور است؟»
+  </div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۹. داشبورد (<span dir="ltr">Dashboard</span>):</b> صفحهٔ فرمان و کنترل؛ مثل داشبورد ماشین که همهٔ دکمه‌ها و نشانگرها یک‌جا جلوی چشمت است.
+  </div>
+
+  <div class="box check">
+    <span class="box-title">✅ ایست بازرسی</span>
+    الان باید در مرورگر، جوابِ دستیارت را ببینی. اگر صفحه باز نشد یا جواب نیامد، برو بخش «رفع اشکال».
+  </div>
+</section>
+
+<!-- ================= STAGE 8 ================= -->
+<section class="stage" id="s8">
+  <span class="stage-chip">مرحله ۸ از ۱۰</span>
+  <div class="progress"><span style="width:80%"></span></div>
+  <h2><span class="badge">۸</span> (اختیاری) وصل کردن به تلگرام 📱</h2>
+
+  <p style="margin-block-start:12px">
+    قشنگ‌ترین بخش <span dir="ltr">OpenClaw</span> این است که لازم نیست پشت کامپیوتر باشی! می‌توانی از <b>گوشی‌ات</b> و از داخل تلگرام (یا واتساپ، دیسکورد و…) با دستیارت حرف بزنی. طبق راهنمای رسمی، ساده‌ترین راه برای شروع، <b>تلگرام</b> است، چون فقط یک «توکنِ ربات»<sup>۱۰</sup> می‌خواهد.
+  </p>
+
+  <p style="margin-block-start:10px">مسیر کلی این است (جزئیات دقیق در راهنمای رسمی آمده):</p>
+  <div class="step"><span class="num">۱</span><p>در تلگرام، ربات رسمی <span dir="ltr">@BotFather</span> را پیدا کن — این ربات، «کارخانهٔ ربات‌سازی» تلگرام است.</p></div>
+  <div class="step"><span class="num">۲</span><p>به او دستور <code>/newbot</code> را بفرست و اسمی برای ربات خودت انتخاب کن.</p></div>
+  <div class="step"><span class="num">۳</span><p><span dir="ltr">BotFather</span> یک «توکن» (رمز طولانی) به تو می‌دهد؛ آن را کپی کن و به کسی نده.</p></div>
+  <div class="step"><span class="num">۴</span><p>در کامپیوتر، دستور <code>openclaw configure</code> را بزن و بخش کانال‌ها (<span dir="ltr">Channels</span>)، گزینهٔ تلگرام را انتخاب کن و توکن را بچسبان.</p></div>
+  <div class="step"><span class="num">۵</span><p>حالا در تلگرام به ربات خودت پیام بده — دستیارت جواب می‌دهد! 🤯</p></div>
+
+  <div class="box foot">
+    <span class="box-title">📖 پاورقی</span>
+    <b>۱۰. توکن (<span dir="ltr">Token</span>):</b> یک رمز طولانی که مثل «کلیدِ درِ خانهٔ ربات» است؛ هرکس آن را داشته باشد می‌تواند ربات را کنترل کند. پس مخفی نگهش دار!
+  </div>
+
+  <div class="box tip">
+    <span class="box-title">💡 نکته</span>
+    ممکن است نام دقیق منوها در نسخه‌های جدید کمی فرق کند. اگر گم شدی، راهنمای رسمی تلگرامِ <span dir="ltr">OpenClaw</span> در این نشانی است: <code>docs.openclaw.ai/channels/telegram</code> (راهنمای رسمی حتی ترجمهٔ فارسی هم دارد!).
+  </div>
+</section>
+
+<!-- ================= STAGE 9 ================= -->
+<section class="stage" id="s9">
+  <span class="stage-chip">مرحله ۹ از ۱۰</span>
+  <div class="progress"><span style="width:90%"></span></div>
+  <h2><span class="badge">۹</span> نکات امنیتی خیلی مهم 🛡️</h2>
+
+  <p style="margin-block-start:12px">
+    <span dir="ltr">OpenClaw</span> قدرتمند است — و هر چیز قدرتمندی، قانون‌های ایمنی دارد. مثل دوچرخه که بدون کلاه ایمنی سوارش نمی‌شویم!
+  </p>
+
+  <div class="box warn">
+    <span class="box-title">⚠️ مواظب باش — این ۵ قانون را همیشه رعایت کن</span>
+    <b>۱)</b> کلید <span dir="ltr">API</span> و توکن‌ها را <b>هرگز</b> برای کسی نفرست و در گروه‌ها ننویس.<br>
+    <b>۲)</b> این دستیار به فایل‌های کامپیوترت دسترسی دارد؛ پس فقط روی کامپیوتری نصبش کن که <b>بزرگ‌ترها اجازه داده‌اند</b>.<br>
+    <b>۳)</b> در تنظیمات، فقط به <b>شمارهٔ خودت</b> اجازهٔ پیام‌دادن به ربات را بده (به این کار «جفت‌سازی» یا <span dir="ltr">pairing</span> می‌گویند) تا غریبه‌ها نتوانند به ربات تو دستور بدهند.<br>
+    <b>۴)</b> «مهارت»ها (<span dir="ltr">Skills</span>) و افزونه‌ها را فقط از منابع رسمی و شناخته‌شده نصب کن — افزونهٔ ناشناس مثل آب‌نباتِ آدم غریبه است!<br>
+    <b>۵)</b> اگر دستیار خواست کاری مهم انجام دهد (خرید، ارسال ایمیل، پاک‌کردن فایل)، اول خودت بررسی کن، بعد اجازه بده.
+  </div>
+
+  <div class="box why">
+    <span class="box-title">🤔 چرا این‌قدر سخت‌گیری؟</span>
+    چون این ربات «دست» دارد! همان‌طور که سوئیچ ماشین را به هرکسی نمی‌دهیم، کنترل کامپیوترمان را هم بی‌حساب‌وکتاب به کسی — حتی یک ربات — نمی‌سپاریم.
+  </div>
+</section>
+
+<!-- ================= STAGE 10: TROUBLESHOOT ================= -->
+<section class="stage" id="s10">
+  <span class="stage-chip">مرحله ۱۰ از ۱۰</span>
+  <div class="progress"><span style="width:100%"></span></div>
+  <h2><span class="badge">🔧</span> رفع اشکال — اگر چیزی کار نکرد</h2>
+
+  <div class="box fix">
+    <span class="box-title">😕 مشکل ۱: می‌نویسد <span dir="ltr">openclaw is not recognized</span> (شناخته نشد)</span>
+    <b>علت:</b> پنجرهٔ <span dir="ltr">PowerShell</span> هنوز از نصب جدید خبر ندارد.<br>
+    <b>راه‌حل:</b> پنجره را کامل ببند، یک پنجرهٔ جدید باز کن و دوباره امتحان کن. اگر نشد، کامپیوتر را یک‌بار خاموش و روشن کن.
+  </div>
+
+  <div class="box fix">
+    <span class="box-title">😕 مشکل ۲: موقع نصب، خطای قرمز درباره اینترنت یا دانلود می‌دهد</span>
+    <b>علت:</b> اینترنت قطع شده یا سایت در دسترس نیست.<br>
+    <b>راه‌حل:</b> اول مطمئن شو با مرورگر می‌توانی سایت باز کنی. بعد دستور نصب را دوباره اجرا کن. گاهی فقط باید چند دقیقه بعد دوباره امتحان کنی.
+  </div>
+
+  <div class="box fix">
+    <span class="box-title">😕 مشکل ۳: دستیار جواب نمی‌دهد یا خطای کلید <span dir="ltr">API</span> می‌دهد</span>
+    <b>علت:</b> کلید اشتباه وارد شده، یا اعتبارش تمام شده است.<br>
+    <b>راه‌حل:</b> با کمک بزرگ‌ترت، در سایت شرکت هوش مصنوعی وضعیت کلید را چک کنید؛ بعد با دستور <code>openclaw configure</code> کلید درست را دوباره وارد کن.
+  </div>
+
+  <div class="box fix">
+    <span class="box-title">😕 مشکل ۴: دستور <code>openclaw dashboard</code> صفحه‌ای باز نمی‌کند</span>
+    <b>علت:</b> «گیت‌وی» خاموش است.<br>
+    <b>راه‌حل:</b> اول <code>openclaw gateway start</code> را بزن، بعد دوباره <code>openclaw dashboard</code> را امتحان کن.</div>
+
+  <div class="box fix">
+    <span class="box-title">😕 مشکل ۵: وسط راه‌اندازی (<span dir="ltr">onboard</span>) گیر کردم یا اشتباه انتخاب کردم</span>
+    <b>علت:</b> اشکالی ندارد؛ برای همه پیش می‌آید!<br>
+    <b>راه‌حل:</b> دوباره <code>openclaw onboard</code> را اجرا کن، یا با <code>openclaw configure</code> فقط همان بخش را درست کن.
+  </div>
+
+  <div class="box tip">
+    <span class="box-title">💡 هنوز گیر کرده‌ای؟</span>
+    راهنمای رسمی در <code>docs.openclaw.ai</code> (با ترجمهٔ فارسی) و انجمن کاربران در دیسکورد هست. سؤال‌پرسیدن عیب نیست — همهٔ حرفه‌ای‌ها هم سؤال می‌پرسند!
+  </div>
+</section>
+
+<!-- ================= PARTY ================= -->
+<section class="party">
+  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+  <ul>
+    <li>✅ توضیح بدهی <span dir="ltr">OpenClaw</span> چیست و چه فرقی با چت‌بات معمولی دارد</li>
+    <li>✅ پنجرهٔ <span dir="ltr">PowerShell</span> را باز کنی و دستور تایپ کنی</li>
+    <li>✅ <span dir="ltr">OpenClaw</span> را با یک خط دستور نصب کنی</li>
+    <li>✅ با راهنمای <span dir="ltr">onboard</span> دستیار را راه بیندازی و کلید <span dir="ltr">API</span> بدهی</li>
+    <li>✅ سلامتی «گیت‌وی» را چک کنی و در داشبورد گفت‌وگو کنی</li>
+    <li>✅ (اگر خواستی) دستیارت را به تلگرام وصل کنی</li>
+    <li>✅ و از همه مهم‌تر: قانون‌های ایمنی را رعایت کنی 🛡️</li>
+  </ul>
+  <p style="margin-block-start:16px">حالا یک دستیار هوش مصنوعیِ واقعی داری که مال خودِ توست. آفرین به تو! 🦞💙</p>
+</section>
+
+<footer>
+  <p>این آموزش بر اساس اطلاعات سایت رسمی <span dir="ltr">openclaw.ai</span> در تیر ۱۴۰۵ / ژوئیهٔ ۲۰۲۶ تهیه شده است.</p>
+  <p class="sig">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</p>
+</footer>
+
+</div>
+</body>
+</html>

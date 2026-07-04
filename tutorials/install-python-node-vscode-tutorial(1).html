@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<!-- ================================================
+     Author / امضا: Mehdi Rezghi — مهدی رزقی
+     این اثر توسط Mehdi Rezghi طراحی و تدوین شده است.
+     ================================================ -->
+<title>آموزش نصب پایتون، Node.js و VS Code با پاورشل</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1e3a8a; --blue2:#2563eb; --sky:#e0f2fe;
+  --orange:#f59e0b; --green:#16a34a; --red:#dc2626;
+  --purple:#7c3aed; --bg:#f8fafc; --card:#ffffff;
+  --ink:#1f2937; --soft:#64748b;
+}
+*{box-sizing:border-box}
+body{
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  direction:rtl; text-align:right;
+  background:var(--bg); color:var(--ink);
+  font-size:17.5px; line-height:1.95; margin:0; padding:0;
+}
+.wrap{max-width:860px; margin-inline:auto; padding:16px}
+/* ---------- Hero ---------- */
+header{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--purple) 100%);
+  color:#fff; padding:44px 20px 34px; text-align:center;
+  border-radius:0 0 32px 32px;
+}
+header .big{font-size:56px; margin-block-end:8px}
+header h1{font-size:1.7rem; font-weight:900; margin:0 0 10px}
+header p{margin:0; opacity:.95; font-size:1.02rem}
+.pill{
+  display:inline-block; background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:999px; padding:4px 16px; margin:14px 4px 0; font-size:.9rem;
+}
+/* ---------- TOC ---------- */
+nav{
+  background:var(--card); border-radius:20px; padding:18px 22px;
+  margin-block-start:-20px; box-shadow:0 6px 20px rgba(30,58,138,.12);
+}
+nav h2{margin:0 0 8px; font-size:1.05rem; color:var(--blue)}
+nav ol{margin:0; padding-inline-start:22px}
+nav a{color:var(--blue2); text-decoration:none; font-weight:700}
+nav a:hover{text-decoration:underline}
+/* ---------- Stage cards ---------- */
+section.stage{
+  background:var(--card); border-radius:22px; padding:24px 24px 18px;
+  margin-block-start:26px; box-shadow:0 4px 16px rgba(15,23,42,.08);
+  border-inline-start:8px solid var(--blue2);
+  position:relative;
+}
+.stagehead{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-block-end:6px}
+.num{
+  min-width:52px; height:52px; border-radius:16px;
+  background:var(--blue2); color:#fff; font-size:1.5rem; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 10px rgba(37,99,235,.35);
+}
+section.stage h2{margin:0; font-size:1.28rem; font-weight:900; color:var(--blue)}
+.chip{
+  margin-inline-start:auto; background:var(--sky); color:var(--blue);
+  border-radius:999px; padding:2px 14px; font-size:.8rem; font-weight:700;
+}
+.bar{height:8px; background:#e2e8f0; border-radius:99px; overflow:hidden; margin:6px 0 16px}
+.bar i{display:block; height:100%; background:linear-gradient(90deg,var(--blue2),var(--purple))}
+/* ---------- Steps ---------- */
+.step{
+  display:flex; gap:12px; align-items:flex-start;
+  background:#f1f5f9; border-radius:14px; padding:12px 14px; margin:10px 0;
+}
+.step b.sn{
+  flex:none; background:var(--purple); color:#fff; border-radius:10px;
+  width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:.95rem;
+}
+/* ---------- Boxes ---------- */
+.box{border-radius:14px; padding:12px 16px; margin:12px 0; font-size:.98rem}
+.tip{background:#ecfdf5; border-inline-start:6px solid var(--green)}
+.warn{background:#fff7ed; border-inline-start:6px solid var(--orange)}
+.foot{background:#eef2ff; border-inline-start:6px solid var(--purple); font-size:.93rem}
+.check{background:#f0fdf4; border:2px dashed var(--green); border-radius:16px; padding:14px 18px; margin:16px 0}
+.check b{color:var(--green)}
+.fix{background:#fef2f2; border-inline-start:6px solid var(--red)}
+.box .t{font-weight:900; display:block; margin-block-end:2px}
+/* ---------- Code ---------- */
+code, pre{
+  direction:ltr; text-align:left; unicode-bidi:isolate;
+  font-family:Consolas,'Courier New',monospace;
+}
+code{background:#1f2937; color:#a5f3fc; border-radius:6px; padding:2px 8px; font-size:.95rem}
+pre{
+  background:#0f172a; color:#e2e8f0; border-radius:14px;
+  padding:14px 18px; overflow-x:auto; font-size:1rem; line-height:1.7;
+  box-shadow:inset 0 0 0 1px #334155; margin:10px 0;
+}
+pre .ok{color:#86efac}
+/* ---------- Diagram ---------- */
+.flow{display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; margin:16px 0}
+.flow .fbox{
+  background:var(--sky); color:var(--blue); font-weight:800;
+  border-radius:14px; padding:10px 16px; text-align:center; font-size:.92rem;
+  border:2px solid #bae6fd;
+}
+.flow .arr{color:var(--purple); font-size:1.4rem; font-weight:900}
+/* ---------- Trouble table ---------- */
+details{
+  background:#fff; border:2px solid #fecaca; border-radius:14px;
+  padding:10px 16px; margin:10px 0;
+}
+summary{font-weight:800; color:var(--red); cursor:pointer}
+/* ---------- Finale ---------- */
+.finale{
+  background:linear-gradient(135deg,#16a34a,#059669); color:#fff;
+  border-radius:22px; padding:30px 24px; text-align:center; margin:30px 0;
+}
+.finale h2{font-size:1.5rem; margin:0 0 10px}
+.finale ul{display:inline-block; text-align:right; margin:10px 0 0}
+footer{color:var(--soft); text-align:center; font-size:.85rem; padding:20px}
+@media (max-width:700px){
+  body{font-size:16.5px}
+  .chip{margin-inline-start:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="big">🐍 🟢 💙</div>
+  <h1>نصب پایتون، Node.js و VS Code — فقط با چند دستور!</h1>
+  <p>قراره چی یاد بگیریم؟ می‌خواهیم سه ابزار مهم کدنویسی را بدون سرگردانی در سایت‌ها، فقط با تایپ چند دستور ساده در «پاورشل» نصب کنیم. از صفرِ صفر!</p>
+  <span class="pill">⏱ حدود ۲۰ تا ۳۰ دقیقه</span>
+  <span class="pill">🖥 ویندوز ۱۰ یا ۱۱</span>
+  <span class="pill">👧👦 مناسب مبتدی کامل</span>
+</header>
+
+<div class="wrap">
+
+<nav>
+  <h2>🗺 فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s1">این‌ها اصلاً چی هستند؟ (آشنایی)</a></li>
+    <li><a href="#s2">پیش‌نیازها — چی لازم داریم؟</a></li>
+    <li><a href="#s3">باز کردن پاورشل</a></li>
+    <li><a href="#s4">بررسی ابزار جادویی winget</a></li>
+    <li><a href="#s5">نصب پایتون 🐍</a></li>
+    <li><a href="#s6">نصب Node.js 🟢</a></li>
+    <li><a href="#s7">نصب VS Code 💙</a></li>
+    <li><a href="#s8">آزمایش نهایی و جشن 🎉</a></li>
+    <li><a href="#fix">🔧 رفع اشکال (اگر جایی گیر کردی)</a></li>
+  </ol>
+</nav>
+
+<!-- ================= Stage 1 ================= -->
+<section class="stage" id="s1">
+  <div class="stagehead"><div class="num">۱</div><h2>این‌ها اصلاً چی هستند؟</h2><span class="chip">مرحله ۱ از ۸</span></div>
+  <div class="bar"><i style="width:12%"></i></div>
+
+  <p>قبل از نصب، بیا با یک تشبیه ساده بفهمیم هر کدام چه‌کاره‌اند:</p>
+
+  <div class="step"><b class="sn">🐍</b><div><b>پایتون (Python)</b> — یک «زبان» برای حرف زدن با کامپیوتر است. همان‌طور که با فارسی با دوستت حرف می‌زنی، با پایتون به کامپیوتر می‌گویی چه کاری انجام بدهد.</div></div>
+  <div class="step"><b class="sn">🟢</b><div><b><span dir="ltr">Node.js</span></b> — یک «موتور» است که زبان دیگری به نام جاوااسکریپت<sup>۱</sup> را روی کامپیوترت اجرا می‌کند. مثل موتور ماشین که بنزین را به حرکت تبدیل می‌کند.</div></div>
+  <div class="step"><b class="sn">💙</b><div><b><span dir="ltr">VS Code</span></b> — یک «دفترچه‌ی مخصوص کدنویسی» است. جایی که کدهایت را می‌نویسی، رنگی می‌شوند و اشتباه‌هایت را گوشزد می‌کند.</div></div>
+  <div class="step"><b class="sn">⚡</b><div><b>پاورشل (PowerShell)</b> — «اتاق فرمان» ویندوز است. یک پنجره‌ی ساده که در آن به‌جای کلیک کردن، <b>دستور تایپ می‌کنی</b> و ویندوز اطاعت می‌کند!</div></div>
+
+  <div class="flow">
+    <div class="fbox">⚡ پاورشل<br>اتاق فرمان</div><div class="arr">←</div>
+    <div class="fbox">📦 winget<br>پیکِ نصب برنامه</div><div class="arr">←</div>
+    <div class="fbox">🐍 🟢 💙<br>سه ابزار ما نصب می‌شوند</div>
+  </div>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۱ — جاوااسکریپت چیست؟</span>
+  جاوااسکریپت (<span dir="ltr">JavaScript</span>) زبانی است که بیشتر سایت‌های اینترنت با آن ساخته می‌شوند. <span dir="ltr">Node.js</span> کاری می‌کند این زبان بیرون از مرورگر هم کار کند.</div>
+
+  <div class="box tip"><span class="t">💡 نکته</span>
+  چرا با پاورشل نصب می‌کنیم و نه با دانلود از سایت‌ها؟ چون سریع‌تر است، از سایت‌های تقلبی در امان می‌مانی، و همه‌چیز با یک خط دستور انجام می‌شود!</div>
+</section>
+
+<!-- ================= Stage 2 ================= -->
+<section class="stage" id="s2">
+  <div class="stagehead"><div class="num">۲</div><h2>پیش‌نیازها — چی لازم داریم؟</h2><span class="chip">مرحله ۲ از ۸</span></div>
+  <div class="bar"><i style="width:25%"></i></div>
+
+  <div class="step"><b class="sn">۱</b><div>یک کامپیوتر با <b>ویندوز ۱۰ یا ۱۱</b> (بیشتر کامپیوترهای امروزی همین‌طورند).</div></div>
+  <div class="step"><b class="sn">۲</b><div><b>اینترنت وصل</b> — چون برنامه‌ها از اینترنت دانلود می‌شوند.</div></div>
+  <div class="step"><b class="sn">۳</b><div>حدود <b>۲ گیگابایت فضای خالی</b> روی دیسک (تقریباً همه‌ی کامپیوترها دارند).</div></div>
+  <div class="step"><b class="sn">۴</b><div>کمی حوصله! 😊 هیچ دانش قبلی لازم نیست.</div></div>
+
+  <div class="box warn"><span class="t">⚠️ مواظب باش</span>
+  در طول نصب ممکن است پنجره‌ای باز شود و بپرسد «آیا اجازه می‌دهی این برنامه تغییراتی ایجاد کند؟»<sup>۲</sup> — این طبیعی است؛ روی <b>Yes</b> (بله) کلیک کن. اگر کامپیوتر مالِ خانواده است، بهتر است با اجازه‌ی یک بزرگ‌تر این کار را انجام بدهی.</div>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۲ — این پنجره‌ی سؤال چیست؟</span>
+  اسمش <span dir="ltr">UAC</span> است؛ نگهبان ویندوز! هر وقت برنامه‌ای بخواهد چیزی نصب کند، اول از تو اجازه می‌گیرد. چون خودمان دستور نصب را داده‌ایم، اجازه دادن اشکالی ندارد.</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> ویندوز داری؟ اینترنت وصل است؟ (یک سایت باز کن ببین بالا می‌آید.) اگر بله، برو مرحله‌ی بعد!</div>
+</section>
+
+<!-- ================= Stage 3 ================= -->
+<section class="stage" id="s3">
+  <div class="stagehead"><div class="num">۳</div><h2>باز کردن پاورشل ⚡</h2><span class="chip">مرحله ۳ از ۸</span></div>
+  <div class="bar"><i style="width:37%"></i></div>
+
+  <div class="step"><b class="sn">۱</b><div>روی صفحه‌کلید، دکمه‌ی <b>ویندوز</b> را فشار بده (دکمه‌ای با علامت پنجره ⊞، پایینِ سمت چپِ صفحه‌کلید، کنار <span dir="ltr">Alt</span>).</div></div>
+  <div class="step"><b class="sn">۲</b><div>حالا تایپ کن: <code>powershell</code> (لازم نیست جایی کلیک کنی؛ همین که تایپ کنی، ویندوز خودش جست‌وجو می‌کند.)</div></div>
+  <div class="step"><b class="sn">۳</b><div>در نتیجه‌ها، <b>Windows PowerShell</b> را می‌بینی. روی آن <b>یک بار کلیک</b> کن تا باز شود.</div></div>
+  <div class="step"><b class="sn">۴</b><div>یک پنجره‌ی آبی یا مشکی باز می‌شود که داخلش نوشته‌ای شبیه این است و یک مکان‌نمای چشمک‌زن دارد:</div></div>
+
+  <pre>PS C:\Users\Ali&gt; _</pre>
+
+  <div class="box tip"><span class="t">💡 نکته</span>
+  به‌جای «<span dir="ltr">Ali</span>» اسم کاربری کامپیوترِ خودت را می‌بینی. این خط یعنی: «پاورشل آماده است، دستورت را بگو!»</div>
+
+  <div class="box foot"><span class="t">📖 توضیح — چطور در پاورشل دستور بدهیم؟</span>
+  خیلی ساده: دستور را <b>تایپ</b> می‌کنی (یا کپی می‌کنی و با راست‌کلیک داخل پنجره، پیست می‌شود) و بعد دکمه‌ی <b>Enter</b> را می‌زنی. همین! Enter یعنی «اجرا کن».</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> پنجره‌ی پاورشل باز است و مکان‌نمای چشمک‌زن را می‌بینی؟ عالی است! این پنجره را تا آخر آموزش <b>باز نگه دار</b>.</div>
+</section>
+
+<!-- ================= Stage 4 ================= -->
+<section class="stage" id="s4">
+  <div class="stagehead"><div class="num">۴</div><h2>بررسی ابزار جادویی winget 📦</h2><span class="chip">مرحله ۴ از ۸</span></div>
+  <div class="bar"><i style="width:50%"></i></div>
+
+  <p><b><span dir="ltr">winget</span></b><sup>۳</sup> مثل یک «پیک فروشگاه» است: اسم برنامه را به او می‌گویی، خودش می‌رود از فروشگاه رسمی مایکروسافت آن را می‌آورد و نصب می‌کند. اول مطمئن شویم این پیک سرِ کارش هست:</p>
+
+  <div class="step"><b class="sn">۱</b><div>در پاورشل این دستور را تایپ کن و <b>Enter</b> بزن:</div></div>
+  <pre>winget --version</pre>
+  <div class="step"><b class="sn">۲</b><div>اگر جوابی شبیه این دیدی، همه‌چیز مرتب است:</div></div>
+  <pre><span class="ok">v1.7.10582</span></pre>
+
+  <div class="box tip"><span class="t">💡 نکته</span>
+  عددها ممکن است روی کامپیوتر تو کمی فرق کنند — مهم نیست! همین که <b>یک شماره نسخه</b> نشان بدهد یعنی <span dir="ltr">winget</span> آماده است.</div>
+
+  <div class="box warn"><span class="t">⚠️ اگر پیغام قرمز داد!</span>
+  اگر نوشت <span dir="ltr">winget is not recognized</span> یعنی پیک ما هنوز استخدام نشده! نگران نباش — برو به بخش <a href="#fix">🔧 رفع اشکال، مشکل شماره ۱</a>، درستش کن و برگرد همین‌جا.</div>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۳ — winget مخفف چیست؟</span>
+  مخفف <span dir="ltr">Windows Package Manager</span> یعنی «مدیر بسته‌های ویندوز». به هر برنامه‌ی قابل نصب، یک «بسته» می‌گویند — مثل بسته‌های پستی!</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> با زدن <code>winget --version</code> یک شماره نسخه دیدی؟ حالا آماده‌ی نصب اولین برنامه هستیم! 🚀</div>
+</section>
+
+<!-- ================= Stage 5 ================= -->
+<section class="stage" id="s5">
+  <div class="stagehead"><div class="num">۵</div><h2>نصب پایتون 🐍</h2><span class="chip">مرحله ۵ از ۸</span></div>
+  <div class="bar"><i style="width:62%"></i></div>
+
+  <div class="step"><b class="sn">۱</b><div>این دستور را در پاورشل تایپ (یا کپی) کن و <b>Enter</b> بزن:</div></div>
+  <pre>winget install --id Python.Python.3.12 -e</pre>
+
+  <div class="step"><b class="sn">۲</b><div>اگر بار اول است، شاید بپرسد آیا شرایط استفاده را قبول داری (<span dir="ltr">Do you agree to all the source agreements?</span>). حرف <code>Y</code> را تایپ کن و <b>Enter</b> بزن.<sup>۴</sup></div></div>
+
+  <div class="step"><b class="sn">۳</b><div>حالا صبر کن ☕ — نوارهایی از پیشرفت دانلود می‌بینی. وقتی تمام شود، می‌نویسد:</div></div>
+  <pre><span class="ok">Successfully installed</span></pre>
+
+  <div class="step"><b class="sn">۴</b><div><b>خیلی مهم:</b> پنجره‌ی پاورشل را <b>ببند</b> و طبق مرحله‌ی ۳ <b>دوباره باز کن</b>.<sup>۵</sup></div></div>
+
+  <div class="step"><b class="sn">۵</b><div>حالا برای اطمینان، این را بزن:</div></div>
+  <pre>python --version</pre>
+  <div class="step"><b class="sn">۶</b><div>باید جوابی شبیه این ببینی:</div></div>
+  <pre><span class="ok">Python 3.12.4</span></pre>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۴ — این سؤال موافقت چیست؟</span>
+  <span dir="ltr">winget</span> فقط یک بار می‌پرسد که آیا قبول داری برنامه‌ها را از مخزن رسمی‌اش بیاورد. <code>Y</code> یعنی <span dir="ltr">Yes</span> (بله).</div>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۵ — چرا باید پاورشل را ببندیم و دوباره باز کنیم؟</span>
+  وقتی برنامه‌ای نصب می‌شود، آدرسش در «دفترچه تلفن» ویندوز ثبت می‌شود. پاورشلِ باز، دفترچه‌ی قدیمی را در دست دارد! با بستن و باز کردن، دفترچه‌ی جدید را برمی‌دارد و پایتون را پیدا می‌کند. <b>پرتکرارترین اشتباه مبتدی‌ها فراموش کردن همین کار است!</b></div>
+
+  <div class="box tip"><span class="t">💡 نکته</span>
+  عدد <span dir="ltr">3.12</span> نسخه‌ی پایتون است. اگر روزی نسخه‌ی جدیدتری آمده بود و این دستور کار نکرد، به بخش رفع اشکال (مشکل ۴) نگاه کن.</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> دستور <code>python --version</code> یک شماره نسخه نشان داد؟ تبریک — پایتون نصب شد! 🐍✨ اگر خطای فروشگاه مایکروسافت باز شد، برو <a href="#fix">رفع اشکال، مشکل ۳</a>.</div>
+</section>
+
+<!-- ================= Stage 6 ================= -->
+<section class="stage" id="s6">
+  <div class="stagehead"><div class="num">۶</div><h2>نصب Node.js 🟢</h2><span class="chip">مرحله ۶ از ۸</span></div>
+  <div class="bar"><i style="width:75%"></i></div>
+
+  <p>حالا که یاد گرفتی، بقیه مثل آب خوردن است — همان کار، فقط با یک اسم دیگر:</p>
+
+  <div class="step"><b class="sn">۱</b><div>در پاورشل بزن:</div></div>
+  <pre>winget install --id OpenJS.NodeJS.LTS -e</pre>
+
+  <div class="step"><b class="sn">۲</b><div>صبر کن تا <span dir="ltr">Successfully installed</span> را ببینی.</div></div>
+
+  <div class="step"><b class="sn">۳</b><div>پاورشل را <b>ببند و دوباره باز کن</b> (یادت هست چرا؟ پاورقی ۵! 😉).</div></div>
+
+  <div class="step"><b class="sn">۴</b><div>این دو دستور را یکی‌یکی بزن تا مطمئن شویم:</div></div>
+  <pre>node --version
+npm --version</pre>
+  <div class="step"><b class="sn">۵</b><div>باید دو شماره ببینی، چیزی شبیه:</div></div>
+  <pre><span class="ok">v20.15.1</span>
+<span class="ok">10.7.0</span></pre>
+
+  <div class="box foot"><span class="t">📖 پاورقی ۶ — LTS و npm یعنی چه؟</span>
+  <b><span dir="ltr">LTS</span></b> یعنی «نسخه‌ی پشتیبانی طولانی» — پایدارترین نسخه، مخصوص کسانی که دردسر نمی‌خواهند؛ برای همین ما همین را نصب کردیم. <b><span dir="ltr">npm</span></b> هم فروشگاه ابزارهای <span dir="ltr">Node.js</span> است که خودکار همراهش نصب می‌شود — دوتا نصب کردیم به قیمت یکی! 🎁</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> هر دو دستور شماره نسخه دادند؟ <span dir="ltr">Node.js</span> هم آماده است! 🟢</div>
+</section>
+
+<!-- ================= Stage 7 ================= -->
+<section class="stage" id="s7">
+  <div class="stagehead"><div class="num">۷</div><h2>نصب VS Code 💙</h2><span class="chip">مرحله ۷ از ۸</span></div>
+  <div class="bar"><i style="width:87%"></i></div>
+
+  <div class="step"><b class="sn">۱</b><div>آخرین دستور نصب! در پاورشل بزن:</div></div>
+  <pre>winget install --id Microsoft.VisualStudioCode -e</pre>
+
+  <div class="step"><b class="sn">۲</b><div>صبر کن تا <span dir="ltr">Successfully installed</span> بیاید.</div></div>
+
+  <div class="step"><b class="sn">۳</b><div>پاورشل را <b>ببند و دوباره باز کن</b> (بار آخر، قول می‌دهم! 😄).</div></div>
+
+  <div class="step"><b class="sn">۴</b><div>حالا این را بزن تا <span dir="ltr">VS Code</span> باز شود:</div></div>
+  <pre>code</pre>
+
+  <div class="step"><b class="sn">۵</b><div>چند لحظه بعد، پنجره‌ی آبیِ خوش‌گلِ <span dir="ltr">VS Code</span> باز می‌شود — دفترچه‌ی کدنویسی‌ات آماده است!</div></div>
+
+  <div class="box tip"><span class="t">💡 نکته</span>
+  از این به بعد می‌توانی <span dir="ltr">VS Code</span> را از منوی استارت هم باز کنی: دکمه‌ی ویندوز ⊞ را بزن، تایپ کن <code>code</code> و Enter.</div>
+
+  <div class="box tip"><span class="t">💡 نکته‌ی حرفه‌ای — فارسی‌سازی</span>
+  داخل <span dir="ltr">VS Code</span>، از منوی سمت چپ روی آیکون مربع‌ها (<span dir="ltr">Extensions</span>) کلیک کن، بنویس <code>persian</code> و بسته‌ی زبان فارسی را نصب کن تا منوها فارسی شوند. (اختیاری است!)</div>
+
+  <div class="check"><b>✅ خودت را امتحان کن:</b> پنجره‌ی <span dir="ltr">VS Code</span> باز شد؟ سه‌تایی کامل شد! برویم برای آزمایش نهایی 🏁</div>
+</section>
+
+<!-- ================= Stage 8 ================= -->
+<section class="stage" id="s8">
+  <div class="stagehead"><div class="num">۸</div><h2>آزمایش نهایی — اولین کد زندگی‌ات! 🏁</h2><span class="chip">مرحله ۸ از ۸</span></div>
+  <div class="bar"><i style="width:100%"></i></div>
+
+  <p>بیا مطمئن شویم همه‌چیز واقعاً کار می‌کند — و همزمان <b>اولین برنامه‌ات</b> را بنویسی!</p>
+
+  <div class="step"><b class="sn">۱</b><div>در پاورشل بزن:</div></div>
+  <pre>python -c "print('Salam Donya!')"</pre>
+  <div class="step"><b class="sn">۲</b><div>پایتون باید جواب بدهد:</div></div>
+  <pre><span class="ok">Salam Donya!</span></pre>
+  <div class="step"><b class="sn">۳</b><div>حالا نوبت <span dir="ltr">Node.js</span> است:</div></div>
+  <pre>node -e "console.log('Salam az Node!')"</pre>
+  <div class="step"><b class="sn">۴</b><div>و جوابش:</div></div>
+  <pre><span class="ok">Salam az Node!</span></pre>
+
+  <div class="box foot"><span class="t">📖 توضیح — الان چه اتفاقی افتاد؟</span>
+  تو به دو زبان مختلف به کامپیوتر گفتی «یک جمله چاپ کن» و او اطاعت کرد! <code>print</code> در پایتون و <code>console.log</code> در جاوااسکریپت هر دو یعنی «روی صفحه بنویس». تو الان رسماً برنامه‌نویسی کرده‌ای! 👏</div>
+</section>
+
+<!-- ================= Finale ================= -->
+<div class="finale">
+  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+  <ul>
+    <li>⚡ پاورشل را باز کنی و به کامپیوتر دستور بدهی</li>
+    <li>📦 با <span dir="ltr">winget</span> هر برنامه‌ای را با یک خط نصب کنی</li>
+    <li>🐍 پایتون، 🟢 <span dir="ltr">Node.js</span> و 💙 <span dir="ltr">VS Code</span> را نصب و امتحان کنی</li>
+    <li>👨‍💻 اولین کدت را اجرا کنی!</li>
+  </ul>
+  <p>قدم بعدی؟ در <span dir="ltr">VS Code</span> یک فایل بساز و شروع کن به یادگیری پایتون. دنیا منتظر برنامه‌های توست! 🚀</p>
+</div>
+
+<!-- ================= Troubleshooting ================= -->
+<section class="stage" id="fix" style="border-inline-start-color:var(--red)">
+  <div class="stagehead"><div class="num" style="background:var(--red)">🔧</div><h2>رفع اشکال — اگر جایی گیر کردی</h2></div>
+
+  <details>
+    <summary>مشکل ۱: می‌نویسد winget is not recognized</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    یعنی <span dir="ltr">winget</span> روی این ویندوز نیست. دکمه‌ی ویندوز ⊞ را بزن، تایپ کن <code>Microsoft Store</code> و بازش کن. در جست‌وجوی فروشگاه بنویس <span dir="ltr">App Installer</span> و آن را نصب یا به‌روزرسانی (<span dir="ltr">Update</span>) کن. بعد پاورشل را ببند، دوباره باز کن و از <a href="#s4">مرحله‌ی ۴</a> ادامه بده.</div>
+  </details>
+
+  <details>
+    <summary>مشکل ۲: بعد از نصب، python یا node یا code را نمی‌شناسد</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    ۹۰٪ مواقع فقط یادت رفته پاورشل را <b>ببندی و دوباره باز کنی</b> (پاورقی ۵). اگر باز هم نشد، یک بار کامپیوتر را ری‌استارت کن — دفترچه تلفن ویندوز کاملاً تازه می‌شود.</div>
+  </details>
+
+  <details>
+    <summary>مشکل ۳: با زدن python فروشگاه مایکروسافت باز می‌شود!</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    این یک میان‌برِ فضولِ ویندوز است. دکمه‌ی ویندوز ⊞ را بزن، تایپ کن <span dir="ltr">manage app execution aliases</span> و بازش کن. در فهرست، دو کلید مربوط به <span dir="ltr">python.exe</span> و <span dir="ltr">python3.exe</span> که نامشان <span dir="ltr">App Installer</span> است را <b>خاموش</b> کن. پاورشل را ببند و باز کن؛ حل شد!</div>
+  </details>
+
+  <details>
+    <summary>مشکل ۴: می‌گوید بسته پیدا نشد (No package found)</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    شاید نام دقیق بسته کمی عوض شده باشد. با این دستور خودت جست‌وجو کن: <code>winget search python</code> (یا <code>node</code> یا <code>vscode</code>). در ستون <span dir="ltr">Id</span> نام دقیق را پیدا کن و همان را در دستور نصب بگذار.</div>
+  </details>
+
+  <details>
+    <summary>مشکل ۵: دانلود وسط راه قطع شد یا خیلی کند است</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    اینترنتت را چک کن و همان دستور نصب را دوباره بزن — <span dir="ltr">winget</span> از نو شروع می‌کند و مشکلی پیش نمی‌آید. اگر باز قطع شد، چند دقیقه بعد یا با اینترنت دیگری امتحان کن.</div>
+  </details>
+
+  <details>
+    <summary>مشکل ۶: پنجره‌ی اجازه (Yes/No) آمد و ترسیدم!</summary>
+    <div class="box fix"><span class="t">راه حل</span>
+    نترس 😊 این همان نگهبان ویندوز است (پاورقی ۲). چون خودت دستور نصب داده‌ای، <b>Yes</b> را بزن. اگر گزینه‌ی Yes خاموش است، یعنی حساب کاربری‌ات مدیر نیست — از یک بزرگ‌تر بخواه رمز مدیر را وارد کند.</div>
+  </details>
+</section>
+
+<footer>
+  ساخته‌شده با ❤️ برای یادگیری آسان — اگر همه‌ی ✅ها را رد کردی، تو دیگر یک مبتدی نیستی!
+  <div style="margin-block-start:8px; font-size:.8rem; opacity:.75; letter-spacing:.3px;">
+    ✍️ طراحی و تدوین: <b><span dir="ltr">Mehdi Rezghi</span></b> — مهدی رزقی
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

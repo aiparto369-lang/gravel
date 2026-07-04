@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<title>پایتون در ۱ ساعت — مخصوص وایب کدینگ</title>
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1a3a6b; --blue2:#2456a6; --accent:#ff8a3d; --accent2:#ffb703;
+  --green:#1f9d55; --red:#d64545; --purple:#7048b6;
+  --bg:#f4f7fb; --card:#ffffff; --ink:#22314a; --soft:#e8eef8;
+  --tip:#fff7e0; --warn:#ffe9e5; --foot:#eef3ff; --check:#e6f7ec; --fix:#f3ecff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  font-size:17.5px; line-height:1.9; direction:rtl; text-align:right;
+}
+.wrap{max-width:880px; margin-inline:auto; padding-inline:16px; padding-block-end:60px}
+/* ---------- hero ---------- */
+header.hero{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,#3a75d4 100%);
+  color:#fff; padding-block:44px 56px; padding-inline:16px; text-align:center;
+  border-end-start-radius:40px; border-end-end-radius:40px;
+}
+header.hero .snake{font-size:56px; line-height:1}
+header.hero h1{font-size:clamp(26px,5vw,40px); font-weight:900; margin-block:10px 6px}
+header.hero p.sub{font-size:19px; opacity:.95; max-width:640px; margin-inline:auto}
+.hero-badges{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-block-start:18px}
+.hero-badges span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); padding:4px 14px; border-radius:999px; font-size:14.5px}
+/* ---------- intro / assumption box ---------- */
+.intro{
+  background:var(--card); border:2px solid var(--soft); border-radius:18px;
+  padding:20px 22px; margin-block-start:-34px; box-shadow:0 8px 24px rgba(26,58,107,.10);
+}
+.intro h2{margin-block-start:0; color:var(--blue); font-size:20px}
+.intro ul{margin-block:6px; padding-inline-start:22px}
+/* ---------- TOC ---------- */
+nav.toc{background:var(--card); border-radius:18px; padding:18px 22px; margin-block-start:22px; border:2px solid var(--soft)}
+nav.toc h2{margin-block-start:0; color:var(--blue); font-size:20px}
+nav.toc ol{margin:0; padding-inline-start:22px; columns:2; column-gap:28px}
+nav.toc li{margin-block:4px; break-inside:avoid}
+nav.toc a{color:var(--blue2); text-decoration:none; font-weight:700}
+nav.toc a:hover{color:var(--accent)}
+/* ---------- stage cards ---------- */
+section.stage{
+  background:var(--card); border-radius:20px; padding:24px 24px 18px;
+  margin-block-start:28px; border:2px solid var(--soft);
+  box-shadow:0 4px 14px rgba(26,58,107,.06);
+}
+.stage-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.stage-num{
+  min-width:52px; height:52px; border-radius:16px; background:var(--accent);
+  color:#fff; font-weight:900; font-size:22px; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 10px rgba(255,138,61,.4);
+}
+.stage h2{margin:0; font-size:22px; color:var(--blue); flex:1}
+.chip{
+  background:var(--soft); color:var(--blue); border-radius:999px; padding:3px 12px;
+  font-size:13.5px; font-weight:700; white-space:nowrap;
+}
+.timechip{background:#e5f5ff; color:#0b6aa8}
+/* progress bar */
+.pbar{height:8px; background:var(--soft); border-radius:99px; margin-block:12px 6px; overflow:hidden}
+.pbar > i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:99px}
+/* ---------- steps ---------- */
+.step{
+  display:flex; gap:12px; align-items:flex-start; background:#fbfcff;
+  border:1.5px solid var(--soft); border-radius:14px; padding:12px 14px; margin-block:10px;
+}
+.step b.n{
+  min-width:30px; height:30px; border-radius:10px; background:var(--blue2); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:15px; margin-block-start:3px;
+}
+.step div{flex:1}
+/* ---------- boxes ---------- */
+.box{border-radius:14px; padding:12px 16px; margin-block:12px; border-inline-start:6px solid; font-size:16.5px}
+.box b.t{display:block; margin-block-end:2px}
+.tip{background:var(--tip); border-color:var(--accent2)}
+.warn{background:var(--warn); border-color:var(--red)}
+.foot{background:var(--foot); border-color:var(--blue2)}
+.check{background:var(--check); border-color:var(--green)}
+.why{background:#f0fbf4; border-color:#59c98a; font-size:15.5px}
+.fixbox{background:var(--fix); border-color:var(--purple)}
+/* ---------- code ---------- */
+pre.code{
+  direction:ltr; text-align:left; background:#101a2e; color:#e8eefc;
+  font-family:'Consolas','Courier New',monospace; font-size:15.5px; line-height:1.7;
+  border-radius:14px; padding:14px 18px; overflow-x:auto; margin-block:10px;
+}
+pre.code .c{color:#7fd18a}   /* comment */
+pre.code .s{color:#ffd479}   /* string */
+pre.code .k{color:#7ab8ff; font-weight:bold} /* keyword */
+pre.code .o{color:#9aa7c4}   /* output marker */
+code{
+  direction:ltr; unicode-bidi:embed; background:#eef2fa; color:#1a3a6b;
+  font-family:'Consolas','Courier New',monospace; font-size:.92em;
+  padding:1px 7px; border-radius:7px;
+}
+.out{
+  direction:ltr; text-align:left; background:#0d2417; color:#a8f0c0;
+  font-family:'Consolas',monospace; font-size:15px; border-radius:0 0 14px 14px;
+  padding:8px 18px; margin-block-start:-10px; margin-block-end:10px;
+}
+.outlabel{
+  direction:rtl; text-align:right; background:#12301f; color:#7fd18a; font-size:13px;
+  padding:2px 14px; margin-block-start:-10px; font-family:'Vazirmatn',Tahoma,sans-serif;
+}
+/* ---------- table ---------- */
+table.dic{width:100%; border-collapse:collapse; margin-block:12px; font-size:16px; background:#fff}
+table.dic th{background:var(--blue); color:#fff; padding:8px 10px; font-size:15.5px}
+table.dic td{border:1.5px solid var(--soft); padding:7px 10px; vertical-align:top}
+table.dic tr:nth-child(even) td{background:#f7faff}
+/* ---------- svg diagram ---------- */
+.diagram{background:#fbfcff; border:1.5px dashed var(--blue2); border-radius:16px; padding:14px; margin-block:14px; text-align:center}
+.diagram svg{max-width:100%; height:auto}
+/* ---------- celebration ---------- */
+.party{
+  background:linear-gradient(135deg,#1f9d55,#2fbf71); color:#fff; border-radius:22px;
+  padding:28px 24px; margin-block-start:32px; text-align:center;
+}
+.party h2{margin-block-start:0; font-size:26px}
+.party ul{text-align:right; max-width:560px; margin-inline:auto; padding-inline-start:22px}
+footer{
+  text-align:center; margin-block-start:34px; color:#5b6a86; font-size:14px;
+}
+footer .sig{font-size:12.5px; opacity:.65; margin-block-start:6px}
+@media (max-width:700px){
+  nav.toc ol{columns:1}
+  body{font-size:17px}
+  .stage-head{gap:10px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="snake">🐍✨</div>
+  <h1>پایتون در ۱ ساعت — مخصوص «وایب کدینگ»</h1>
+  <p class="sub">قراره چی یاد بگیریم؟ این‌که کد پایتون را <b>بخوانی و بفهمی</b>، تا وقتی هوش مصنوعی برایت کد می‌نویسد، بدانی دارد چه‌کار می‌کند و بتوانی کارَت را جلو ببری.</p>
+  <div class="hero-badges">
+    <span>⏱️ حدود ۶۰ دقیقه</span>
+    <span>🧒 برای مبتدیِ مطلق</span>
+    <span>🤖 با تمرکز روی وایب کدینگ</span>
+    <span>🧩 ۱۲ مرحلهٔ کوتاه</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="intro">
+  <h2>📋 قبل از شروع — این آموزش با چه فرض‌هایی نوشته شده؟</h2>
+  <ul>
+    <li>فرض کرده‌ایم کامپیوترت <b>ویندوز</b> دارد و فقط بلدی روشنش کنی، کلیک کنی و تایپ کنی. همین کافی است!</li>
+    <li>هدف این آموزش <b>برنامه‌نویس‌شدنِ حرفه‌ای در یک ساعت نیست</b> (چنین چیزی ممکن نیست!). هدف این است که آن‌قدر پایتون بفهمی که بتوانی با کمک هوش مصنوعی کد بگیری، بخوانی‌اش، اجرایش کنی و خطاهایش را درست کنی. به این سبک کارکردن می‌گویند «وایب کدینگ»<sup>۱</sup>.</li>
+    <li>هر مرحله حدود ۵ دقیقه وقت می‌گیرد. عجله نکن؛ اگر بیشتر طول کشید هیچ اشکالی ندارد.</li>
+  </ul>
+  <div class="box foot">
+    <b class="t">📖 پاورقی ۱ — «وایب کدینگ» (Vibe Coding) یعنی چه؟</b>
+    یعنی به‌جای این‌که خودت خط‌به‌خط کد بنویسی، به یک هوش مصنوعی (مثل Claude یا ChatGPT) به زبان خودت می‌گویی چه می‌خواهی، او کد را می‌نویسد، و تو آن را می‌خوانی، اجرا می‌کنی و با چند پیام رفت‌وبرگشتی کاملش می‌کنی. مثل این است که یک آشپز ماهر کنارت باشد و تو فقط سفارش بدهی و غذا را بچشی — ولی برای این‌که سفارشِ درست بدهی، باید اسم مواد اولیه را بلد باشی!
+  </div>
+</div>
+
+<nav class="toc">
+  <h2>🗺️ فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s0">پیش‌نیازها: نصب پایتون</a></li>
+    <li><a href="#s1">پایتون چیست و چرا؟</a></li>
+    <li><a href="#s2">اولین کدت را اجرا کن</a></li>
+    <li><a href="#s3">متغیرها: جعبه‌های اسم‌دار</a></li>
+    <li><a href="#s4">انواع داده: عدد، متن، بله/خیر</a></li>
+    <li><a href="#s5">لیست و دیکشنری</a></li>
+    <li><a href="#s6">شرط‌ها: اگر... آن‌گاه...</a></li>
+    <li><a href="#s7">حلقه‌ها: تکرارِ خودکار</a></li>
+    <li><a href="#s8">تابع‌ها: دستورپخت‌های آماده</a></li>
+    <li><a href="#s9">کتابخانه‌ها و import</a></li>
+    <li><a href="#s10">خطاها را بخوان، نترس!</a></li>
+    <li><a href="#s11">وایب کدینگ عملی 🤖</a></li>
+    <li><a href="#fix">🔧 رفع اشکال‌های رایج</a></li>
+  </ol>
+</nav>
+
+<!-- ================= مرحله ۰ ================= -->
+<section class="stage" id="s0">
+  <div class="stage-head">
+    <div class="stage-num">۰</div>
+    <h2>پیش‌نیازها: پایتون را روی کامپیوترت بیاور 🧰</h2>
+    <span class="chip">مرحله ۱ از ۱۲</span><span class="chip timechip">⏱️ ~۷ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:8%"></i></div>
+
+  <p>برای این‌که کد پایتون اجرا شود، کامپیوترت باید «زبان پایتون» را بلد باشد. این یعنی باید یک برنامهٔ رایگان به اسم <span dir="ltr">Python</span> را نصب کنیم. مثل این است که برای خواندن یک کتاب فرانسوی، اول باید یک مترجم فرانسوی استخدام کنی!</p>
+
+  <div class="step"><b class="n">۱</b><div>مرورگر اینترنتت (مثلاً <span dir="ltr">Chrome</span> یا <span dir="ltr">Edge</span>) را باز کن.</div></div>
+  <div class="step"><b class="n">۲</b><div>در نوار آدرس بالای مرورگر تایپ کن: <code dir="ltr">python.org</code> و کلید <span dir="ltr">Enter</span> را بزن.</div></div>
+  <div class="step"><b class="n">۳</b><div>در سایت، دنبال دکمه یا منویی به اسم <span dir="ltr">Downloads</span> بگرد و رویش کلیک کن. (ممکن است ظاهر سایت کمی فرق کند، ولی کلمهٔ <span dir="ltr">Downloads</span> همیشه هست.)</div></div>
+  <div class="step"><b class="n">۴</b><div>روی دکمهٔ زردرنگِ بزرگ که نوشته <span dir="ltr">Download Python</span> و یک شماره کنارش دارد کلیک کن تا فایل نصب دانلود شود.</div></div>
+  <div class="step"><b class="n">۵</b><div>وقتی دانلود تمام شد، روی فایل دانلودشده دوبار کلیک کن تا پنجرهٔ نصب باز شود.</div></div>
+  <div class="step"><b class="n">۶</b><div>⚠️ خیلی مهم: در اولین صفحهٔ نصب، پایینِ پنجره یک تیک هست با نوشته‌ای شبیه <span dir="ltr">Add python.exe to PATH</span>. <b>حتماً این تیک را بزن.</b></div></div>
+  <div class="step"><b class="n">۷</b><div>حالا روی <span dir="ltr">Install Now</span> کلیک کن و صبر کن تا نصب تمام شود. اگر ویندوز پرسید «اجازه می‌دهی تغییر ایجاد شود؟» روی <span dir="ltr">Yes</span> کلیک کن.</div></div>
+  <div class="step"><b class="n">۸</b><div>وقتی نوشت <span dir="ltr">Setup was successful</span>، پنجره را ببند. تمام! 🎉</div></div>
+
+  <div class="box tip"><b class="t">💡 نکته</b> همراه پایتون، یک برنامهٔ سادهٔ کدنویسی به اسم <b><span dir="ltr">IDLE</span></b> هم خودبه‌خود نصب می‌شود. در کل این آموزش از همین استفاده می‌کنیم — چیز دیگری لازم نیست نصب کنی.</div>
+
+  <div class="box foot"><b class="t">📖 پاورقی — <span dir="ltr">PATH</span> یعنی چه؟</b> «پَث» مثل دفترچه‌تلفنِ ویندوز است. وقتی تیکش را می‌زنی، یعنی به ویندوز می‌گویی: «شمارهٔ پایتون را در دفترچه‌ات ذخیره کن تا هر وقت صدایش زدم، پیدایش کنی.» اگر این تیک را نزنی، بعداً ویندوز پایتون را گم می‌کند!</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> روی دکمهٔ استارت ویندوز (پایین-گوشهٔ صفحه) کلیک کن و تایپ کن: <code dir="ltr">IDLE</code> — باید برنامه‌ای با آیکون پایتون در نتایج ببینی. اگر دیدی، عالی است! اگر ندیدی، برو به بخش <a href="#fix">رفع اشکال</a>، مشکل شمارهٔ ۱.</div>
+</section>
+
+<!-- ================= مرحله ۱ ================= -->
+<section class="stage" id="s1">
+  <div class="stage-head">
+    <div class="stage-num">۱</div>
+    <h2>پایتون چیست و وایب کدینگ چطوری کار می‌کند؟ 🧠</h2>
+    <span class="chip">مرحله ۲ از ۱۲</span><span class="chip timechip">⏱️ ~۳ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:16%"></i></div>
+
+  <p><b>پایتون</b> یک زبان برنامه‌نویسی<sup>۲</sup> است؛ یعنی زبانی که با آن به کامپیوتر <b>دستور</b> می‌دهیم. کامپیوتر مثل یک آشپزِ خیلی سریع ولی خیلی حرف‌گوش‌کن است: <b>دقیقاً</b> همان کاری را می‌کند که نوشته‌ای — نه یک ذره بیشتر، نه یک ذره کمتر، و اگر جمله‌ات غلط املایی داشته باشد، قهر می‌کند و خطا می‌دهد!</p>
+  <p>پایتون محبوب‌ترین زبان دنیا برای شروع است، چون کدهایش شبیه جملهٔ انگلیسیِ ساده است و هوش مصنوعی‌ها هم در نوشتنِ آن فوق‌العاده‌اند. برای همین بهترین زبان برای وایب کدینگ است.</p>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۲ — «زبان برنامه‌نویسی» یعنی چه؟</b> کامپیوتر فارسی و انگلیسی معمولی را نمی‌فهمد. زبان برنامه‌نویسی یک زبانِ قراردادیِ ساده با قواعد خیلی دقیق است که هم ما می‌توانیم بنویسیمش، هم کامپیوتر می‌تواند اجرایش کند.</p></div>
+
+  <p>در وایب کدینگ، چرخهٔ کارِ تو همیشه این ۴ قدم است. این شکل را خوب به خاطر بسپار — کل این آموزش برای این است که بتوانی این چرخه را بچرخانی:</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="چرخه وایب کدینگ">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#2456a6"/></marker></defs>
+      <rect x="10" y="55" width="150" height="70" rx="14" fill="#fff3e6" stroke="#ff8a3d" stroke-width="2.5"/>
+      <text x="85" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#b35410" font-family="Vazirmatn,Tahoma">۱. بخواه 💬</text>
+      <text x="85" y="108" text-anchor="middle" font-size="12.5" fill="#7a4a1e" font-family="Vazirmatn,Tahoma">از هوش مصنوعی</text>
+      <rect x="195" y="55" width="150" height="70" rx="14" fill="#e8f1ff" stroke="#2456a6" stroke-width="2.5"/>
+      <text x="270" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a3a6b" font-family="Vazirmatn,Tahoma">۲. بخوان 👀</text>
+      <text x="270" y="108" text-anchor="middle" font-size="12.5" fill="#3a5a8c" font-family="Vazirmatn,Tahoma">کد را بفهم</text>
+      <rect x="380" y="55" width="150" height="70" rx="14" fill="#e6f7ec" stroke="#1f9d55" stroke-width="2.5"/>
+      <text x="455" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#136b39" font-family="Vazirmatn,Tahoma">۳. اجرا کن ▶️</text>
+      <text x="455" y="108" text-anchor="middle" font-size="12.5" fill="#2e7d51" font-family="Vazirmatn,Tahoma">نتیجه را ببین</text>
+      <rect x="565" y="55" width="150" height="70" rx="14" fill="#f3ecff" stroke="#7048b6" stroke-width="2.5"/>
+      <text x="640" y="85" text-anchor="middle" font-size="17" font-weight="bold" fill="#4d2e85" font-family="Vazirmatn,Tahoma">۴. اصلاح کن 🔁</text>
+      <text x="640" y="108" text-anchor="middle" font-size="12.5" fill="#5c3f96" font-family="Vazirmatn,Tahoma">خطا را برگردان</text>
+      <line x1="160" y1="90" x2="192" y2="90" stroke="#2456a6" stroke-width="2.5" marker-end="url(#ar)"/>
+      <line x1="345" y1="90" x2="377" y2="90" stroke="#2456a6" stroke-width="2.5" marker-end="url(#ar)"/>
+      <line x1="530" y1="90" x2="562" y2="90" stroke="#2456a6" stroke-width="2.5" marker-end="url(#ar)"/>
+      <path d="M 640 125 C 640 170, 85 170, 85 128" fill="none" stroke="#9aa7c4" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+      <text x="362" y="178" text-anchor="middle" font-size="12.5" fill="#5b6a86" font-family="Vazirmatn,Tahoma">و دوباره از اول... تا وقتی که برنامه‌ات کامل شود</text>
+    </svg>
+  </div>
+
+  <div class="box why"><b class="t">🤔 چرا باید کدخواندن یاد بگیرم وقتی هوش مصنوعی می‌نویسد؟</b> چون قدم‌های ۲ و ۴ (بخوان و اصلاح کن) گردنِ خودت است! اگر کد را نفهمی، مثل کسی هستی که با تاکسی به شهر غریبه رفته: تا وقتی راننده درست برود مشکلی نیست، ولی اگر راه را اشتباه برود، اصلاً متوجه نمی‌شوی. مراحل ۳ تا ۱۰ این آموزش دقیقاً «نقشه‌خوانی» را یادت می‌دهد.</div>
+</section>
+
+<!-- ================= مرحله ۲ ================= -->
+<section class="stage" id="s2">
+  <div class="stage-head">
+    <div class="stage-num">۲</div>
+    <h2>اولین کدت را اجرا کن ▶️</h2>
+    <span class="chip">مرحله ۳ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:24%"></i></div>
+
+  <p>وقتش است اولین دستور را به کامپیوتر بدهی. از برنامهٔ <span dir="ltr">IDLE</span> استفاده می‌کنیم که همراه پایتون نصب شد.</p>
+
+  <div class="step"><b class="n">۱</b><div>روی دکمهٔ استارت ویندوز کلیک کن و تایپ کن: <code dir="ltr">IDLE</code></div></div>
+  <div class="step"><b class="n">۲</b><div>روی برنامهٔ <span dir="ltr">IDLE</span> که در نتایج ظاهر شد کلیک کن تا باز شود. یک پنجرهٔ سفید با چند خط نوشتهٔ انگلیسی و علامت <code dir="ltr">&gt;&gt;&gt;</code> می‌بینی. این پنجره «پوسته»<sup>۳</sup> نام دارد.</div></div>
+  <div class="step"><b class="n">۳</b><div>جلوی علامت <code dir="ltr">&gt;&gt;&gt;</code> این را <b>دقیقاً همین‌طوری</b> تایپ کن (همهٔ حروف کوچک، با پرانتز و گیومه):</div></div>
+
+  <pre class="code">print("Salam Donya!")</pre>
+
+  <div class="step"><b class="n">۴</b><div>کلید <span dir="ltr">Enter</span> را بزن.</div></div>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Salam Donya!</div>
+
+  <p>تبریک! 🎉 تو الان به کامپیوتر دستور دادی و او اطاعت کرد. بیا کد را کالبدشکافی کنیم:</p>
+
+  <table class="dic">
+    <tr><th>تکه</th><th>یعنی چه؟</th></tr>
+    <tr><td><code dir="ltr">print</code></td><td>اسم یک دستور آماده است، یعنی «چاپ کن / نشان بده». (ربطی به پرینترِ کاغذی ندارد؛ یعنی روی صفحه نمایش بده.)</td></tr>
+    <tr><td><code dir="ltr">( )</code></td><td>پرانتزها مثل دهانِ دستورند: هر چه می‌خواهی به دستور بدهی، داخلشان می‌گذاری.</td></tr>
+    <tr><td><code dir="ltr">"Salam Donya!"</code></td><td>گیومه‌ها یعنی «این یک متن است، همین‌طوری نمایشش بده و سعی نکن معنی‌اش کنی».</td></tr>
+  </table>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۳ — «پوسته» (<span dir="ltr">Shell</span>) چیست؟</b> جایی است که هر خط کدی بنویسی، <b>همان لحظه</b> اجرا می‌شود. مثل ماشین‌حسابِ گفتگویی: می‌گویی، جواب می‌دهد. برای تمرین عالی است. برنامه‌های واقعی را در «فایل» می‌نویسند که در مرحلهٔ آخر یاد می‌گیری.</div>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b> پایتون به کوچکی و بزرگیِ حروف حساس است! <code dir="ltr">print</code> درست است ولی <code dir="ltr">Print</code> یا <code dir="ltr">PRINT</code> خطا می‌دهد. همچنین گیومه و پرانتزِ باز باید حتماً بسته شوند — مثل درِ یخچال!</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> حالا خودت این را امتحان کن: <code dir="ltr">print(2 + 3)</code> — باید عدد <span dir="ltr">5</span> را ببینی. دقت کن این‌بار گیومه نگذاشتیم، چون می‌خواستیم پایتون حساب کند، نه این‌که متنِ «2 + 3» را نشان بدهد. اگر جواب نگرفتی، برو به بخش رفع اشکال، مشکل شمارهٔ ۲.</div>
+</section>
+
+<!-- ================= مرحله ۳ ================= -->
+<section class="stage" id="s3">
+  <div class="stage-head">
+    <div class="stage-num">۳</div>
+    <h2>متغیرها: جعبه‌های اسم‌دار 📦</h2>
+    <span class="chip">مرحله ۴ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:32%"></i></div>
+
+  <p>تصور کن یک قفسه پر از جعبه داری و روی هر جعبه یک برچسبِ اسم چسبانده‌ای: «اسباب‌بازی»، «مداد»، «پول‌توجیبی». هر وقت چیزی لازم داشتی، با اسمش صدایش می‌زنی. در برنامه‌نویسی به این جعبه‌ها می‌گویند <b>متغیر</b><sup>۴</sup> — و این مهم‌ترین چیزی است که در هر کدی می‌بینی.</p>
+
+  <p>در پوستهٔ <span dir="ltr">IDLE</span> این سه خط را یکی‌یکی تایپ کن (بعد از هر خط <span dir="ltr">Enter</span> بزن):</p>
+
+  <pre class="code">name = "Sara"
+age = 12
+print(name)</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Sara</div>
+
+  <table class="dic">
+    <tr><th>تکه</th><th>یعنی چه؟</th></tr>
+    <tr><td><code dir="ltr">name = "Sara"</code></td><td>یک جعبه به اسم <span dir="ltr">name</span> بساز و متنِ <span dir="ltr">Sara</span> را داخلش بگذار.</td></tr>
+    <tr><td><code dir="ltr">=</code></td><td>⚠️ در پایتون علامت مساوی یعنی «بگذار داخلِ»، نه «برابر است با»! جهتش همیشه از راست به چپ است: چیزِ سمت راست می‌رود داخل جعبهٔ سمت چپ.</td></tr>
+    <tr><td><code dir="ltr">print(name)</code></td><td>محتوای جعبهٔ <span dir="ltr">name</span> را نشان بده. چون گیومه ندارد، پایتون می‌فهمد «name» اسم یک جعبه است، نه یک متن.</td></tr>
+  </table>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ طلایی برای وایب کدینگ</b> در کدهایی که هوش مصنوعی می‌نویسد، تقریباً هر خطی که یک <code dir="ltr">=</code> وسطش دارد، دارد یک جعبه می‌سازد یا محتوایش را عوض می‌کند. اسم جعبه‌ها معمولاً معنی‌دار است: <code dir="ltr">total_price</code> یعنی «قیمت کل»، <code dir="ltr">user_name</code> یعنی «نام کاربر». همین اسم‌خوانی، نصفِ فهمیدنِ کد است!</div>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۴ — «متغیر» (<span dir="ltr">variable</span>)</b> یعنی جایی در حافظهٔ کامپیوتر که یک اسم دارد و می‌شود چیزی داخلش نگه داشت. «متغیر» است چون محتوایش می‌تواند تغییر کند: اگر بعداً بنویسی <code dir="ltr">age = 13</code>، محتوای قبلی دور ریخته می‌شود و ۱۳ جایش می‌نشیند.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> این را امتحان کن: <code dir="ltr">print(age + 1)</code> — باید <span dir="ltr">13</span> را ببینی. یعنی پایتون رفت داخل جعبهٔ <span dir="ltr">age</span>، عدد ۱۲ را برداشت و یکی به آن اضافه کرد.</div>
+</section>
+
+<!-- ================= مرحله ۴ ================= -->
+<section class="stage" id="s4">
+  <div class="stage-head">
+    <div class="stage-num">۴</div>
+    <h2>انواع داده: عدد، متن، بله/خیر 🔢🔤</h2>
+    <span class="chip">مرحله ۵ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:40%"></i></div>
+
+  <p>همان‌طور که در آشپزخانه، مایعات را در بطری می‌ریزیم و برنج را در کیسه، در پایتون هم هر «جنس» از اطلاعات، نوعِ خودش را دارد. ۴ نوعِ اصلی که در ۹۰٪ کدها می‌بینی این‌ها هستند:</p>
+
+  <table class="dic">
+    <tr><th>نوع</th><th>اسم انگلیسی در کد</th><th>مثال</th><th>یعنی چه؟</th></tr>
+    <tr><td>عدد صحیح</td><td><code dir="ltr">int</code></td><td><code dir="ltr">42</code></td><td>عدد بدون اعشار. برای شمردن.</td></tr>
+    <tr><td>عدد اعشاری</td><td><code dir="ltr">float</code></td><td><code dir="ltr">3.14</code></td><td>عدد با ممیز. برای اندازه‌گیری. (به‌جای ممیزِ فارسی از نقطه استفاده می‌شود.)</td></tr>
+    <tr><td>متن / رشته</td><td><code dir="ltr">str</code></td><td><code dir="ltr">"salam"</code></td><td>هر چیزی داخل گیومه. حتی <code dir="ltr">"42"</code> با گیومه یک متن است، نه عدد!</td></tr>
+    <tr><td>بولی (بله/خیر)</td><td><code dir="ltr">bool</code></td><td><code dir="ltr">True</code> / <code dir="ltr">False</code></td><td>فقط دو حالت دارد: درست یا غلط. مثل کلید برق: روشن یا خاموش.</td></tr>
+  </table>
+
+  <p>یک ترفند فوق‌العاده کاربردی: می‌توانی متن و متغیر را قاطی کنی. به این می‌گویند <b>اِف-اِسترینگ</b><sup>۵</sup> و هوش مصنوعی‌ها عاشقش هستند — تقریباً در هر کدی می‌بینی‌اش:</p>
+
+  <pre class="code">name = "Sara"
+age = 12
+print(f"Salam {name}! To {age} sal dari.")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Salam Sara! To 12 sal dari.</div>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۵ — <span dir="ltr">f-string</span> چیست؟</b> اگر قبل از گیومهٔ اول یک حرف <code dir="ltr">f</code> بگذاری، هر چیزی که داخل متن بین آکولاد <code dir="ltr">{ }</code> بنویسی، پایتون آن را «جای خالی» حساب می‌کند و محتوای متغیر را جایش می‌گذارد. مثل کارت دعوتی که جای اسم مهمان خالی گذاشته‌اند و برای هر نفر اسمش را می‌نویسند.</div>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b> <code dir="ltr">"5" + "5"</code> می‌شود <code dir="ltr">"55"</code> (دو متن به هم چسبیدند!) ولی <code dir="ltr">5 + 5</code> می‌شود <code dir="ltr">10</code>. یکی از خطاهای رایجی که در وایب کدینگ می‌بینی همین قاطی‌شدن متن و عدد است.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> بنویس: <code dir="ltr">print(f"2 + 2 = {2 + 2}")</code> — باید ببینی: <span dir="ltr">2 + 2 = 4</span>. یعنی داخل آکولاد حتی می‌شود حساب‌وکتاب هم کرد!</div>
+</section>
+
+<!-- ================= مرحله ۵ ================= -->
+<section class="stage" id="s5">
+  <div class="stage-head">
+    <div class="stage-num">۵</div>
+    <h2>لیست و دیکشنری: جعبه‌های چندطبقه 🗂️</h2>
+    <span class="chip">مرحله ۶ از ۱۲</span><span class="chip timechip">⏱️ ~۶ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:48%"></i></div>
+
+  <p>گاهی یک جعبه برای یک چیز کافی نیست؛ می‌خواهی یک <b>فهرست خرید</b> داشته باشی. در پایتون به آن <b>لیست</b> می‌گویند و با کروشه <code dir="ltr">[ ]</code> ساخته می‌شود:</p>
+
+  <pre class="code">kharid = ["nan", "shir", "panir"]
+print(kharid[0])
+print(len(kharid))</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">nan
+3</div>
+
+  <table class="dic">
+    <tr><th>تکه</th><th>یعنی چه؟</th></tr>
+    <tr><td><code dir="ltr">["nan", "shir", "panir"]</code></td><td>یک لیست با ۳ عضو. عضوها با ویرگول انگلیسی جدا می‌شوند.</td></tr>
+    <tr><td><code dir="ltr">kharid[0]</code></td><td>عضو شمارهٔ ۰ از لیست، یعنی اولین عضو! ⚠️ پایتون از <b>صفر</b> می‌شمارد، نه از یک. عضو دوم می‌شود <code dir="ltr">kharid[1]</code>.</td></tr>
+    <tr><td><code dir="ltr">len(kharid)</code></td><td>«طول» لیست، یعنی تعداد عضوهایش. <span dir="ltr">len</span> مخفف <span dir="ltr">length</span> (طول) است.</td></tr>
+  </table>
+
+  <p>و گاهی می‌خواهی هر چیزی یک <b>برچسب</b> داشته باشد، مثل دفترچه‌تلفن: اسمِ آدم ← شماره‌اش. به این می‌گویند <b>دیکشنری</b> و با آکولاد <code dir="ltr">{ }</code> ساخته می‌شود:</p>
+
+  <pre class="code">daneshamooz = {"name": "Sara", "nomre": 19}
+print(daneshamooz["name"])</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Sara</div>
+
+  <p>در دیکشنری، هر خانه دو بخش دارد: <b>کلید</b> (سمت چپِ دونقطه، مثل <code dir="ltr">"name"</code>) و <b>مقدار</b> (سمت راست، مثل <code dir="ltr">"Sara"</code>). با کلید، مقدار را پیدا می‌کنی — درست مثل این‌که در دفترچه‌تلفن با اسمِ آدم، شماره‌اش را پیدا می‌کنی.</p>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ وایب کدینگ</b> هر وقت در کدِ هوش مصنوعی <code dir="ltr">[ ]</code> دیدی بگو «آها، فهرست!» و هر وقت <code dir="ltr">{ }</code> با دونقطه دیدی بگو «آها، دفترچه‌تلفن!». اطلاعاتی که از اینترنت یا فایل‌ها می‌آید (مثل قیمت‌ها، کاربرها، تنظیمات) تقریباً همیشه به شکل همین دوتاست.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> بنویس <code dir="ltr">print(kharid[2])</code> — باید <span dir="ltr">panir</span> را ببینی (عضو سوم، چون شمارش از صفر است!). اگر خطای قرمز دیدی، برو رفع اشکال، مشکل شمارهٔ ۳.</div>
+</section>
+
+<!-- ================= مرحله ۶ ================= -->
+<section class="stage" id="s6">
+  <div class="stage-head">
+    <div class="stage-num">۶</div>
+    <h2>شرط‌ها: اگر... آن‌گاه... 🚦</h2>
+    <span class="chip">مرحله ۷ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:56%"></i></div>
+
+  <p>برنامه‌ها باید بتوانند تصمیم بگیرند، مثل خودِ ما: «<b>اگر</b> باران می‌بارد، چتر بردار؛ <b>وگرنه</b> عینک آفتابی بزن.» در پایتون این کار با <code dir="ltr">if</code> (اگر) و <code dir="ltr">else</code> (وگرنه) انجام می‌شود:</p>
+
+  <pre class="code">nomre = 15
+<span class="k">if</span> nomre >= 10:
+    print("Ghabool shodi!")
+<span class="k">else</span>:
+    print("Dobare talash kon.")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Ghabool shodi!</div>
+
+  <div class="box warn"><b class="t">⚠️ دو قانون خیلی مهم که کلِ پایتون روی آن‌ها سوار است</b>
+  ۱) خطِ <code dir="ltr">if</code> همیشه با <b>دونقطه <span dir="ltr">:</span></b> تمام می‌شود. دونقطه یعنی «حالا می‌گویم در این صورت چه‌کار کن...».<br>
+  ۲) خط‌های بعدی که <b>کمی تورفته‌اند</b> (۴ تا فاصله از اول خط)، «داخلِ» آن شرط هستند. به این تورفتگی می‌گویند <b>ایندنت</b><sup>۶</sup>. مثل این است که زیرمجموعه‌های یک فهرست را کمی تو می‌نویسی. اگر تورفتگی را بردارید یا کم‌وزیاد کنید، پایتون خطا می‌دهد یا کار اشتباهی می‌کند!</div>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۶ — «ایندنت» (<span dir="ltr">indent</span>) یعنی تورفتگی</b> در بیشتر زبان‌ها تورفتگی فقط برای خوشگلی است، ولی در پایتون <b>معنی</b> دارد: مشخص می‌کند کدام خط‌ها «داخل» کدام دستورند. وقتی کد هوش مصنوعی را می‌خوانی، به تورفتگی‌ها مثل پلکان نگاه کن: هر چه تورفته‌تر، یعنی «داخل‌تر».</div>
+
+  <p>علامت‌های مقایسه که در شرط‌ها می‌بینی:</p>
+  <table class="dic">
+    <tr><th>علامت</th><th>یعنی</th><th>مثال</th></tr>
+    <tr><td><code dir="ltr">==</code></td><td>آیا برابر است؟ (دقت کن: دو تا مساوی! یک مساوی یعنی «بگذار داخل جعبه»)</td><td><code dir="ltr">age == 12</code></td></tr>
+    <tr><td><code dir="ltr">!=</code></td><td>آیا نابرابر است؟</td><td><code dir="ltr">name != "Ali"</code></td></tr>
+    <tr><td><code dir="ltr">&gt;</code> و <code dir="ltr">&lt;</code></td><td>بزرگ‌تر / کوچک‌تر</td><td><code dir="ltr">nomre &gt; 10</code></td></tr>
+    <tr><td><code dir="ltr">&gt;=</code> و <code dir="ltr">&lt;=</code></td><td>بزرگ‌تر یا مساوی / کوچک‌تر یا مساوی</td><td><code dir="ltr">nomre &gt;= 10</code></td></tr>
+    <tr><td><code dir="ltr">and</code> / <code dir="ltr">or</code></td><td>و / یا — برای ترکیب دو شرط</td><td><code dir="ltr">age &gt; 8 and age &lt; 13</code></td></tr>
+    <tr><td><code dir="ltr">elif</code></td><td>«وگرنه اگر» — شرطِ وسطی، بین <code dir="ltr">if</code> و <code dir="ltr">else</code></td><td>—</td></tr>
+  </table>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> در پوسته مقدار را عوض کن: <code dir="ltr">nomre = 8</code> و بعد همان بلوکِ <code dir="ltr">if</code> بالا را دوباره بنویس (در پوسته، بعد از خطِ تورفته یک <span dir="ltr">Enter</span> اضافه بزن تا اجرا شود). این‌بار باید <span dir="ltr">Dobare talash kon.</span> را ببینی.</div>
+</section>
+
+<!-- ================= مرحله ۷ ================= -->
+<section class="stage" id="s7">
+  <div class="stage-head">
+    <div class="stage-num">۷</div>
+    <h2>حلقه‌ها: تکرارِ خودکار 🔁</h2>
+    <span class="chip">مرحله ۸ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:64%"></i></div>
+
+  <p>فرض کن معلم گفته «برای تک‌تکِ بچه‌های کلاس یک کارت تبریک بنویس». تو که ۳۰ بار جملهٔ جدا نمی‌نویسی؛ یک الگو داری و برای هر نفر تکرارش می‌کنی. در پایتون به این می‌گویند <b>حلقه</b> و با <code dir="ltr">for</code> ساخته می‌شود:</p>
+
+  <pre class="code">kharid = ["nan", "shir", "panir"]
+<span class="k">for</span> chiz <span class="k">in</span> kharid:
+    print(f"Yadet nare: {chiz}")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Yadet nare: nan
+Yadet nare: shir
+Yadet nare: panir</div>
+
+  <p>ترجمهٔ خطِ <code dir="ltr">for chiz in kharid:</code> به فارسی می‌شود: «برای هر <b>چیز</b> در لیستِ <b>خرید</b>، کارهای تورفتهٔ زیر را انجام بده.» متغیرِ <code dir="ltr">chiz</code> در هر دور، یکی از عضوهای لیست می‌شود: دور اول <span dir="ltr">nan</span>، دور دوم <span dir="ltr">shir</span> و همین‌طور تا آخر.</p>
+
+  <p>اگر لیست نداری و فقط می‌خواهی چیزی مثلاً ۵ بار تکرار شود، از <code dir="ltr">range</code> استفاده می‌شود:</p>
+
+  <pre class="code"><span class="k">for</span> i <span class="k">in</span> range(5):
+    print(f"Dor {i}")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Dor 0
+Dor 1
+Dor 2
+Dor 3
+Dor 4</div>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ وایب کدینگ</b> <code dir="ltr">range(5)</code> اعداد ۰ تا ۴ را می‌دهد (باز هم شمارش از صفر، و خودِ ۵ حساب نمی‌شود!). در کدهای هوش مصنوعی هر جا <code dir="ltr">for</code> دیدی، در ذهنت بگو: «این تکه، برای همهٔ عضوها تکرار می‌شود.» یک نوع حلقهٔ دیگر هم هست به اسم <code dir="ltr">while</code> که یعنی «تا وقتی که شرط برقرار است، تکرار کن» — مثل «تا وقتی ظرف‌ها تمام نشده، بشور!».</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> یک حلقه بنویس که اعداد ۰ تا ۲ را چاپ کند: <code dir="ltr">for i in range(3):</code> و در خط تورفتهٔ بعد <code dir="ltr">print(i)</code>. باید ۰ و ۱ و ۲ را زیر هم ببینی.</div>
+</section>
+
+<!-- ================= مرحله ۸ ================= -->
+<section class="stage" id="s8">
+  <div class="stage-head">
+    <div class="stage-num">۸</div>
+    <h2>تابع‌ها: دستورپخت‌های آماده 👨‍🍳</h2>
+    <span class="chip">مرحله ۹ از ۱۲</span><span class="chip timechip">⏱️ ~۶ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:72%"></i></div>
+
+  <p><b>تابع</b><sup>۷</sup> مثل یک دستورپختِ اسم‌دار است: یک بار می‌نویسی «چطور کیک درست کنیم»، بعد هر وقت خواستی فقط می‌گویی «کیک درست کن!» و لازم نیست دستورپخت را دوباره بنویسی. کدهای هوش مصنوعی <b>پر از تابع</b> هستند، پس این مرحله خیلی مهم است:</p>
+
+  <pre class="code"><span class="k">def</span> salam_kon(name):
+    print(f"Salam {name} jan!")
+
+salam_kon("Sara")
+salam_kon("Ali")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">Salam Sara jan!
+Salam Ali jan!</div>
+
+  <table class="dic">
+    <tr><th>تکه</th><th>یعنی چه؟</th></tr>
+    <tr><td><code dir="ltr">def</code></td><td>مخفف <span dir="ltr">define</span> یعنی «تعریف کن». دارد یک دستورپخت جدید می‌سازد — هنوز اجرایش نمی‌کند!</td></tr>
+    <tr><td><code dir="ltr">salam_kon</code></td><td>اسمی که خودمان برای دستورپخت انتخاب کردیم.</td></tr>
+    <tr><td><code dir="ltr">(name)</code></td><td>«موادِ لازم» دستورپخت. این تابع یک ماده لازم دارد: یک اسم. به آن «ورودی» یا «پارامتر» می‌گویند.</td></tr>
+    <tr><td>خط‌های تورفته</td><td>بدنهٔ دستورپخت — کارهایی که موقع اجرا انجام می‌شود.</td></tr>
+    <tr><td><code dir="ltr">salam_kon("Sara")</code></td><td>«صدازدنِ» تابع، یعنی: حالا دستورپخت را با مادهٔ «سارا» اجرا کن! تا صدایش نزنی، هیچ اتفاقی نمی‌افتد.</td></tr>
+  </table>
+
+  <p>تابع‌ها می‌توانند به‌جای چاپ‌کردن، یک <b>نتیجه پس بدهند</b>. این کار با کلمهٔ <code dir="ltr">return</code> (برگردان) انجام می‌شود:</p>
+
+  <pre class="code"><span class="k">def</span> jam_kon(a, b):
+    <span class="k">return</span> a + b
+
+natije = jam_kon(3, 4)
+print(natije)</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی:</div>
+  <div class="out">7</div>
+
+  <div class="box why"><b class="t">🤔 فرق <span dir="ltr">print</span> و <span dir="ltr">return</span> چیست؟</b> <code dir="ltr">print</code> فقط چیزی را <b>نشانت می‌دهد</b> (مثل آشپزی که غذا را از پشت شیشه نشانت بدهد). <code dir="ltr">return</code> نتیجه را <b>تحویلت می‌دهد</b> تا در جعبه‌ای بگذاری و بعداً استفاده‌اش کنی (مثل بیرون‌بر گرفتن!). در کد بالا، عدد ۷ تحویل داده شد و داخل جعبهٔ <code dir="ltr">natije</code> رفت.</div>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۷ — «تابع» (<span dir="ltr">function</span>)</b> تکه‌کدی اسم‌دار که یک کار مشخص انجام می‌دهد و می‌شود بارها صدایش زد. <code dir="ltr">print</code> و <code dir="ltr">len</code> که قبلاً استفاده کردی هم تابع‌اند — فقط آماده‌ساختِ خودِ پایتون‌اند!</div>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ وایب کدینگ</b> وقتی هوش مصنوعی یک برنامهٔ بلند برایت می‌نویسد، آن را به چند تابع تقسیم می‌کند. برای فهمیدن کد، اول <b>فقط اسم تابع‌ها را بخوان</b> — مثل فهرست کتاب! مثلاً اگر دیدی <code dir="ltr">def download_file</code> و <code dir="ltr">def rename_photos</code>، بدون خواندن جزئیات فهمیده‌ای برنامه چه‌کار می‌کند. بعد آخرِ کد را ببین که کدام تابع‌ها صدا زده می‌شوند و با چه ترتیبی.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> تابعِ <code dir="ltr">jam_kon</code> را با عددهای خودت صدا بزن: <code dir="ltr">print(jam_kon(10, 20))</code> — باید ۳۰ ببینی.</div>
+</section>
+
+<!-- ================= مرحله ۹ ================= -->
+<section class="stage" id="s9">
+  <div class="stage-head">
+    <div class="stage-num">۹</div>
+    <h2>کتابخانه‌ها و <span dir="ltr">import</span> 📚</h2>
+    <span class="chip">مرحله ۱۰ از ۱۲</span><span class="chip timechip">⏱️ ~۴ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:80%"></i></div>
+
+  <p>لازم نیست همه‌چیز را از صفر بسازی! میلیون‌ها برنامه‌نویس، تابع‌های آماده‌شان را در بسته‌هایی به اسم <b>کتابخانه</b><sup>۸</sup> گذاشته‌اند. با دستور <code dir="ltr">import</code> (وارد کن) یک کتابخانه را به برنامه‌ات می‌آوری — مثل قرض‌گرفتن یک جعبه‌ابزار کامل از همسایه:</p>
+
+  <pre class="code"><span class="k">import</span> random
+
+adad = random.randint(1, 6)
+print(f"Tas: {adad}")</pre>
+
+  <div class="outlabel">🖥️ چیزی که باید ببینی (عددش هر بار فرق می‌کند!):</div>
+  <div class="out">Tas: 4</div>
+
+  <p>این کد یک <b>تاس</b> می‌اندازد! کتابخانهٔ <code dir="ltr">random</code> (تصادفی) را وارد کردیم و از تابعِ <code dir="ltr">randint</code> آن خواستیم یک عدد تصادفی بین ۱ تا ۶ بدهد. آن <b>نقطه</b> در <code dir="ltr">random.randint</code> یعنی «از داخلِ»: تابعِ <span dir="ltr">randint</span> از داخل جعبه‌ابزارِ <span dir="ltr">random</span>.</p>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۸ — «کتابخانه» (<span dir="ltr">library</span> یا <span dir="ltr">module</span>)</b> مجموعه‌ای از تابع‌های آماده برای یک موضوع خاص. چندتا کتابخانه همراه خودِ پایتون می‌آید (مثل <code dir="ltr">random</code> برای شانس و <code dir="ltr">datetime</code> برای تاریخ و ساعت). هزاران کتابخانهٔ دیگر را هم می‌شود جداگانه نصب کرد — هوش مصنوعی هر وقت لازم باشد، خودش دستور نصبش را بهت می‌دهد.</div>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ وایب کدینگ</b> خط‌های <code dir="ltr">import</code> همیشه <b>بالای کد</b> هستند. با خواندنشان می‌فهمی برنامه از چه ابزارهایی استفاده می‌کند: <code dir="ltr">import os</code> یعنی «با فایل‌ها و پوشه‌ها کار دارد»، <code dir="ltr">import requests</code> یعنی «به اینترنت وصل می‌شود». اگر موقع اجرا خطای <span dir="ltr">ModuleNotFoundError</span> دیدی، یعنی آن کتابخانه روی کامپیوترت نصب نیست — کافی است همین خطا را به هوش مصنوعی نشان بدهی تا دستور نصبش را بدهد.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> همان دو خط تاس را دوباره اجرا کن (در <span dir="ltr">IDLE</span> با فلشِ بالا یا تایپ دوباره). باید عدد جدیدی ببینی — چون تصادفی است!</div>
+</section>
+
+<!-- ================= مرحله ۱۰ ================= -->
+<section class="stage" id="s10">
+  <div class="stage-head">
+    <div class="stage-num">۱۰</div>
+    <h2>خطاها را بخوان، نترس! 🩹</h2>
+    <span class="chip">مرحله ۱۱ از ۱۲</span><span class="chip timechip">⏱️ ~۵ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:88%"></i></div>
+
+  <p>مهارتِ شمارهٔ یکِ یک وایب‌کدر، <b>نترسیدن از نوشته‌های قرمز</b> است! خطا یعنی پایتون دارد <b>مؤدبانه توضیح می‌دهد</b> کجا گیر کرده — مثل معلمی که زیر غلط املایی‌ات خط می‌کشد و می‌گوید کدام کلمه اشتباه است. بیا عمداً یک خطا بسازیم. این را بنویس (عمداً غلط است!):</p>
+
+  <pre class="code">print(salam)</pre>
+
+  <div class="outlabel">🖥️ چیزی که می‌بینی (قرمزرنگ):</div>
+  <div class="out">Traceback (most recent call last):
+  File "&lt;pyshell#1&gt;", line 1, in &lt;module&gt;
+    print(salam)
+NameError: name 'salam' is not defined</div>
+
+  <p>ترسناک به نظر می‌رسد؟ فقط <b>دو جایش</b> را بخوان:</p>
+  <div class="step"><b class="n">۱</b><div><b>خط آخر</b> — مهم‌ترین خط! نوع خطا و توضیحش: <code dir="ltr">NameError: name 'salam' is not defined</code> یعنی «خطای اسم: جعبه‌ای به اسم salam وجود ندارد.» راست هم می‌گوید — ما هیچ‌وقت جعبه‌ای به این اسم نساختیم و گیومه هم نگذاشتیم که متن حساب شود.</div></div>
+  <div class="step"><b class="n">۲</b><div><b>شمارهٔ خط</b> — عبارتِ <code dir="ltr">line 1</code> می‌گوید مشکل در خطِ چندمِ کد است، و خودِ خطِ خطادار را هم نشان می‌دهد.</div></div>
+
+  <p>معروف‌ترین خطاهایی که خواهی دید:</p>
+  <table class="dic">
+    <tr><th>خطا</th><th>معنی به زبان ساده</th><th>معمولاً دلیلش</th></tr>
+    <tr><td><code dir="ltr">SyntaxError</code></td><td>«جمله‌ات از نظر دستور زبان غلط است»</td><td>دونقطهٔ جاافتاده، پرانتز یا گیومهٔ بسته‌نشده</td></tr>
+    <tr><td><code dir="ltr">NameError</code></td><td>«این اسم را نمی‌شناسم»</td><td>غلط تایپی در اسم متغیر/تابع، یا استفاده قبل از ساختن</td></tr>
+    <tr><td><code dir="ltr">TypeError</code></td><td>«این دو جنس با هم جور درنمی‌آیند»</td><td>جمع‌کردن متن با عدد، مثل <code dir="ltr">"5" + 3</code></td></tr>
+    <tr><td><code dir="ltr">IndentationError</code></td><td>«تورفتگی‌ات به‌هم‌ریخته»</td><td>فاصلهٔ اول خط کم یا زیاد است</td></tr>
+    <tr><td><code dir="ltr">IndexError</code></td><td>«لیست این‌قدر عضو ندارد!»</td><td>مثلاً از لیستِ ۳تایی عضو شمارهٔ ۵ را خواسته‌ای</td></tr>
+    <tr><td><code dir="ltr">ModuleNotFoundError</code></td><td>«این کتابخانه نصب نیست»</td><td>باید کتابخانه را نصب کنی — از هوش مصنوعی بپرس چطور</td></tr>
+  </table>
+
+  <div class="box tip"><b class="t">💡 قانون طلایی وایب کدینگ</b> هر وقت خطا دیدی، <b>کلِ متن قرمز را کپی کن</b> و عیناً برای هوش مصنوعی بفرست با این جمله: «این خطا را گرفتم، مشکل چیست و کد اصلاح‌شده را بده.» در ۹۰٪ موارد در همان پیام بعدی حل می‌شود. برای کپی‌کردن: با ماوس روی متن بکش تا رنگی شود، بعد کلیدهای <span dir="ltr">Ctrl</span> و <span dir="ltr">C</span> را با هم بزن.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b> خودت یک خطا بساز: بنویس <code dir="ltr">print("salam"</code> (بدون پرانتز بسته) و <span dir="ltr">Enter</span> بزن. حالا بدون ترس بگو این چه نوع خطایی است. (جواب: <span dir="ltr">SyntaxError</span> — پرانتز بسته نشده!)</div>
+</section>
+
+<!-- ================= مرحله ۱۱ ================= -->
+<section class="stage" id="s11">
+  <div class="stage-head">
+    <div class="stage-num">۱۱</div>
+    <h2>وایب کدینگ عملی: اولین پروژهٔ واقعی‌ات 🤖🚀</h2>
+    <span class="chip">مرحله ۱۲ از ۱۲</span><span class="chip timechip">⏱️ ~۱۰ دقیقه</span>
+  </div>
+  <div class="pbar"><i style="width:100%"></i></div>
+
+  <p>حالا همهٔ آجرها را داری! وقتش است چرخهٔ کاملِ وایب کدینگ را یک بار واقعی انجام بدهی. اول یاد بگیریم کد را به‌جای پوسته، در یک <b>فایل</b> بنویسیم (برنامه‌های واقعی همیشه در فایل‌اند):</p>
+
+  <h3 style="color:var(--blue2)">🗂️ الف) کدنویسی در فایل (به‌جای پوسته)</h3>
+  <div class="step"><b class="n">۱</b><div>در پنجرهٔ <span dir="ltr">IDLE</span>، از منوی بالا روی <span dir="ltr">File</span> کلیک کن.</div></div>
+  <div class="step"><b class="n">۲</b><div>روی <span dir="ltr">New File</span> کلیک کن. یک پنجرهٔ سفیدِ خالی باز می‌شود — این «دفترچهٔ» برنامه‌ات است.</div></div>
+  <div class="step"><b class="n">۳</b><div>کدت را در این پنجره بنویس (یا کدِ هوش مصنوعی را در آن جای‌گذاری<sup>۹</sup> کن).</div></div>
+  <div class="step"><b class="n">۴</b><div>از منوی <span dir="ltr">File</span> گزینهٔ <span dir="ltr">Save</span> را بزن و یک اسم انگلیسی بده، مثلاً <code dir="ltr">bazi.py</code> (پسوندِ <span dir="ltr">.py</span> یعنی فایل پایتون).</div></div>
+  <div class="step"><b class="n">۵</b><div>برای اجرا: از منوی <span dir="ltr">Run</span> گزینهٔ <span dir="ltr">Run Module</span> را بزن (یا کلید <span dir="ltr">F5</span>). نتیجه در پنجرهٔ پوسته نمایش داده می‌شود.</div></div>
+
+  <div class="box foot"><b class="t">📖 پاورقی ۹ — «جای‌گذاری» (<span dir="ltr">Paste</span>)</b> یعنی چیزی که کپی کرده‌ای را بچسبانی: کلیک در جای مقصد، بعد کلیدهای <span dir="ltr">Ctrl</span> و <span dir="ltr">V</span> را با هم بزن.</div>
+
+  <h3 style="color:var(--blue2)">💬 ب) چطور از هوش مصنوعی «درست» کد بخواهی؟</h3>
+  <p>کیفیتِ کدی که می‌گیری به کیفیت درخواستت بستگی دارد. این ۴ قانون را رعایت کن:</p>
+
+  <table class="dic">
+    <tr><th>قانون</th><th>❌ بد</th><th>✅ خوب</th></tr>
+    <tr><td>دقیق بگو چه می‌خواهی</td><td>«یه بازی بساز»</td><td>«یک بازی حدس عدد به پایتون بنویس: کامپیوتر عددی بین ۱ تا ۱۰۰ انتخاب کند و من حدس بزنم، و بگوید حدسم بزرگ‌تر است یا کوچک‌تر»</td></tr>
+    <tr><td>سطحت را بگو</td><td>(هیچی نگویی)</td><td>«مبتدی هستم؛ کد ساده بنویس و جلوی هر بخش کامنت توضیح بگذار»</td></tr>
+    <tr><td>محیطت را بگو</td><td>(هیچی نگویی)</td><td>«ویندوز دارم و با IDLE اجرا می‌کنم»</td></tr>
+    <tr><td>خطا را کامل برگردان</td><td>«کار نکرد!»</td><td>«این خطا را گرفتم: (کپیِ کامل متن قرمز)»</td></tr>
+  </table>
+
+  <div class="box tip"><b class="t">💡 «کامنت» چیست؟</b> در کد پایتون، هر خطی که با علامت <code dir="ltr">#</code> شروع شود، <b>یادداشتِ توضیحی</b> است و کامپیوتر آن را کاملاً نادیده می‌گیرد — فقط برای آدم‌هاست! وقتی از هوش مصنوعی می‌خواهی «با کامنت» بنویسد، یعنی کنار هر تکه کد، توضیحش را هم بنویسد. برای یادگیری معجزه می‌کند.</div>
+
+  <h3 style="color:var(--blue2)">🎮 پ) حالا خودت انجامش بده — پروژهٔ پایانی</h3>
+  <div class="step"><b class="n">۱</b><div>یک هوش مصنوعی (مثل <span dir="ltr">Claude</span>) را باز کن و این را بفرست: «یک بازی حدس عدد سادهٔ پایتون برای مبتدی بنویس، با کامنت فارسی برای هر خط.»</div></div>
+  <div class="step"><b class="n">۲</b><div>قبل از اجرا، کد را <b>خط به خط بخوان</b> و با دانشِ همین یک ساعت، حدس بزن هر خط چه‌کار می‌کند. حالا همه‌چیزش برایت آشناست: <code dir="ltr">import random</code> (تاس!)، <code dir="ltr">while</code> (تکرار تا وقتی...)، <code dir="ltr">if/elif/else</code> (تصمیم‌گیری)، <code dir="ltr">int(...)</code> (تبدیل متن به عدد).</div></div>
+  <div class="step"><b class="n">۳</b><div>هر خطی را که نفهمیدی، از هوش مصنوعی بپرس: «خط X یعنی چه؟ مثل بچه‌ها توضیح بده.» — این پرسیدن، خودِ یادگیری است!</div></div>
+  <div class="step"><b class="n">۴</b><div>کد را در یک <span dir="ltr">New File</span> جای‌گذاری کن، ذخیره کن و با <span dir="ltr">F5</span> اجرا کن.</div></div>
+  <div class="step"><b class="n">۵</b><div>حالا یک تغییر بخواه! مثلاً: «کاری کن بازی تعداد حدس‌هایم را بشمارد و آخرش بگوید با چند حدس بردم.» کد جدید را بگیر، بخوان، اجرا کن. 🔁 این همان چرخهٔ وایب کدینگ است!</div></div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی نهایی</b> اگر بازی اجرا شد و توانستی حداقل یک تغییر کوچک با کمک هوش مصنوعی در آن بدهی، رسماً وایب‌کدر شده‌ای! 🏆 اگر جایی گیر کردی، خطا را کپی کن و به هوش مصنوعی بده — یا بخش رفع اشکالِ پایین را ببین.</div>
+
+  <h3 style="color:var(--blue2)">🔑 جدول رمزگشایی: هر علامتی در کد دیدی، این‌جا معنی‌اش هست</h3>
+  <p>این جدول را مثل دیکشنری جیبی نگه دار. موقع خواندنِ هر کد پایتون، جواب «این علامت یعنی چه؟» این‌جاست:</p>
+  <table class="dic">
+    <tr><th>علامت / کلمه</th><th>بخوانش:</th></tr>
+    <tr><td><code dir="ltr">=</code></td><td>«بگذار داخل جعبهٔ...»</td></tr>
+    <tr><td><code dir="ltr">==</code></td><td>«آیا برابر است با...؟»</td></tr>
+    <tr><td><code dir="ltr">" "</code> یا <code dir="ltr">' '</code></td><td>«این یک متن است»</td></tr>
+    <tr><td><code dir="ltr">[ ]</code></td><td>«لیست» (یا: عضو شمارهٔ فلان از لیست)</td></tr>
+    <tr><td><code dir="ltr">{ }</code></td><td>«دیکشنری» (دفترچهٔ کلید ← مقدار) یا جای خالی در <span dir="ltr">f-string</span></td></tr>
+    <tr><td><code dir="ltr">( )</code></td><td>«ورودی‌های تابع» — چیزی که به دستور می‌دهیم</td></tr>
+    <tr><td><code dir="ltr">:</code> در آخر خط</td><td>«حالا کارهای داخلش را می‌گویم...» (خط‌های بعدی تو می‌روند)</td></tr>
+    <tr><td>تورفتگی اول خط</td><td>«من داخلِ دستورِ بالایی هستم»</td></tr>
+    <tr><td><code dir="ltr">#</code></td><td>«یادداشت برای آدم‌ها — کامپیوتر رد می‌شود»</td></tr>
+    <tr><td><code dir="ltr">if / elif / else</code></td><td>«اگر / وگرنه اگر / وگرنه»</td></tr>
+    <tr><td><code dir="ltr">for ... in ...</code></td><td>«برای تک‌تکِ ... در ...»</td></tr>
+    <tr><td><code dir="ltr">while</code></td><td>«تا وقتی که ... تکرار کن»</td></tr>
+    <tr><td><code dir="ltr">def</code></td><td>«دستورپخت جدید تعریف می‌کنم»</td></tr>
+    <tr><td><code dir="ltr">return</code></td><td>«نتیجه را تحویل بده و برگرد»</td></tr>
+    <tr><td><code dir="ltr">import</code></td><td>«جعبه‌ابزار آماده را بیاور»</td></tr>
+    <tr><td>نقطه، مثل <code dir="ltr">random.randint</code></td><td>«از داخلِ» — ابزارِ فلان از جعبه‌ابزارِ فلان</td></tr>
+    <tr><td><code dir="ltr">input("...")</code></td><td>«از کاربر سؤال بپرس و جوابش را بگیر» (جوابش همیشه متن است؛ برای عدد‌شدن دورش <code dir="ltr">int( )</code> می‌گذارند)</td></tr>
+  </table>
+</section>
+
+<!-- ================= رفع اشکال ================= -->
+<section class="stage" id="fix">
+  <div class="stage-head">
+    <div class="stage-num" style="background:var(--purple)">🔧</div>
+    <h2>رفع اشکال‌های رایج</h2>
+    <span class="chip">وقتی گیر کردی این‌جا بیا</span>
+  </div>
+
+  <div class="box fixbox"><b class="t">مشکل ۱: <span dir="ltr">IDLE</span> در جست‌وجوی استارت پیدا نمی‌شود</b>
+  <b>علت:</b> احتمالاً نصبِ پایتون کامل نشده.<br>
+  <b>راه‌حل:</b> فایل نصب را دوباره اجرا کن (اگر پرسید، <span dir="ltr">Repair</span> یا نصب دوباره را بزن) و صبر کن تا پیام <span dir="ltr">successful</span> را ببینی. بعد کامپیوتر را یک بار خاموش‌روشن کن و دوباره جست‌وجو کن.</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۲: نوشتم <code dir="ltr">print(...)</code> ولی خطای <span dir="ltr">SyntaxError</span> گرفتم</b>
+  <b>علت:</b> معمولاً یکی از این سه‌تا: حرف بزرگ نوشته‌ای (<span dir="ltr">Print</span>)، گیومه یا پرانتز را نبسته‌ای، یا به‌جای گیومهٔ انگلیسیِ <code dir="ltr">"</code> از گیومهٔ فارسیِ «» استفاده کرده‌ای.<br>
+  <b>راه‌حل:</b> زبان کیبورد را با کلیدهای <span dir="ltr">Alt</span>+<span dir="ltr">Shift</span> (یا <span dir="ltr">Win</span>+<span dir="ltr">Space</span>) روی انگلیسی بگذار و خط را دوباره، دقیقاً مثل نمونه، تایپ کن.</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۳: خطای <span dir="ltr">NameError</span> می‌گیرم</b>
+  <b>علت:</b> از جعبه‌ای استفاده کرده‌ای که هنوز نساخته‌ای، یا اسمش را غلط تایپ کرده‌ای (<span dir="ltr">nam</span> به‌جای <span dir="ltr">name</span>). حواست باشد: اگر پوستهٔ <span dir="ltr">IDLE</span> را ببندی، همهٔ جعبه‌ها پاک می‌شوند و باید از اول بسازی‌شان!<br>
+  <b>راه‌حل:</b> اول خطِ ساختِ متغیر را اجرا کن (مثلاً <code dir="ltr">name = "Sara"</code>)، بعد استفاده‌اش کن. املا را حرف‌به‌حرف چک کن.</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۴: خطای <span dir="ltr">IndentationError</span> یا رفتار عجیب بعد از <code dir="ltr">if</code> و <code dir="ltr">for</code></b>
+  <b>علت:</b> تورفتگیِ خط‌های داخلی درست نیست.<br>
+  <b>راه‌حل:</b> بعد از خطی که به دونقطه ختم می‌شود، خطِ بعدی را دقیقاً با ۴ فاصله (یا یک بار کلید <span dir="ltr">Tab</span>) شروع کن. همهٔ خط‌های داخلِ یک بلوک باید تورفتگیِ یکسان داشته باشند. در پوسته، برای تمام‌کردن بلوک و اجرای آن، یک <span dir="ltr">Enter</span> اضافه روی خط خالی بزن.</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۵: تایپ فارسی در کد، همه‌چیز را به‌هم می‌ریزد</b>
+  <b>علت:</b> دستورهای پایتون باید انگلیسی باشند؛ حروف فارسی در اسم دستورها جواب نمی‌دهد.<br>
+  <b>راه‌حل:</b> کد را انگلیسی بنویس. متن فارسی فقط داخل گیومه‌ها مجاز است، مثلاً <code dir="ltr">print("سلام")</code> کاملاً درست کار می‌کند.</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۶: کدِ هوش مصنوعی را اجرا کردم، خطای <span dir="ltr">ModuleNotFoundError</span> گرفتم</b>
+  <b>علت:</b> کد از کتابخانه‌ای استفاده می‌کند که روی کامپیوترت نصب نیست.<br>
+  <b>راه‌حل:</b> متن کامل خطا را کپی کن و به هوش مصنوعی بگو: «این خطا را گرفتم، روی ویندوز چطور نصبش کنم؟ قدم‌به‌قدم بگو.» او دستور نصب را می‌دهد (معمولاً چیزی شبیه <code dir="ltr">pip install ...</code> که در ابزاری به اسم <span dir="ltr">Command Prompt</span> تایپ می‌شود — هوش مصنوعی راهنمایی‌ات می‌کند).</div>
+
+  <div class="box fixbox"><b class="t">مشکل ۷: کد اجرا می‌شود ولی کاری که می‌خواستم را نمی‌کند</b>
+  <b>علت:</b> این خطا نیست، «سوءتفاهم» است! برنامه دقیقاً همان چیزی را انجام داده که نوشته شده — فقط چیزی که نوشته شده با چیزی که در ذهنِ تو بود فرق دارد.<br>
+  <b>راه‌حل:</b> به هوش مصنوعی بگو: «کد اجرا شد ولی انتظار داشتم X شود، در عوض Y شد.» هر چه دقیق‌تر تفاوت را بگویی، سریع‌تر درست می‌شود. این حرفه‌ای‌ترین جملهٔ وایب کدینگ است!</div>
+</section>
+
+<!-- ================= جشن ================= -->
+<div class="party">
+  <h2>🎉 تمام شد! حالا تو بلدی...</h2>
+  <ul>
+    <li>✅ پایتون نصب کنی و کد را در <span dir="ltr">IDLE</span> (پوسته و فایل) اجرا کنی</li>
+    <li>✅ متغیرها (جعبه‌ها)، عدد و متن و بولی را از هم تشخیص بدهی</li>
+    <li>✅ لیست <code dir="ltr">[ ]</code> و دیکشنری <code dir="ltr">{ }</code> را بخوانی</li>
+    <li>✅ شرط‌ها (<span dir="ltr">if</span>)، حلقه‌ها (<span dir="ltr">for</span>) و تابع‌ها (<span dir="ltr">def</span>) را بفهمی</li>
+    <li>✅ خطاها را بدون ترس بخوانی و برای هوش مصنوعی بفرستی</li>
+    <li>✅ چرخهٔ وایب کدینگ را بچرخانی: بخواه ← بخوان ← اجرا کن ← اصلاح کن 🔁</li>
+  </ul>
+  <p style="margin-block-end:0"><b>قدم بعدی؟</b> همین امشب یک پروژهٔ کوچکِ به‌دردبخور از هوش مصنوعی بخواه — مثلاً «برنامه‌ای که تولد دوستانم را یادآوری کند» — و چرخه را بچرخان. هر پروژه، ده برابرِ هر آموزشی یادت می‌دهد. 🚀</p>
+</div>
+
+<footer>
+  <div>این آموزش برای یادگیریِ مستقل ساخته شده — هر جا گیر کردی، خطا را کپی کن و بپرس!</div>
+  <div class="sig">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+</footer>
+
+</div>
+</body>
+</html>
