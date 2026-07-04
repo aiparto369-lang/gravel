@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای انتشار گراول — گام‌به‌گام</title>
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<!-- © Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2F7F7;--card:#fff;--ink:#14303B;--teal:#0E7C86;--teal-soft:#E1F0F1;--saffron:#E8A317;--saffron-ink:#8A5A00;--saffron-soft:#FBF1DA;--line:#D6E3E5;--night:#123B4A}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);font-size:17px;line-height:1.9;direction:rtl;text-align:right}
+.wrap{max-width:780px;margin-inline:auto;padding:24px 16px 48px}
+header{background:var(--night);color:#F4F8F8;padding:40px 0;border-block-end:6px solid var(--saffron)}
+header h1{font-size:clamp(24px,5vw,34px);font-weight:900;margin:8px 0 0}
+header p{color:#CFE3E6;margin:8px 0 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-block-start:20px;box-shadow:0 2px 10px rgba(18,59,74,.08)}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;font-size:19px;margin-inline-end:10px}
+.step h2{display:flex;align-items:center;font-size:20px;font-weight:900;margin:0 0 10px}
+code,pre{direction:ltr;text-align:left;font-family:Consolas,'Courier New',monospace;background:#0F2530;color:#D9EEF1;border-radius:8px}
+code{padding:2px 8px;font-size:15px}
+pre{padding:14px;overflow-x:auto;font-size:14px}
+.tip{background:var(--saffron-soft);border-inline-start:5px solid var(--saffron);border-radius:12px;padding:12px 16px;color:var(--saffron-ink);font-size:15.5px;margin-block-start:12px}
+.warn{background:#FDECEC;border-inline-start:5px solid #C0392B;border-radius:12px;padding:12px 16px;color:#7B241C;font-size:15.5px;margin-block-start:12px}
+.check{background:var(--teal-soft);border-inline-start:5px solid var(--teal);border-radius:12px;padding:12px 16px;color:#0A5A62;font-size:15.5px;margin-block-start:12px}
+ul,ol{padding-inline-start:22px}
+footer{text-align:center;color:#7A9098;font-size:13.5px;margin-block-start:36px;opacity:.9}
+footer a{color:var(--teal)}
+</style>
+</head>
+<body>
+<header><div class="wrap" style="padding-block:0">
+  <div style="font-size:44px" aria-hidden="true">🚀</div>
+  <h1>راهنمای انتشار گراول</h1>
+  <p>یک بار راه‌اندازی کن — از آن به بعد، فقط فایل آموزش را آپلود می‌کنی و <b>ربات گراول</b> بقیهٔ کارها را انجام می‌دهد.</p>
+</div></header>
+<main class="wrap">
+
+<div class="step">
+  <h2><span class="step-num">۱</span>حساب گیت‌هاب بساز (اگر نداری)</h2>
+  <p>به آدرس <code>github.com</code> برو و روی <span dir="ltr"><b>Sign up</b></span> کلیک کن. یک ایمیل، یک رمز و یک نام کاربری می‌خواهد.</p>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">۲</span>مخزن (Repository) بساز</h2>
+  <ol>
+    <li>روی علامت <b>+</b> بالای صفحه کلیک کن و <span dir="ltr"><b>New repository</b></span> را بزن.</li>
+    <li>نامش را بگذار: <code>gravel</code></li>
+    <li>گزینهٔ <span dir="ltr"><b>Public</b></span> را انتخاب کن و <span dir="ltr"><b>Create repository</b></span> را بزن.</li>
+  </ol>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">۳</span>همهٔ فایل‌ها را آپلود کن</h2>
+  <ol>
+    <li>فایل زیپ را از حالت فشرده خارج کن (راست‌کلیک → <span dir="ltr">Extract All</span>).</li>
+    <li>در صفحهٔ مخزن، روی <span dir="ltr"><b>uploading an existing file</b></span> کلیک کن.</li>
+    <li><b>همهٔ محتوای داخل پوشهٔ gravel</b> (شامل پوشه‌های <code>.github</code> و <code>scripts</code> و <code>tutorials</code>) را با موس بکش و داخل صفحه رها کن.</li>
+    <li>پایین صفحه <span dir="ltr"><b>Commit changes</b></span> را بزن.</li>
+  </ol>
+  <div class="warn">⚠️ پوشهٔ <code>.github</code> قلب ربات است — حتماً آپلود شود. چون اسمش با نقطه شروع می‌شود ممکن است در ویندوز مخفی به نظر برسد؛ اگر ندیدی‌اش، در File Explorer از تب View گزینهٔ <span dir="ltr">Hidden items</span> را روشن کن.</div>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">۴</span>سایت را روشن کن (Pages)</h2>
+  <ol>
+    <li>در مخزن به <span dir="ltr"><b>Settings</b></span> → <span dir="ltr"><b>Pages</b></span> برو.</li>
+    <li>در قسمت <span dir="ltr">Branch</span> گزینهٔ <code>main</code> را انتخاب و <span dir="ltr"><b>Save</b></span> کن.</li>
+    <li>چند دقیقه صبر کن؛ آدرس سایتت بالای صفحه ظاهر می‌شود:<br><code>https://YOUR-USERNAME.github.io/gravel/</code></li>
+  </ol>
+  <div class="check">✅ ایست بازرسی: آدرس را باز کن — باید صفحهٔ «گراول» را با جست‌وجو و دسته‌بندی ببینی.</div>
+</div>
+
+<div class="step" style="border-inline-start:6px solid var(--saffron)">
+  <h2><span class="step-num" style="background:var(--saffron)">🤖</span>از این به بعد: فقط آپلود کن!</h2>
+  <p>روال همیشگی‌ات از امروز این است:</p>
+  <ol>
+    <li>فایل HTML آموزش جدید را بگیر.</li>
+    <li>در مخزن، وارد پوشهٔ <code>tutorials</code> شو و آپلودش کن.</li>
+    <li>تمام! ☕ ظرف حدود یک دقیقه، ربات گراول خودش:</li>
+  </ol>
+  <ul>
+    <li>آموزش را پیدا و <b>دسته‌بندی</b> می‌کند و در قفسه و جست‌وجو می‌نشاند،</li>
+    <li>برچسب «جدید ✨» می‌زند و در بخش «تازه‌ها» نشانش می‌دهد،</li>
+    <li>امضای © و لینک برگشت به گراول را <b>داخل خود فایل</b> تزریق می‌کند،</li>
+    <li>کش آفلاین را به‌روز می‌کند تا کاربران قدیمی هم آموزش تازه را ببینند،</li>
+    <li>نقشهٔ سایت (sitemap) را برای گوگل تازه می‌کند.</li>
+  </ul>
+  <div class="tip">💡 می‌توانی کار ربات را تماشا کنی: تب <span dir="ltr"><b>Actions</b></span> در مخزن، هر اجرای «Gravel Bot» را با تیک سبز نشان می‌دهد.</div>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">۵</span>شناسنامهٔ آموزش (توصیه‌شده)</h2>
+  <p>اگر این چند خط در <code>&lt;head&gt;</code> فایل آموزش باشد، ربات به‌جای حدس‌زدن، دقیق دسته‌بندی می‌کند:</p>
+  <pre>&lt;meta name="gravel:category" content="برنامه‌نویسی"&gt;
+&lt;meta name="gravel:emoji"    content="🐍"&gt;
+&lt;meta name="gravel:time"     content="حدود ۶۰ دقیقه"&gt;
+&lt;meta name="gravel:level"    content="مبتدی"&gt;
+&lt;meta name="gravel:desc"     content="یک خط توضیح آموزش"&gt;
+&lt;meta name="gravel:keywords" content="کلمه‌هایی که مردم جست‌وجو می‌کنند"&gt;
+&lt;meta name="gravel:order"    content="5"&gt;  &lt;!-- فقط اگر عضو «مسیر صعود» است --&gt;</pre>
+  <p>دسته‌های مجاز: <b>برنامه‌نویسی</b>، <b>کریپتو و پرداخت</b>، <b>اتوماسیون</b>، <b>ابزارهای هوش مصنوعی</b>، <b>سایر</b>.</p>
+  <div class="tip">💡 وقتی آموزش جدید سفارش می‌دهی، کافی است بگویی «برای گراول» — شناسنامه از همان اول داخل فایل گذاشته می‌شود و هیچ کار دستی نمی‌ماند.</div>
+</div>
+
+<div class="step">
+  <h2><span class="step-num">۶</span>تنظیمات شخصی (از قبل انجام شده)</h2>
+  <p>آی‌دی تلگرامت (<span dir="ltr">@Mehdirezghi</span>) از قبل در سایت تنظیم شده: دکمهٔ «سفارش آموزش» مستقیم چت تو را باز می‌کند و امضایت در پایین همهٔ صفحه‌هاست. اگر روزی خواستی عوضش کنی، در <code>index.html</code> این خط را پیدا کن:</p>
+  <pre>const TELEGRAM_ID = "Mehdirezghi";</pre>
+</div>
+
+<div class="step" style="border-inline-start:6px solid var(--saffron)">
+  <h2><span class="step-num" style="background:var(--saffron)">🎉</span>تمام شد!</h2>
+  <p>حالا گراول یک موجود زنده است: تو فقط آموزش تولید می‌کنی و آپلود؛ فهرست، دسته‌بندی، جست‌وجو، آفلاین، سئو و امضای © — همه خودکار.</p>
+</div>
+
+</main>
+<footer>
+  🏔️ گراول — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.<br>
+  © <span dir="ltr">Mehdi Rezghi</span> — <a href="https://t.me/Mehdirezghi" dir="ltr">@Mehdirezghi</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>گراول — کتابخانهٔ آموزش گام‌به‌گام | Mehdi Rezghi</title>
+<meta name="description" content="گراول: کتابخانهٔ آفلاین آموزش‌های گام‌به‌گام فارسی — از صفر و بدون پیش‌نیاز. برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<!-- ================================================== -->
+<!-- گراول (Gravel) — کتابخانهٔ آموزش گام‌به‌گام          -->
+<!-- © Mehdi Rezghi — All rights reserved                -->
+<!-- Telegram: https://t.me/Mehdirezghi                  -->
+<!-- ================================================== -->
+<meta name="theme-color" content="#123B4A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:title" content="گراول — کتابخانهٔ آموزش گام‌به‌گام">
+<meta property="og:description" content="برای رسیدن به قله باید از سنگ‌ریزه عبور کرد. آموزش‌های فارسی از صفر — آفلاین هم کار می‌کند.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="window.__noQR=true"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "گراول",
+  "alternateName": "Gravel",
+  "description": "کتابخانهٔ آموزش‌های گام‌به‌گام فارسی از صفر و بدون پیش‌نیاز",
+  "inLanguage": "fa",
+  "copyrightHolder": {"@type": "Person", "name": "Mehdi Rezghi", "sameAs": "https://t.me/Mehdirezghi"},
+  "author": {"@type": "Person", "name": "Mehdi Rezghi", "sameAs": "https://t.me/Mehdirezghi"}
+}
+</script>
+<style>
+/* ---------- Design tokens — © Mehdi Rezghi ---------- */
+:root{
+  --paper:#F2F7F7; --card:#FFFFFF;
+  --ink:#14303B; --ink-soft:#3E5A66; --night:#123B4A;
+  --teal:#0E7C86; --teal-soft:#E1F0F1;
+  --saffron:#E8A317; --saffron-ink:#8A5A00; --saffron-soft:#FBF1DA;
+  --line:#D6E3E5;
+  --radius:16px; --shadow:0 2px 10px rgba(18,59,74,.08);
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:32px; --space-6:48px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  margin:0; font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  background:var(--paper); color:var(--ink);
+  font-size:17px; line-height:1.9; direction:rtl; text-align:right;
+}
+code,[dir="ltr"]{font-family:Consolas,'Courier New',monospace}
+a{color:var(--teal)}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px;border-radius:6px}
+.wrap{max-width:920px;margin-inline:auto;padding-inline:var(--space-2)}
+
+/* ---------- Header ---------- */
+header.hero{background:var(--night);color:#F4F8F8;padding-block:var(--space-6) var(--space-4);border-block-end:6px solid var(--saffron)}
+.hero .emoji{font-size:56px;line-height:1}
+.hero h1{font-size:clamp(30px,6vw,44px);font-weight:900;margin:var(--space-1) 0 0}
+.hero p.tagline{color:var(--saffron);font-weight:700;font-size:17px;margin:6px 0 0}
+.hero p.promise{color:#CFE3E6;margin-block-start:var(--space-2);max-width:36rem;font-size:18px}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-block-start:var(--space-3)}
+.badge{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 14px;font-size:14px;color:#EAF4F5}
+.badge strong{color:var(--saffron);font-weight:900}
+
+/* ---------- Progress ---------- */
+.progress-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:var(--space-3);margin-block-start:calc(-1 * var(--space-3));border:1px solid var(--line)}
+.progress-row{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+.progress-track{flex:1 1 200px;height:14px;background:var(--teal-soft);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--saffron));border-radius:999px;transition:width .5s ease}
+#progressLabel{font-weight:900;color:var(--teal);white-space:nowrap}
+
+/* ---------- Sections ---------- */
+section{margin-block-start:var(--space-6)}
+h2{font-size:clamp(22px,4.5vw,28px);font-weight:900;margin:0 0 var(--space-1)}
+h2 .h-emoji{margin-inline-end:8px}
+p.section-lead{color:var(--ink-soft);margin-block-start:0;max-width:40rem}
+
+/* ---------- Cards (shared) ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-inline-start:6px solid var(--teal);border-radius:var(--radius);box-shadow:var(--shadow);padding:var(--space-3);transition:transform .15s ease, box-shadow .15s ease}
+@media (hover:hover){ .card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(18,59,74,.12)} }
+.card-head{display:flex;align-items:flex-start;gap:12px}
+.card-emoji{font-size:34px;line-height:1.2}
+.card h3{margin:0;font-size:19px;font-weight:900}
+.card p.desc{margin:6px 0 0;color:var(--ink-soft);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-block-start:12px}
+.chip{background:var(--teal-soft);color:var(--teal);border-radius:999px;padding:2px 12px;font-size:13.5px;font-weight:700}
+.chip.saffron{background:var(--saffron-soft);color:var(--saffron-ink)}
+.badge-new{background:var(--saffron);color:#3A2600;border-radius:999px;padding:2px 12px;font-size:12.5px;font-weight:900}
+.card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin-block-start:var(--space-2)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;text-decoration:none;border:none;border-radius:12px;padding:10px 20px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;min-height:44px}
+.btn:hover{background:#0A6570}
+.btn.secondary{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn.secondary:hover{background:var(--teal-soft)}
+.btn.install{background:var(--saffron);color:#3A2600}
+.btn.install:hover{background:#D99508}
+.done-check{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--ink-soft);cursor:pointer;min-height:44px}
+.done-check input{width:22px;height:22px;accent-color:var(--saffron);cursor:pointer}
+
+/* ---------- مسیر صعود (rail) ---------- */
+.path{position:relative;padding-inline-start:34px;margin-block-start:var(--space-3)}
+.path::before{content:"";position:absolute;inset-block:26px;inset-inline-start:11px;width:6px;background:var(--line);border-radius:999px}
+.path .rail-fill{position:absolute;inset-inline-start:11px;top:26px;width:6px;height:0;background:var(--saffron);border-radius:999px;transition:height .6s ease}
+.station{position:relative;margin-block-end:var(--space-3)}
+.station::before{content:"";position:absolute;inset-inline-start:-34px;top:22px;width:22px;height:22px;border-radius:50%;background:var(--card);border:5px solid var(--teal)}
+.station.done::before{background:var(--saffron);border-color:var(--saffron)}
+.station.done .card{border-inline-start-color:var(--saffron)}
+.station.done .done-check{color:var(--saffron-ink)}
+
+/* ---------- قفسهٔ کامل: جست‌وجو + دسته‌بندی ---------- */
+.search-box{position:relative;margin-block-start:var(--space-2)}
+.search-box input{
+  width:100%;font-family:inherit;font-size:17px;padding:12px 46px 12px 16px;
+  border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);min-height:50px;
+}
+.search-box input:focus{border-color:var(--teal);outline:none}
+.search-box .s-icon{position:absolute;inset-inline-start:auto;inset-inline-end:14px;top:50%;transform:translateY(-50%);font-size:20px;pointer-events:none;opacity:.6}
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-block-start:14px}
+.cat-chip{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:6px 16px;font-family:inherit;font-size:14.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;min-height:42px}
+.cat-chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.cat-chip .cnt{opacity:.75;font-size:13px;margin-inline-start:4px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-block-start:var(--space-3)}
+.shelf .card{border-inline-start-width:5px;display:flex;flex-direction:column}
+.shelf .card .card-actions{margin-block-start:auto;padding-block-start:var(--space-2)}
+.shelf .card.done-card{border-inline-start-color:var(--saffron)}
+.empty-state{background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:var(--space-4);text-align:center;color:var(--ink-soft)}
+.fresh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-block-start:var(--space-3)}
+
+/* ---------- فرم‌ها ---------- */
+.cert-input-row{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:flex-end;margin-block-start:var(--space-2)}
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 220px}
+.field label{font-weight:700;font-size:15px}
+.field input{font-family:inherit;font-size:17px;padding:10px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);min-height:44px}
+.field input:focus{border-color:var(--teal);outline:none}
+.field textarea{font-family:inherit;font-size:16.5px;line-height:1.9;padding:10px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);resize:vertical;min-height:110px;width:100%}
+.field textarea:focus{border-color:var(--teal);outline:none}
+
+/* ---------- کارت کتابخانه ---------- */
+.cert{margin-block-start:var(--space-3);background:linear-gradient(160deg,var(--night) 0%,#1A4E60 100%);color:#F4F8F8;border-radius:20px;padding:var(--space-4);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+.cert::after{content:"🏔️";position:absolute;inset-inline-end:-14px;inset-block-end:-18px;font-size:110px;opacity:.14;transform:rotate(-12deg)}
+.cert .cert-tag{font-size:13px;letter-spacing:.5px;color:var(--saffron);font-weight:900}
+.cert h3{margin:6px 0 0;font-size:24px;font-weight:900}
+.cert p{margin:8px 0 0;color:#CFE3E6;font-size:16px}
+.cert ul{margin:10px 0 0;padding-inline-start:22px;color:#EAF4F5}
+.cert ul li{margin-block-end:2px}
+.cert .cert-footer{margin-block-start:var(--space-2);font-size:13px;color:#9FBFC6;position:relative;z-index:1}
+.cert-qr{display:flex;align-items:center;gap:14px;margin-block-start:var(--space-2);position:relative;z-index:1}
+.qr-box{background:#fff;border-radius:12px;padding:8px;display:inline-flex}
+.qr-box img,.qr-box canvas{display:block;width:96px;height:96px}
+.qr-label{font-size:13.5px;color:#CFE3E6;max-width:9rem}
+.share-row{display:flex;flex-wrap:wrap;gap:10px;margin-block-start:var(--space-2)}
+.hint{background:var(--saffron-soft);border-inline-start:5px solid var(--saffron);border-radius:12px;padding:12px 16px;font-size:15px;color:var(--saffron-ink);margin-block-start:var(--space-2)}
+[hidden]{display:none!important}
+.toast{position:fixed;inset-block-end:20px;inset-inline-start:50%;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 22px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:9}
+
+/* ---------- پخش کن ---------- */
+.spread{background:var(--teal-soft);border-radius:var(--radius);padding:var(--space-3);border:1px dashed var(--teal)}
+.spread ol{margin:8px 0 0;padding-inline-start:22px}
+.spread li{margin-block-end:6px}
+
+/* ---------- Footer ---------- */
+footer{margin-block-start:var(--space-6);padding-block:var(--space-4);background:var(--night);color:#9FBFC6;font-size:14px;text-align:center}
+footer a{color:var(--saffron)}
+footer .made-with{color:#CFE3E6}
+footer .heart{display:inline-block;animation:heartbeat 1.6s ease-in-out infinite}
+@keyframes heartbeat{0%,100%{transform:scale(1)}12%{transform:scale(1.18)}24%{transform:scale(1)}36%{transform:scale(1.12)}}
+footer .copyright{opacity:.85;margin-block-start:10px}
+@media (max-width:700px){
+  .hero .emoji{font-size:44px}
+  .card-actions .btn{flex:1 1 auto;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="emoji" aria-hidden="true">🏔️</div>
+    <h1>گراول</h1>
+    <p class="tagline">برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</p>
+    <p class="promise">کتابخانهٔ آموزش‌های گام‌به‌گام فارسی — از صفرِ صفر، بدون هیچ پیش‌نیازی. یک بار باز کن؛ بعداً <strong>بدون اینترنت</strong> هم در دسترس است.</p>
+    <div class="badges">
+      <span class="badge">📴 <strong>آفلاین</strong> کار می‌کند</span>
+      <span class="badge">🆓 همیشه رایگان</span>
+      <span class="badge" id="countBadge">📚 در حال بارگذاری…</span>
+    </div>
+    <button class="btn install" id="installBtn" type="button" hidden style="margin-block-start:20px">📲 نصب روی گوشی</button>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+
+  <!-- خلاصهٔ پیشرفت -->
+  <div class="progress-card" role="status" aria-live="polite">
+    <div class="progress-row">
+      <span>پیشرفت تو در گراول:</span>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="progressLabel">۰ از ۰</span>
+    </div>
+  </div>
+
+  <!-- تازه‌ها -->
+  <section aria-labelledby="fresh-title" id="freshSection" hidden>
+    <h2 id="fresh-title"><span class="h-emoji" aria-hidden="true">✨</span>تازه‌ها</h2>
+    <p class="section-lead">آخرین سنگ‌ریزه‌هایی که به مسیر اضافه شده‌اند.</p>
+    <div class="fresh-grid" id="freshGrid"></div>
+  </section>
+
+  <!-- مسیر صعود -->
+  <section aria-labelledby="path-title" id="pathSection" hidden>
+    <h2 id="path-title"><span class="h-emoji" aria-hidden="true">⛰️</span>مسیر صعود</h2>
+    <p class="section-lead">مسیر پیشنهادی برای شروع: از ایستگاه اول شروع کن و قدم‌به‌قدم بالا برو. هر ایستگاه را که تمام کردی، تیکش را بزن تا مسیر زعفرانی به قله نزدیک‌تر شود.</p>
+    <div class="path" id="path">
+      <div class="rail-fill" id="railFill" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- قفسهٔ کامل -->
+  <section aria-labelledby="shelf-title">
+    <h2 id="shelf-title"><span class="h-emoji" aria-hidden="true">🗂️</span>قفسهٔ کامل</h2>
+    <p class="section-lead">همهٔ آموزش‌ها، با جست‌وجو و دسته‌بندی. هر آموزش جدیدی که منتشر شود، خودکار همین‌جا می‌نشیند.</p>
+    <div class="search-box">
+      <label for="searchInput" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">جست‌وجو در آموزش‌ها</label>
+      <input type="search" id="searchInput" placeholder="جست‌وجو کن… مثلاً: پایتون، کیف‌پول، n8n">
+      <span class="s-icon" aria-hidden="true">🔍</span>
+    </div>
+    <div class="chips-row" id="chipsRow" role="group" aria-label="دسته‌بندی‌ها"></div>
+    <div class="shelf" id="shelfGrid"></div>
+    <div class="empty-state" id="emptyState" hidden>
+      <p style="margin:0;font-size:18px">🔎 چیزی با این جست‌وجو پیدا نشد.</p>
+      <p style="margin:8px 0 16px">شاید هنوز ساخته نشده — پس بهترین کار این است که سفارشش بدهی!</p>
+      <a class="btn" href="#order-title">✉️ سفارش همین آموزش</a>
+    </div>
+  </section>
+
+  <!-- کارت کتابخانه -->
+  <section aria-labelledby="cert-title">
+    <h2 id="cert-title"><span class="h-emoji" aria-hidden="true">🎖️</span>کارت کتابخانهٔ من</h2>
+    <p class="section-lead">اسمت را بنویس تا کارت افتخارت ساخته شود. بعد آن را برای دوستانت بفرست — یا اسکرین‌شات بگیر و استوری کن!</p>
+    <div class="cert-input-row">
+      <div class="field">
+        <label for="learnerName">اسم تو</label>
+        <input type="text" id="learnerName" placeholder="مثلاً: سارا" autocomplete="name">
+      </div>
+    </div>
+    <div class="cert" id="certCard">
+      <span class="cert-tag">کارت کتابخانهٔ گراول</span>
+      <h3 id="certName">همراه گراول</h3>
+      <p id="certSummary">هنوز هیچ آموزشی تمام نشده — از ایستگاه اول شروع کن! 🚀</p>
+      <ul id="certList" hidden></ul>
+      <div class="cert-qr" id="certQr" hidden>
+        <div class="qr-box" id="qrBox" aria-hidden="true"></div>
+        <span class="qr-label">اسکن کن و وارد گراول شو</span>
+      </div>
+      <div class="cert-footer">© Mehdi Rezghi — <span dir="ltr">@Mehdirezghi</span></div>
+    </div>
+    <div class="share-row">
+      <a class="btn" id="shareTelegram" href="#" target="_blank" rel="noopener">📨 بفرست در تلگرام</a>
+      <a class="btn" id="shareWhatsapp" href="#" target="_blank" rel="noopener">💬 بفرست در واتساپ</a>
+      <button class="btn secondary" id="copyText" type="button">📋 کپی متن دعوت</button>
+    </div>
+    <div class="hint">💡 هر دوستی که با لینک تو بیاید، به کل گراول دسترسی پیدا می‌کند — رایگان و آفلاین. یاد گرفتی؟ پاسش بده! 🤝</div>
+  </section>
+
+  <!-- سفارش آموزش -->
+  <section aria-labelledby="order-title">
+    <h2 id="order-title"><span class="h-emoji" aria-hidden="true">✉️</span>سفارش آموزش</h2>
+    <p class="section-lead">دوست داری یاد بگیری اما آموزشش اینجا نیست؟ بنویس چه چیزی — سفارشت مستقیم به دست من می‌رسد و آموزش‌های بعدی از همین‌جا انتخاب می‌شوند.</p>
+    <div class="card" style="border-inline-start-color:var(--saffron)">
+      <div class="field">
+        <label for="orderText">چه آموزشی می‌خواهی؟ (هر چقدر خواستی توضیح بده)</label>
+        <textarea id="orderText" rows="4" placeholder="مثلاً: آموزش ساخت ربات تلگرام از صفر برای کسی که هیچی بلد نیست…"></textarea>
+      </div>
+      <div class="card-actions">
+        <button class="btn" id="orderSend" type="button">📨 بفرست در تلگرام</button>
+        <button class="btn secondary" id="orderCopy" type="button">📋 فقط کپی کن</button>
+      </div>
+      <div class="hint" id="orderHint" hidden>💡 متن سفارشت کپی شد و تلگرام باز می‌شود — کافی است در چت، آن را <b>پیست (Paste)</b> کنی و بفرستی.</div>
+    </div>
+  </section>
+
+  <!-- پخش کن -->
+  <section aria-labelledby="spread-title">
+    <h2 id="spread-title"><span class="h-emoji" aria-hidden="true">🌱</span>گراول را پخش کن</h2>
+    <div class="spread">
+      <p style="margin:0">گراول تبلیغ ندارد؛ فقط با دستِ یادگیرنده‌ها بزرگ می‌شود. سه راه ساده:</p>
+      <ol>
+        <li>لینک این صفحه را در گروه کلاس یا خانواده بفرست.</li>
+        <li>فایل هر آموزش را جدا دانلود کن و با بلوتوث یا فلش به کسی بده که اینترنت ندارد.</li>
+        <li>کارت کتابخانه‌ات را استوری کن تا بقیه هم مسیر را شروع کنند.</li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0">🏔️ گراول — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</p>
+    <p class="made-with" style="margin:8px 0 0">ساخته شده با <span class="heart" aria-label="عشق">❤️</span></p>
+    <p class="sig" style="margin:6px 0 0">✍️ طراحی و تدوین: <a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" dir="ltr">@Mehdirezghi</a></p>
+    <p class="copyright">© <span id="copyYear"></span> <span dir="ltr">Mehdi Rezghi</span> — همهٔ حقوق محفوظ است.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ==================================================
+   گراول (Gravel) — © Mehdi Rezghi
+   Telegram: https://t.me/Mehdirezghi
+   ================================================== */
+
+/* ---------- تنظیمات نویسنده ---------- */
+const TELEGRAM_ID = "Mehdirezghi";  /* آی‌دی تلگرام بدون @ */
+const SITE_URL = location.origin.startsWith("http") ? (location.origin + location.pathname.replace(/index\.html$/,"")) : "";
+const NEW_DAYS = 21; /* آموزش‌های جدیدتر از این تعداد روز، برچسب «جدید» می‌گیرند */
+
+/* ---------- دسته‌بندی‌ها ---------- */
+const CATEGORIES = {
+  "برنامه‌نویسی": "💻",
+  "کریپتو و پرداخت": "🪙",
+  "اتوماسیون": "⚙️",
+  "ابزارهای هوش مصنوعی": "🤖",
+  "سایر": "📦"
+};
+
+/* ---------- داده‌های ذخیره (اگر catalog.json در دسترس نبود، مثلاً باز کردن مستقیم فایل) ---------- */
+const SEED = [
+  {id:"python-vibecoding", file:"tutorials/python-vibecoding-tutorial.html", emoji:"🐍", title:"پایتون از صفر برای وایب‌کدینگ", desc:"اولین قدم دنیای برنامه‌نویسی: پایتون را نصب کن و با کمک هوش مصنوعی اولین برنامه‌ات را بساز.", time:"حدود ۶۰ دقیقه", level:"مبتدی", category:"برنامه‌نویسی", order:1, added:"2026-07-04", keywords:"پایتون python نصب کدنویسی vibe"},
+  {id:"crypto-openrouter", file:"tutorials/crypto-openrouter-tutorial.html", emoji:"👛", title:"کیف‌پول کریپتو و دسترسی به OpenRouter", desc:"ساخت کیف‌پول MetaMask، شارژ امن، و گرفتن کلید OpenRouter برای استفاده از مدل‌های هوش مصنوعی.", time:"حدود ۴۵ دقیقه", level:"مبتدی", category:"کریپتو و پرداخت", order:2, added:"2026-07-04", keywords:"متامسک metamask کیف پول نوبیتکس openrouter کلید api"},
+  {id:"docker-n8n", file:"tutorials/docker-n8n-tutorial.html", emoji:"🐳", title:"داکر و n8n: خط تولید اتوماسیون هوشمند", desc:"نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.", time:"حدود ۹۰ دقیقه", level:"مبتدی", category:"اتوماسیون", order:3, added:"2026-07-04", keywords:"داکر docker n8n اتوماسیون ورک‌فلو"},
+  {id:"openclaw", file:"tutorials/openclaw-tutorial.html", emoji:"🦾", title:"نصب و راه‌اندازی OpenClaw", desc:"دستیار هوش مصنوعی خط فرمان را روی ویندوز راه بینداز و اولین مأموریتش را بده.", time:"حدود ۴۵ دقیقه", level:"مبتدی", category:"ابزارهای هوش مصنوعی", order:4, added:"2026-07-04", keywords:"openclaw هوش مصنوعی دستیار cli"}
+];
+let CATALOG = SEED;
+let activeCat = "همه";
+let query = "";
+
+/* ---------- ذخیره‌سازی امن ---------- */
+const store = (() => {
+  let mem = {};
+  const KEY = "gravel-state-v1";
+  function read(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return mem; } }
+  function write(obj){ mem = obj; try{ localStorage.setItem(KEY, JSON.stringify(obj)); }catch(e){} }
+  return {read, write};
+})();
+let state = Object.assign({name:"", done:{}}, store.read());
+
+/* ---------- ابزارها ---------- */
+const faDigits = n => String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+/* نرمال‌سازی متن فارسی برای جست‌وجوی بدون خطا (ی/ي، ک/ك، نیم‌فاصله، اعراب، ارقام) */
+function norm(s){
+  return (s || "").toLowerCase()
+    .replace(/[يى]/g,"ی").replace(/ك/g,"ک").replace(/[أإآٱ]/g,"ا")
+    .replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ی")
+    .replace(/[\u064B-\u0652\u0670\u0640]/g,"")
+    .replace(/\u200c/g," ")
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/\s+/g," ").trim();
+}
+function isNew(t){
+  if(!t.added) return false;
+  const d = new Date(t.added);
+  return !isNaN(d) && (Date.now() - d.getTime()) < NEW_DAYS * 864e5;
+}
+function catEmoji(c){ return CATEGORIES[c] || "📦"; }
+function toast(msg){
+  const t = document.createElement("div");
+  t.className = "toast"; t.setAttribute("role","status"); t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+
+/* ---------- بارگذاری فهرست (ساخته‌شده توسط ربات گراول) ---------- */
+async function loadCatalog(){
+  try{
+    const res = await fetch("catalog.json", {cache:"no-cache"});
+    if(res.ok){
+      const data = await res.json();
+      if(Array.isArray(data.tutorials) && data.tutorials.length) return data.tutorials;
+    }
+  }catch(e){/* آفلاین یا باز شدن مستقیم فایل */}
+  return SEED;
+}
+
+/* ---------- ساخت کارت ---------- */
+function cardHTML(t, compact){
+  const done = !!state.done[t.id];
+  return `
+    <div class="card-head">
+      <span class="card-emoji" aria-hidden="true">${t.emoji || catEmoji(t.category)}</span>
+      <div>
+        <h3>${t.title}</h3>
+        ${t.desc && !compact ? `<p class="desc">${t.desc}</p>` : ""}
+      </div>
+    </div>
+    <div class="chips">
+      ${isNew(t) ? `<span class="badge-new">جدید ✨</span>` : ""}
+      <span class="chip saffron">${catEmoji(t.category)} ${t.category || "سایر"}</span>
+      ${t.time ? `<span class="chip">⏱ ${t.time}</span>` : ""}
+      ${t.level ? `<span class="chip">🎯 ${t.level}</span>` : ""}
+    </div>
+    <div class="card-actions">
+      <a class="btn" href="${t.file}">📖 باز کردن</a>
+      <a class="btn secondary" href="${t.file}" download>⬇️ دانلود</a>
+      <label class="done-check">
+        <input type="checkbox" data-done="${t.id}" ${done ? "checked" : ""}>
+        تمامش کردم ✅
+      </label>
+    </div>`;
+}
+
+/* ---------- تازه‌ها ---------- */
+function renderFresh(){
+  const grid = document.getElementById("freshGrid");
+  const latest = [...CATALOG].filter(t => t.added).sort((a,b) => (b.added||"").localeCompare(a.added||"")).slice(0,3);
+  const fresh = latest.filter(isNew);
+  const show = fresh.length ? fresh : [];
+  document.getElementById("freshSection").hidden = show.length === 0;
+  grid.innerHTML = "";
+  show.forEach(t => {
+    const el = document.createElement("article");
+    el.className = "card" + (state.done[t.id] ? " done-card" : "");
+    el.innerHTML = cardHTML(t, true);
+    grid.appendChild(el);
+  });
+}
+
+/* ---------- مسیر صعود ---------- */
+function pathItems(){
+  return CATALOG.filter(t => Number.isFinite(+t.order) && +t.order > 0).sort((a,b) => (+a.order) - (+b.order));
+}
+function renderPath(){
+  const items = pathItems();
+  const sec = document.getElementById("pathSection");
+  sec.hidden = items.length === 0;
+  const pathEl = document.getElementById("path");
+  pathEl.querySelectorAll(".station").forEach(n => n.remove());
+  items.forEach((t, i) => {
+    const st = document.createElement("article");
+    st.className = "station" + (state.done[t.id] ? " done" : "");
+    st.id = "station-" + t.id;
+    const levelChip = `ایستگاه ${faDigits(i+1)}` + (i === items.length-1 ? " — قله 🏔️" : (i === 0 ? " — شروع" : ""));
+    st.innerHTML = `<div class="card">${cardHTML(Object.assign({}, t, {level:null}), false).replace('<div class="chips">', `<div class="chips"><span class="chip saffron">${levelChip}</span>`)}</div>`;
+    pathEl.appendChild(st);
+  });
+}
+
+/* ---------- قفسه: چیپ‌ها + جست‌وجو ---------- */
+function buildChips(){
+  const row = document.getElementById("chipsRow");
+  row.innerHTML = "";
+  const counts = {};
+  CATALOG.forEach(t => { const c = t.category || "سایر"; counts[c] = (counts[c]||0)+1; });
+  const cats = ["همه", ...Object.keys(CATEGORIES).filter(c => counts[c])];
+  cats.forEach(c => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "cat-chip";
+    b.setAttribute("aria-pressed", String(c === activeCat));
+    const n = c === "همه" ? CATALOG.length : counts[c];
+    b.innerHTML = (c === "همه" ? "🗂️ همه" : catEmoji(c) + " " + c) + `<span class="cnt">(${faDigits(n)})</span>`;
+    b.addEventListener("click", () => { activeCat = c; buildChips(); renderShelf(); });
+    row.appendChild(b);
+  });
+}
+function renderShelf(){
+  const grid = document.getElementById("shelfGrid");
+  const q = norm(query);
+  const items = CATALOG.filter(t => {
+    const inCat = activeCat === "همه" || (t.category || "سایر") === activeCat;
+    if(!inCat) return false;
+    if(!q) return true;
+    const hay = norm([t.title, t.desc, t.keywords, t.category, t.level].join(" "));
+    return q.split(" ").every(w => hay.includes(w));
+  });
+  grid.innerHTML = "";
+  document.getElementById("emptyState").hidden = items.length > 0;
+  items.forEach(t => {
+    const el = document.createElement("article");
+    el.className = "card" + (state.done[t.id] ? " done-card" : "");
+    el.innerHTML = cardHTML(t, false);
+    grid.appendChild(el);
+  });
+}
+document.getElementById("searchInput").addEventListener("input", e => { query = e.target.value; renderShelf(); });
+
+/* ---------- پیشرفت + ریل + کارت ---------- */
+function refresh(){
+  const total = CATALOG.length;
+  const doneCount = CATALOG.filter(t => state.done[t.id]).length;
+  document.getElementById("progressFill").style.width = total ? (doneCount/total*100) + "%" : "0";
+  document.getElementById("progressLabel").textContent = faDigits(doneCount) + " از " + faDigits(total);
+  document.getElementById("countBadge").innerHTML = "📚 <strong>" + faDigits(total) + "</strong> آموزش";
+  /* ریل زعفرانی */
+  const items = pathItems();
+  let lastDone = -1;
+  items.forEach((t,i) => {
+    const st = document.getElementById("station-"+t.id);
+    if(st) st.classList.toggle("done", !!state.done[t.id]);
+    if(state.done[t.id]) lastDone = i;
+  });
+  const rail = document.getElementById("railFill");
+  const pathEl = document.getElementById("path");
+  if(lastDone < 0 || !items.length){ rail.style.height = "0"; }
+  else{
+    const target = document.getElementById("station-"+items[lastDone].id);
+    if(target){
+      rail.style.height = (target.getBoundingClientRect().top - pathEl.getBoundingClientRect().top + 24) + "px";
+    }
+  }
+  renderCert(doneCount);
+}
+
+/* ---------- کارت کتابخانه ---------- */
+function renderCert(doneCount){
+  const name = state.name.trim();
+  document.getElementById("certName").textContent = name || "همراه گراول";
+  const list = document.getElementById("certList");
+  const sum = document.getElementById("certSummary");
+  const doneTitles = CATALOG.filter(t => state.done[t.id]).map(t => (t.emoji || "📄") + " " + t.title);
+  if(doneCount === 0){
+    sum.textContent = "هنوز هیچ آموزشی تمام نشده — از ایستگاه اول شروع کن! 🚀";
+    list.hidden = true;
+  }else{
+    sum.textContent = (name || "این یادگیرنده") + " تا امروز " + faDigits(doneCount) + " آموزش را کامل تمام کرده است:";
+    list.hidden = false;
+    list.innerHTML = doneTitles.map(x => "<li>" + x + "</li>").join("");
+  }
+  const doneText = doneCount > 0
+    ? "من " + faDigits(doneCount) + " آموزش را در «گراول» تمام کردم! 🎉"
+    : "«گراول» را پیدا کردم — کتابخانهٔ رایگان آموزش‌های گام‌به‌گام فارسی! 🏔️";
+  const invite = doneText + " برای رسیدن به قله باید از سنگ‌ریزه عبور کرد — تو هم از صفر شروع کن، رایگان و آفلاین:";
+  const url = SITE_URL || "";
+  document.getElementById("shareTelegram").href = "https://t.me/share/url?url=" + encodeURIComponent(url) + "&text=" + encodeURIComponent(invite);
+  document.getElementById("shareWhatsapp").href = "https://wa.me/?text=" + encodeURIComponent(invite + " " + url);
+  document.getElementById("copyText").dataset.text = invite + " " + url;
+}
+
+/* ---------- رویدادها ---------- */
+document.addEventListener("change", e => {
+  if(e.target.matches("input[data-done]")){
+    const id = e.target.dataset.done;
+    state.done[id] = e.target.checked;
+    store.write(state);
+    /* هماهنگ‌کردن همهٔ چک‌باکس‌های همین آموزش در بخش‌های مختلف */
+    document.querySelectorAll(`input[data-done="${id}"]`).forEach(cb => { cb.checked = e.target.checked; });
+    renderFresh(); renderShelf(); refresh();
+  }
+});
+const nameInput = document.getElementById("learnerName");
+nameInput.value = state.name;
+nameInput.addEventListener("input", () => {
+  state.name = nameInput.value;
+  store.write(state);
+  renderCert(CATALOG.filter(t => state.done[t.id]).length);
+});
+document.getElementById("copyText").addEventListener("click", async e => {
+  const text = e.currentTarget.dataset.text || "";
+  try{ await navigator.clipboard.writeText(text); toast("کپی شد! حالا هر جا خواستی بفرستش 📨"); }
+  catch(err){ toast("کپی نشد — متن را دستی انتخاب کن."); }
+});
+
+/* ---------- سفارش آموزش ---------- */
+function buildOrderText(){
+  const body = document.getElementById("orderText").value.trim();
+  const name = state.name.trim();
+  if(!body) return "";
+  return "سلام مهدی! 👋\nسفارش آموزش از گراول:\n« " + body + " »" +
+         (name ? "\n— از طرف: " + name : "") +
+         (SITE_URL ? "\n" + SITE_URL : "");
+}
+async function copyOrder(showHint){
+  const text = buildOrderText();
+  if(!text){ toast("اول بنویس چه آموزشی می‌خواهی ✍️"); return false; }
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){ toast("کپی نشد — متن را دستی انتخاب کن."); return false; }
+  if(showHint) document.getElementById("orderHint").hidden = false;
+  return true;
+}
+document.getElementById("orderSend").addEventListener("click", async () => {
+  const ok = await copyOrder(true);
+  if(!ok) return;
+  if(TELEGRAM_ID) setTimeout(() => window.open("https://t.me/" + TELEGRAM_ID, "_blank", "noopener"), 400);
+  else toast("متن کپی شد — در تلگرام برای نویسنده بفرستش 📨");
+});
+document.getElementById("orderCopy").addEventListener("click", async () => {
+  if(await copyOrder(false)) toast("کپی شد! 📋");
+});
+
+/* ---------- QR کد ---------- */
+function renderQR(){
+  if(!SITE_URL || window.__noQR || typeof QRCode === "undefined") return;
+  const box = document.getElementById("qrBox");
+  box.innerHTML = "";
+  new QRCode(box, {text: SITE_URL, width: 96, height: 96, correctLevel: QRCode.CorrectLevel.M});
+  document.getElementById("certQr").hidden = false;
+}
+window.addEventListener("load", renderQR);
+
+/* ---------- نصب PWA ---------- */
+let deferredInstall = null;
+const installBtn = document.getElementById("installBtn");
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstall = e; installBtn.hidden = false; });
+installBtn.addEventListener("click", async () => {
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  await deferredInstall.userChoice;
+  deferredInstall = null; installBtn.hidden = true;
+});
+window.addEventListener("appinstalled", () => { installBtn.hidden = true; toast("گراول روی دستگاهت نصب شد! 🎉"); });
+
+/* ---------- سرویس‌ورکر ---------- */
+if("serviceWorker" in navigator && location.protocol === "https:"){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+/* ---------- شروع ---------- */
+document.getElementById("copyYear").textContent = faDigits(new Date().getFullYear());
+(async function init(){
+  CATALOG = await loadCatalog();
+  renderFresh(); renderPath(); buildChips(); renderShelf(); refresh();
+})();
+window.addEventListener("resize", refresh);
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# © Mehdi Rezghi — https://t.me/Mehdirezghi
+User-agent: *
+Allow: /

@@ -1,0 +1,59 @@
+{
+  "name": "گراول",
+  "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
+  "generated": "2026-07-04T00:00:00Z",
+  "tutorials": [
+    {
+      "id": "python-vibecoding",
+      "file": "tutorials/python-vibecoding-tutorial.html",
+      "emoji": "🐍",
+      "title": "پایتون از صفر برای وایب‌کدینگ",
+      "desc": "اولین قدم دنیای برنامه‌نویسی: پایتون را نصب کن و با کمک هوش مصنوعی اولین برنامه‌ات را بساز.",
+      "time": "حدود ۶۰ دقیقه",
+      "level": "مبتدی",
+      "category": "برنامه‌نویسی",
+      "order": 1,
+      "added": "2026-07-04",
+      "keywords": "پایتون python نصب کدنویسی vibe coding"
+    },
+    {
+      "id": "crypto-openrouter",
+      "file": "tutorials/crypto-openrouter-tutorial.html",
+      "emoji": "👛",
+      "title": "کیف‌پول کریپتو و دسترسی به OpenRouter",
+      "desc": "ساخت کیف‌پول MetaMask، شارژ امن، و گرفتن کلید OpenRouter برای استفاده از مدل‌های هوش مصنوعی.",
+      "time": "حدود ۴۵ دقیقه",
+      "level": "مبتدی",
+      "category": "کریپتو و پرداخت",
+      "order": 2,
+      "added": "2026-07-04",
+      "keywords": "متامسک metamask کیف پول نوبیتکس openrouter کلید api تتر"
+    },
+    {
+      "id": "docker-n8n",
+      "file": "tutorials/docker-n8n-tutorial.html",
+      "emoji": "🐳",
+      "title": "داکر و n8n: خط تولید اتوماسیون هوشمند",
+      "desc": "نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.",
+      "time": "حدود ۹۰ دقیقه",
+      "level": "مبتدی",
+      "category": "اتوماسیون",
+      "order": 3,
+      "added": "2026-07-04",
+      "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow"
+    },
+    {
+      "id": "openclaw",
+      "file": "tutorials/openclaw-tutorial.html",
+      "emoji": "🦾",
+      "title": "نصب و راه‌اندازی OpenClaw",
+      "desc": "دستیار هوش مصنوعی خط فرمان را روی ویندوز راه بینداز و اولین مأموریتش را بده.",
+      "time": "حدود ۴۵ دقیقه",
+      "level": "مبتدی",
+      "category": "ابزارهای هوش مصنوعی",
+      "order": 4,
+      "added": "2026-07-04",
+      "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"
+    }
+  ]
+}
