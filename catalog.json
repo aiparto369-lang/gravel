@@ -1,7 +1,7 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-05T13:14:19+00:00",
+  "generated": "2026-07-05T16:07:56+00:00",
   "tutorials": [
     {
       "id": "install-python-node-vscode(1)",
@@ -93,6 +93,19 @@
       "order": 7,
       "added": "2026-07-05",
       "keywords": "Claude Cowork, کلاد کوورک, آموزش Cowork, هوش مصنوعی ایجنت, AI agent, Anthropic, Claude Desktop, اتوماسیون کارهای اداری, تسک زمان‌بندی شده, اسکیل کلاد, کانکتور, Claude skills, scheduled tasks, آموزش فارسی کلاد"
+    },
+    {
+      "id": "claude-usage-limit",
+      "file": "tutorials/claude-usage-limit-tutorial.html",
+      "emoji": "⚡",
+      "title": "راهکارهای واقعی برای استفادهٔ بهینه از لیمیت کلود | گراول",
+      "desc": "راهکارهای واقعی و مستند برای مصرف بهینهٔ لیمیت کلود، بدون هیچ ترفند خلاف قانون یا پرخطر.",
+      "time": "حدود ۳۵ دقیقه",
+      "level": "مبتدی",
+      "category": "برنامه‌نویسی",
+      "order": null,
+      "added": "2026-07-05",
+      "keywords": "لیمیت کلود, Claude usage limit, افزایش استفاده از کلود, Claude Pro, Claude Max, usage credits, پنجره کانتکست, context window, بهینه‌سازی مصرف کلود, Claude Projects, RAG"
     }
   ]
 }
