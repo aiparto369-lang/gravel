@@ -1,46 +1,59 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-04T00:00:00Z",
+  "generated": "2026-07-05T00:00:00Z",
   "tutorials": [
     {
-      "id": "python-vibecoding",
-      "file": "tutorials/python-vibecoding-tutorial.html",
+      "id": "install-python-node-vscode",
+      "file": "tutorials/install-python-node-vscode-tutorial(1).html",
+      "emoji": "🧰",
+      "title": "نصب پایتون، Node.js و VS Code",
+      "desc": "جعبه‌ابزار پایه را آماده کن: نصب پایتون، Node.js و VS Code روی ویندوز — پیش‌نیاز همهٔ مسیر.",
+      "time": "حدود ۴۵ دقیقه",
+      "level": "مبتدی",
+      "category": "برنامه‌نویسی",
+      "order": 1,
+      "added": "2026-07-04",
+      "keywords": "نصب پایتون python node nodejs vscode ویژوال استودیو کد ویندوز پیش‌نیاز"
+    },
+    {
+      "id": "python-1hour-vibe-coding",
+      "file": "tutorials/python-1hour-vibe-coding-tutorial.html",
       "emoji": "🐍",
       "title": "پایتون از صفر برای وایب‌کدینگ",
       "desc": "اولین قدم دنیای برنامه‌نویسی: پایتون را نصب کن و با کمک هوش مصنوعی اولین برنامه‌ات را بساز.",
       "time": "حدود ۶۰ دقیقه",
       "level": "مبتدی",
       "category": "برنامه‌نویسی",
-      "order": 1,
+      "order": 2,
       "added": "2026-07-04",
-      "keywords": "پایتون python نصب کدنویسی vibe coding"
+      "keywords": "پایتون python نصب کدنویسی برنامه‌نویسی vibe coding"
     },
     {
-      "id": "crypto-openrouter",
-      "file": "tutorials/crypto-openrouter-tutorial.html",
+      "id": "openrouter-crypto-wallet",
+      "file": "tutorials/openrouter-crypto-wallet-tutorial.html",
       "emoji": "👛",
       "title": "کیف‌پول کریپتو و دسترسی به OpenRouter",
       "desc": "ساخت کیف‌پول MetaMask، شارژ امن، و گرفتن کلید OpenRouter برای استفاده از مدل‌های هوش مصنوعی.",
       "time": "حدود ۴۵ دقیقه",
       "level": "مبتدی",
       "category": "کریپتو و پرداخت",
-      "order": 2,
+      "order": 3,
       "added": "2026-07-04",
-      "keywords": "متامسک metamask کیف پول نوبیتکس openrouter کلید api تتر"
+      "keywords": "متامسک metamask کیف پول کریپتو نوبیتکس openrouter کلید api تتر"
     },
     {
-      "id": "docker-n8n",
-      "file": "tutorials/docker-n8n-tutorial.html",
+      "id": "docker-n8n-antigravity",
+      "file": "tutorials/docker-n8n-antigravity-tutorial.html",
       "emoji": "🐳",
       "title": "داکر و n8n: خط تولید اتوماسیون هوشمند",
       "desc": "نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.",
       "time": "حدود ۹۰ دقیقه",
       "level": "مبتدی",
       "category": "اتوماسیون",
-      "order": 3,
+      "order": 4,
       "added": "2026-07-04",
-      "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow"
+      "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow antigravity"
     },
     {
       "id": "openclaw",
@@ -51,7 +64,7 @@
       "time": "حدود ۴۵ دقیقه",
       "level": "مبتدی",
       "category": "ابزارهای هوش مصنوعی",
-      "order": 4,
+      "order": 5,
       "added": "2026-07-04",
       "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"
     }
