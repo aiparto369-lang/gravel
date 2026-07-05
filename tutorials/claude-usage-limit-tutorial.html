@@ -1,0 +1,691 @@
+<!-- © Mehdi Rezghi — https://t.me/Mehdirezghi — گراول: برای رسیدن به قله باید از سنگ‌ریزه عبور کرد. -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهکارهای واقعی برای استفادهٔ بهینه از لیمیت کلود | گراول</title>
+
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<meta name="gravel:category" content="🤖 ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="⚡">
+<meta name="gravel:time"     content="حدود ۳۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="راهکارهای واقعی و مستند برای مصرف بهینهٔ لیمیت کلود، بدون هیچ ترفند خلاف قانون یا پرخطر.">
+<meta name="gravel:keywords" content="لیمیت کلود, Claude usage limit, افزایش استفاده از کلود, Claude Pro, Claude Max, usage credits, پنجره کانتکست, context window, بهینه‌سازی مصرف کلود, Claude Projects, RAG">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* © Mehdi Rezghi — https://t.me/Mehdirezghi */
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --turquoise:#0E7C86;
+  --saffron:#E8A317;
+  --navy:#123B4A;
+  --card:#FFFFFF;
+  --turquoise-soft:rgba(14,124,134,.10);
+  --saffron-soft:rgba(232,163,23,.14);
+  --navy-soft:rgba(18,59,74,.08);
+  --danger-soft:rgba(200,60,60,.10);
+  --danger:#B23A3A;
+  --radius:16px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn','Tahoma','Segoe UI',sans-serif;
+  direction:rtl;
+  text-align:right;
+  line-height:1.9;
+  font-size:17px;
+}
+code,.ltr,[dir="ltr"]{
+  font-family:'Consolas','SFMono-Regular',monospace;
+}
+pre{
+  direction:ltr;
+  text-align:left;
+  background:var(--navy);
+  color:#EAF6F7;
+  padding:16px 18px;
+  border-radius:12px;
+  overflow-x:auto;
+  font-size:14.5px;
+  line-height:1.6;
+}
+code.inline{
+  background:var(--navy-soft);
+  padding:2px 8px;
+  border-radius:6px;
+  font-size:.92em;
+  direction:ltr;
+  display:inline-block;
+}
+img,svg{max-width:100%;}
+a{color:var(--turquoise);}
+
+/* نوار پیشرفت بالای صفحه */
+#progress-track{
+  position:fixed;
+  top:0; right:0; left:0;
+  height:5px;
+  background:var(--navy-soft);
+  z-index:999;
+}
+#progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, var(--turquoise), var(--saffron));
+  transition:width .12s linear;
+}
+
+.wrap{max-width:880px;margin:0 auto;padding:0 18px 60px;}
+
+/* هدر قهرمانی */
+header.hero{
+  background:linear-gradient(160deg, var(--navy) 0%, var(--turquoise) 100%);
+  color:#fff;
+  padding:56px 18px 42px;
+  margin-top:5px;
+  border-radius:0 0 28px 28px;
+  text-align:center;
+}
+header.hero .emoji{font-size:52px;display:block;margin-bottom:10px;}
+header.hero h1{
+  font-size:clamp(24px,4vw,34px);
+  margin:0 0 12px;
+  font-weight:900;
+}
+header.hero p.promise{
+  font-size:17px;
+  max-width:620px;
+  margin:0 auto;
+  opacity:.95;
+}
+header.hero .meta-chips{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+.chip{
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.35);
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:13.5px;
+}
+
+/* فهرست مراحل */
+nav.toc{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  margin:-30px auto 30px;
+  box-shadow:0 8px 24px rgba(18,59,74,.08);
+  position:relative;
+  z-index:2;
+}
+nav.toc h2{margin-top:0;font-size:16px;color:var(--navy);}
+nav.toc ol{margin:0;padding-inline-start:22px;}
+nav.toc li{margin-bottom:6px;}
+nav.toc a{text-decoration:none;font-weight:500;color:var(--ink);}
+nav.toc a:hover{color:var(--turquoise);}
+
+section{margin:34px 0;}
+h2.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:21px;
+  color:var(--navy);
+  border-inline-start:5px solid var(--turquoise);
+  padding-inline-start:12px;
+}
+
+/* باکس‌های پیش‌نیاز و مفهوم */
+.box{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  box-shadow:0 4px 14px rgba(18,59,74,.06);
+}
+.analogy{
+  background:var(--turquoise-soft);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  margin:16px 0;
+  font-size:16px;
+}
+.analogy b{color:var(--turquoise);}
+
+/* کارت مرحله */
+.step-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  margin-bottom:22px;
+  box-shadow:0 6px 18px rgba(18,59,74,.07);
+  scroll-margin-top:24px;
+}
+.step-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.step-badge{
+  background:var(--turquoise);
+  color:#fff;
+  width:38px;height:38px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;
+  flex-shrink:0;
+}
+.step-head h3{margin:0;font-size:18px;color:var(--navy);flex:1;}
+.time-chip{
+  background:var(--saffron-soft);
+  color:#7a5606;
+  border:1px solid rgba(232,163,23,.4);
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+/* باکس‌های نکته / هشدار / پانویس / ایست بازرسی */
+.note{border-radius:12px;padding:14px 16px;margin:14px 0;font-size:15.5px;}
+.tip{background:var(--turquoise-soft);border-inline-start:4px solid var(--turquoise);}
+.warn{background:var(--danger-soft);border-inline-start:4px solid var(--danger);}
+.footnote{background:var(--navy-soft);border-inline-start:4px solid var(--navy);font-size:14.5px;}
+.check{background:var(--saffron-soft);border-inline-start:4px solid var(--saffron);font-weight:500;}
+.note b{display:block;margin-bottom:4px;}
+
+/* باکس بزرگ هشدار روش‌های خطرناک */
+.big-warning{
+  background:#fff;
+  border:2px solid var(--danger);
+  border-radius:var(--radius);
+  padding:22px 24px;
+}
+.big-warning h2{color:var(--danger);margin-top:0;display:flex;align-items:center;gap:8px;}
+.big-warning ul{padding-inline-start:22px;}
+.big-warning li{margin-bottom:8px;}
+
+/* قالب کپی */
+.template-box{
+  position:relative;
+  background:var(--navy);
+  color:#EAF6F7;
+  border-radius:12px;
+  padding:18px 20px;
+  direction:rtl;
+  text-align:right;
+  font-size:15px;
+  line-height:1.8;
+}
+.copy-btn{
+  position:absolute;
+  top:10px;
+  inset-inline-start:10px;
+  background:var(--saffron);
+  color:var(--navy);
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  font-size:13px;
+}
+.copy-btn:hover{filter:brightness(1.05);}
+
+/* چک‌لیست پایانی */
+.checklist{list-style:none;padding:0;margin:0;}
+.checklist li{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 0;
+  border-bottom:1px dashed rgba(18,59,74,.15);
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:"✅";flex-shrink:0;}
+
+/* جدول رفع اشکال */
+.trouble{margin-bottom:16px;padding:16px 18px;background:var(--card);border-radius:12px;box-shadow:0 3px 10px rgba(18,59,74,.05);}
+.trouble b.symptom{color:var(--navy);}
+.trouble .cause{color:#5a6b70;font-size:14.5px;margin:4px 0;}
+.trouble .fix{color:var(--turquoise);font-weight:600;}
+
+.sources ul{padding-inline-start:20px;}
+.sources a{word-break:break-word;}
+
+/* پایان جشن */
+.celebrate{
+  text-align:center;
+  background:linear-gradient(135deg, var(--turquoise-soft), var(--saffron-soft));
+  border-radius:var(--radius);
+  padding:32px 20px;
+}
+.celebrate .big-emoji{font-size:44px;}
+
+@media (max-width:640px){
+  header.hero{padding:44px 14px 34px;border-radius:0 0 20px 20px;}
+  nav.toc{margin-top:-22px;padding:16px 18px;}
+  .step-card{padding:18px 16px;}
+}
+
+.gravel-footer a{color:inherit;}
+</style>
+</head>
+<body>
+
+<div id="progress-track"><div id="progress-bar"></div></div>
+
+<header class="hero">
+  <span class="emoji">⚡</span>
+  <h1>راهکارهای واقعی برای استفادهٔ بهینه از لیمیت کلود</h1>
+  <p class="promise">
+    یاد می‌گیری لیمیت مصرف کلود دقیقاً چطور کار می‌کند، و با چند تنظیم و عادت سادهٔ کاملاً مجاز،
+    از همان سهمیهٔ فعلی‌ات — چه رایگان باشد چه پولی — چند برابر بیشتر کار بکشی.
+    بدون هیچ ترفند خلاف قانون، حساب تقلبی، یا اسکریپت پرخطر.
+  </p>
+  <div class="meta-chips">
+    <span class="chip">⏱ حدود ۳۵ دقیقه</span>
+    <span class="chip">🎯 سطح: مبتدی</span>
+    <span class="chip">🧩 پیش‌نیاز: فقط یک حساب Claude</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc" aria-label="فهرست مراحل">
+  <h2>📋 فهرست مراحل</h2>
+  <ol>
+    <li><a href="#concept">مفهوم پایه: لیمیت مصرف چیست</a></li>
+    <li><a href="#step-1">مرحلهٔ ۱ — دیدن مصرف فعلی‌ات</a></li>
+    <li><a href="#step-2">مرحلهٔ ۲ — برنامه‌ریزی قبل از چت</a></li>
+    <li><a href="#step-3">مرحلهٔ ۳ — چت تازه برای موضوع تازه</a></li>
+    <li><a href="#step-4">مرحلهٔ ۴ — خاموش کردن ابزارهای غیرضروری</a></li>
+    <li><a href="#step-5">مرحلهٔ ۵ — استفاده از Projects</a></li>
+    <li><a href="#step-6">مرحلهٔ ۶ — انتخاب مدل مناسب کار</a></li>
+    <li><a href="#step-7">مرحلهٔ ۷ — حافظه و جست‌وجوی چت‌های قبلی</a></li>
+    <li><a href="#step-8">مرحلهٔ ۸ — وقتی لیمیت تمام شد</a></li>
+    <li><a href="#warning">⚠️ روش‌هایی که پیشنهاد نمی‌کنیم</a></li>
+    <li><a href="#summary">جمع‌بندی و چک‌لیست</a></li>
+    <li><a href="#trouble">رفع اشکال</a></li>
+    <li><a href="#sources">منابع رسمی</a></li>
+  </ol>
+</nav>
+
+<section class="box" id="intro">
+  <h2 class="section-title">🧭 پیش‌نیازها</h2>
+  <p>برای این آموزش فقط به این‌ها نیاز داری:</p>
+  <ul>
+    <li>یک حساب کاربری در <code class="inline">claude.ai</code> — رایگان یا پولی، فرقی نمی‌کند.</li>
+    <li>یک مرورگر وب معمولی روی گوشی یا کامپیوتر.</li>
+    <li>هیچ دانش فنی یا برنامه‌نویسی لازم نیست؛ همهٔ کارها با چند کلیک در تنظیمات انجام می‌شود.</li>
+  </ul>
+  <div class="note footnote">
+    <b>📖 یک نکتهٔ صادقانه قبل از شروع</b>
+    این آموزش دنبال «حقه» یا «باگ» نیست. هر چیزی که اینجا می‌بینی، دقیقاً همان چیزی است که در
+    مرکز راهنمای رسمی Claude (<span dir="ltr">support.claude.com</span>) هم توصیه شده. هدف این است
+    که از سهمیه‌ای که داری، هوشمندانه‌تر استفاده کنی — نه اینکه قوانین را دور بزنی.
+  </div>
+</section>
+
+<section id="concept">
+  <h2 class="section-title">💡 مفهوم پایه: لیمیت مصرف چیست</h2>
+  <div class="box">
+    <div class="analogy">
+      <b>یک تشبیه ساده:</b> لیمیت مصرف کلود را مثل بستهٔ اینترنت ماهانهٔ گوشی‌ات تصور کن.
+      وقتی بسته‌ات تمام شود، یا باید صبر کنی تا نو شود، یا بستهٔ اضافه بخری. اما اگر ویدیوها را
+      با کیفیت پایین‌تر ببینی و دانلود پس‌زمینه را خاموش کنی، همان بسته خیلی بیشتر دوام می‌آورد.
+      لیمیت کلود هم دقیقاً همین‌طور کار می‌کند.
+    </div>
+    <p>کلود دو نوع محدودیت کاملاً جدا از هم دارد که نباید با هم قاطی شوند:</p>
+    <ul>
+      <li><b>لیمیت مصرف (Usage limit):</b> «بودجهٔ مکالمه»ات در یک بازهٔ زمانی — مثلاً چند پیام
+        می‌توانی در یک نشست پنج‌ساعته بفرستی. وقتی تمام شود، باید صبر کنی تا ریست شود، پلن را
+        ارتقا بدهی، یا اعتبار مصرف بخری.</li>
+      <li><b>محدودیت طول مکالمه (Length limit):</b> اندازهٔ «حافظهٔ کاری» کلود در یک چت مشخص، معروف
+        به پنجرهٔ کانتکست<sup>۱</sup>. وقتی یک چت خیلی طولانی شود، به این سقف می‌خورد.</li>
+    </ul>
+    <div class="note footnote">
+      <b>📖 پانویس ۱ — پنجرهٔ کانتکست (<span dir="ltr">Context Window</span>)</b>
+      یعنی حداکثر مقدار متن (پیام‌ها، فایل‌ها، پاسخ‌ها) که کلود می‌تواند همزمان «به‌خاطر بسپارد»
+      و پردازش کند. این عدد برای همهٔ پلن‌ها ثابت است و بزرگ‌تر کردنش با تنظیمات ممکن نیست؛ فقط
+      می‌توان با روش‌های این آموزش، بهتر از آن استفاده کرد.
+    </div>
+    <div class="note tip">
+      <b>💡 نکتهٔ مهم</b>
+      طبق مرکز راهنمای رسمی، مصرفت را چیزهایی مثل طول و پیچیدگی مکالمه، فایل‌های پیوست، مدل
+      انتخابی، سطح تلاش (<span dir="ltr">effort level</span>) و ابزارهایی مثل جست‌وجوی وب تحت
+      تأثیر قرار می‌دهند. هرچه این‌ها را هوشمندانه‌تر مدیریت کنی، سهمیه‌ات بیشتر دوام می‌آورد.
+      همچنین مصرف در <span dir="ltr">claude.ai</span>، <span dir="ltr">Claude Code</span> و
+      <span dir="ltr">Claude Desktop</span> از یک بودجهٔ مشترک کم می‌شود.
+    </div>
+  </div>
+</section>
+
+<!-- مرحله ۱ -->
+<section class="step-card" id="step-1">
+  <div class="step-head">
+    <span class="step-badge">۱</span>
+    <h3>دیدن مصرف فعلی‌ات</h3>
+    <span class="time-chip">⏱ ۲ دقیقه</span>
+  </div>
+  <p>قبل از هر چیز، ببین الان کجای سهمیه‌ات هستی:</p>
+  <ol>
+    <li>وارد <code class="inline">claude.ai</code> شو.</li>
+    <li>روی نام یا آواتار حساب‌ات (پایین یا بالای صفحه، بسته به دستگاه) کلیک کن.</li>
+    <li>گزینهٔ <code class="inline">Settings</code> را بزن، سپس وارد بخش <code class="inline">Usage</code> شو.</li>
+  </ol>
+  <div class="note check">
+    ✅ ایست بازرسی — اگر پلن پولی داری (Pro، Max، Team یا Enterprise مبتنی بر صندلی)، باید دو نوار
+    پیشرفت ببینی: یکی برای «نشست جاری» (که هر پنج ساعت ریست می‌شود) و یکی برای «لیمیت هفتگی».
+    اگر کاربر رایگان هستی، این صفحه شکل ساده‌تری دارد و فقط زمان ریست بعدی را نشان می‌دهد.
+  </div>
+  <div class="note footnote">
+    <b>📖 نشست پنج‌ساعته چیست؟</b>
+    یعنی سهمیهٔ اصلی‌ات هر پنج ساعت یک‌بار از نو پر می‌شود؛ جدا از این، یک سقف هفتگی هم وجود دارد
+    که به‌خصوص برای مدل Opus جداگانه حساب می‌شود.
+  </div>
+</section>
+
+<!-- مرحله ۲ -->
+<section class="step-card" id="step-2">
+  <div class="step-head">
+    <span class="step-badge">۲</span>
+    <h3>برنامه‌ریزی قبل از چت</h3>
+    <span class="time-chip">⏱ ۳ دقیقه</span>
+  </div>
+  <p>
+    هر بار که پیام می‌فرستی، کلود مجبور است کل تاریخچهٔ آن چت را دوباره بخواند. یعنی پنج پیام کوتاهِ
+    پراکنده، معمولاً گران‌تر از یک پیام کامل و منظم تمام می‌شود. پس قبل از تایپ کردن، یک لحظه فکر کن:
+  </p>
+  <ul>
+    <li>دقیقاً به چه کمکی نیاز دارم؟</li>
+    <li>می‌توانم چند سؤال مرتبط را در یک پیام جمع کنم؟</li>
+    <li>چه اطلاعات زمینه‌ای را از همان اول بدهم تا کلود مجبور نشود سؤال بپرسد؟</li>
+  </ul>
+  <p>یک قالب آماده برای پیام‌های ترکیبی:</p>
+  <div class="template-box">
+    <button class="copy-btn" onclick="copyTemplate(this)">کپی قالب</button>
+    <div id="template-text">
+      «می‌خوام دربارهٔ [موضوع] کمکم کنی. زمینه: [توضیح کوتاه].
+      این کارها رو با هم انجام بده: ۱) [کار اول] ۲) [کار دوم] ۳) [کار سوم].
+      خروجی رو به شکل [فرمت دلخواه] بده.»
+    </div>
+  </div>
+  <div class="note tip">
+    <b>💡 نکته</b>
+    این یعنی «پیام دسته‌ای» — به‌جای سه پیام جدا برای سه کار مرتبط، همه را یک‌جا بفرست.
+  </div>
+</section>
+
+<!-- مرحله ۳ -->
+<section class="step-card" id="step-3">
+  <div class="step-head">
+    <span class="step-badge">۳</span>
+    <h3>چت تازه برای موضوع تازه</h3>
+    <span class="time-chip">⏱ ۱ دقیقه</span>
+  </div>
+  <p>
+    وقتی یک موضوع تازه شروع می‌کنی که ربطی به چت قبلی ندارد، به‌جای ادامه دادن همان مکالمهٔ طولانی،
+    یک چت جدید باز کن. هرچه یک چت طولانی‌تر شود، هم زودتر به سقف پنجرهٔ کانتکست می‌خورد و هم مصرف
+    لیمیتِ هر پیام تازه‌اش بیشتر می‌شود، چون کلود باید کل تاریخچه را دوباره پردازش کند.
+  </p>
+  <div class="note warn">
+    <b>⚠️ اشتباه رایج</b>
+    خیلی‌ها همهٔ کارهای هفته را — از کدنویسی تا نوشتن ایمیل — در یک چت واحد و بسیار طولانی ادامه
+    می‌دهند. این دقیقاً همان چیزی است که سهمیه را سریع‌تر از همه‌چیز خالی می‌کند.
+  </div>
+</section>
+
+<!-- مرحله ۴ -->
+<section class="step-card" id="step-4">
+  <div class="step-head">
+    <span class="step-badge">۴</span>
+    <h3>خاموش کردن ابزارهای غیرضروری</h3>
+    <span class="time-chip">⏱ ۲ دقیقه</span>
+  </div>
+  <p>
+    ابزارهایی مثل جست‌وجوی وب، حالت Research و اتصال‌های <span dir="ltr">MCP</span> بسیار مفیدند،
+    اما توکن<sup>۲</sup> زیادی مصرف می‌کنند. اگر برای یک سؤال ساده به آن‌ها نیازی نیست:
+  </p>
+  <ol>
+    <li>از تنظیمات <code class="inline">Search and tools</code> ابزارهای غیرضروری را موقتاً خاموش کن.</li>
+    <li>برای کارهای روتین، سطح تلاش (<span dir="ltr">effort level</span>) را پایین‌تر انتخاب کن؛
+      سطح تلاش بالاتر یعنی پاسخ کامل‌تر ولی مصرف توکن بیشتر.</li>
+    <li>اگر به استدلال عمیق نیاز نداری، تفکر گسترده (<span dir="ltr">extended thinking</span>) را
+      خاموش نگه‌دار.</li>
+  </ol>
+  <div class="note footnote">
+    <b>📖 پانویس ۲ — توکن (<span dir="ltr">Token</span>)</b>
+    واحد اندازه‌گیری متنی است که مدل‌های هوش مصنوعی با آن کار می‌کنند؛ هر کلمه یا بخشی از کلمه
+    معمولاً یک یا چند توکن حساب می‌شود. هرچه پیام، پاسخ یا ابزارهای فعال بیشتر باشند، توکن بیشتری
+    مصرف می‌شود و سهمیه‌ات سریع‌تر کم می‌شود.
+  </div>
+  <div class="note check">
+    ✅ ایست بازرسی — الان باید بتوانی در «Search and tools» ببینی کدام ابزارها روشن‌اند، و بتوانی
+    هرکدام را که فعلاً لازم نداری خاموش کنی.
+  </div>
+</section>
+
+<!-- مرحله ۵ -->
+<section class="step-card" id="step-5">
+  <div class="step-head">
+    <span class="step-badge">۵</span>
+    <h3>استفاده از Projects به‌جای آپلود مکرر</h3>
+    <span class="time-chip">⏱ ۴ دقیقه</span>
+  </div>
+  <p>
+    اگر مدام به یک فایل یا مجموعه‌ای از اسناد مراجعه می‌کنی، آن را در یک <span dir="ltr">Project</span>
+    آپلود کن، نه در تک‌تک پیام‌ها. فایل‌های داخل Project کش<sup>۳</sup> می‌شوند: هر بار که به آن‌ها
+    ارجاع می‌دهی، فقط بخش‌های تازه از سهمیه‌ات کم می‌شود، نه کل فایل از اول.
+  </p>
+  <div class="note footnote">
+    <b>📖 پانویس ۳ — کش شدن و RAG</b>
+    کش یعنی محتوایی که یک‌بار پردازش شده، برای دفعات بعد ذخیره می‌شود تا نیازی به پردازش دوباره
+    از صفر نباشد. کلود در Projects از روشی به نام <span dir="ltr">RAG</span>
+    (بازیابیِ تقویت‌شده با اطلاعات) استفاده می‌کند: به‌جای بارگذاری کل اسناد در هر پیام، فقط
+    بخش‌های مرتبط با سؤال تو را از میان آن‌ها پیدا و استفاده می‌کند.
+  </div>
+  <div class="note tip">
+    <b>💡 نکته</b>
+    دستورالعمل‌های Project را کوتاه و متمرکز نگه‌دار؛ فایل‌هایی که دیگر استفاده نمی‌کنی را هم از
+    آن پاک کن تا فضای مفیدتری برای اسناد فعال باقی بماند.
+  </div>
+</section>
+
+<!-- مرحله ۶ -->
+<section class="step-card" id="step-6">
+  <div class="step-head">
+    <span class="step-badge">۶</span>
+    <h3>انتخاب مدل مناسب کار</h3>
+    <span class="time-chip">⏱ ۲ دقیقه</span>
+  </div>
+  <p>همهٔ کارها به قوی‌ترین مدل نیاز ندارند. یک قاعدهٔ سرانگشتی:</p>
+  <ul>
+    <li><b>مدل‌های سبک‌تر (مثل Haiku):</b> برای کارهای سریع و ساده — خلاصه‌سازی کوتاه، پاسخ‌های
+      روزمره — و با مصرف توکن پایین‌تر.</li>
+    <li><b>مدل میانی (Sonnet):</b> پیش‌فرض خوبی برای اغلب کارهای روزمره و حتی کدنویسی معمولی.</li>
+    <li><b>مدل‌های سنگین‌تر (Opus):</b> فقط برای استدلال بسیار پیچیده یا کارهای حساس؛ چون مصرف
+      توکن‌شان چند برابر بیشتر است.</li>
+  </ul>
+  <div class="note tip">
+    <b>💡 نکته</b>
+    انتخاب‌گر مدل «چسبنده» است، یعنی روی همان مدلی که آخرین بار انتخاب کردی می‌ماند — قبل از شروع
+    یک کار سنگین، یک نگاه به آن بینداز.
+  </div>
+</section>
+
+<!-- مرحله ۷ -->
+<section class="step-card" id="step-7">
+  <div class="step-head">
+    <span class="step-badge">۷</span>
+    <h3>حافظه و جست‌وجوی چت‌های قبلی</h3>
+    <span class="time-chip">⏱ ۲ دقیقه</span>
+  </div>
+  <p>
+    اگر پلن پولی داری (Pro، Max، Team یا Enterprise)، به‌جای توضیح دوبارهٔ زمینه‌ای که قبلاً جایی
+    گفته‌ای، از کلود بخواه به چت‌های قبلی مراجعه کند؛ مثلاً بنویس: «همان‌طور که در چت [موضوع] گفتم…».
+    این کار از تکرار غیرضروری اطلاعات — و مصرف بی‌جای سهمیه — جلوگیری می‌کند.
+  </p>
+</section>
+
+<!-- مرحله ۸ -->
+<section class="step-card" id="step-8">
+  <div class="step-head">
+    <span class="step-badge">۸</span>
+    <h3>وقتی لیمیت واقعاً تمام شد</h3>
+    <span class="time-chip">⏱ ۳ دقیقه</span>
+  </div>
+  <p>حتی با بهترین مدیریت، ممکن است به سقف سهمیه برسی. سه راه واقعی و رسمی وجود دارد:</p>
+  <ol>
+    <li><b>صبر کردن:</b> نشست‌ها هر پنج ساعت ریست می‌شوند و سقف هفتگی هم در بازهٔ خودش تازه می‌شود.</li>
+    <li><b>ارتقای پلن:</b> رفتن از پلن رایگان به Pro، یا از Pro به Max/Team، سهمیهٔ بیشتری می‌دهد.</li>
+    <li><b>فعال‌سازی اعتبار مصرف (Usage credits):</b> در پلن‌های پولی، از مسیر
+      <code class="inline">Settings</code> ← <code class="inline">Usage</code>، می‌توانی
+      «Usage credits» را فعال کنی تا بعد از تمام‌شدن سهمیهٔ اصلی، با نرخ استاندارد API ادامه بدهی —
+      با یک سقف هزینهٔ ماهانهٔ مشخص که خودت تعیین می‌کنی، تا هزینه از کنترل خارج نشود.</li>
+  </ol>
+  <div class="note check">
+    ✅ ایست بازرسی — اگر «Usage credits» را فعال کردی، حتماً یک سقف هزینهٔ ماهانه هم ثبت کن؛
+    این گزینه در همان صفحهٔ Usage کنار دکمهٔ فعال‌سازی است.
+  </div>
+</section>
+
+<section class="big-warning" id="warning">
+  <h2>⚠️ روش‌هایی که پیشنهاد نمی‌کنیم</h2>
+  <p>
+    چون عنوان این آموزش «راهکارهای واقعی» است، لازم است صادق باشیم: چند ترفند در اینترنت می‌گردد
+    که ادعا می‌کنند لیمیت را «دور می‌زنند» — اما این‌ها راهکار واقعی و پایدار نیستند:
+  </p>
+  <ul>
+    <li><b>ساختن چند حساب رایگان</b> برای گرفتن چند سهمیهٔ جداگانه.</li>
+    <li><b>استفاده از اسکریپت یا بات</b> برای دور زدن یا شبیه‌سازی خودکار ریست شدن سهمیه.</li>
+    <li><b>اشتراک‌گذاری یا فروش دسترسی حساب</b> بین چند نفر برای رد کردن محدودیت یک‌نفره.</li>
+  </ul>
+  <p>
+    این کارها با قوانین استفادهٔ Anthropic در تضادند و حساب‌ات را در معرض تعلیق قرار می‌دهند —
+    یعنی دقیقاً برعکسِ یک «راهکار واقعی و پایدار». مسیر مطمئن همان چیزی است که در این آموزش دیدی:
+    مصرف هوشمندانه‌تر، و در صورت نیاز واقعی، ارتقای رسمی یا خرید اعتبار.
+  </p>
+</section>
+
+<section class="celebrate" id="summary">
+  <div class="big-emoji">🎉</div>
+  <h2>تمام شد! حالا بلدی از لیمیت کلود هوشمندانه استفاده کنی</h2>
+  <ul class="checklist" style="text-align:right;max-width:520px;margin:20px auto 0;">
+    <li>می‌دانم فرق لیمیت مصرف و محدودیت طول مکالمه چیست.</li>
+    <li>مصرف فعلی‌ام را در Settings ← Usage چک می‌کنم.</li>
+    <li>سؤال‌های مرتبط را در یک پیام جمع می‌کنم.</li>
+    <li>برای موضوع تازه، چت تازه باز می‌کنم.</li>
+    <li>ابزارهای غیرضروری و effort بالا را فقط وقتی لازم است روشن نگه می‌دارم.</li>
+    <li>فایل‌های تکراری را داخل Project می‌گذارم، نه در هر پیام.</li>
+    <li>مدل را متناسب با سنگینی کار انتخاب می‌کنم.</li>
+    <li>می‌دانم وقتی لیمیت تمام شد، سه گزینهٔ واقعی دارم.</li>
+  </ul>
+</section>
+
+<section id="trouble">
+  <h2 class="section-title">🔧 رفع اشکال</h2>
+
+  <div class="trouble">
+    <b class="symptom">نوار Usage را در تنظیمات نمی‌بینم</b>
+    <div class="cause">علت احتمالی: در پلن رایگان هستی؛ این نوارها فقط برای پلن‌های پولی نمایش داده می‌شوند.</div>
+    <div class="fix">راه‌حل: زمان ریست بعدی از همان صفحهٔ تنظیمات قابل مشاهده است؛ برای نوار پیشرفت کامل، پلن Pro یا بالاتر لازم است.</div>
+  </div>
+
+  <div class="trouble">
+    <b class="symptom">گزینهٔ خاموش کردن ابزارها را پیدا نمی‌کنم</b>
+    <div class="cause">علت احتمالی: به‌جای «Search and tools» داخل تنظیمات کلی گشته‌ای.</div>
+    <div class="fix">راه‌حل: این گزینه معمولاً از داخل خود پنجرهٔ چت، کنار جعبهٔ پیام، در نمادی شبیه ابزار یا از منوی تنظیمات جست‌وجو و ابزارها قابل دسترسی است.</div>
+  </div>
+
+  <div class="trouble">
+    <b class="symptom">با اینکه همهٔ نکات را رعایت کردم، بازهم زود به لیمیت می‌خورم</b>
+    <div class="cause">علت احتمالی: یک چت را بیش از حد طولانی نگه داشته‌ای یا فایل‌های حجیم را بارها آپلود می‌کنی.</div>
+    <div class="fix">راه‌حل: چت جدید باز کن و فایل‌های پرکاربرد را در یک Project ذخیره کن تا از کش استفاده شود.</div>
+  </div>
+
+  <div class="trouble">
+    <b class="symptom">بعد از فعال‌کردن Usage credits نگران هزینهٔ زیاد هستم</b>
+    <div class="cause">علت احتمالی: سقف هزینهٔ ماهانه تنظیم نشده یا خیلی بالا گذاشته شده.</div>
+    <div class="fix">راه‌حل: در همان صفحهٔ Usage، سقف هزینه را پایین‌تر بیاور یا Usage credits را کاملاً غیرفعال کن.</div>
+  </div>
+</section>
+
+<section class="box sources" id="sources">
+  <h2 class="section-title">📚 منابع رسمی</h2>
+  <p>همهٔ نکات این آموزش پیش از نوشتن، با مرکز راهنمای رسمی Claude راستی‌آزمایی شده‌اند:</p>
+  <ul>
+    <li><a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work" target="_blank" rel="noopener" dir="ltr">How do usage and length limits work?</a></li>
+    <li><a href="https://support.claude.com/en/articles/9797557-usage-limit-best-practices" target="_blank" rel="noopener" dir="ltr">Usage limit best practices</a></li>
+    <li><a href="https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans" target="_blank" rel="noopener" dir="ltr">Manage usage credits for paid Claude plans</a></li>
+    <li><a href="https://www.anthropic.com/aup" target="_blank" rel="noopener" dir="ltr">Anthropic Usage Policy</a></li>
+  </ul>
+</section>
+
+</div>
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+
+<script>
+// © Mehdi Rezghi — https://t.me/Mehdirezghi
+(function(){
+  var bar = document.getElementById('progress-bar');
+  function updateProgress(){
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+})();
+
+function copyTemplate(btn){
+  var text = document.getElementById('template-text').innerText;
+  var originalLabel = btn.textContent;
+  function done(ok){
+    btn.textContent = ok ? 'کپی شد ✅' : 'کپی نشد';
+    setTimeout(function(){ btn.textContent = originalLabel; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){done(true);}, function(){done(false);});
+  } else {
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done(true);
+    }catch(e){ done(false); }
+  }
+}
+</script>
+
+</body>
+</html>
