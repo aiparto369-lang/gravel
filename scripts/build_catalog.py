@@ -32,20 +32,36 @@ HEURISTICS = [
 ]
 FOOTER_MARK = "gravel-footer"
 
-# شناسنامهٔ پیش‌فرض چهار آموزش نخست (اگر فایلشان متای gravel نداشته باشد، مسیر صعود حفظ می‌شود)
+# شناسنامهٔ پین‌شدهٔ پنج ایستگاه رزروشدهٔ «مسیر صعود» (قوانین پروژه، بخش ۴).
+# کلیدها = id واقعی فایل‌ها (نام فایل منهای ‎-tutorial‎). این مقادیر بر متاهای داخل
+# خود فایل مقدم‌اند تا شماره‌گذاری مسیر هرگز به‌هم نریزد. آموزش‌های جدید (شماره ۶ به بعد)
+# اینجا نمی‌آیند؛ شناسنامه‌شان از متاهای gravel:* داخل خودشان خوانده می‌شود.
 LEGACY = {
-    "python-vibecoding": {"emoji": "🐍", "category": "برنامه‌نویسی", "order": 1, "time": "حدود ۶۰ دقیقه",
-                          "desc": "اولین قدم دنیای برنامه‌نویسی: پایتون را نصب کن و با کمک هوش مصنوعی اولین برنامه‌ات را بساز.",
-                          "keywords": "پایتون python نصب کدنویسی vibe coding"},
-    "crypto-openrouter": {"emoji": "👛", "category": "کریپتو و پرداخت", "order": 2, "time": "حدود ۴۵ دقیقه",
-                          "desc": "ساخت کیف‌پول MetaMask، شارژ امن، و گرفتن کلید OpenRouter برای استفاده از مدل‌های هوش مصنوعی.",
-                          "keywords": "متامسک metamask کیف پول نوبیتکس openrouter کلید api تتر"},
-    "docker-n8n":        {"emoji": "🐳", "category": "اتوماسیون", "order": 3, "time": "حدود ۹۰ دقیقه",
-                          "desc": "نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.",
-                          "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow"},
-    "openclaw":          {"emoji": "🦾", "category": "ابزارهای هوش مصنوعی", "order": 4, "time": "حدود ۴۵ دقیقه",
-                          "desc": "دستیار هوش مصنوعی خط فرمان را روی ویندوز راه بینداز و اولین مأموریتش را بده.",
-                          "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"},
+    "install-python-node-vscode(1)": {
+        "emoji": "🧰", "category": "برنامه‌نویسی", "order": 1, "time": "حدود ۴۵ دقیقه",
+        "title": "نصب پایتون، Node.js و VS Code",
+        "desc": "جعبه‌ابزار پایه را آماده کن: نصب پایتون، Node.js و VS Code روی ویندوز — پیش‌نیاز همهٔ مسیر.",
+        "keywords": "نصب پایتون python node nodejs vscode ویژوال استودیو کد ویندوز پیش‌نیاز"},
+    "python-1hour-vibe-coding": {
+        "emoji": "🐍", "category": "برنامه‌نویسی", "order": 2, "time": "حدود ۶۰ دقیقه",
+        "title": "پایتون از صفر برای وایب‌کدینگ",
+        "desc": "اولین قدم دنیای برنامه‌نویسی: پایتون را نصب کن و با کمک هوش مصنوعی اولین برنامه‌ات را بساز.",
+        "keywords": "پایتون python نصب کدنویسی برنامه‌نویسی vibe coding"},
+    "openrouter-crypto-wallet": {
+        "emoji": "👛", "category": "کریپتو و پرداخت", "order": 3, "time": "حدود ۴۵ دقیقه",
+        "title": "کیف‌پول کریپتو و دسترسی به OpenRouter",
+        "desc": "ساخت کیف‌پول MetaMask، شارژ امن، و گرفتن کلید OpenRouter برای استفاده از مدل‌های هوش مصنوعی.",
+        "keywords": "متامسک metamask کیف پول کریپتو نوبیتکس openrouter کلید api تتر"},
+    "docker-n8n-antigravity": {
+        "emoji": "🐳", "category": "اتوماسیون", "order": 4, "time": "حدود ۹۰ دقیقه",
+        "title": "داکر و n8n: خط تولید اتوماسیون هوشمند",
+        "desc": "نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.",
+        "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow antigravity"},
+    "openclaw": {
+        "emoji": "🦾", "category": "ابزارهای هوش مصنوعی", "order": 5, "time": "حدود ۴۵ دقیقه",
+        "title": "نصب و راه‌اندازی OpenClaw",
+        "desc": "دستیار هوش مصنوعی خط فرمان را روی ویندوز راه بینداز و اولین مأموریتش را بده.",
+        "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"},
 }
 
 def read(p): return p.read_text(encoding="utf-8", errors="replace")
@@ -90,6 +106,18 @@ def categorize(text, stem, title):
             return cat
     return "سایر"
 
+def inject_canonical(path, text, page_url):
+    """تزریق تگ canonical — به گوگل رسماً اعلام می‌کند نسخهٔ اصلِ این صفحه کجاست.
+    کپی‌های سایت‌های دیگر در سئو همیشه پشت نسخهٔ اصل می‌مانند."""
+    if not page_url or 'rel="canonical"' in text or "rel='canonical'" in text:
+        return text
+    if "</head>" not in text:
+        return text
+    tag = f'<link rel="canonical" href="{html.escape(page_url)}">\n</head>'
+    text = text.replace("</head>", tag, 1)
+    path.write_text(text, encoding="utf-8")
+    return text
+
 def inject_copyright(path, text):
     """تزریق امضای © و لینک برگشت به گراول در فایل آموزش (فقط اگر نباشد)."""
     changed = False
@@ -122,29 +150,34 @@ def build_catalog():
     for p in sorted(TUTORIALS.glob("*.html")):
         text = read(p)
         text = inject_copyright(p, text)
+        if SITE_URL:
+            text = inject_canonical(p, text, SITE_URL + "/" + urllib.parse.quote("tutorials/" + p.name))
         tid = p.stem.replace("-tutorial", "")
-        legacy = LEGACY.get(tid, {})
-        title = meta(text, "gravel:title") or title_of(text) or p.stem
-        order_raw = meta(text, "gravel:order")
-        try:
-            order = int(order_raw) if order_raw else legacy.get("order")
-        except ValueError:
-            order = legacy.get("order")
-        cat = meta(text, "gravel:category")
+        legacy = LEGACY.get(tid, {})  # ایستگاه‌های رزروشده: مقادیر پین‌شده مقدم بر متاهای داخل فایل
+        title = legacy.get("title") or meta(text, "gravel:title") or title_of(text) or p.stem
+        if "order" in legacy:
+            order = legacy["order"]
+        else:
+            order_raw = meta(text, "gravel:order")
+            try:
+                order = int(order_raw) if order_raw else None
+            except ValueError:
+                order = None
+        cat = legacy.get("category") or meta(text, "gravel:category")
         if cat not in CATEGORIES:
-            cat = legacy.get("category") or categorize(text, p.stem, title)
+            cat = categorize(text, p.stem, title)
         items.append({
             "id": tid,
             "file": "tutorials/" + p.name,
-            "emoji": meta(text, "gravel:emoji") or legacy.get("emoji", ""),
+            "emoji": legacy.get("emoji") or meta(text, "gravel:emoji") or "",
             "title": title,
-            "desc": meta(text, "gravel:desc") or meta(text, "description") or legacy.get("desc", ""),
-            "time": meta(text, "gravel:time") or legacy.get("time", ""),
+            "desc": legacy.get("desc") or meta(text, "gravel:desc") or meta(text, "description") or "",
+            "time": legacy.get("time") or meta(text, "gravel:time") or "",
             "level": meta(text, "gravel:level") or "مبتدی",
             "category": cat,
             "order": order,
             "added": added_date(p),
-            "keywords": meta(text, "gravel:keywords") or meta(text, "keywords") or legacy.get("keywords", ""),
+            "keywords": legacy.get("keywords") or meta(text, "gravel:keywords") or meta(text, "keywords") or "",
         })
     # مرتب‌سازی: اول مسیر صعود (order)، بعد بقیه بر اساس تاریخ (تازه‌ترها اول)
     items.sort(key=lambda t: (t["order"] is None, t["order"] or 0, t["added"]), reverse=False)
@@ -177,6 +210,10 @@ def build_sitemap(items):
 
 def main():
     items = build_catalog()
+    # canonical صفحهٔ اصلی
+    idx = ROOT / "index.html"
+    if SITE_URL and idx.exists():
+        inject_canonical(idx, read(idx), SITE_URL + "/")
     catalog = {
         "name": "گراول",
         "copyright": COPYRIGHT,

@@ -1,7 +1,7 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-05T11:55:47+00:00",
+  "generated": "2026-07-05T12:39:01+00:00",
   "tutorials": [
     {
       "id": "install-python-node-vscode(1)",
@@ -13,7 +13,7 @@
       "level": "مبتدی",
       "category": "برنامه‌نویسی",
       "order": 1,
-      "added": "2026-07-05",
+      "added": "2026-07-04",
       "keywords": "نصب پایتون python node nodejs vscode ویژوال استودیو کد ویندوز پیش‌نیاز"
     },
     {
@@ -26,7 +26,7 @@
       "level": "مبتدی",
       "category": "برنامه‌نویسی",
       "order": 2,
-      "added": "2026-07-05",
+      "added": "2026-07-04",
       "keywords": "پایتون python نصب کدنویسی برنامه‌نویسی vibe coding"
     },
     {
@@ -39,7 +39,7 @@
       "level": "مبتدی",
       "category": "کریپتو و پرداخت",
       "order": 3,
-      "added": "2026-07-05",
+      "added": "2026-07-04",
       "keywords": "متامسک metamask کیف پول کریپتو نوبیتکس openrouter کلید api تتر"
     },
     {
@@ -52,7 +52,7 @@
       "level": "مبتدی",
       "category": "اتوماسیون",
       "order": 4,
-      "added": "2026-07-05",
+      "added": "2026-07-04",
       "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow antigravity"
     },
     {
@@ -65,7 +65,7 @@
       "level": "مبتدی",
       "category": "ابزارهای هوش مصنوعی",
       "order": 5,
-      "added": "2026-07-05",
+      "added": "2026-07-04",
       "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"
     },
     {
@@ -80,6 +80,19 @@
       "order": 6,
       "added": "2026-07-05",
       "keywords": "OpenClaw, اوپن‌کلا, نصب OpenClaw, تنظیمات OpenClaw, آموزش OpenClaw, دستیار هوش مصنوعی شخصی, Gateway, openclaw onboard, ربات تلگرام هوش مصنوعی, self-hosted AI assistant, ترفند OpenClaw, openclaw dashboard, openclaw doctor, ClawHub"
+    },
+    {
+      "id": "claude-cowork",
+      "file": "tutorials/claude-cowork-tutorial.html",
+      "emoji": "🤝",
+      "title": "آموزش کامل Claude Cowork — همکار هوش مصنوعی روی کامپیوتر شما | گراول",
+      "desc": "آموزش گام‌به‌گام Claude Cowork از نصب تا ترفندهای حرفه‌ای: هوش مصنوعی که مستقیم روی فایل‌های شما کار می‌کند",
+      "time": "حدود ۴۵ دقیقه",
+      "level": "مبتدی",
+      "category": "ابزارهای هوش مصنوعی",
+      "order": 7,
+      "added": "2026-07-05",
+      "keywords": "Claude Cowork, کلاد کوورک, آموزش Cowork, هوش مصنوعی ایجنت, AI agent, Anthropic, Claude Desktop, اتوماسیون کارهای اداری, تسک زمان‌بندی شده, اسکیل کلاد, کانکتور, Claude skills, scheduled tasks, آموزش فارسی کلاد"
     }
   ]
 }

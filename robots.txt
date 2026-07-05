@@ -1,3 +1,4 @@
 # © Mehdi Rezghi — https://t.me/Mehdirezghi
 User-agent: *
 Allow: /
+Sitemap: https://aiparto369-lang.github.io/gravel/sitemap.xml
