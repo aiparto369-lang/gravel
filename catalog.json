@@ -1,10 +1,10 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-05T00:00:00Z",
+  "generated": "2026-07-05T11:55:47+00:00",
   "tutorials": [
     {
-      "id": "install-python-node-vscode",
+      "id": "install-python-node-vscode(1)",
       "file": "tutorials/install-python-node-vscode-tutorial(1).html",
       "emoji": "🧰",
       "title": "نصب پایتون، Node.js و VS Code",
@@ -13,7 +13,7 @@
       "level": "مبتدی",
       "category": "برنامه‌نویسی",
       "order": 1,
-      "added": "2026-07-04",
+      "added": "2026-07-05",
       "keywords": "نصب پایتون python node nodejs vscode ویژوال استودیو کد ویندوز پیش‌نیاز"
     },
     {
@@ -26,7 +26,7 @@
       "level": "مبتدی",
       "category": "برنامه‌نویسی",
       "order": 2,
-      "added": "2026-07-04",
+      "added": "2026-07-05",
       "keywords": "پایتون python نصب کدنویسی برنامه‌نویسی vibe coding"
     },
     {
@@ -39,7 +39,7 @@
       "level": "مبتدی",
       "category": "کریپتو و پرداخت",
       "order": 3,
-      "added": "2026-07-04",
+      "added": "2026-07-05",
       "keywords": "متامسک metamask کیف پول کریپتو نوبیتکس openrouter کلید api تتر"
     },
     {
@@ -52,7 +52,7 @@
       "level": "مبتدی",
       "category": "اتوماسیون",
       "order": 4,
-      "added": "2026-07-04",
+      "added": "2026-07-05",
       "keywords": "داکر docker n8n اتوماسیون ورک‌فلو workflow antigravity"
     },
     {
@@ -65,8 +65,21 @@
       "level": "مبتدی",
       "category": "ابزارهای هوش مصنوعی",
       "order": 5,
-      "added": "2026-07-04",
+      "added": "2026-07-05",
       "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان"
+    },
+    {
+      "id": "openclaw-pro",
+      "file": "tutorials/openclaw-pro-tutorial.html",
+      "emoji": "🦞",
+      "title": "کار حرفه‌ای با OpenClaw — تنظیمات اولیه، روش کار و ترفندها | گراول",
+      "desc": "راه‌اندازی کامل OpenClaw از صفر: تنظیمات اولیهٔ ویزارد نصب، کار روزمره با داشبورد و ترمینال، اتصال تلگرام و ترفندهای حرفه‌ای امنیت و اتوماسیون",
+      "time": "حدود ۷۵ دقیقه",
+      "level": "متوسط",
+      "category": "ابزارهای هوش مصنوعی",
+      "order": 6,
+      "added": "2026-07-05",
+      "keywords": "OpenClaw, اوپن‌کلا, نصب OpenClaw, تنظیمات OpenClaw, آموزش OpenClaw, دستیار هوش مصنوعی شخصی, Gateway, openclaw onboard, ربات تلگرام هوش مصنوعی, self-hosted AI assistant, ترفند OpenClaw, openclaw dashboard, openclaw doctor, ClawHub"
     }
   ]
 }

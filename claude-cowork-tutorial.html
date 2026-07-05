@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — مهدی رزقی — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- بخشی از گراول (Gravel) — کتابخانهٔ آموزش گام‌به‌گام | برای رسیدن به قله باید از سنگ‌ریزه عبور کرد. -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آموزش کامل Claude Cowork — همکار هوش مصنوعی روی کامپیوتر شما | گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="🤝">
+<meta name="gravel:time"     content="حدود ۴۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="آموزش گام‌به‌گام Claude Cowork از نصب تا ترفندهای حرفه‌ای: هوش مصنوعی که مستقیم روی فایل‌های شما کار می‌کند">
+<meta name="gravel:keywords" content="Claude Cowork, کلاد کوورک, آموزش Cowork, هوش مصنوعی ایجنت, AI agent, Anthropic, Claude Desktop, اتوماسیون کارهای اداری, تسک زمان‌بندی شده, اسکیل کلاد, کانکتور, Claude skills, scheduled tasks, آموزش فارسی کلاد">
+<meta name="gravel:order"    content="7">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi */
+:root{
+  --bg:#F2F7F7;        /* زمینه */
+  --ink:#14303B;       /* جوهر */
+  --teal:#0E7C86;      /* فیروزه‌ای */
+  --saffron:#E8A317;   /* زعفرانی */
+  --navy:#123B4A;      /* سرمه‌ای شب */
+  --card:#FFFFFF;
+  --soft:#E4EFEF;
+  --ok:#1E8E5A;
+  --warn:#C24C1A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  font-size:17.5px;line-height:1.95;
+  direction:rtl;text-align:right;
+}
+#progressbar{
+  position:fixed;top:0;inset-inline-start:0;height:6px;width:0%;
+  background:linear-gradient(90deg,var(--teal),var(--saffron));
+  z-index:99;transition:width .15s;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px 60px}
+a{color:var(--teal)}
+code, pre{
+  direction:ltr;text-align:left;
+  font-family:'Consolas','Courier New',monospace;
+}
+code{
+  background:var(--soft);border-radius:6px;padding:2px 8px;font-size:.92em;
+  color:var(--navy);unicode-bidi:isolate;
+}
+pre{
+  background:var(--navy);color:#EAF6F6;border-radius:14px;
+  padding:18px 20px;overflow-x:auto;font-size:.95em;line-height:1.8;
+  border-inline-start:5px solid var(--saffron);
+}
+pre code{background:none;color:inherit;padding:0}
+h1,h2,h3{line-height:1.5;font-weight:900}
+h2{color:var(--navy);font-size:1.5em;margin-top:0}
+
+/* هدر قهرمان */
+.hero{
+  background:linear-gradient(150deg,var(--navy) 0%,var(--teal) 100%);
+  color:#fff;border-radius:0 0 32px 32px;
+  padding:52px 22px 44px;text-align:center;margin-bottom:34px;
+}
+.hero .mount{font-size:56px;line-height:1}
+.hero h1{font-size:1.85em;margin:14px 0 6px}
+.hero .slogan{opacity:.92;font-size:1em;margin-bottom:18px}
+.hero .promise{
+  display:inline-block;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.35);border-radius:999px;
+  padding:8px 22px;font-size:.95em;
+}
+.meta-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.meta-chips span{
+  background:rgba(255,255,255,.16);border-radius:999px;padding:6px 16px;font-size:.88em;
+}
+
+/* فهرست مراحل */
+.toc{
+  background:var(--card);border-radius:20px;padding:24px 26px;
+  box-shadow:0 4px 18px rgba(18,59,74,.08);margin-bottom:36px;
+}
+.toc h2{font-size:1.2em;margin-bottom:12px}
+.toc ol{margin:0;padding-inline-start:22px}
+.toc li{margin:7px 0}
+.toc a{text-decoration:none;font-weight:700}
+.toc small{color:var(--teal);font-weight:400}
+
+/* کارت مرحله */
+.stage{
+  background:var(--card);border-radius:22px;padding:30px 28px 26px;
+  box-shadow:0 4px 18px rgba(18,59,74,.08);margin:0 0 34px;
+  border-top:6px solid var(--teal);
+}
+.stage.alt{border-top-color:var(--saffron)}
+.stage-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.badge{
+  min-width:56px;height:56px;border-radius:18px;flex:0 0 auto;
+  background:var(--teal);color:#fff;font-size:1.35em;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.stage.alt .badge{background:var(--saffron)}
+.chip{
+  background:var(--soft);color:var(--navy);border-radius:999px;
+  padding:4px 14px;font-size:.82em;font-weight:700;
+}
+.stage h2{flex:1;min-width:200px}
+
+/* گام‌ها */
+.steps{counter-reset:st;padding-inline-start:0;list-style:none;margin:14px 0}
+.steps>li{
+  counter-increment:st;position:relative;
+  padding:12px 54px 12px 12px;margin:10px 0;
+  background:var(--bg);border-radius:14px;
+}
+.steps>li::before{
+  content:counter(st);position:absolute;inset-inline-start:auto;
+  right:12px;top:14px;
+  width:30px;height:30px;border-radius:10px;background:var(--navy);color:#fff;
+  font-weight:900;font-size:.9em;display:flex;align-items:center;justify-content:center;
+}
+.steps>li{padding-right:54px}
+
+/* جعبه‌ها */
+.box{border-radius:16px;padding:16px 20px;margin:18px 0;font-size:.97em}
+.tip{background:#EAF6EE;border-inline-start:5px solid var(--ok)}
+.warn{background:#FCEFE7;border-inline-start:5px solid var(--warn)}
+.foot{background:#F1F0FA;border-inline-start:5px solid #6C63B5;font-size:.92em}
+.check{background:#FFF7E6;border-inline-start:5px solid var(--saffron)}
+.fix{background:#E9F3F6;border-inline-start:5px solid var(--teal)}
+.box b.t{display:block;margin-bottom:4px}
+
+/* جدول */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95em}
+th,td{border:1px solid #D6E4E4;padding:10px 12px;vertical-align:top}
+th{background:var(--soft);color:var(--navy)}
+tr:nth-child(even) td{background:#FAFDFD}
+
+/* نمودار مقایسه */
+.duo{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0}
+.duo>div{
+  flex:1;min-width:250px;border-radius:16px;padding:18px 20px;
+}
+.duo .a{background:var(--soft)}
+.duo .b{background:#FDF3DC}
+.duo h3{margin:0 0 8px;font-size:1.05em}
+.duo ul{margin:0;padding-inline-start:20px}
+.duo li{margin:5px 0;font-size:.95em}
+
+/* فلوی سی‌اس‌اس */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:20px 0}
+.flow .n{
+  background:var(--navy);color:#fff;border-radius:12px;padding:10px 16px;
+  font-size:.9em;font-weight:700;text-align:center;
+}
+.flow .ar{color:var(--saffron);font-size:1.4em;font-weight:900}
+
+/* پرامپت آماده */
+.prompt{
+  background:#FFFDF5;border:2px dashed var(--saffron);border-radius:14px;
+  padding:14px 18px;margin:14px 0;
+}
+.prompt .lbl{font-size:.82em;font-weight:900;color:var(--saffron)}
+
+.celebrate{
+  background:linear-gradient(150deg,var(--teal),var(--navy));color:#fff;
+  border-radius:22px;padding:34px 28px;text-align:center;margin-bottom:34px;
+}
+.celebrate h2{color:#fff}
+.celebrate ul{display:inline-block;text-align:right;margin:10px 0 0;padding-inline-start:22px}
+
+.gravel-footer a{color:inherit}
+.sign{font-size:12px;opacity:.7;text-align:center;margin-top:6px}
+
+@media (max-width:700px){
+  body{font-size:16.5px}
+  .hero h1{font-size:1.4em}
+  .duo{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div id="progressbar"></div>
+
+<header class="hero">
+  <div class="mount">🏔️🤝</div>
+  <h1>آموزش کامل <span dir="ltr">Claude Cowork</span></h1>
+  <div class="slogan">گراول — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</div>
+  <div class="promise">قراره چی یاد بگیریم؟ راه‌اندازی همکارِ هوش مصنوعی که مستقیم روی فایل‌های کامپیوترتان کار می‌کند — از صفرِ صفر، بدون هیچ پیش‌نیازی.</div>
+  <div class="meta-chips">
+    <span>⏱ حدود ۴۵ دقیقه</span>
+    <span>📶 سطح: مبتدی</span>
+    <span>🚉 ایستگاه ۷ مسیر صعود</span>
+    <span>🗓 به‌روزشده: تیر ۱۴۰۵ / ژوئیهٔ ۲۰۲۶</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- فهرست -->
+<nav class="toc" id="toc">
+  <h2>🗺️ فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s1">Cowork چیست و چه فرقی با چتِ معمولی دارد؟</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s2">پیش‌نیازها و بررسی آمادگی کامپیوتر</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s3">نصب Claude Desktop و ورود به Cowork</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s4">اولین کارِ واقعی: از توصیف تا تحویل</a> <small>— ۸ دقیقه</small></li>
+    <li><a href="#s5">هدایت کار و حالت‌های مجوز (امنیت)</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s6">دستورالعمل‌های سراسری و پوشه‌ای</a> <small>— ۴ دقیقه</small></li>
+    <li><a href="#s7">کانکتورها: اتصال به ابزارهای دیگر</a> <small>— ۴ دقیقه</small></li>
+    <li><a href="#s8">اسکیل‌ها و پلاگین‌ها</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s9">تسک‌های زمان‌بندی‌شده</a> <small>— ۳ دقیقه</small></li>
+    <li><a href="#s10">پروژه‌ها و انجام کار از موبایل</a> <small>— ۳ دقیقه</small></li>
+    <li><a href="#s11">نکات پیشرفته و ترفندهای حرفه‌ای</a> <small>— ۵ دقیقه</small></li>
+    <li><a href="#s12">مثال‌های کاربردی آماده (کپی کنید و استفاده کنید)</a></li>
+    <li><a href="#s13">🔧 رفع اشکال</a></li>
+  </ol>
+</nav>
+
+<!-- مرحله ۱ -->
+<section class="stage" id="s1">
+  <div class="stage-head">
+    <div class="badge">۱</div>
+    <h2>Cowork چیست و چه فرقی با چتِ معمولی دارد؟</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <p>تصور کنید دو نفر برای کمک به شما آمده‌اند: یک <b>مشاور</b> و یک <b>همکار</b>. مشاور کنار میزتان می‌نشیند و می‌گوید «این کار را این‌طوری انجام بده» — اما دستش به هیچ‌چیز نمی‌خورد. همکار اما پشت میز می‌نشیند، پوشه‌ها را باز می‌کند و کار را <b>خودش انجام می‌دهد</b>.</p>
+
+  <p>چتِ معمولی Claude همان مشاور است. <b dir="ltr">Claude Cowork</b> همان همکار است: شما نتیجهٔ دلخواه را توصیف می‌کنید، Cowork برنامه می‌ریزد، فایل‌های شما را می‌خواند و می‌نویسد، و خروجی نهایی — سند مرتب، اکسل با فرمول، پوشهٔ دسته‌بندی‌شده — را مستقیم روی کامپیوترتان تحویل می‌دهد.</p>
+
+  <div class="duo">
+    <div class="a">
+      <h3>💬 چت معمولی (مشاور)</h3>
+      <ul>
+        <li>به سؤال‌ها یکی‌یکی جواب می‌دهد</li>
+        <li>برای کار با فایل باید دستی آپلود کنید</li>
+        <li>می‌گوید «چطور» — انجام با شماست</li>
+        <li>مصرف کمتری از سهمیه دارد</li>
+      </ul>
+    </div>
+    <div class="b">
+      <h3>🤝 Cowork (همکار)</h3>
+      <ul>
+        <li>یک کار چندمرحله‌ای را از اول تا آخر انجام می‌دهد</li>
+        <li>مستقیم به پوشه‌هایی که اجازه بدهید دسترسی دارد</li>
+        <li>خروجی واقعی می‌سازد: فایل، گزارش، اکسل، اسلاید</li>
+        <li>می‌تواند کارهای زمان‌بندی‌شده و طولانی اجرا کند</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>Cowork از همان موتور ایجنتیک<sup>۱</sup> ساخته شده که <span dir="ltr">Claude Code</span> (ابزار برنامه‌نویس‌ها) را قدرتمند کرده — با این تفاوت که دیگر خبری از ترمینال<sup>۲</sup> نیست و همه‌چیز در محیط سادهٔ اپلیکیشن دسکتاپ Claude انجام می‌شود. اگر ایستگاه ۵ مسیر صعود (OpenClaw) را گذرانده باشید، حس آشنایی خواهید داشت؛ اگر نه، هیچ اشکالی ندارد — این آموزش کاملاً مستقل است.</p>
+
+  <div class="box foot"><b class="t">📖 پانویس</b>
+  ۱) <b>ایجنتیک (Agentic):</b> یعنی هوش مصنوعی به‌جای فقط جواب‌دادن، خودش «عمل» می‌کند: برنامه می‌ریزد، ابزار به کار می‌گیرد و مراحل را تا رسیدن به نتیجه جلو می‌برد.<br>
+  ۲) <b>ترمینال (Terminal):</b> پنجرهٔ سیاه متنی که برنامه‌نویس‌ها در آن دستور تایپ می‌کنند. در Cowork به آن نیازی نیست.</div>
+
+  <div class="box tip"><b class="t">💡 نکته</b>
+  Cowork برای چه کسانی ساخته شده؟ هر کسی که با سند، داده و فایل سروکار دارد: مدیران، تحلیل‌گران، پژوهشگران، تیم‌های مالی و حقوقی و اداری. لازم نیست حتی یک خط کد بلد باشید.</div>
+</section>
+
+<!-- مرحله ۲ -->
+<section class="stage alt" id="s2">
+  <div class="stage-head">
+    <div class="badge">۲</div>
+    <h2>پیش‌نیازها و بررسی آمادگی کامپیوتر</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <p>قبل از شروع، این چهار مورد را لازم دارید:</p>
+
+  <table>
+    <tr><th>پیش‌نیاز</th><th>توضیح</th></tr>
+    <tr><td>💳 اشتراک پولی Claude</td><td>یکی از پلن‌های <span dir="ltr">Pro</span>، <span dir="ltr">Max</span>، <span dir="ltr">Team</span> یا <span dir="ltr">Enterprise</span>. (در ایستگاه ۳ مسیر صعود یاد گرفتید چطور پرداخت بین‌المللی را با کیف‌پول کریپتو حل کنید.)</td></tr>
+    <tr><td>🖥 کامپیوتر</td><td>ویندوز (آخرین نسخهٔ اپ Claude)، مک، یا لینوکس (بتا<sup>۳</sup>)</td></tr>
+    <tr><td>🌐 اینترنت پایدار</td><td>در تمام مدت اجرای کار باید وصل باشید.</td></tr>
+    <tr><td>📱 (اختیاری) اپ موبایل Claude</td><td>برای سپردن کار از راه دور — در مرحلهٔ ۱۰ می‌بینیم.</td></tr>
+  </table>
+
+  <p><b>آیا کامپیوتر من Cowork را پشتیبانی می‌کند؟</b> انتروپیک یک برنامهٔ کوچک «بررسی آمادگی» دارد که قبل از نصب، سازگاری سیستم را چک می‌کند:</p>
+
+  <ol class="steps">
+    <li>به صفحهٔ راهنمای رسمی بروید: <a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork" target="_blank" rel="noopener"><span dir="ltr">support.claude.com → Get started with Claude Cowork</span></a></li>
+    <li>در بخش <span dir="ltr">«Will my computer support Claude Cowork?»</span> لینک مربوط به سیستم خودتان (مک، ویندوز x64 یا ویندوز arm64) را دانلود کنید.</li>
+    <li>برنامهٔ دانلودشده را باز کنید و منتظر نتیجه بمانید.</li>
+  </ol>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b>
+  اگر پیام <span dir="ltr">"This computer is ready for Cowork"</span> را دیدید، سبزید — بروید مرحلهٔ بعد. اگر ندیدید، به بخش «رفع اشکال» انتهای همین صفحه سر بزنید.</div>
+
+  <div class="box foot"><b class="t">📖 پانویس</b>
+  ۳) <b>بتا (Beta):</b> نسخه‌ای که هنوز در حال آزمایش است و ممکن است ایرادهای کوچکی داشته باشد.</div>
+</section>
+
+<!-- مرحله ۳ -->
+<section class="stage" id="s3">
+  <div class="stage-head">
+    <div class="badge">۳</div>
+    <h2>نصب Claude Desktop و ورود به Cowork</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <ol class="steps">
+    <li>مرورگر را باز کنید و به آدرس <a href="https://claude.com/download" target="_blank" rel="noopener"><span dir="ltr">claude.com/download</span></a> بروید.</li>
+    <li>نسخهٔ مناسب سیستم‌عامل خودتان را دانلود کنید.</li>
+    <li>فایل دانلودشده را اجرا کنید و نصب را کامل کنید (مثل نصب هر برنامهٔ معمولی: <span dir="ltr">Next → Install</span>).</li>
+    <li>برنامهٔ Claude را باز کنید.</li>
+    <li>با همان حساب Claude خودتان وارد شوید (<span dir="ltr">Log in</span>).</li>
+    <li>در بالای برنامه دنبال انتخاب‌گر حالت بگردید: کنار «<span dir="ltr">Chat</span>» یک تب به نام «<b dir="ltr">Cowork</b>» می‌بینید.</li>
+    <li>روی تب <span dir="ltr">Cowork</span> کلیک کنید تا وارد حالت «کارها» (<span dir="ltr">Tasks</span>) شوید.</li>
+  </ol>
+
+  <div class="box tip"><b class="t">💡 نکته</b>
+  بار اول ممکن است پیام <span dir="ltr">"Setting up Claude's workspace"</span> ببینید. کاملاً طبیعی است: Cowork دارد آخرین نسخهٔ محیط کاری‌اش را آماده می‌کند. چند لحظه صبر کنید.</div>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b>
+  تا وقتی Cowork مشغول کار است، <b>اپلیکیشن باید باز بماند و کامپیوتر بیدار باشد</b>. اگر برنامه را ببندید یا لپ‌تاپ به خواب برود، کارِ در حال اجرا متوقف می‌شود.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b>
+  الان باید تب Cowork را باز کرده باشید و یک کادر برای توصیف کار ببینید. اگر تب Cowork را نمی‌بینید، مطمئن شوید اپ به آخرین نسخه به‌روز است و اشتراکتان پولی است.</div>
+</section>
+
+<!-- مرحله ۴ -->
+<section class="stage alt" id="s4">
+  <div class="stage-head">
+    <div class="badge">۴</div>
+    <h2>اولین کارِ واقعی: از توصیف تا تحویل</h2>
+    <span class="chip">⏱ ۸ دقیقه</span>
+  </div>
+
+  <p>بهترین تمرین اول، مرتب‌کردن پوشهٔ دانلودهاست: بی‌خطر است، نتیجه‌اش فوری دیده می‌شود و دقیقاً همان چیزی است که Cowork برایش ساخته شده.</p>
+
+  <ol class="steps">
+    <li>در تب Cowork، پوشه‌ای را که می‌خواهید Claude به آن دسترسی داشته باشد انتخاب کنید (مثلاً پوشهٔ <span dir="ltr">Downloads</span>). Cowork <b>فقط</b> به پوشه‌هایی که خودتان مشخص می‌کنید دسترسی دارد.</li>
+    <li>کارتان را به زبان ساده توصیف کنید. مثلاً پرامپت<sup>۴</sup> زیر را بنویسید:</li>
+  </ol>
+
+  <div class="prompt"><span class="lbl">پرامپت آماده — کپی کنید:</span>
+  <p style="margin:6px 0 0">پوشهٔ Downloads من را بر اساس نوع فایل (تصویر، سند، ویدئو، فایل فشرده، نصب‌کننده) در زیرپوشه‌های جداگانه مرتب کن. فایل‌های تکراری را پیدا کن اما <b>حذف نکن</b> — فقط فهرستشان را در یک فایل متنی به من گزارش بده.</p></div>
+
+  <ol class="steps" start="3">
+    <li>دکمهٔ ارسال را بزنید و صبر کنید. Claude ابتدا یک <b>برنامه (Plan)</b> نشانتان می‌دهد: چه مراحلی را می‌خواهد طی کند.</li>
+    <li>برنامه را بخوانید. اگر درست بود، اجازهٔ ادامه بدهید.</li>
+    <li>حین کار، نشانگرهای پیشرفت نشان می‌دهد Claude الان مشغول چیست. می‌توانید تماشا کنید، یا بروید چای بریزید و برگردید. ☕</li>
+    <li>وقتی تمام شد، پوشهٔ Downloads را باز کنید و نتیجه را ببینید.</li>
+  </ol>
+
+  <p><b>پشت صحنه چه اتفاقی می‌افتد؟</b></p>
+  <div class="flow">
+    <span class="n">📝 تحلیل درخواست<br>و ساخت برنامه</span><span class="ar">←</span>
+    <span class="n">🧩 شکستن کار<br>به زیرکارها</span><span class="ar">←</span>
+    <span class="n">🖥 اجرای کد در<br>ماشین مجازی ایزوله</span><span class="ar">←</span>
+    <span class="n">⚡ هماهنگی چند<br>جریان کاری موازی</span><span class="ar">←</span>
+    <span class="n">📦 تحویل خروجی<br>روی فایل‌سیستم شما</span>
+  </div>
+
+  <div class="box foot"><b class="t">📖 پانویس</b>
+  ۴) <b>پرامپت (Prompt):</b> متن درخواستی که به هوش مصنوعی می‌دهید.<br>
+  ۵) <b>ماشین مجازی ایزوله (Isolated VM):</b> یک «اتاقک دربستهٔ» نرم‌افزاری روی کامپیوترتان که کدهای Cowork داخل آن اجرا می‌شوند تا از سیستم‌عامل اصلی شما جدا بمانند. لایهٔ امنیتی مهمی است.</div>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b>
+  الان باید زیرپوشه‌های مرتب‌شده و فایل گزارش تکراری‌ها را در Downloads ببینید. اگر فایل‌ها جای مورد انتظار نیستند، محل خروجی را که Claude در پایان کار اعلام کرده دوباره بخوانید.</div>
+</section>
+
+<!-- مرحله ۵ -->
+<section class="stage" id="s5">
+  <div class="stage-head">
+    <div class="badge">۵</div>
+    <h2>هدایت کار و حالت‌های مجوز (امنیت)</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <p>در Cowork شما «سرپرست» هستید و Claude «همکار». دو ابزار سرپرستی دارید:</p>
+
+  <p><b>۱) هدایت میانهٔ کار (Steering):</b> لازم نیست تا پایان کار ساکت بمانید. هر وقت دیدید مسیر باید عوض شود، همان وسطِ کار پیام بدهید: «فایل‌های PDF را جدا نکن، همه را در یک پوشه بگذار». Claude خودش را تنظیم می‌کند.</p>
+
+  <p><b>۲) حالت‌های مجوز:</b> بالای هر جلسهٔ کاری یک انتخاب‌گر حالت هست:</p>
+
+  <table>
+    <tr><th>حالت</th><th>رفتار</th><th>چه وقت مناسب است؟</th></tr>
+    <tr><td><span dir="ltr">Ask before acting</span><br>(قبل از عمل بپرس)</td><td>Claude قبل از هر اقدام مهم مکث می‌کند و از شما تأیید می‌گیرد.</td><td>ابزار جدید، فایل‌های ناآشنا یا حساس، هر کاری که می‌خواهید از نزدیک زیر نظر بگیرید. <b>پیشنهاد ما برای شروع.</b></td></tr>
+    <tr><td><span dir="ltr">Act without asking</span><br>(بدون پرسیدن عمل کن)</td><td>Claude بدون توقف کار می‌کند.</td><td>سریع‌تر اما پرریسک‌تر؛ فقط وقتی خودتان ناظرید و با فایل‌ها و سایت‌های مطمئن کار می‌کنید.</td></tr>
+  </table>
+
+  <div class="box tip"><b class="t">💡 نکتهٔ امنیتی مهم</b>
+  در <b>هر دو</b> حالت، Cowork برای <b>حذف دائمی فایل</b> همیشه اجازهٔ صریح می‌خواهد و باید «Allow» را بزنید. با این حال، قبل از کار روی فایل‌های حساس (مالی، شخصی) اول یک کپی پشتیبان بگیرید — عادت طلایی هر حرفه‌ای.</div>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b>
+  Cowork به اینترنت دسترسی دارد و کارهای واقعی انجام می‌دهد. قبل از وصل‌کردن ابزارهای خارجی (مرحلهٔ ۷) یا اجرای کار روی داده‌های محرمانه، برنامهٔ پیشنهادی Claude را با دقت بخوانید. راهنمای رسمی امنیت: <a href="https://support.claude.com/en/articles/13364135-use-claude-cowork-safely" target="_blank" rel="noopener"><span dir="ltr">Use Claude Cowork safely</span></a></div>
+</section>
+
+<!-- مرحله ۶ -->
+<section class="stage alt" id="s6">
+  <div class="stage-head">
+    <div class="badge">۶</div>
+    <h2>دستورالعمل‌های سراسری و پوشه‌ای</h2>
+    <span class="chip">⏱ ۴ دقیقه</span>
+  </div>
+
+  <p>دستورالعمل‌ها (<span dir="ltr">Instructions</span>) قانون‌های ثابت شما هستند: یک بار می‌نویسید، در همهٔ کارها اعمال می‌شود. مثل برگهٔ «قواعد کار با من» که روز اول به همکار جدید می‌دهید.</p>
+
+  <p><b>دستورالعمل سراسری (Global):</b> در همهٔ جلسه‌های Cowork اجرا می‌شود.</p>
+  <ol class="steps">
+    <li>در اپ دسکتاپ به <span dir="ltr">Settings</span> بروید.</li>
+    <li>بخش <span dir="ltr">Cowork</span> را باز کنید.</li>
+    <li>کنار <span dir="ltr">Global instructions</span> روی «<span dir="ltr">Edit</span>» کلیک کنید.</li>
+    <li>قواعدتان را بنویسید و «<span dir="ltr">Save</span>» را بزنید.</li>
+  </ol>
+
+  <div class="prompt"><span class="lbl">نمونهٔ دستورالعمل سراسری:</span>
+  <p style="margin:6px 0 0">خروجی‌های متنی را همیشه به فارسی و رسمی بنویس. تاریخ‌ها را شمسی هم بنویس. نام فایل‌های خروجی را با الگوی <code>YYYY-MM-DD-topic</code> بساز. قبل از هر تغییر بزرگ، خلاصهٔ یک‌خطی کار را اعلام کن.</p></div>
+
+  <p><b>دستورالعمل پوشه‌ای (Folder):</b> وقتی پوشه‌ای را انتخاب می‌کنید، می‌توانید قواعد مخصوص همان پوشه/پروژه را هم اضافه کنید — مثلاً «در این پوشه، گزارش‌ها همیشه با قالب شرکت ما ساخته شوند». Claude حتی می‌تواند حین کار، خودش این دستورالعمل‌ها را کامل‌تر کند.</p>
+
+  <div class="box check"><b class="t">✅ ایست بازرسی</b>
+  یک دستورالعمل سراسری کوتاه ذخیره کنید، بعد یک کار سادهٔ جدید بدهید و ببینید Claude آن را رعایت می‌کند.</div>
+</section>
+
+<!-- مرحله ۷ -->
+<section class="stage" id="s7">
+  <div class="stage-head">
+    <div class="badge">۷</div>
+    <h2>کانکتورها: اتصال به ابزارهای دیگر</h2>
+    <span class="chip">⏱ ۴ دقیقه</span>
+  </div>
+
+  <p>کانکتور<sup>۶</sup> پلی است بین Cowork و سرویس‌هایی که کارتان آنجاست: Slack، Notion، Jira، Microsoft 365 و صدها ابزار دیگر. با کانکتور، Claude می‌تواند هم داده بخواند و هم عمل کند: تیکت به‌روز کند، پیش‌نویس پاسخ بنویسد، در کانال پیام بگذارد، فایل ذخیره کند.</p>
+
+  <ol class="steps">
+    <li>از پنل «<span dir="ltr">Customize</span>» در نوار کناری (یا از <span dir="ltr">Settings → Connectors</span>) کاتالوگ کانکتورها را باز کنید.</li>
+    <li>کانکتور موردنظر را پیدا کنید و روی اتصال کلیک کنید.</li>
+    <li>یک بار وارد حساب آن سرویس شوید و اجازه بدهید (Authorize). از این به بعد در هر جلسه‌ای در دسترس است.</li>
+    <li>در هر جلسه می‌توانید از منوی Customize یا نوار چت تعیین کنید کدام ابزارها فعال باشند.</li>
+  </ol>
+
+  <div class="box tip"><b class="t">💡 نکته</b>
+  ترکیب طلایی: کانکتور + فایل‌های محلی. مثلاً «داده‌های این هفتهٔ کانال Slack تیم را بخوان و کنار فایل اکسل فروش در پوشهٔ من، یک گزارش هفتگی بساز.» — این همان جادویی است که در چت معمولی ممکن نبود.</div>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b>
+  هر کانکتور یعنی یک درِ جدید به داده‌های شما. فقط کانکتورهایی را وصل کنید که واقعاً لازم دارید و به سازنده‌شان اعتماد دارید. در پلن‌های سازمانی، مدیر تیم تعیین می‌کند کدام کانکتورها مجازند و کدام فقط «فقط‌خواندنی» باشند.</div>
+
+  <div class="box foot"><b class="t">📖 پانویس</b>
+  ۶) <b>کانکتور (Connector):</b> افزونه‌ای که Claude را به یک سرویس بیرونی وصل می‌کند. زیرساخت فنی بسیاری از آن‌ها پروتکل MCP است — همان که در ایستگاه ۴ مسیر صعود (n8n) با آن آشنا شدید.</div>
+</section>
+
+<!-- مرحله ۸ -->
+<section class="stage alt" id="s8">
+  <div class="stage-head">
+    <div class="badge">۸</div>
+    <h2>اسکیل‌ها و پلاگین‌ها</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <p><b>اسکیل (Skill)</b> یعنی «دستورکار ذخیره‌شده»: روش انجام یک کار تکراری که یک بار تعریف می‌شود و بارها اجرا می‌شود. مثل دستور پخت آشپزی — دفعهٔ بعد لازم نیست دوباره توضیح بدهید.</p>
+
+  <ol class="steps">
+    <li><b>استفاده از اسکیل:</b> یا نامش را مستقیم صدا بزنید — مثلاً <code>/report-weekly</code> — یا فقط کار را به زبان ساده توصیف کنید؛ Claude خودش تشخیص می‌دهد کدام اسکیل به کار می‌آید و آن را بارگذاری می‌کند.</li>
+    <li><b>ساخت اسکیل (ترفند حرفه‌ای):</b> یک بار کاری را طبق روال عادی با Cowork انجام بدهید. در پایان بنویسید:</li>
+  </ol>
+
+  <div class="prompt"><span class="lbl">پرامپت آماده — تبدیل کار به اسکیل:</span>
+  <p style="margin:6px 0 0">کاری که همین الان انجام دادیم را در قالب یک اسکیل بسته‌بندی کن (<span dir="ltr">Package what we just did into a skill</span>). مراحل، قالب‌ها و محل فایل‌های منبع را ثبت کن تا دفعهٔ بعد با یک پرامپت اجرا شود.</p></div>
+
+  <p>ابزار داخلی <span dir="ltr">skill-creator</span> همهٔ مراحل و قالب‌ها را ثبت می‌کند و از آن به بعد، همان کارِ نیم‌ساعته با یک جمله اجرا می‌شود.</p>
+
+  <p><b>پلاگین (Plugin)</b> یک بستهٔ کامل است: چند اسکیل + چند کانکتور + زیرایجنت‌ها، همه با هم. انتروپیک پلاگین‌های آمادهٔ نقش‌محور منتشر کرده — مثلاً پلاگین «فروش» با کانکتورهای Salesforce و Outlook و اسکیل‌هایی برای آماده‌سازی جلسه و گزارش پایپ‌لاین؛ یا پلاگین «محصول» با Jira و Confluence و Slack. این‌ها نقطهٔ شروع‌اند و قرار است شخصی‌سازی‌شان کنید.</p>
+
+  <div class="box tip"><b class="t">💡 نکته</b>
+  قانون یک‌بار-دوبار-اسکیل: هر کاری را که برای بار <b>دوم</b> از Cowork خواستید، همان‌جا اسکیلش کنید. بار سوم فقط یک جمله می‌نویسید.</div>
+</section>
+
+<!-- مرحله ۹ -->
+<section class="stage" id="s9">
+  <div class="stage-head">
+    <div class="badge">۹</div>
+    <h2>تسک‌های زمان‌بندی‌شده</h2>
+    <span class="chip">⏱ ۳ دقیقه</span>
+  </div>
+
+  <p>می‌خواهید هر روز صبح ساعت ۹، خلاصهٔ فایل‌های جدید پوشهٔ کاری‌تان آماده باشد؟ تسک زمان‌بندی‌شده دقیقاً همین است: پرامپتی که خودکار، طبق برنامهٔ شما، اجرا می‌شود.</p>
+
+  <ol class="steps">
+    <li>در هر جلسهٔ Cowork تایپ کنید: <code>/schedule</code></li>
+    <li>پرامپت کار و زمان‌بندی (روزانه، هفتگی، یا اجرای دستی در لحظهٔ دلخواه) را مشخص کنید.</li>
+    <li>برای مدیریت همهٔ زمان‌بندی‌ها، در نوار کناری روی «<span dir="ltr">Scheduled</span>» کلیک کنید.</li>
+  </ol>
+
+  <div class="box warn"><b class="t">⚠️ مواظب باش</b>
+  تسک زمان‌بندی‌شده فقط وقتی اجرا می‌شود که <b>کامپیوتر بیدار و اپ Claude باز</b> باشد. برای روتین صبحگاهی، تنظیم خواب (Sleep) لپ‌تاپ را بررسی کنید.</div>
+
+  <div class="box tip"><b class="t">💡 ترفند حرفه‌ای</b>
+  اسکیل + زمان‌بندی = دستیار تمام‌خودکار. اسکیلی که در مرحلهٔ ۸ ساختید را زمان‌بندی کنید تا مثلاً هر جمعه گزارش هفتگی، با قالب دقیق شما، بدون هیچ دخالتی آماده باشد.</div>
+</section>
+
+<!-- مرحله ۱۰ -->
+<section class="stage alt" id="s10">
+  <div class="stage-head">
+    <div class="badge">۱۰</div>
+    <h2>پروژه‌ها و انجام کار از موبایل</h2>
+    <span class="chip">⏱ ۳ دقیقه</span>
+  </div>
+
+  <p><b>پروژه‌ها (Projects):</b> کارهای مرتبط را در فضاهای کاری جدا نگه دارید. هر پروژه فایل‌ها، لینک‌ها، دستورالعمل‌ها و <b>حافظهٔ</b><sup>۷</sup> مخصوص خودش را دارد — برای کارهای تکرارشونده یا طولانی‌مدت عالی است. نکتهٔ مهم: حافظه فقط داخل پروژه‌ها نگهداری می‌شود، نه بین جلسه‌های تکیِ Cowork.</p>
+
+  <p><b>کار از موبایل (پلن Pro و Max):</b> از اپ موبایل Claude پیام بدهید، Cowork روی <b>دسکتاپِ روشن</b> شما کار را با فایل‌ها و کانکتورهای محلی انجام می‌دهد و نتیجه به همان گفتگو برمی‌گردد. یعنی در راه خانه کار را می‌سپارید و وقتی می‌رسید، آماده است.</p>
+
+  <ol class="steps">
+    <li>اپ دسکتاپ و اپ موبایل، هر دو را به آخرین نسخه به‌روز کنید.</li>
+    <li>طبق راهنمای داخل اپ، موبایل را با دسکتاپ جفت (Pair) کنید.</li>
+    <li>دسکتاپ باید روشن و بیدار بماند — موبایل فقط «فرمان از راه دور» است.</li>
+  </ol>
+
+  <div class="box foot"><b class="t">📖 پانویس</b>
+  ۷) <b>حافظه (Memory):</b> یادداشت‌هایی که Claude از جلسه‌های قبلی همان پروژه نگه می‌دارد تا دفعهٔ بعد لازم نباشد همه‌چیز را از اول توضیح بدهید.</div>
+</section>
+
+<!-- مرحله ۱۱ -->
+<section class="stage" id="s11">
+  <div class="stage-head">
+    <div class="badge">۱۱</div>
+    <h2>نکات پیشرفته و ترفندهای حرفه‌ای</h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+
+  <table>
+    <tr><th>ترفند</th><th>چرا مهم است</th></tr>
+    <tr><td><b>🌙 روتین شبانه:</b> کارهای بزرگ (تحلیل صدها فایل، پژوهش گسترده) را آخر شب بسپارید و صبح نتیجه را تحویل بگیرید.</td><td>الگوی محبوب حرفه‌ای‌ها: کارهایی که قبلاً روزها وقت تیم می‌گرفت، یک‌شبه انجام می‌شود. فقط یادتان باشد کامپیوتر بیدار بماند.</td></tr>
+    <tr><td><b>✍️ ویرایش درجا (<span dir="ltr">Edit with Claude</span>):</b> در پیش‌نویس‌های Markdown، متن موردنظر را هایلایت کنید، «Edit with Claude» را بزنید و تغییرتان را بنویسید.</td><td>دیگر لازم نیست در چت توضیح بدهید «آن پاراگراف سوم بخش دوم را…» — دقیقاً همان‌جا ویرایش می‌شود.</td></tr>
+    <tr><td><b>💰 مدیریت سهمیهٔ مصرف:</b> Cowork چند برابرِ چت معمولی از سهمیه‌تان مصرف می‌کند.</td><td>کارهای ساده و سؤالی را در چت معمولی بپرسید؛ Cowork را برای کارهای چندمرحله‌ایِ فایل‌محور نگه دارید. کارهای مرتبط را در یک جلسه دسته‌بندی (Batch) کنید. مصرفتان را از <span dir="ltr">Settings → Usage</span> ببینید.</td></tr>
+    <tr><td><b>🧩 زیرایجنت‌ها (Sub-agents):</b> برای کارهای بزرگ، Cowork خودش کار را بین چند ایجنت موازی تقسیم می‌کند.</td><td>شما کاری لازم نیست بکنید — اما اگر کارتان تفکیک‌پذیر است (مثلاً «برای هر یک از این ۱۰ فایل یک خلاصه»)، صریح بگویید تا موازی‌سازی بهتر شود.</td></tr>
+    <tr><td><b>🖱 کامپیوترِ در اختیار Claude (Computer Use):</b> در پیش‌نمایش پژوهشی، Claude می‌تواند مرورگر و صفحه‌نمایش شما را هم به کار بگیرد.</td><td>ترتیب هوشمند: اول کانکتور مستقیم، بعد مرورگر، و صفحه‌نمایش فقط به‌عنوان آخرین راه. برای هر اپلیکیشن جداگانه اجازه می‌گیرد و هر لحظه می‌توانید متوقفش کنید.</td></tr>
+    <tr><td><b>📄 خروجی حرفه‌ای Office:</b> اکسل با فرمول‌های واقعی (VLOOKUP، قالب‌بندی شرطی، چند شیت) و پاورپوینت آماده بخواهید — نه فقط CSV خام.</td><td>خروجی‌ها بعداً با «Claude for Excel» و «Claude for PowerPoint» هم قابل ویرایش‌اند.</td></tr>
+    <tr><td><b>🎯 نتیجه را توصیف کنید، نه مراحل را:</b> به‌جای ۱۰ دستور ریز، بگویید خروجی نهایی دقیقاً چه شکلی باشد.</td><td>Cowork حول «نتیجه» طراحی شده. قالب، ستون‌ها، لحن و محل ذخیره را مشخص کنید و مسیر رسیدن را به او بسپارید.</td></tr>
+  </table>
+
+  <div class="box tip"><b class="t">💡 قانون طلایی انتخاب ابزار</b>
+  سؤال دارید؟ → چت. کارِ چندمرحله‌ای با فایل دارید؟ → Cowork. کارِ تکراری است؟ → اسکیل. کارِ تکراریِ زمان‌دار است؟ → اسکیل + <code>/schedule</code>.</div>
+</section>
+
+<!-- مرحله ۱۲ -->
+<section class="stage alt" id="s12">
+  <div class="stage-head">
+    <div class="badge">۱۲</div>
+    <h2>مثال‌های کاربردی آماده — کپی کنید و استفاده کنید</h2>
+  </div>
+
+  <p><b>۱) گزارش هزینه از رسیدها 🧾</b></p>
+  <div class="prompt"><span class="lbl">پرامپت:</span>
+  <p style="margin:6px 0 0">همهٔ عکس‌های رسید داخل پوشهٔ <code>Receipts</code> را بخوان. مبلغ، تاریخ، فروشنده و دسته‌بندی هر رسید را استخراج کن و یک فایل اکسل با جمع کل، جمع به تفکیک دسته، و قالب‌بندی شرطی برای مبالغ بالای حد مشخص بساز.</p></div>
+
+  <p><b>۲) تغییر نام گروهی فایل‌ها 🏷</b></p>
+  <div class="prompt"><span class="lbl">پرامپت:</span>
+  <p style="margin:6px 0 0">همهٔ فایل‌های این پوشه را با الگوی <code>YYYY-MM-DD-description</code> بازنامگذاری کن. تاریخ را از خودِ فایل (تاریخ ایجاد یا تاریخ داخل محتوا) بردار. قبل از اعمال، جدول «نام قدیم ← نام جدید» را برای تأیید من نشان بده.</p></div>
+
+  <p><b>۳) ترکیب پژوهش در یک گزارش 📚</b></p>
+  <div class="prompt"><span class="lbl">پرامپت:</span>
+  <p style="margin:6px 0 0">فایل‌های PDF و یادداشت‌های پوشهٔ <code>Research</code> را با نتایج جست‌وجوی وب دربارهٔ [موضوع] ترکیب کن و یک گزارش ساخت‌یافتهٔ فارسی بنویس: خلاصهٔ مدیریتی، یافته‌های کلیدی با ارجاع به منبع، و بخش «شکاف‌ها و سؤالات باز».</p></div>
+
+  <p><b>۴) صورت‌جلسه به اقدام ✅</b></p>
+  <div class="prompt"><span class="lbl">پرامپت:</span>
+  <p style="margin:6px 0 0">متن پیاده‌شدهٔ جلسه در فایل <code>meeting.txt</code> را تحلیل کن: تصمیم‌ها، اقدام‌ها (با مسئول و مهلت) و موضوعات باز را جدا کن و یک سند صورت‌جلسهٔ رسمی و یک چک‌لیست پیگیری بساز.</p></div>
+
+  <p><b>۵) اسلاید از یادداشت‌های پراکنده 🎞</b></p>
+  <div class="prompt"><span class="lbl">پرامپت:</span>
+  <p style="margin:6px 0 0">از یادداشت‌های خام فایل <code>notes.md</code> یک ارائهٔ ۱۰ اسلایدی بساز: اسلاید عنوان، مسئله، سه اسلاید راه‌حل، داده‌ها با نمودار، جمع‌بندی و اقدام بعدی. لحن: مدیریتی و مختصر.</p></div>
+
+  <p><b>۶) روتین صبحگاهی زمان‌بندی‌شده ⏰</b></p>
+  <div class="prompt"><span class="lbl">پرامپت (داخل /schedule):</span>
+  <p style="margin:6px 0 0">هر روز ساعت ۸:۳۰ صبح: فایل‌های جدید ۲۴ ساعت اخیر پوشهٔ <code>Work</code> را فهرست کن، از هر سند جدید خلاصهٔ سه‌خطی بنویس و همه را در فایل <code>daily-brief.md</code> ذخیره کن.</p></div>
+</section>
+
+<!-- مرحله ۱۳ رفع اشکال -->
+<section class="stage" id="s13">
+  <div class="stage-head">
+    <div class="badge">🔧</div>
+    <h2>رفع اشکال</h2>
+  </div>
+
+  <div class="box fix"><b class="t">❌ Claude وسط کار متوقف شد</b>
+  <b>علت:</b> اپ بسته شده یا کامپیوتر به خواب رفته. <b>راه‌حل:</b> اپ را باز نگه دارید و در تنظیمات سیستم، Sleep را هنگام کارهای طولانی غیرفعال کنید.</div>
+
+  <div class="box fix"><b class="t">❌ خیلی زود به سقف مصرف می‌خورم</b>
+  <b>علت:</b> Cowork مصرف بالاتری از چت دارد. <b>راه‌حل:</b> کارهای ساده را به چت معمولی ببرید، کارهای مرتبط را در یک جلسه جمع کنید و مصرف را از <span dir="ltr">Settings → Usage</span> پایش کنید.</div>
+
+  <div class="box fix"><b class="t">❌ فایل خروجی را پیدا نمی‌کنم</b>
+  <b>علت:</b> دسترسی پوشه ناقص است یا خروجی جای دیگری ذخیره شده. <b>راه‌حل:</b> مجوز دسترسی پوشه را بررسی کنید و مسیر خروجی را که Claude در پایان کار اعلام کرده دوباره بخوانید.</div>
+
+  <div class="box fix"><b class="t">❌ ویندوز: پیام <span dir="ltr">"VM service not running"</span></b>
+  <b>علت:</b> سرویس ماشین مجازی Cowork اجرا نیست (معمولاً به‌خاطر نصب با نصب‌کنندهٔ قدیمی). <b>راه‌حل:</b> از <span dir="ltr">claude.com/download</span> دوباره نصب کنید، یا در <code>services.msc</code> سرویس «Claude VM Service» را Start کنید (دستور: <code>sc start CoworkVMService</code>).</div>
+
+  <div class="box fix"><b class="t">❌ ویندوز: پیام <span dir="ltr">"EXDEV: cross-device link not permitted"</span></b>
+  <b>علت:</b> محل ذخیرهٔ برنامه‌های جدید ویندوز روی درایوی غیر از <span dir="ltr">C:</span> تنظیم شده. <b>راه‌حل:</b> در <span dir="ltr">Settings → System → Storage → Where new content is saved</span> درایو را به <span dir="ltr">C:</span> برگردانید، Cowork را حذف و دوباره نصب کنید.</div>
+
+  <div class="box fix"><b class="t">❌ تب Cowork را اصلاً نمی‌بینم</b>
+  <b>علت:</b> نسخهٔ قدیمی اپ یا نبود اشتراک پولی. <b>راه‌حل:</b> اپ را به‌روز کنید و مطمئن شوید حسابتان یکی از پلن‌های Pro/Max/Team/Enterprise را دارد.</div>
+</section>
+
+<!-- جشن -->
+<section class="celebrate">
+  <h2>🎉 تمام شد! حالا شما بلدید…</h2>
+  <ul>
+    <li>Claude Cowork را نصب و اولین کار واقعی را به آن بسپارید</li>
+    <li>با حالت‌های مجوز، امن و کنترل‌شده کار کنید</li>
+    <li>با دستورالعمل‌ها و کانکتورها، Cowork را مال خودتان کنید</li>
+    <li>کارهای تکراری را اسکیل کنید و با <span dir="ltr">/schedule</span> خودکارشان کنید</li>
+    <li>از موبایل کار بسپارید و صبح‌ها گزارش آماده تحویل بگیرید</li>
+  </ul>
+  <p style="margin-top:18px">🏔️ قدم بعدی در مسیر صعود: اسکیل‌سازی حرفه‌ای — هر کار تکراری این هفته‌تان را به یک اسکیل تبدیل کنید.</p>
+</section>
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+<div class="sign">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+
+</div><!-- /wrap -->
+
+<script>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi | نوار پیشرفت مطالعه */
+(function(){
+  var bar = document.getElementById('progressbar');
+  function upd(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = p + '%';
+  }
+  window.addEventListener('scroll', upd, {passive:true});
+  window.addEventListener('resize', upd);
+  upd();
+})();
+</script>
+</body>
+</html>
