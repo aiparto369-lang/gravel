@@ -106,6 +106,18 @@ def categorize(text, stem, title):
             return cat
     return "سایر"
 
+def inject_canonical(path, text, page_url):
+    """تزریق تگ canonical — به گوگل رسماً اعلام می‌کند نسخهٔ اصلِ این صفحه کجاست.
+    کپی‌های سایت‌های دیگر در سئو همیشه پشت نسخهٔ اصل می‌مانند."""
+    if not page_url or 'rel="canonical"' in text or "rel='canonical'" in text:
+        return text
+    if "</head>" not in text:
+        return text
+    tag = f'<link rel="canonical" href="{html.escape(page_url)}">\n</head>'
+    text = text.replace("</head>", tag, 1)
+    path.write_text(text, encoding="utf-8")
+    return text
+
 def inject_copyright(path, text):
     """تزریق امضای © و لینک برگشت به گراول در فایل آموزش (فقط اگر نباشد)."""
     changed = False
@@ -138,6 +150,8 @@ def build_catalog():
     for p in sorted(TUTORIALS.glob("*.html")):
         text = read(p)
         text = inject_copyright(p, text)
+        if SITE_URL:
+            text = inject_canonical(p, text, SITE_URL + "/" + urllib.parse.quote("tutorials/" + p.name))
         tid = p.stem.replace("-tutorial", "")
         legacy = LEGACY.get(tid, {})  # ایستگاه‌های رزروشده: مقادیر پین‌شده مقدم بر متاهای داخل فایل
         title = legacy.get("title") or meta(text, "gravel:title") or title_of(text) or p.stem
@@ -196,6 +210,10 @@ def build_sitemap(items):
 
 def main():
     items = build_catalog()
+    # canonical صفحهٔ اصلی
+    idx = ROOT / "index.html"
+    if SITE_URL and idx.exists():
+        inject_canonical(idx, read(idx), SITE_URL + "/")
     catalog = {
         "name": "گراول",
         "copyright": COPYRIGHT,
