@@ -1,0 +1,821 @@
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi — بخشی از پروژهٔ گراول (Gravel). کپی‌برداری بدون ذکر منبع مجاز نیست. -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آموزش پاورشل (PowerShell) از صفر — گراول</title>
+
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<meta name="gravel:category" content="⚙️ اتوماسیون">
+<meta name="gravel:emoji"    content="🖥️">
+<meta name="gravel:time"     content="حدود ۹۰ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="آموزش کامل پاورشل از صفر: نصب، دستورات کاربردی روزمره، امکانات منحصربه‌فرد و ترفندهای حرفه‌ای، بدون نیاز به پیش‌زمینه.">
+<meta name="gravel:keywords" content="پاورشل, PowerShell, آموزش پاورشل, ترفندهای پاورشل, دستورات پاورشل, PowerShell tutorial, pwsh, cmdlet, خط فرمان ویندوز, اسکریپت نویسی ویندوز, PowerShell 7, ویندوز پاورشل, اتوماسیون ویندوز">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- © 2026 Mehdi Rezghi — بلوک استایل اصلی گراول -->
+<style>
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --navy:#123B4A;
+  --card:#FFFFFF;
+  --border:rgba(20,48,59,.12);
+  --shadow: 0 6px 20px rgba(18,59,74,.08);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn','Tahoma','Segoe UI',sans-serif;
+  direction:rtl;
+  text-align:right;
+  line-height:1.9;
+  font-size:17px;
+  padding-top:6px;
+}
+code, .ltr, [dir="ltr"]{
+  font-family:'Consolas','Courier New',monospace;
+}
+h1,h2,h3{
+  font-weight:900;
+  line-height:1.5;
+}
+a{color:var(--teal);}
+img{max-width:100%;}
+
+/* نوار پیشرفت بالای صفحه */
+.progress-fixed{
+  position:fixed;
+  top:0; right:0; left:0;
+  height:5px;
+  background:rgba(20,48,59,.08);
+  z-index:999;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, var(--teal), var(--saffron));
+  transition:width .1s linear;
+}
+
+.wrap{max-width:880px;margin:0 auto;padding:28px 18px 60px;}
+
+/* هدر قهرمان */
+.hero{
+  background:linear-gradient(135deg, var(--navy), var(--teal));
+  color:#fff;
+  border-radius:22px;
+  padding:38px 26px;
+  margin-top:14px;
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+.hero .emoji{font-size:52px;display:block;margin-bottom:10px;}
+.hero h1{font-size:28px;margin:0 0 10px;}
+.hero p{font-size:16px;opacity:.95;margin:0 auto;max-width:640px;}
+.hero .meta-chips{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  padding:6px 14px;border-radius:999px;
+  font-size:13px;
+}
+
+/* جعبهٔ معرفی/فرضیات */
+.intro-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-right:5px solid var(--teal);
+  border-radius:16px;
+  padding:20px 22px;
+  margin:22px 0;
+  box-shadow:var(--shadow);
+}
+.intro-box h3{margin-top:0;color:var(--navy);}
+.intro-box ul{margin:10px 0 0;padding-inline-start:20px;}
+
+/* فهرست مراحل */
+.toc{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 22px;
+  margin:22px 0;
+  box-shadow:var(--shadow);
+}
+.toc h3{margin-top:0;color:var(--navy);}
+.toc ol{margin:0;padding-inline-start:22px;}
+.toc li{margin:6px 0;}
+.toc a{text-decoration:none;font-weight:500;}
+.toc a:hover{text-decoration:underline;}
+
+/* کارت هر مرحله */
+.stage{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+  margin:26px 0;
+  box-shadow:var(--shadow);
+  scroll-margin-top:20px;
+}
+.stage-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.stage-badge{
+  min-width:44px;height:44px;
+  border-radius:50%;
+  background:var(--saffron);
+  color:#fff;
+  font-weight:900;
+  font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.stage-head h2{margin:0;font-size:20px;color:var(--navy);flex:1;min-width:180px;}
+.stage-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip-light{
+  background:rgba(14,124,134,.1);
+  color:var(--teal);
+  border:1px solid rgba(14,124,134,.25);
+  padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:5px;
+}
+
+.substep{margin:14px 0;padding-inline-start:2px;}
+.substep b.tag{
+  display:inline-block;
+  background:var(--navy);
+  color:#fff;
+  font-size:12px;
+  padding:2px 9px;
+  border-radius:8px;
+  margin-inline-end:8px;
+}
+
+.why-box{
+  background:rgba(232,163,23,.08);
+  border:1px dashed rgba(232,163,23,.5);
+  border-radius:12px;
+  padding:10px 14px;
+  margin:10px 0;
+  font-size:15px;
+}
+
+.tip, .warn, .note, .check, .fix{
+  border-radius:12px;
+  padding:14px 16px;
+  margin:14px 0;
+  font-size:15.5px;
+}
+.tip{background:rgba(14,124,134,.08);border:1px solid rgba(14,124,134,.3);}
+.warn{background:rgba(200,60,40,.07);border:1px solid rgba(200,60,40,.3);}
+.note{background:rgba(18,59,74,.06);border:1px solid rgba(18,59,74,.2);}
+.check{background:rgba(30,140,90,.08);border:1px solid rgba(30,140,90,.35);}
+.fix{background:#fff;border:1px solid var(--border);}
+.tip b, .warn b, .note b, .check b{display:block;margin-bottom:4px;}
+
+pre{
+  direction:ltr;
+  text-align:left;
+  background:var(--navy);
+  color:#eaf6f6;
+  padding:16px 18px;
+  border-radius:12px;
+  overflow-x:auto;
+  font-size:14.5px;
+  margin:12px 0;
+  line-height:1.7;
+}
+pre code{color:#eaf6f6;background:none;padding:0;}
+p code, li code{
+  direction:ltr;
+  unicode-bidi:embed;
+  background:rgba(20,48,59,.08);
+  padding:2px 7px;
+  border-radius:6px;
+  font-size:14.5px;
+  color:var(--navy);
+}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;}
+table th, table td{border:1px solid var(--border);padding:9px 10px;text-align:right;}
+table th{background:rgba(14,124,134,.1);color:var(--navy);}
+table td code{white-space:nowrap;}
+
+.recap{
+  background:linear-gradient(135deg, var(--teal), var(--navy));
+  color:#fff;
+  border-radius:20px;
+  padding:30px 24px;
+  margin:30px 0;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.recap h2{margin-top:0;}
+.recap ul{text-align:right;display:inline-block;margin-top:14px;}
+
+.gravel-footer{
+  text-align:center;direction:rtl;
+  font-family:Vazirmatn,Tahoma,sans-serif;
+  font-size:13px;opacity:.85;
+  padding:20px 12px;
+  border-top:1px solid rgba(0,0,0,.08);
+  margin-top:20px;
+}
+
+@media (max-width:600px){
+  .hero h1{font-size:22px;}
+  .stage{padding:18px;}
+  body{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-fixed"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="emoji">🖥️</span>
+    <h1>آموزش <span dir="ltr">PowerShell</span> از صفر — به زبان ساده</h1>
+    <p>قراره چی یاد بگیریم؟ از نصب تا دستورات کاربردی روزمره، امکانات منحصربه‌فرد و ترفندهای حرفه‌ای — قدم‌به‌قدم و بدون پرش.</p>
+    <div class="meta-chips">
+      <span class="chip">⏱️ حدود ۹۰ دقیقه</span>
+      <span class="chip">🎯 سطح: مبتدی</span>
+      <span class="chip">🪟 ویندوز ۱۰ / ۱۱</span>
+    </div>
+  </header>
+
+  <div class="intro-box">
+    <h3>🎬 پیش از شروع</h3>
+    <p>این آموزش <b>از صفرِ صفر</b> نوشته شده؛ یعنی هیچ پیش‌نیازی جز داشتن یک کامپیوتر ویندوزی و اتصال اینترنت برای نصب نیاز ندارید. اگر پیش‌تر با خط فرمان کار کرده‌اید، می‌توانید بخش نصب را رد کنید و مستقیم به «قانون طلایی نام‌گذاری دستورها» بروید.</p>
+    <p>فرض‌های این آموزش:</p>
+    <ul>
+      <li>سیستم‌عامل شما ویندوز ۱۰ یا ۱۱ است (نکات مربوط به سایر سیستم‌عامل‌ها جداگانه اشاره می‌شود).</li>
+      <li>هیچ آشنایی قبلی با خط فرمان یا برنامه‌نویسی لازم نیست.</li>
+      <li>در پایان، هم مفهوم <span dir="ltr">PowerShell</span> را می‌فهمید و هم می‌توانید کارهای روزمره را با آن سریع‌تر انجام دهید.</li>
+    </ul>
+  </div>
+
+  <nav class="toc">
+    <h3>🧭 فهرست مراحل</h3>
+    <ol>
+      <li><a href="#step-1">پاورشل دقیقاً چیست و چرا به‌کارتان می‌آید؟</a></li>
+      <li><a href="#step-2">تفاوت دو نسخه: پاورشل داخلی ویندوز و پاورشل ۷</a></li>
+      <li><a href="#step-3">نصب پاورشل ۷</a></li>
+      <li><a href="#step-4">اولین اجرا و آشنایی با محیط</a></li>
+      <li><a href="#step-5">قانون طلایی نام‌گذاری دستورها</a></li>
+      <li><a href="#step-6">گرفتن کمک از خودِ پاورشل</a></li>
+      <li><a href="#step-7">پایپ‌لاین و ابجکت‌ها — ویژگی منحصربه‌فرد پاورشل</a></li>
+      <li><a href="#step-8">متغیرها، آرایه‌ها و هش‌تیبل‌ها</a></li>
+      <li><a href="#step-9">دستورات کاربردی روزمره</a></li>
+      <li><a href="#step-10">امکانات ویژه و ترفندهای حرفه‌ای</a></li>
+      <li><a href="#step-11">نوشتن اسکریپت و سیاست اجرا</a></li>
+      <li><a href="#fix">رفع اشکالات رایج</a></li>
+      <li><a href="#recap">جمع‌بندی و قدم بعدی</a></li>
+    </ol>
+  </nav>
+
+  <!-- مرحله ۱ -->
+  <section class="stage" id="step-1">
+    <div class="stage-head">
+      <div class="stage-badge">۱</div>
+      <h2>پاورشل دقیقاً چیست و چرا به‌کارتان می‌آید؟</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۸ دقیقه</span><span class="chip-light">مرحله ۱ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>فرض کنید در یک شرکت، از دستیارتان می‌خواهید فهرست کارمندانِ بخش فروش را که بیش از سه سال سابقه دارند بیرون بکشد، بر اساس سابقه‌کار مرتب کند و فقط نام و ایمیل آن‌ها را روی کاغذ بیاورد. یک دستیار معمولی باید این کار را در چند مرحلهٔ جدا و با یادداشت‌برداری دستی انجام دهد. یک دستیار حرفه‌ای، همان درخواست را در یک جمله می‌فهمد و خروجی را هم به‌صورت یک جدول تمیز و آمادهٔ استفاده تحویل می‌دهد، نه یک مشت کاغذ پراکنده.</p>
+      <p><span dir="ltr">PowerShell</span> (در این آموزش «پاورشل» می‌نامیمش) همان دستیار حرفه‌ای برای کامپیوتر شماست. پاورشل یک <b>پوسته</b><sup>۱</sup> و <b>زبان اسکریپت‌نویسی</b><sup>۲</sup> است که مایکروسافت آن را برای مدیریت کامپیوتر، فایل‌ها، سرویس‌ها و حتی سرورهای شبکه ساخته است.</p>
+    </div>
+
+    <div class="note">
+      <b>📖 پانویس ۱ — «پوسته» (Shell) چیست؟</b>
+      برنامه‌ای است که دستورهای متنی شما را می‌گیرد، اجرا می‌کند و نتیجه را نشان می‌دهد؛ یعنی همان پنجرهٔ سیاه‌رنگی که با تایپ دستور، بدون کلیک روی آیکون، کارها انجام می‌شود.
+    </div>
+    <div class="note">
+      <b>📖 پانویس ۲ — «اسکریپت‌نویسی» (Scripting) چیست؟</b>
+      نوشتن مجموعه‌ای از دستورها در یک فایل، طوری که با یک بار اجرا کردن آن فایل، همهٔ دستورها پشت‌سرهم و خودکار انجام شوند — مثل نوشتن یک دستورالعمل کامل به‌جای گفتن هر مرحله جداگانه.
+    </div>
+
+    <div class="why-box">
+      <b>چرا مهم است؟</b> کارهایی که در ویندوز با کلیک‌های مکرر و تکراری انجام می‌دهید (کپی گروهی فایل‌ها، بستن چند برنامه هم‌زمان، بررسی وضعیت سرویس‌ها، دریافت اطلاعات از یک سایت) با یک یا دو خط دستور در پاورشل و در چند ثانیه انجام می‌شود.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      اگر الان بتوانید با جملهٔ خودتان توضیح دهید «پاورشل یعنی چه»، آماده‌اید که وارد مرحلهٔ بعد شوید. جواب پیشنهادی: «برنامه‌ای که با تایپ دستور، کارهای کامپیوتر را سریع و خودکار انجام می‌دهد.»
+    </div>
+  </section>
+
+  <!-- مرحله ۲ -->
+  <section class="stage" id="step-2">
+    <div class="stage-head">
+      <div class="stage-badge">۲</div>
+      <h2>تفاوت دو نسخه: پاورشل داخلی ویندوز و پاورشل ۷</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۶ دقیقه</span><span class="chip-light">مرحله ۲ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>ویندوز شما از قبل یک نسخهٔ پاورشل نصب دارد به نام <b><span dir="ltr">Windows PowerShell 5.1</span></b>. این نسخه سال‌هاست تغییر نکرده و فقط روی ویندوز کار می‌کند.</p>
+      <p>در کنار آن، مایکروسافت نسخهٔ جدیدتری به نام <b><span dir="ltr">PowerShell 7</span></b> (که گاهی <span dir="ltr">PowerShell Core</span> هم نامیده می‌شود) منتشر کرده که روی ویندوز، مک و لینوکس اجرا می‌شود، سریع‌تر است و امکانات بیشتری دارد. این دو نسخه <b>کنار هم</b> و بدون تداخل نصب و اجرا می‌شوند.</p>
+    </div>
+
+    <table>
+      <tr><th>ویژگی</th><th><span dir="ltr">Windows PowerShell 5.1</span></th><th><span dir="ltr">PowerShell 7</span></th></tr>
+      <tr><td>نصب پیش‌فرض روی ویندوز</td><td>بله</td><td>خیر (باید نصب شود)</td></tr>
+      <tr><td>سیستم‌عامل‌های پشتیبانی‌شده</td><td>فقط ویندوز</td><td>ویندوز، مک، لینوکس</td></tr>
+      <tr><td>دستور اجرا در خط فرمان</td><td><code>powershell</code></td><td><code>pwsh</code></td></tr>
+      <tr><td>تکمیل هوشمند دستورها</td><td>ساده</td><td>پیشرفته (پیش‌بینی حین تایپ)</td></tr>
+    </table>
+
+    <div class="tip">
+      <b>💡 نکته</b>
+      در این آموزش با <span dir="ltr">PowerShell 7</span> کار می‌کنیم چون به‌روزتر و کامل‌تر است، ولی تقریباً همهٔ دستورهایی که یاد می‌گیرید در نسخهٔ داخلی ویندوز هم کار می‌کنند.
+    </div>
+  </section>
+
+  <!-- مرحله ۳ -->
+  <section class="stage" id="step-3">
+    <div class="stage-head">
+      <div class="stage-badge">۳</div>
+      <h2>نصب پاورشل ۷</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۱۰ دقیقه</span><span class="chip-light">مرحله ۳ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۱</b> کلید <code>Win</code> را بزنید، عبارت <code dir="ltr">PowerShell</code> را تایپ کنید و ببینید برنامه‌ای با نام <b><span dir="ltr">Windows PowerShell</span></b> در نتایج ظاهر می‌شود — این همان نسخهٔ داخلی است، فعلاً فقط ببینید هست یا نه، بازش نکنید.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۲</b> همان برنامهٔ <span dir="ltr">Windows PowerShell</span> را باز کنید (کلیک روی نتیجهٔ جست‌وجو کافی است). یک پنجرهٔ آبی‌رنگ باز می‌شود.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۳</b> برای نصب نسخهٔ ۷، ساده‌ترین و توصیه‌شدهٔ رسمی مایکروسافت، استفاده از ابزار <code dir="ltr">winget</code> است که از قبل روی ویندوز ۱۰ و ۱۱ نصب است. همین دستور را در همان پنجرهٔ آبی تایپ کنید و اینتر بزنید:</p>
+      <pre><code>winget install --id Microsoft.PowerShell --source winget</code></pre>
+      <p>چند ثانیه صبر کنید تا دانلود و نصب تمام شود. ممکن است یک پیام تأیید (<code dir="ltr">Y/N</code>) بپرسد؛ حرف <code dir="ltr">Y</code> را تایپ و اینتر بزنید.</p>
+    </div>
+
+    <div class="note">
+      <b>📖 پانویس — «Winget» چیست؟</b>
+      فروشگاه برنامهٔ خط‌فرمانیِ خودِ ویندوز است؛ دقیقاً مثل یک فروشگاه اپلیکیشن، ولی به‌جای کلیک روی دکمه‌ها، با یک خط دستور، برنامه نصب می‌شود.
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۴</b> پس از پایان نصب، دوباره کلید <code>Win</code> را بزنید و این‌بار عبارت <code dir="ltr">PowerShell</code> را تایپ کنید. حالا باید گزینه‌ای به نام <b><span dir="ltr">PowerShell 7</span></b> (با آیکون مشکی) هم در کنار نسخهٔ قدیمی دیده شود. همان را باز کنید.</p>
+    </div>
+
+    <div class="warn">
+      <b>⚠️ مواظب باش</b>
+      اگر دستور <code dir="ltr">winget</code> با پیام خطا مواجه شد یا اصلاً شناخته نشد، احتمالاً نسخهٔ ویندوز شما قدیمی است. در این حالت به‌جای آن، فایل نصب رسمی را از صفحهٔ رسمی مایکروسافت دانلود کنید:
+      <span dir="ltr">learn.microsoft.com/powershell/scripting/install/installing-powershell-on-windows</span>
+      و پس از دانلود فایل <code dir="ltr">.msi</code>، مثل هر نرم‌افزار دیگری آن را دوبار کلیک و نصب کنید.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      در پنجرهٔ جدید (پاورشل ۷) این دستور را بزنید:
+      <pre><code>$PSVersionTable.PSVersion</code></pre>
+      باید عددی مثل <code dir="ltr">7.6.x</code> یا بالاتر ببینید. اگر دیدید، نصب موفق بوده است.
+    </div>
+  </section>
+
+  <!-- مرحله ۴ -->
+  <section class="stage" id="step-4">
+    <div class="stage-head">
+      <div class="stage-badge">۴</div>
+      <h2>اولین اجرا و آشنایی با محیط</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۷ دقیقه</span><span class="chip-light">مرحله ۴ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>پنجرهٔ پاورشل که باز می‌شود، یک خط با علامت <code dir="ltr">PS C:\Users\NameOfUser&gt;</code> نشان می‌دهد. این خط را <b>خط فرمان</b> (Prompt) می‌گویند؛ یعنی اینجا منتظر است شما دستور تایپ کنید.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۱</b> این دستور ساده را تایپ کرده و اینتر بزنید تا تاریخ و ساعت را ببینید:</p>
+      <pre><code>Get-Date</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۲</b> حالا این را امتحان کنید تا فهرست برنامه‌های در حال اجرا را ببینید:</p>
+      <pre><code>Get-Process</code></pre>
+      <p>یک جدول با ستون‌های مرتب (نام برنامه، مصرف حافظه، شناسه و…) ظاهر می‌شود. به این جدول در ادامه بازمی‌گردیم.</p>
+    </div>
+
+    <div class="tip">
+      <b>💡 نکته</b>
+      برای پاک کردن صفحه (بدون بستن برنامه)، دستور <code dir="ltr">cls</code> یا <code dir="ltr">Clear-Host</code> را بزنید.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      اگر با اجرای <code dir="ltr">Get-Date</code> تاریخ امروز را دیدید، محیط شما آماده است.
+    </div>
+  </section>
+
+  <!-- مرحله ۵ -->
+  <section class="stage" id="step-5">
+    <div class="stage-head">
+      <div class="stage-badge">۵</div>
+      <h2>قانون طلایی نام‌گذاری دستورها</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۶ دقیقه</span><span class="chip-light">مرحله ۵ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>در پاورشل، هر دستور را <b><span dir="ltr">cmdlet</span></b><sup>۳</sup> می‌نامند و همهٔ آن‌ها از یک قاعدهٔ ثابت پیروی می‌کنند: <b>فعل-اسم</b> (<span dir="ltr">Verb-Noun</span>). یعنی همیشه اول می‌گویید چه کاری (فعل)، بعد روی چه چیزی (اسم):</p>
+      <ul>
+        <li><code dir="ltr">Get-Process</code> = «بگیر» + «فرایندها»</li>
+        <li><code dir="ltr">Get-Service</code> = «بگیر» + «سرویس‌ها»</li>
+        <li><code dir="ltr">Stop-Process</code> = «متوقف کن» + «فرایند»</li>
+        <li><code dir="ltr">New-Item</code> = «بساز» + «آیتم/فایل»</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <b>📖 پانویس ۳ — «Cmdlet» چیست؟</b>
+      به هر دستور آمادهٔ پاورشل، cmdlet (خوانده می‌شود «کامدلت») گفته می‌شود؛ یعنی یک قطعه‌کد از پیش نوشته‌شده که یک کار مشخص انجام می‌دهد.
+    </div>
+
+    <div class="why-box">
+      <b>چرا مهم است؟</b> وقتی این قاعده را بدانید، حتی دستوری را که تا به‌حال ندیده‌اید هم می‌توانید حدس بزنید. اگر بخواهید سرویسی را متوقف کنید، احتمالاً اسمش <code dir="ltr">Stop-Service</code> است — و همین‌طور هم هست.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      حدس بزنید دستور «شروع یک سرویس» چه نامی دارد، سپس آن را در پانویس ۴ (بخش بعد) بررسی کنید. (پاسخ: <code dir="ltr">Start-Service</code>)
+    </div>
+  </section>
+
+  <!-- مرحله ۶ -->
+  <section class="stage" id="step-6">
+    <div class="stage-head">
+      <div class="stage-badge">۶</div>
+      <h2>گرفتن کمک از خودِ پاورشل</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۸ دقیقه</span><span class="chip-light">مرحله ۶ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>یکی از امکانات منحصربه‌فرد پاورشل این است که خودش راهنمای کامل خودش را دارد؛ نیازی نیست هر بار جست‌وجوی اینترنتی کنید. سه دستور کلیدی:</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۱</b> برای پیدا کردن دستورهای مرتبط با یک موضوع، از <code dir="ltr">Get-Command</code> استفاده کنید:</p>
+      <pre><code>Get-Command *service*</code></pre>
+      <p>این دستور همهٔ cmdletهایی را نشان می‌دهد که کلمهٔ «service» در نامشان است — از جمله همان <code dir="ltr">Start-Service</code> که در مرحلهٔ قبل حدس زدید.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۲</b> برای دیدن توضیح کامل و مثال‌های یک دستور، از <code dir="ltr">Get-Help</code> استفاده کنید:</p>
+      <pre><code>Get-Help Get-Process -Examples</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۳</b> برای دیدن اینکه یک خروجی چه اطلاعات و قابلیت‌هایی دارد، از <code dir="ltr">Get-Member</code> استفاده کنید:</p>
+      <pre><code>Get-Process | Get-Member</code></pre>
+      <p>(دربارهٔ آن علامت <code dir="ltr">|</code> در مرحلهٔ بعد کامل توضیح می‌دهیم.)</p>
+    </div>
+
+    <div class="tip">
+      <b>💡 نکته</b>
+      بار اول که <code dir="ltr">Get-Help</code> را اجرا کنید، پاورشل ممکن است بپرسد آیا فایل‌های راهنما را دانلود کند؛ با تایپ <code dir="ltr">Y</code> موافقت کنید تا راهنمای کامل روی سیستم شما ذخیره شود.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      دستور <code dir="ltr">Get-Command *stop*</code> را بزنید و ببینید آیا <code dir="ltr">Stop-Service</code> در فهرست هست.
+    </div>
+  </section>
+
+  <!-- مرحله ۷ -->
+  <section class="stage" id="step-7">
+    <div class="stage-head">
+      <div class="stage-badge">۷</div>
+      <h2>پایپ‌لاین و ابجکت‌ها — ویژگی منحصربه‌فرد پاورشل</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۱۰ دقیقه</span><span class="chip-light">مرحله ۷ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>در بیشتر خط‌فرمان‌های قدیمی (مثل <span dir="ltr">cmd</span> یا حتی <span dir="ltr">bash</span>)، وقتی خروجی یک دستور را به دستور بعدی می‌فرستید، فقط <b>متنِ ساده</b> رد و بدل می‌شود — مثل این‌که یک برگهٔ کاغذ بدون هیچ برچسبی دست‌به‌دست شود و دستور بعدی مجبور باشد حدس بزند کدام بخش از متن چه معنایی دارد.</p>
+      <p>پاورشل این کار را متفاوت انجام می‌دهد: هر خروجی، یک <b><span dir="ltr">Object</span></b><sup>۴</sup> کامل و برچسب‌دار است — دقیقاً مثل یک فرم پر شده با فیلدهای مشخص (نام، تاریخ، اندازه و…). وقتی این خروجی را با علامت <code dir="ltr">|</code> (به آن <b>پایپ‌لاین</b> یا <span dir="ltr">pipeline</span> گفته می‌شود) به دستور بعدی می‌فرستید، آن دستور دقیقاً می‌داند هر فیلد چیست.</p>
+    </div>
+
+    <div class="note">
+      <b>📖 پانویس ۴ — «Object» (ابجکت) چیست؟</b>
+      یک بستهٔ اطلاعاتی سازمان‌یافته با چند فیلد مشخص؛ مثل یک ردیف در اکسل که ستون‌های «نام»، «قیمت» و «تعداد» دارد، نه یک متن خام و بی‌ساختار.
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">مثال</b> این دستور، پنج برنامه‌ای را که بیشترین حافظه را مصرف می‌کنند پیدا می‌کند:</p>
+      <pre><code>Get-Process | Sort-Object WS -Descending | Select-Object -First 5 Name, WS</code></pre>
+      <p>در این خط، سه cmdlet پشت‌سرهم با پایپ‌لاین به هم وصل شده‌اند: اول فهرست فرایندها را می‌گیرد، بعد بر اساس مصرف حافظه (<code dir="ltr">WS</code>) مرتب می‌کند، و در آخر فقط پنج مورد اول را با دو ستون «نام» و «مصرف حافظه» نمایش می‌دهد.</p>
+    </div>
+
+    <div class="why-box">
+      <b>چرا مهم است؟</b> همین یک ویژگی، دلیل اصلی قدرتمند بودن پاورشل نسبت به خط‌فرمان‌های سنتی است: چون خروجی هر دستور «فهمیده‌شده» است، می‌توانید بدون نوشتن کد پیچیده، فیلتر کنید، مرتب کنید و دوباره فیلتر کنید.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      دستور زیر را اجرا کنید و ببینید فقط سرویس‌های «در حال اجرا» (Running) نمایش داده می‌شوند:
+      <pre><code>Get-Service | Where-Object Status -eq 'Running'</code></pre>
+    </div>
+  </section>
+
+  <!-- مرحله ۸ -->
+  <section class="stage" id="step-8">
+    <div class="stage-head">
+      <div class="stage-badge">۸</div>
+      <h2>متغیرها، آرایه‌ها و هش‌تیبل‌ها</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۸ دقیقه</span><span class="chip-light">مرحله ۸ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۱</b> برای نگه‌داشتن یک مقدار برای استفادهٔ بعدی، از یک <b>متغیر</b><sup>۵</sup> استفاده کنید. نام هر متغیر در پاورشل با علامت <code dir="ltr">$</code> شروع می‌شود:</p>
+      <pre><code>$name = "علی"
+Write-Host $name</code></pre>
+    </div>
+
+    <div class="note">
+      <b>📖 پانویس ۵ — «متغیر» (Variable) چیست؟</b>
+      یک جعبهٔ برچسب‌دار برای نگه‌داشتن یک مقدار (عدد، متن، یا حتی فهرستی از موارد) تا بعداً با همان نام دوباره از آن استفاده کنید.
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۲</b> برای نگه‌داشتن چند مقدار در کنار هم، از یک <b>آرایه</b> (<span dir="ltr">Array</span>) استفاده کنید:</p>
+      <pre><code>$fruits = @("سیب", "موز", "پرتقال")
+$fruits[0]      # اولین عضو را نشان می‌دهد: سیب</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۳</b> برای نگه‌داشتن اطلاعات به‌صورت جفت «کلید–مقدار»، از یک <b>هش‌تیبل</b> (<span dir="ltr">Hashtable</span>) استفاده کنید:</p>
+      <pre><code>$user = @{ Name = "علی"; Role = "مدیر" }
+$user.Name      # علی</code></pre>
+    </div>
+
+    <div class="tip">
+      <b>💡 نکته</b>
+      علامت <code dir="ltr">#</code> در پاورشل یعنی «توضیح»؛ هرچه بعد از آن در همان خط بیاید اجرا نمی‌شود و فقط برای یادداشت شماست.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      یک متغیر به نام <code dir="ltr">$age</code> بسازید که مقدار سن شما را داشته باشد، سپس با <code dir="ltr">Write-Host $age</code> آن را چاپ کنید.
+    </div>
+  </section>
+
+  <!-- مرحله ۹ -->
+  <section class="stage" id="step-9">
+    <div class="stage-head">
+      <div class="stage-badge">۹</div>
+      <h2>دستورات کاربردی روزمره</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۱۲ دقیقه</span><span class="chip-light">مرحله ۹ از ۱۱</span></div>
+    </div>
+
+    <div class="substep"><p>در این بخش، پرکاربردترین دستورهای پاورشل را دسته‌بندی‌شده می‌بینید. لازم نیست همه را حفظ کنید؛ کافی است بدانید برای هر نیاز باید دنبال چه چیزی بگردید.</p></div>
+
+    <h3 style="color:var(--navy);font-size:16.5px;">📁 فایل‌ها و پوشه‌ها</h3>
+    <table>
+      <tr><th>کار</th><th>دستور</th></tr>
+      <tr><td>دیدن محتوای پوشهٔ فعلی</td><td><code dir="ltr">Get-ChildItem</code> (یا مخفف <code dir="ltr">gci</code>)</td></tr>
+      <tr><td>رفتن به یک پوشهٔ دیگر</td><td><code dir="ltr">Set-Location "C:\Path"</code> (یا <code dir="ltr">cd</code>)</td></tr>
+      <tr><td>ساخت فایل یا پوشهٔ جدید</td><td><code dir="ltr">New-Item -ItemType File -Name "test.txt"</code></td></tr>
+      <tr><td>کپی کردن</td><td><code dir="ltr">Copy-Item source.txt dest.txt</code></td></tr>
+      <tr><td>جابه‌جایی/تغییر نام</td><td><code dir="ltr">Move-Item old.txt new.txt</code></td></tr>
+      <tr><td>حذف فایل یا پوشه</td><td><code dir="ltr">Remove-Item file.txt</code></td></tr>
+      <tr><td>خواندن محتوای یک فایل متنی</td><td><code dir="ltr">Get-Content file.txt</code></td></tr>
+      <tr><td>جست‌وجوی یک متن داخل فایل‌ها</td><td><code dir="ltr">Select-String "کلمه" *.txt</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--navy);font-size:16.5px;">⚙️ سیستم و سرویس‌ها</h3>
+    <table>
+      <tr><th>کار</th><th>دستور</th></tr>
+      <tr><td>فهرست برنامه‌های در حال اجرا</td><td><code dir="ltr">Get-Process</code></td></tr>
+      <tr><td>بستن یک برنامه</td><td><code dir="ltr">Stop-Process -Name "notepad"</code></td></tr>
+      <tr><td>فهرست سرویس‌های ویندوز</td><td><code dir="ltr">Get-Service</code></td></tr>
+      <tr><td>روشن/خاموش کردن یک سرویس</td><td><code dir="ltr">Start-Service</code> / <code dir="ltr">Stop-Service</code></td></tr>
+      <tr><td>اطلاعات کلی سیستم</td><td><code dir="ltr">Get-ComputerInfo</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--navy);font-size:16.5px;">🌐 شبکه</h3>
+    <table>
+      <tr><th>کار</th><th>دستور</th></tr>
+      <tr><td>تست اتصال به یک آدرس (مثل پینگ)</td><td><code dir="ltr">Test-Connection google.com</code></td></tr>
+      <tr><td>دانلود یک فایل از اینترنت</td><td><code dir="ltr">Invoke-WebRequest -Uri "..." -OutFile "file.zip"</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--navy);font-size:16.5px;">🔍 فیلتر، مرتب‌سازی و شمارش (روی هر خروجی)</h3>
+    <table>
+      <tr><th>کار</th><th>دستور</th></tr>
+      <tr><td>فیلتر کردن بر اساس شرط</td><td><code dir="ltr">Where-Object</code></td></tr>
+      <tr><td>مرتب‌سازی</td><td><code dir="ltr">Sort-Object</code></td></tr>
+      <tr><td>انتخاب چند ستون یا چند مورد اول</td><td><code dir="ltr">Select-Object</code></td></tr>
+      <tr><td>اجرای یک کار روی تک‌تک موارد</td><td><code dir="ltr">ForEach-Object</code></td></tr>
+      <tr><td>شمارش، جمع، میانگین</td><td><code dir="ltr">Measure-Object</code></td></tr>
+      <tr><td>دسته‌بندی بر اساس یک ستون</td><td><code dir="ltr">Group-Object</code></td></tr>
+    </table>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      امتحان کنید: <code dir="ltr">Get-ChildItem | Where-Object Length -gt 1MB</code> — این دستور فایل‌های بزرگ‌تر از یک مگابایت را در پوشهٔ فعلی نشان می‌دهد.
+    </div>
+  </section>
+
+  <!-- مرحله ۱۰ -->
+  <section class="stage" id="step-10">
+    <div class="stage-head">
+      <div class="stage-badge">۱۰</div>
+      <h2>امکانات ویژه و ترفندهای حرفه‌ای</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۱۲ دقیقه</span><span class="chip-light">مرحله ۱۰ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p>حالا که با پایه‌ها آشنا شدید، این بخش چیزهایی را نشان می‌دهد که پاورشل را از یک ابزار «قابل استفاده» به یک ابزار «سریع و لذت‌بخش» تبدیل می‌کند.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۱ — تکمیل خودکار</b> وقتی چند حرف اول یک دستور یا مسیر فایل را تایپ می‌کنید، کلید <code dir="ltr">Tab</code> را بزنید؛ پاورشل بقیه را کامل می‌کند یا بین گزینه‌ها می‌چرخد.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۲ — پیش‌بینی هوشمند حین تایپ</b> در <span dir="ltr">PowerShell 7</span>، وقتی شروع به تایپ دستوری کنید که قبلاً استفاده کرده‌اید، پیشنهاد آن به‌صورت کم‌رنگ جلوی نشانگر ظاهر می‌شود؛ برای پذیرفتنش کافی است کلید <code dir="ltr">→</code> را بزنید.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۳ — تاریخچهٔ دستورها</b> با کلیدهای <code dir="ltr">↑</code> و <code dir="ltr">↓</code> بین دستورهای قبلی جابه‌جا شوید. برای دیدن کل تاریخچه:</p>
+      <pre><code>Get-History</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۴ — نام‌های مستعار (Alias)</b> بسیاری از دستورهای آشنای دنیای <span dir="ltr">cmd</span> و <span dir="ltr">Linux</span> در پاورشل هم کار می‌کنند، چون در واقع نام مستعارِ همان cmdletها هستند:</p>
+      <table>
+        <tr><th>چیزی که تایپ می‌کنید</th><th>دستور واقعی</th></tr>
+        <tr><td><code dir="ltr">ls</code> یا <code dir="ltr">dir</code></td><td><code dir="ltr">Get-ChildItem</code></td></tr>
+        <tr><td><code dir="ltr">cd</code></td><td><code dir="ltr">Set-Location</code></td></tr>
+        <tr><td><code dir="ltr">cat</code></td><td><code dir="ltr">Get-Content</code></td></tr>
+        <tr><td><code dir="ltr">ps</code></td><td><code dir="ltr">Get-Process</code></td></tr>
+        <tr><td><code dir="ltr">kill</code></td><td><code dir="ltr">Stop-Process</code></td></tr>
+      </table>
+      <p>برای دیدن نام واقعی پشتِ هر نام مستعار: <code dir="ltr">Get-Alias ls</code></p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۵ — فایل تنظیمات شخصی (Profile)</b> پاورشل یک فایل ویژه دارد که هر بار باز شدن، خودکار اجرا می‌شود؛ می‌توانید در آن نام‌های مستعار دلخواه یا تنظیمات همیشگی خودتان را بنویسید:</p>
+      <pre><code># دیدن مسیر فایل پروفایل
+$PROFILE
+
+# باز کردن آن برای ویرایش (اگر وجود نداشت، اول بسازیدش)
+notepad $PROFILE</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">ترفند ۶ — دسترسی به دنیای «.NET»</b> پاورشل مستقیماً به کتابخانهٔ عظیم <span dir="ltr">.NET</span> مایکروسافت دسترسی دارد، یعنی می‌توانید از قابلیت‌های پیشرفتهٔ برنامه‌نویسی هم در دستورهای روزمره استفاده کنید — بدون این‌که نیاز باشد الان وارد جزئیاتش شوید.</p>
+    </div>
+
+    <div class="why-box">
+      <b>خلاصهٔ تفاوت پاورشل با خط‌فرمان‌های قدیمی:</b>
+      <ul style="margin:8px 0 0;padding-inline-start:20px;">
+        <li>پایپ‌لاین آن ابجکت رد و بدل می‌کند، نه متن ساده (مرحلهٔ ۷).</li>
+        <li>همهٔ دستورها از یک قاعدهٔ نام‌گذاری ثابت پیروی می‌کنند (مرحلهٔ ۵).</li>
+        <li>روی ویندوز، مک و لینوکس یکسان اجرا می‌شود.</li>
+        <li>می‌تواند کامپیوترهای دیگر را از راه دور مدیریت کند (به آن <span dir="ltr">Remoting</span> گفته می‌شود؛ دستور شروع آن <code dir="ltr">Enter-PSSession</code> است).</li>
+        <li>راهنمای کامل و جست‌وجوپذیر داخل خودش دارد (مرحلهٔ ۶).</li>
+      </ul>
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      یک دستور را نصفه تایپ کنید (مثلاً <code dir="ltr">Get-Pro</code>) و کلید <code dir="ltr">Tab</code> را بزنید. اگر به‌طور خودکار <code dir="ltr">Get-Process</code> کامل شد، این ترفند را یاد گرفته‌اید.
+    </div>
+  </section>
+
+  <!-- مرحله ۱۱ -->
+  <section class="stage" id="step-11">
+    <div class="stage-head">
+      <div class="stage-badge">۱۱</div>
+      <h2>نوشتن اسکریپت و سیاست اجرا</h2>
+      <div class="stage-chips"><span class="chip-light">⏱️ ۹ دقیقه</span><span class="chip-light">مرحله ۱۱ از ۱۱</span></div>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۱</b> یک فایل متنی جدید بسازید و پسوند آن را از <code dir="ltr">.txt</code> به <code dir="ltr">.ps1</code> تغییر دهید — مثلاً <code dir="ltr">salam.ps1</code>. این پسوند به پاورشل می‌گوید که محتوای فایل، مجموعه‌ای از دستورهای اجراشدنی است.</p>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۲</b> این چند خط را داخل فایل بنویسید و ذخیره کنید:</p>
+      <pre><code>Write-Host "سلام از یک اسکریپت پاورشل"
+Get-Date</code></pre>
+    </div>
+
+    <div class="substep">
+      <p><b class="tag">گام ۳</b> برای اجرای فایل، در پنجرهٔ پاورشل به پوشهٔ فایل بروید و این را تایپ کنید:</p>
+      <pre><code>.\salam.ps1</code></pre>
+    </div>
+
+    <div class="warn">
+      <b>⚠️ مواظب باش — سیاست اجرا (Execution Policy)</b>
+      اگر پیام خطایی دیدید که می‌گوید اجرای اسکریپت‌ها روی این سیستم غیرفعال است، دلیلش یک قابلیت امنیتی به نام <b>سیاست اجرا</b> است که به‌طور پیش‌فرض از اجرای ناخواستهٔ اسکریپت‌های ناشناس جلوگیری می‌کند. برای اجازه دادن به اسکریپت‌های خودتان (نه فایل‌های دانلودی ناشناس)، این دستور را <b>فقط یک‌بار</b> اجرا کنید:
+      <pre><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+      این تنظیم فقط اسکریپت‌های نوشته‌شده روی همین کامپیوتر را آزاد می‌کند و اسکریپت‌های دانلودی از اینترنت را همچنان بررسی امضا می‌کند — پس اسکریپتی را که منبعش را نمی‌شناسید هرگز اجرا نکنید.
+    </div>
+
+    <div class="check">
+      <b>✅ ایست بازرسی</b>
+      اگر با اجرای <code dir="ltr">.\salam.ps1</code> پیام سلام و تاریخ امروز را دیدید، اولین اسکریپت خودتان را با موفقیت نوشته و اجرا کرده‌اید.
+    </div>
+  </section>
+
+  <!-- رفع اشکال -->
+  <section class="stage" id="fix">
+    <div class="stage-head">
+      <div class="stage-badge">🔧</div>
+      <h2>رفع اشکالات رایج</h2>
+    </div>
+
+    <div class="fix">
+      <b>❌ خطا: «running scripts is disabled on this system»</b><br>
+      <b>علت:</b> سیاست اجرا اسکریپت را مسدود کرده.<br>
+      <b>راه‌حل:</b> دستور مرحلهٔ ۱۱ را اجرا کنید: <code dir="ltr">Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code>
+    </div>
+    <div class="fix">
+      <b>❌ خطا: «... is not recognized as a name of a cmdlet»</b><br>
+      <b>علت:</b> یا نام دستور اشتباه تایپ شده، یا آن دستور به یک ماژول جانبی نیاز دارد که نصب نیست.<br>
+      <b>راه‌حل:</b> با <code dir="ltr">Get-Command *بخشی-از-نام*</code> نام دقیق را پیدا کنید.
+    </div>
+    <div class="fix">
+      <b>❌ فایل <code dir="ltr">.ps1</code> با دوبار کلیک اجرا نمی‌شود یا بلافاصله بسته می‌شود</b><br>
+      <b>علت:</b> رفتار عادی پاورشل است؛ برای اجرای امن، اسکریپت باید از داخل پنجرهٔ پاورشل و با <code dir="ltr">.\</code> صدا زده شود.<br>
+      <b>راه‌حل:</b> طبق گام ۳ از مرحلهٔ ۱۱ عمل کنید.
+    </div>
+    <div class="fix">
+      <b>❌ دستور <code dir="ltr">winget</code> شناخته نمی‌شود</b><br>
+      <b>علت:</b> نسخهٔ ویندوز قدیمی است یا «نصب‌کنندهٔ برنامه» (App Installer) به‌روزرسانی نشده.<br>
+      <b>راه‌حل:</b> فایل نصب رسمی پاورشل ۷ را مستقیماً از سایت مایکروسافت دانلود کنید (طبق هشدار مرحلهٔ ۳).
+    </div>
+    <div class="fix">
+      <b>❌ خروجی <code dir="ltr">Where-Object</code> یا فیلتر، چیزی نشان نمی‌دهد</b><br>
+      <b>علت:</b> معمولاً نام ستون یا مقدار شرط اشتباه تایپ شده (پاورشل به کوچک/بزرگ بودن حروف در نام دستورها و ستون‌ها حساس نیست، اما مقدار داخل رشته‌ها را دقیق مقایسه می‌کند).<br>
+      <b>راه‌حل:</b> ابتدا با <code dir="ltr">Get-Member</code> نام دقیق ستون‌ها را بررسی کنید.
+    </div>
+  </section>
+
+  <!-- جمع‌بندی -->
+  <section class="recap" id="recap">
+    <h2>🎉 تمام شد! حالا شما بلدید…</h2>
+    <ul>
+      <li>✅ پاورشل چیست و چه تفاوتی با خط‌فرمان قدیمی دارد</li>
+      <li>✅ نصب و اجرای پاورشل ۷</li>
+      <li>✅ خواندن، فیلتر کردن و مرتب‌سازی خروجی دستورها با پایپ‌لاین</li>
+      <li>✅ استفاده از ده‌ها دستور کاربردی روزمره</li>
+      <li>✅ ترفندهای حرفه‌ای مثل تکمیل خودکار، نام‌های مستعار و فایل پروفایل</li>
+      <li>✅ نوشتن و اجرای اولین اسکریپت خودتان</li>
+    </ul>
+    <p style="margin-top:18px;">قدم بعدی پیشنهادی: کارهای تکراری روزمرهٔ خودتان روی کامپیوتر را فهرست کنید و سعی کنید برای هرکدام، معادل پاورشلی‌اش را با <code dir="ltr">Get-Command</code> پیدا کنید. سایر آموزش‌های گراول در بخش «⚙️ اتوماسیون» و «💻 برنامه‌نویسی» می‌توانند ادامهٔ طبیعی این مسیر باشند.</p>
+  </section>
+
+  <div class="gravel-footer" dir="rtl">
+    🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+     &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+    <a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+  </div>
+
+</div>
+
+<!-- © 2026 Mehdi Rezghi — بلوک اسکریپت نوار پیشرفت -->
+<script>
+(function(){
+  var fill = document.getElementById('progressFill');
+  function update(){
+    var h = document.documentElement;
+    var scrollTop = h.scrollTop || document.body.scrollTop;
+    var scrollHeight = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    fill.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+
+</body>
+</html>
