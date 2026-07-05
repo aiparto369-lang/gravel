@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<!--
+© 2026 Mehdi Rezghi — مهدی رزقی
+Author / امضا: Mehdi Rezghi — مهدی رزقی
+Telegram: https://t.me/Mehdirezghi
+بخشی از گراول (Gravel) — کتابخانهٔ آموزش گام‌به‌گام
+«برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»
+-->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کار حرفه‌ای با OpenClaw — تنظیمات اولیه، روش کار و ترفندها | گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="🦞">
+<meta name="gravel:time"     content="حدود ۷۵ دقیقه">
+<meta name="gravel:level"    content="متوسط">
+<meta name="gravel:desc"     content="راه‌اندازی کامل OpenClaw از صفر: تنظیمات اولیهٔ ویزارد نصب، کار روزمره با داشبورد و ترمینال، اتصال تلگرام و ترفندهای حرفه‌ای امنیت و اتوماسیون">
+<meta name="gravel:keywords" content="OpenClaw, اوپن‌کلا, نصب OpenClaw, تنظیمات OpenClaw, آموزش OpenClaw, دستیار هوش مصنوعی شخصی, Gateway, openclaw onboard, ربات تلگرام هوش مصنوعی, self-hosted AI assistant, ترفند OpenClaw, openclaw dashboard, openclaw doctor, ClawHub">
+<meta name="gravel:order"    content="6">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi */
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --night:#123B4A;
+  --card:#FFFFFF;
+  --teal-soft:#E2F1F2;
+  --saffron-soft:#FBF1DA;
+  --red:#B4373C;
+  --red-soft:#FBE9EA;
+  --green:#2E7D4F;
+  --green-soft:#E7F4EC;
+  --line:rgba(20,48,59,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  font-size:17px;
+  line-height:1.9;
+  direction:rtl;
+  text-align:right;
+}
+a{color:var(--teal)}
+h1,h2,h3{line-height:1.6}
+
+/* نوار پیشرفت */
+#progressbar{
+  position:fixed;top:0;inset-inline-start:0;height:6px;width:0%;
+  background:linear-gradient(90deg,var(--teal),var(--saffron));
+  z-index:99;transition:width .15s;
+}
+
+.wrap{max-width:880px;margin:0 auto;padding:0 18px 40px}
+
+/* هدر */
+.hero{
+  background:linear-gradient(135deg,var(--night),var(--teal));
+  color:#fff;border-radius:0 0 28px 28px;
+  padding:44px 22px 34px;text-align:center;
+}
+.hero .logo{font-size:56px;line-height:1}
+.hero h1{margin:12px 0 6px;font-size:clamp(22px,4.5vw,34px);font-weight:900}
+.hero .slogan{opacity:.9;font-size:14px;margin-bottom:14px}
+.hero .promise{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  border-radius:14px;padding:12px 16px;display:inline-block;font-size:15px;max-width:640px;
+}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.chip{
+  background:rgba(255,255,255,.16);border-radius:999px;
+  padding:4px 14px;font-size:13px;
+}
+
+/* فهرست */
+.toc{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:18px 22px;margin:26px 0;
+}
+.toc h2{margin:0 0 10px;font-size:18px;color:var(--night)}
+.toc ol{margin:0;padding-inline-start:22px}
+.toc li{margin:4px 0;font-size:15px}
+.toc a{text-decoration:none;font-weight:700}
+.toc a:hover{text-decoration:underline}
+
+/* کارت مرحله */
+.stage{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:24px 22px;margin:26px 0;
+  box-shadow:0 2px 8px rgba(20,48,59,.05);
+}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.stage-num{
+  background:var(--teal);color:#fff;font-weight:900;font-size:20px;
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.stage h2{margin:0;font-size:20px;color:var(--night);flex:1;min-width:200px}
+.time-chip{
+  background:var(--saffron-soft);color:#8a5f00;border-radius:999px;
+  padding:3px 12px;font-size:12.5px;font-weight:700;white-space:nowrap;
+}
+.pos-chip{
+  background:var(--teal-soft);color:var(--teal);border-radius:999px;
+  padding:3px 12px;font-size:12.5px;font-weight:700;white-space:nowrap;
+}
+
+/* گام‌های ریز */
+.step{
+  border:1px solid var(--line);border-radius:14px;
+  padding:12px 16px;margin:12px 0;background:#FCFEFE;
+}
+.step b.sn{color:var(--teal)}
+
+/* جعبه‌ها */
+.box{border-radius:14px;padding:13px 16px;margin:14px 0;font-size:15.5px;border:1px solid transparent}
+.tip{background:var(--teal-soft);border-color:rgba(14,124,134,.25)}
+.warn{background:var(--red-soft);border-color:rgba(180,55,60,.25)}
+.note{background:var(--saffron-soft);border-color:rgba(232,163,23,.35)}
+.check{background:var(--green-soft);border-color:rgba(46,125,79,.3)}
+.foot{background:#EEF3F4;border-color:var(--line);font-size:14px}
+.box b:first-child{display:block;margin-bottom:2px}
+
+/* کد */
+pre{
+  direction:ltr;text-align:left;
+  background:var(--night);color:#E8F4F5;
+  border-radius:12px;padding:14px 16px;overflow-x:auto;
+  font-family:'Consolas','Courier New',monospace;font-size:14px;line-height:1.7;
+  margin:12px 0;
+}
+pre .c{color:#7FB6BD}
+code{
+  direction:ltr;unicode-bidi:embed;
+  background:var(--teal-soft);color:var(--night);
+  border-radius:6px;padding:1px 7px;
+  font-family:'Consolas','Courier New',monospace;font-size:14px;
+}
+pre code{background:none;color:inherit;padding:0}
+
+/* نمودار معماری */
+.diagram{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+  background:#FCFEFE;border:1px dashed var(--teal);border-radius:14px;
+  padding:16px;margin:14px 0;text-align:center;
+}
+.dbox{
+  background:var(--card);border:2px solid var(--teal);border-radius:12px;
+  padding:10px 14px;font-size:14px;font-weight:700;color:var(--night);min-width:110px;
+}
+.dbox small{display:block;font-weight:400;font-size:12px;color:var(--teal)}
+.darrow{font-size:22px;color:var(--saffron);font-weight:900}
+
+/* جدول */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:right;vertical-align:top}
+th{background:var(--teal-soft);color:var(--night)}
+td code{white-space:nowrap}
+
+/* پایان */
+.finale{
+  background:linear-gradient(135deg,var(--teal),var(--night));
+  color:#fff;border-radius:20px;padding:28px 24px;margin:30px 0;text-align:center;
+}
+.finale h2{margin-top:0}
+.finale ul{text-align:right;display:inline-block;margin:10px auto}
+
+.gravel-footer a{text-decoration:none}
+@media (max-width:700px){
+  body{font-size:16px}
+  .stage{padding:18px 15px}
+  .stage h2{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div id="progressbar"></div>
+
+<header class="hero">
+  <div class="logo">🦞</div>
+  <h1>کار حرفه‌ای با OpenClaw — از تنظیمات اولیه تا ترفندهای پیشرفته</h1>
+  <div class="slogan">🏔️ گراول — «برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»</div>
+  <div class="promise">
+    قراره چی یاد بگیریم؟ در این آموزش، OpenClaw را از صفرِ صفر و بدون هیچ پیش‌نیازی نصب و پیکربندی می‌کنید،
+    روش کار روزمره با آن را یاد می‌گیرید و در پایان با ترفندهای حرفه‌ای، آن را به یک دستیار هوش مصنوعی شخصیِ همیشه‌روشن تبدیل می‌کنید.
+  </div>
+  <div class="meta-chips">
+    <span class="chip">⏱️ حدود ۷۵ دقیقه</span>
+    <span class="chip">📊 سطح: متوسط</span>
+    <span class="chip">🛤️ مسیر صعود — ایستگاه ۶</span>
+    <span class="chip">✍️ Mehdi Rezghi</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <h2>🗺️ فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s1">OpenClaw چیست و چگونه کار می‌کند؟ (معماری)</a></li>
+    <li><a href="#s2">پیش‌نیازها — چه چیزهایی لازم داریم؟</a></li>
+    <li><a href="#s3">نصب OpenClaw</a></li>
+    <li><a href="#s4">تنظیمات اولیه — ویزارد onboard قدم‌به‌قدم</a></li>
+    <li><a href="#s5">راستی‌آزمایی: آیا موتور روشن شده؟</a></li>
+    <li><a href="#s6">اولین گفتگو در داشبورد</a></li>
+    <li><a href="#s7">اتصال تلگرام — دستیار در جیب شما</a></li>
+    <li><a href="#s8">فایل پیکربندی و فرمان‌های روزمره</a></li>
+    <li><a href="#s9">ترفندها و کاربردهای حرفه‌ای</a></li>
+    <li><a href="#s10">امنیت — قواعد طلایی</a></li>
+    <li><a href="#s11">به‌روزرسانی و نگه‌داری</a></li>
+    <li><a href="#s12">رفع اشکال 🔧</a></li>
+  </ol>
+</nav>
+
+<!-- ============ مرحله ۱ ============ -->
+<section class="stage" id="s1">
+  <div class="stage-head">
+    <div class="stage-num">۱</div>
+    <h2>OpenClaw چیست و چگونه کار می‌کند؟</h2>
+    <span class="time-chip">⏱️ ۵ دقیقه</span>
+    <span class="pos-chip">مرحله ۱ از ۱۲</span>
+  </div>
+
+  <p>
+    تصور کنید یک منشیِ بسیار باهوش استخدام کرده‌اید که ۲۴ ساعته در دفترِ خانهٔ شما (کامپیوتر شخصی‌تان) نشسته است.
+    به این منشی می‌توانید از هر جایی پیام بدهید — از تلگرام، از واتس‌اپ، از مرورگر — و او کارها را انجام می‌دهد:
+    جواب می‌دهد، جست‌وجو می‌کند، فایل می‌سازد و حتی کارهای زمان‌بندی‌شده را خودش پیگیری می‌کند.
+    <b>OpenClaw دقیقاً همین منشی است</b>؛ یک دستیار هوش مصنوعی شخصی که روی دستگاه خودتان اجرا می‌شود
+    و به هیچ سرویس واسطه‌ای وابسته نیست — یعنی داده‌های شما در خانهٔ خودتان می‌ماند.
+  </p>
+
+  <p>در آموزش قبلی مسیر صعود (ایستگاه ۵) با OpenClaw آشنا شدید. حالا وقت آن است که آن را مثل یک حرفه‌ای راه بیندازیم و به‌کار بگیریم. چهار قطعهٔ اصلی این سیستم را بشناسید:</p>
+
+  <div class="diagram" dir="rtl">
+    <div class="dbox">📱 کانال‌ها<small>تلگرام، مرورگر، …</small></div>
+    <div class="darrow">⇐</div>
+    <div class="dbox">🚪 Gateway<small>مغز مدیریتی — همیشه روشن</small></div>
+    <div class="darrow">⇐</div>
+    <div class="dbox">🤖 Agent<small>خودِ دستیار هوشمند</small></div>
+    <div class="darrow">⇐</div>
+    <div class="dbox">🧰 Skills<small>مهارت‌ها و ابزارها</small></div>
+  </div>
+
+  <div class="box foot">📖 <b>پاورقی — واژه‌های این بخش:</b>
+    <b>Gateway (گِیت‌وی):</b> یعنی «دروازه». برنامه‌ای که در پس‌زمینهٔ کامپیوترتان روشن می‌ماند و همهٔ پیام‌ها از هر کانالی اول به آن می‌رسند؛ مثل تلفنچیِ یک شرکت.
+    <b>Agent (اِیجنت):</b> یعنی «عامل / کارگزار». همان هوش مصنوعی‌ای است که فکر می‌کند و جواب می‌سازد.
+    <b>Channel (چنل):</b> یعنی «کانال». راهِ ارتباطی شما با دستیار: تلگرام، واتس‌اپ، صفحهٔ مرورگر و غیره.
+    <b>Skill (اسکیل):</b> یعنی «مهارت». افزونه‌های کوچکی که به دستیار توانایی‌های تازه می‌دهند؛ مثل دورهٔ آموزشی‌ای که منشی شما می‌گذراند.
+  </div>
+
+  <div class="box tip">💡 <b>نکته:</b>
+    Gateway فقط «مرکز کنترل» است؛ محصول اصلی، خودِ دستیار است. شما یک بار Gateway را روشن می‌کنید و بعد از هر کانالی که دوست دارید با دستیارتان حرف می‌زنید.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    اگر بتوانید با یک جمله برای دوست‌تان توضیح دهید که «Gateway چه فرقی با Agent دارد»، این مرحله را با موفقیت گذرانده‌اید. (جواب: Gateway تلفنچی است، Agent متخصصی است که جواب می‌دهد.)
+  </div>
+</section>
+
+<!-- ============ مرحله ۲ ============ -->
+<section class="stage" id="s2">
+  <div class="stage-head">
+    <div class="stage-num">۲</div>
+    <h2>پیش‌نیازها — چه چیزهایی لازم داریم؟</h2>
+    <span class="time-chip">⏱️ ۱۰ دقیقه</span>
+    <span class="pos-chip">مرحله ۲ از ۱۲</span>
+  </div>
+
+  <p>قبل از شروع، این سه چیز را آماده کنید:</p>
+
+  <div class="step"><b class="sn">۲-۱)</b> <b>Node.js نسخهٔ ۲۴ (پیشنهاد رسمی)</b> — نسخهٔ <span dir="ltr">22.19</span> به بالا هم پشتیبانی می‌شود.
+    اگر ایستگاه ۱ مسیر صعود (نصب پایتون، Node.js و VS Code) را گذرانده‌اید، Node.js را دارید. برای اطمینان، ترمینال<sup>۱</sup> را باز کنید و بنویسید:
+    <pre><code>node --version</code></pre>
+    اگر عددی مثل <code>v24.x.x</code> یا <code>v22.19</code> به بالا دیدید، آماده‌اید.
+  </div>
+
+  <div class="step"><b class="sn">۲-۲)</b> <b>یک کلید API از یک سرویس‌دهندهٔ مدل هوش مصنوعی</b> — مثل OpenRouter که در ایستگاه ۳ مسیر صعود ساختید، یا Anthropic / OpenAI / Google.
+    ویزارد نصب خودش از شما کلید را می‌پرسد؛ فقط آن را از قبل در جایی امن کپی داشته باشید.
+  </div>
+
+  <div class="step"><b class="sn">۲-۳)</b> <b>اتصال اینترنت پایدار</b> — برای دانلود برنامه و گفتگو با مدل‌ها.
+  </div>
+
+  <div class="box note">📌 <b>کاربران ویندوز:</b>
+    طبق مستندات رسمی، ساده‌ترین مسیر روی ویندوز، برنامهٔ <span dir="ltr">Windows Hub</span> است؛
+    ولی مسیر نصب با PowerShell (که در همین آموزش می‌بینید) و مسیر WSL2 هم به‌طور رسمی پشتیبانی می‌شوند.
+  </div>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>۱) ترمینال:</b> پنجره‌ای که در آن به‌جای کلیک، «فرمان متنی» می‌نویسید. در ویندوز: منوی استارت ← تایپ <span dir="ltr">PowerShell</span> ← Enter. در مک: برنامهٔ <span dir="ltr">Terminal</span>.
+    <b>کلید API:</b> رمز عبورِ مخصوصِ برنامه‌هاست؛ رشته‌ای طولانی از حروف و اعداد که به سرویس هوش مصنوعی می‌گوید «این درخواست از طرف حساب فلانی است».
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    فرمان <code>node --version</code> عدد نسخه را نشان می‌دهد و کلید API در دسترس شماست؟ برویم سراغ نصب.
+  </div>
+</section>
+
+<!-- ============ مرحله ۳ ============ -->
+<section class="stage" id="s3">
+  <div class="stage-head">
+    <div class="stage-num">۳</div>
+    <h2>نصب OpenClaw</h2>
+    <span class="time-chip">⏱️ ۵ دقیقه</span>
+    <span class="pos-chip">مرحله ۳ از ۱۲</span>
+  </div>
+
+  <p>نصب فقط یک خط فرمان است. بسته به سیستم‌عامل، <b>فقط یکی</b> از این دو را اجرا کنید:</p>
+
+  <div class="step"><b class="sn">۳-۱)</b> <b>ویندوز</b> — PowerShell را باز کنید و این را بنویسید و Enter بزنید:
+    <pre><code>iwr -useb https://openclaw.ai/install.ps1 | iex</code></pre>
+  </div>
+
+  <div class="step"><b class="sn">۳-۲)</b> <b>مک یا لینوکس</b> — ترمینال را باز کنید و این را اجرا کنید:
+    <pre><code>curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+  </div>
+
+  <p>اسکریپت نصب، خودش Node را بررسی می‌کند، OpenClaw را دانلود و نصب می‌کند و در پایان پیام موفقیت نشان می‌دهد.</p>
+
+  <div class="box warn">⚠️ <b>مواظب باش — خطای مجوز در PowerShell:</b>
+    اگر ویندوز جلوی اجرای اسکریپت را گرفت، PowerShell را با «Run as Administrator» باز کنید،
+    اول فرمان <code>Set-ExecutionPolicy RemoteSigned</code> را اجرا کنید (و با <code>Y</code> تأیید کنید)، سپس دوباره فرمان نصب را بزنید.
+  </div>
+
+  <div class="box tip">💡 <b>نکته — راه جایگزین:</b>
+    اگر با npm راحت‌ترید، این فرمان هم همان نتیجه را می‌دهد:
+    <pre><code>npm install -g openclaw@latest</code></pre>
+    روش‌های Docker و Nix هم در مستندات رسمی (<span dir="ltr">docs.openclaw.ai/install</span>) توضیح داده شده‌اند.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    ترمینال را ببندید، دوباره باز کنید و بنویسید <code>openclaw --version</code>. اگر شمارهٔ نسخه چاپ شد، نصب کامل است.
+    اگر نوشت «فرمان پیدا نشد»، به بخش رفع اشکال (مرحلهٔ ۱۲) بروید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۴ ============ -->
+<section class="stage" id="s4">
+  <div class="stage-head">
+    <div class="stage-num">۴</div>
+    <h2>تنظیمات اولیه — ویزارد onboard قدم‌به‌قدم</h2>
+    <span class="time-chip">⏱️ ۱۰ دقیقه</span>
+    <span class="pos-chip">مرحله ۴ از ۱۲</span>
+  </div>
+
+  <p>
+    مهم‌ترین بخش نصب همین‌جاست. OpenClaw یک «ویزارد»<sup>۱</sup> دارد که مثل یک راهنمای تور، دست شما را می‌گیرد
+    و همهٔ تنظیمات اولیه را قدم‌به‌قدم می‌پرسد. آن را با این فرمان اجرا کنید:
+  </p>
+
+  <pre><code>openclaw onboard --install-daemon</code></pre>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>۱) ویزارد (Wizard):</b> یعنی «جادوگر»؛ در نرم‌افزار، به راهنمای پرسش‌وپاسخیِ مرحله‌به‌مرحله می‌گویند.
+    <b>daemon (دیمِن):</b> برنامه‌ای که بی‌سروصدا در پس‌زمینه اجرا می‌شود. سوئیچ <code>--install-daemon</code> یعنی «Gateway را طوری نصب کن که با روشن‌شدن سیستم، خودش روشن شود» — همان منشیِ همیشه‌حاضر.
+  </div>
+
+  <p>ویزارد این‌ها را از شما می‌پرسد. برای هر کدام چه جوابی بدهید:</p>
+
+  <div class="step"><b class="sn">۴-۱)</b> <b>انتخاب سرویس‌دهندهٔ مدل (Provider):</b>
+    از فهرست، سرویسی را انتخاب کنید که کلیدش را دارید — مثلاً OpenRouter (اگر در فهرست بود)، Anthropic یا OpenAI.
+    با کلیدهای جهت‌نما بالا و پایین بروید و با Enter انتخاب کنید.
+  </div>
+
+  <div class="step"><b class="sn">۴-۲)</b> <b>وارد کردن کلید API:</b>
+    کلید را جای‌گذاری (Paste) کنید و Enter بزنید. نگران نباشید اگر هنگام تایپ چیزی دیده نشد — کلیدها برای امنیت مخفی نمایش داده می‌شوند.
+  </div>
+
+  <div class="step"><b class="sn">۴-۳)</b> <b>تنظیمات Gateway:</b>
+    پیشنهادهای پیش‌فرض ویزارد برای شروع عالی‌اند؛ روی همه Enter بزنید و رد شوید.
+  </div>
+
+  <div class="step"><b class="sn">۴-۴)</b> <b>کانال‌ها، مهارت‌ها و افزونه‌های اختیاری:</b>
+    فعلاً همه را رد کنید (Skip). این‌ها را بعداً در همین آموزش، آگاهانه و بادقت اضافه می‌کنیم.
+  </div>
+
+  <div class="step"><b class="sn">۴-۵)</b> <b>نصب سرویس پس‌زمینه (daemon):</b>
+    تأیید کنید تا Gateway به‌صورت خودکار همیشه روشن بماند.
+  </div>
+
+  <div class="box tip">💡 <b>نکته — عجله‌ای نیست:</b>
+    طبق مستندات رسمی، هر مرحلهٔ اختیاری را که رد کنید، بعداً می‌توانید با فرمان
+    <code>openclaw configure</code> به آن برگردید. پس بدون استرس، سریع‌ترین مسیر را بروید.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    ویزارد با پیام موفقیت تمام شد و به خط فرمان برگشتید؟ تنظیمات اولیه انجام شد؛ حالا مطمئن شویم موتور واقعاً روشن است.
+  </div>
+</section>
+
+<!-- ============ مرحله ۵ ============ -->
+<section class="stage" id="s5">
+  <div class="stage-head">
+    <div class="stage-num">۵</div>
+    <h2>راستی‌آزمایی: آیا موتور روشن شده؟</h2>
+    <span class="time-chip">⏱️ ۳ دقیقه</span>
+    <span class="pos-chip">مرحله ۵ از ۱۲</span>
+  </div>
+
+  <div class="step"><b class="sn">۵-۱)</b> وضعیت Gateway را بپرسید:
+    <pre><code>openclaw gateway status</code></pre>
+  </div>
+
+  <div class="step"><b class="sn">۵-۲)</b> در خروجی دنبال این باشید: Gateway در حال گوش‌دادن روی <b>پورت<sup>۱</sup> <span dir="ltr">18789</span></b> است.
+  </div>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>۱) پورت (Port):</b> مثل شمارهٔ واحد در یک ساختمان. کامپیوتر شما یک ساختمان است و هر برنامه در یک «واحد» شماره‌دار به درخواست‌ها گوش می‌دهد. واحدِ OpenClaw شمارهٔ <span dir="ltr">18789</span> است.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    عبارت مربوط به پورت <span dir="ltr">18789</span> را در خروجی می‌بینید؟ عالی است. اگر خطا دیدید، فرمان
+    <code>openclaw gateway</code> را اجرا کنید تا Gateway به‌صورت دستی و موقتی بالا بیاید و پیام خطا را واضح ببینید؛ بعد به مرحلهٔ ۱۲ سر بزنید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۶ ============ -->
+<section class="stage" id="s6">
+  <div class="stage-head">
+    <div class="stage-num">۶</div>
+    <h2>اولین گفتگو در داشبورد</h2>
+    <span class="time-chip">⏱️ ۵ دقیقه</span>
+    <span class="pos-chip">مرحله ۶ از ۱۲</span>
+  </div>
+
+  <div class="step"><b class="sn">۶-۱)</b> این فرمان را اجرا کنید:
+    <pre><code>openclaw dashboard</code></pre>
+    مرورگرتان باز می‌شود و <b>Control UI</b> — یعنی صفحهٔ کنترل و گفتگوی OpenClaw — را نشان می‌دهد.
+  </div>
+
+  <div class="step"><b class="sn">۶-۲)</b> در جعبهٔ گفتگو یک پیام ساده بنویسید؛ مثلاً: «سلام! خودت را معرفی کن.»
+  </div>
+
+  <div class="step"><b class="sn">۶-۳)</b> منتظر پاسخ بمانید. اگر جواب گرفتید، یعنی کل زنجیره — Gateway، کلید API و مدل — درست کار می‌کند. 🎉
+  </div>
+
+  <div class="box tip">💡 <b>نکته:</b>
+    اگر مرورگر خودکار باز نشد، خودتان آدرس <code>http://127.0.0.1:18789/</code> را در مرورگر باز کنید — این آدرسِ محلیِ داشبورد است و فقط از روی همین دستگاه در دسترس است.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    الان باید یک پاسخ هوش مصنوعی در داشبورد ببینید. ندیدید؟ رایج‌ترین علت، کلید API اشتباه است — با
+    <code>openclaw configure</code> بخش مدل را دوباره تنظیم کنید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۷ ============ -->
+<section class="stage" id="s7">
+  <div class="stage-head">
+    <div class="stage-num">۷</div>
+    <h2>اتصال تلگرام — دستیار در جیب شما</h2>
+    <span class="time-chip">⏱️ ۱۵ دقیقه</span>
+    <span class="pos-chip">مرحله ۷ از ۱۲</span>
+  </div>
+
+  <p>
+    طبق مستندات رسمی، سریع‌ترین کانال برای اتصال، تلگرام است — فقط یک «توکن ربات»<sup>۱</sup> می‌خواهد.
+    بعد از این مرحله، از گوشی‌تان و از هر جای دنیا با دستیارتان حرف می‌زنید.
+  </p>
+
+  <div class="step"><b class="sn">۷-۱)</b> در تلگرام، ربات رسمی <code>@BotFather</code> را باز کنید.
+    <div class="box warn" style="margin-bottom:0">⚠️ <b>مواظب باش:</b> ربات‌های تقلبی با نام مشابه وجود دارند. مطمئن شوید نام کاربری <b>دقیقاً</b> <code>@BotFather</code> است (معمولاً با تیک تأیید).</div>
+  </div>
+
+  <div class="step"><b class="sn">۷-۲)</b> فرمان <code>/newbot</code> را بفرستید.</div>
+
+  <div class="step"><b class="sn">۷-۳)</b> یک نام نمایشی برای ربات بنویسید (مثلاً «دستیار من»).</div>
+
+  <div class="step"><b class="sn">۷-۴)</b> یک نام کاربری بنویسید که به <code>bot</code> ختم شود (مثلاً <code>mehdi_helper_bot</code>).</div>
+
+  <div class="step"><b class="sn">۷-۵)</b> BotFather یک <b>توکن</b> به شما می‌دهد — رشته‌ای شبیه <code>123456:ABC-xyz...</code>. آن را کپی کنید و مثل رمز عبور از آن محافظت کنید.</div>
+
+  <div class="step"><b class="sn">۷-۶)</b> در ترمینال، <code>openclaw configure</code> را اجرا کنید، بخش کانال‌ها (Channels) را انتخاب کنید، تلگرام را فعال کنید و توکن را جای‌گذاری کنید.
+    سیاست پیام مستقیم را روی حالت پیش‌فرض <code>pairing</code> (جفت‌سازی<sup>۲</sup>) بگذارید.
+  </div>
+
+  <div class="step"><b class="sn">۷-۷)</b> Gateway را دوباره راه‌اندازی کنید تا تنظیمات اعمال شود:
+    <pre><code>openclaw gateway restart</code></pre>
+  </div>
+
+  <div class="step"><b class="sn">۷-۸)</b> حالا از تلگرامِ خودتان به ربات‌تان یک پیام بدهید («سلام»). چون سیاست pairing فعال است، ربات هنوز جواب نمی‌دهد — این طبیعی و درست است!</div>
+
+  <div class="step"><b class="sn">۷-۹)</b> در ترمینال، درخواست‌های در انتظار را ببینید و خودتان را تأیید کنید:
+    <pre><code>openclaw pairing list telegram
+openclaw pairing approve telegram &lt;CODE&gt;</code></pre>
+    به‌جای <code>&lt;CODE&gt;</code> همان کدی را بگذارید که در خروجی فرمان اول دیدید.
+  </div>
+
+  <div class="step"><b class="sn">۷-۱۰)</b> دوباره از تلگرام پیام بدهید. این بار دستیار جواب می‌دهد. 🎉</div>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>۱) توکن ربات (Bot Token):</b> شناسنامه و کلید ربات تلگرامی شماست؛ هر کسی آن را داشته باشد، صاحب ربات است.
+    <b>۲) جفت‌سازی (Pairing):</b> ساز‌وکار امنیتی OpenClaw: هر فرد غریبه‌ای که به ربات پیام بدهد، اول باید توسط شما (صاحب سیستم) تأیید شود. کدهای جفت‌سازی بعد از یک ساعت منقضی می‌شوند.
+  </div>
+
+  <div class="box warn">⚠️ <b>مواظب باش — هرگز ربات را «باز» نگذارید:</b>
+    حالت <code>dmPolicy: "open"</code> یعنی هر کسی در تلگرام که نام ربات شما را پیدا کند، می‌تواند به دستیار شما — و ابزارهای آن — فرمان بدهد. برای دستیار شخصی، همیشه <code>pairing</code> یا <code>allowlist</code> را نگه دارید.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    از گوشی به ربات پیام دادید و پاسخ هوش مصنوعی گرفتید؟ رسماً یک دستیار شخصیِ همیشه‌روشن در جیب دارید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۸ ============ -->
+<section class="stage" id="s8">
+  <div class="stage-head">
+    <div class="stage-num">۸</div>
+    <h2>فایل پیکربندی و فرمان‌های روزمره</h2>
+    <span class="time-chip">⏱️ ۱۰ دقیقه</span>
+    <span class="pos-chip">مرحله ۸ از ۱۲</span>
+  </div>
+
+  <p>
+    همهٔ تنظیمات OpenClaw در یک فایل متنی نگه‌داری می‌شود:
+    <code>~/.openclaw/openclaw.json</code>
+    (علامت <code>~</code> یعنی پوشهٔ خانگی کاربر شما). ویزارد و فرمان <code>openclaw configure</code> همین فایل را ویرایش می‌کنند؛
+    حرفه‌ای‌ها گاهی مستقیم هم آن را با VS Code باز می‌کنند.
+  </p>
+
+  <p>این جدول را مثل «جعبه‌ابزار روزانه» نگه دارید:</p>
+
+  <table>
+    <tr><th>فرمان</th><th>چه کاری می‌کند؟</th></tr>
+    <tr><td><code>openclaw dashboard</code></td><td>باز کردن داشبورد گفتگو در مرورگر</td></tr>
+    <tr><td><code>openclaw gateway status</code></td><td>نمایش وضعیت روشن/خاموش بودن Gateway</td></tr>
+    <tr><td><code>openclaw gateway restart</code></td><td>راه‌اندازی دوباره پس از هر تغییر تنظیمات</td></tr>
+    <tr><td><code>openclaw configure</code></td><td>باز کردن دوبارهٔ ویزارد تنظیمات (بخش‌به‌بخش)</td></tr>
+    <tr><td><code>openclaw logs --follow</code></td><td>نمایش زندهٔ گزارش رویدادها — بهترین دوست شما هنگام خطایابی</td></tr>
+    <tr><td><code>openclaw doctor</code></td><td>«پزشک» سیستم: مشکلات پیکربندی را پیدا و گزارش می‌کند</td></tr>
+    <tr><td><code>openclaw channels status</code></td><td>وضعیت اتصال کانال‌ها (تلگرام و …)</td></tr>
+  </table>
+
+  <p>دو فرمان کاربردی دیگر برای کار مستقیم از ترمینال:</p>
+
+  <pre><code><span class="c"># گفتگو با دستیار بدون باز کردن هیچ رابطی</span>
+openclaw agent --message "یک چک‌لیست انتشار برای سایتم بنویس" --thinking high
+
+<span class="c"># ارسال پیام به یک مخاطب از طریق کانال متصل</span>
+openclaw message send --channel telegram --target 123456789 --message "سلام از OpenClaw"</code></pre>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>‎<span dir="ltr">--thinking high</span>‎:</b> از دستیار می‌خواهد پیش از پاسخ، عمیق‌تر «فکر» کند — برای کارهای پیچیده عالی است، ولی کندتر و پرهزینه‌تر است.
+    <b>لاگ (Log):</b> دفترچهٔ گزارش لحظه‌به‌لحظهٔ برنامه؛ هر اتفاقی — پیام رسیده، خطا، تصمیم — در آن ثبت می‌شود.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    فرمان <code>openclaw doctor</code> را همین حالا اجرا کنید. اگر بدون هشدار قرمز تمام شد، سیستم شما سالم است؛ اگر هشداری داد، همان‌جا توضیح می‌دهد چه چیزی را اصلاح کنید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۹ ============ -->
+<section class="stage" id="s9">
+  <div class="stage-head">
+    <div class="stage-num">۹</div>
+    <h2>ترفندها و کاربردهای حرفه‌ای</h2>
+    <span class="time-chip">⏱️ ۲۰ دقیقه</span>
+    <span class="pos-chip">مرحله ۹ از ۱۲</span>
+  </div>
+
+  <h3>🧰 ترفند ۱ — مهارت‌ها (Skills): به دستیارتان توانایی جدید بدهید</h3>
+  <p>
+    مهارت‌ها افزونه‌های آماده‌ای هستند که کارهای مشخصی را به دستیار اضافه می‌کنند — از جست‌وجوی وب تا کار با فایل‌ها.
+    مخزن رسمی مهارت‌ها <b>ClawHub</b> نام دارد (بخش ClawHub در مستندات رسمی). راه فعال‌سازی: اجرای <code>openclaw configure</code> و انتخاب بخش مهارت‌ها،
+    یا اضافه‌کردن هنگام onboard. هر مهارت را فقط وقتی نصب کنید که واقعاً لازم دارید — مهارتِ کمتر، سطح خطای کمتر.
+  </p>
+
+  <h3>⏰ ترفند ۲ — کارهای زمان‌بندی‌شده (cron)</h3>
+  <p>
+    OpenClaw ابزار زمان‌بندی داخلی دارد؛ یعنی می‌توانید به دستیار بگویید کاری را «هر روز ساعت ۸ صبح» انجام دهد —
+    مثلاً «هر صبح خلاصهٔ برنامهٔ امروزم را در تلگرام بفرست». ساده‌ترین راه: همین را به زبان آدمیزاد در چت از خودِ دستیار بخواهید؛
+    دستیار از ابزار زمان‌بندی‌اش استفاده می‌کند. جزئیات در بخش ابزارهای مستندات (<span dir="ltr">docs.openclaw.ai/tools</span>) آمده است.
+  </p>
+
+  <h3>👥 ترفند ۳ — چند دستیار تخصصی (Multi-agent)</h3>
+  <p>
+    لازم نیست یک دستیار همه‌کاره داشته باشید. OpenClaw اجازه می‌دهد چند Agent جدا تعریف کنید که هرکدام
+    فضای کاری<sup>۱</sup> و حافظهٔ جداگانه دارند — مثلاً یکی «برنامه‌نویس»، یکی «مدیر محتوا». حتی در گروه‌های تلگرامیِ تاپیک‌دار،
+    می‌توانید هر تاپیک را به یک Agent متفاوت وصل کنید. این یعنی یک گروه تلگرام، یک دفترِ کار کامل با چند متخصص!
+  </p>
+
+  <h3>💬 ترفند ۴ — فرمان‌های داخل چت</h3>
+  <p>در خودِ گفتگوی تلگرام، فرمان‌هایی با <code>/</code> در اختیار دارید؛ چند نمونهٔ پرکاربرد:</p>
+  <table>
+    <tr><th>فرمان</th><th>کاربرد</th></tr>
+    <tr><td><code>/status</code></td><td>نمایش وضعیت جلسهٔ فعلی</td></tr>
+    <tr><td><code>/activation always</code></td><td>در گروه: دستیار به همهٔ پیام‌ها پاسخ دهد (فقط برای همین جلسه)</td></tr>
+    <tr><td><code>/activation mention</code></td><td>در گروه: فقط وقتی منشن شد پاسخ دهد (حالت امن‌تر)</td></tr>
+    <tr><td><code>/reasoning on</code></td><td>نمایش روند فکرکردن دستیار همراه پاسخ</td></tr>
+  </table>
+
+  <h3>📡 ترفند ۵ — نمایش زندهٔ پاسخ در تلگرام (Streaming)</h3>
+  <p>
+    به‌صورت پیش‌فرض، OpenClaw پاسخ را همان‌طور که ساخته می‌شود، به‌صورت زنده در پیام تلگرام ویرایش و کامل می‌کند
+    (حالت <code>partial</code>). اگر دوست دارید فقط پاسخ نهایی و تمیز ارسال شود، در فایل پیکربندی، مقدار
+    <code>channels.telegram.streaming</code> را روی <code>"off"</code> بگذارید و Gateway را restart کنید.
+  </p>
+
+  <h3>🌐 ترفند ۶ — پراکسی برای اتصال پایدار تلگرام</h3>
+  <p>
+    اگر سرور یا کامپیوتر شما برای رسیدن به <span dir="ltr">api.telegram.org</span> مشکل دارد، مستندات رسمی راه‌حل داخلی دارد:
+    در فایل پیکربندی، برای کانال تلگرام یک پراکسی<sup>۲</sup> تعریف کنید:
+  </p>
+  <pre><code>{
+  "channels": {
+    "telegram": {
+      "proxy": "socks5://user:password@proxy-host:1080"
+    }
+  }
+}</code></pre>
+
+  <h3>⌨️ ترفند ۷ — منوی فرمان‌های اختصاصی در تلگرام</h3>
+  <p>می‌توانید برای ربات‌تان منوی فرمان شخصی بسازید تا کارهای پرتکرار یک‌ضربه‌ای شوند:</p>
+  <pre><code>{
+  "channels": {
+    "telegram": {
+      "customCommands": [
+        { "command": "backup", "description": "پشتیبان‌گیری گیت" },
+        { "command": "generate", "description": "ساخت تصویر" }
+      ]
+    }
+  }
+}</code></pre>
+
+  <div class="box foot">📖 <b>پاورقی:</b>
+    <b>۱) فضای کاری (Workspace):</b> پوشه و حافظهٔ اختصاصی هر Agent؛ مثل میزِ کار جداگانهٔ هر کارمند.
+    <b>۲) پراکسی (Proxy):</b> واسطه‌ای که ترافیک اینترنتی شما را از مسیر دیگری عبور می‌دهد؛ مثل پیکِ امینی که نامه را از راه باز به مقصد می‌رساند.
+  </div>
+
+  <div class="box tip">💡 <b>نکتهٔ طلایی حرفه‌ای‌ها:</b>
+    بعد از هر تغییر در فایل پیکربندی، این دو فرمان را پشت‌سرهم بزنید:
+    <code>openclaw doctor</code> (بررسی سلامت تنظیمات) و سپس <code>openclaw gateway restart</code> (اعمال تغییرات). این عادت، ۹۰٪ سردرگمی‌ها را حذف می‌کند.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    یکی از ترفندها را همین حالا امتحان کنید — پیشنهاد ما: در چت تلگرام، از دستیار بخواهید «هر روز ساعت ۹ صبح یک جملهٔ انگیزشی برایم بفرست». اگر پذیرفت و زمان‌بندی کرد، شما رسماً وارد سطح حرفه‌ای شده‌اید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۱۰ ============ -->
+<section class="stage" id="s10">
+  <div class="stage-head">
+    <div class="stage-num">۱۰</div>
+    <h2>امنیت — قواعد طلایی</h2>
+    <span class="time-chip">⏱️ ۷ دقیقه</span>
+    <span class="pos-chip">مرحله ۱۰ از ۱۲</span>
+  </div>
+
+  <p>دستیار شما به ابزارهای واقعی روی کامپیوترتان دسترسی دارد؛ پس امنیت آن، امنیت کامپیوتر شماست. این پنج قاعده را جدی بگیرید:</p>
+
+  <div class="step"><b class="sn">۱۰-۱)</b> <b>پیام‌های ورودی را «ورودیِ غیرقابل‌اعتماد» بدانید.</b>
+    مستندات رسمی صریح می‌گوید: هر پیام مستقیمی که به ربات می‌رسد باید غیرقابل‌اعتماد فرض شود. به همین دلیل، جفت‌سازی (pairing) را هرگز غیرفعال نکنید.
+  </div>
+
+  <div class="step"><b class="sn">۱۰-۲)</b> <b>برای ربات تک‌نفره، فهرست مجاز (allowlist) بسازید.</b>
+    مطمئن‌ترین حالت: <code>dmPolicy: "allowlist"</code> به‌همراه شناسهٔ عددی تلگرامِ خودتان در <code>allowFrom</code>.
+    شناسهٔ عددی‌تان را امن پیدا کنید: به ربات‌تان پیام بدهید، <code>openclaw logs --follow</code> را اجرا کنید و مقدار <code>from.id</code> را بخوانید.
+  </div>
+
+  <div class="step"><b class="sn">۱۰-۳)</b> <b>در گروه‌ها، منشن را اجباری نگه دارید.</b>
+    تنظیم <code>requireMention: true</code> (پیش‌فرض) یعنی دستیار فقط وقتی صدایش کنید جواب می‌دهد — نه به هر پیام گروه.
+  </div>
+
+  <div class="step"><b class="sn">۱۰-۴)</b> <b>Gateway را روی اینترنت باز نکنید.</b>
+    داشبورد روی <code>127.0.0.1</code> یعنی فقط دستگاه خودتان در دسترس است — همین درست است. باز کردن آن برای دسترسی از راه دور، نیازمند دستورالعمل امنیتی مخصوص در مستندات رسمی است؛ بدون مطالعهٔ آن اقدام نکنید.
+  </div>
+
+  <div class="step"><b class="sn">۱۰-۵)</b> <b>توکن و کلیدها را هرگز جایی نفرستید.</b>
+    توکن ربات و کلید API را در هیچ چتی، اسکرین‌شاتی یا مخزن گیت‌هابی قرار ندهید. اگر لو رفت، در BotFather با <code>/revoke</code> توکن جدید بگیرید و کلید API را در پنل سرویس‌دهنده باطل کنید.
+  </div>
+
+  <div class="box warn">⚠️ <b>مواظب باش:</b>
+    فرمان <code>openclaw doctor</code> تنظیمات پرریسک (مثل سیاست پیام‌های باز) را به شما هشدار می‌دهد. هر چند وقت یک بار — و حتماً بعد از هر تغییر امنیتی — آن را اجرا کنید.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    آیا می‌توانید بگویید ربات شما الان در کدام حالت است — pairing ،allowlist یا open؟ اگر جواب open است، همین حالا برگردید و آن را عوض کنید.
+  </div>
+</section>
+
+<!-- ============ مرحله ۱۱ ============ -->
+<section class="stage" id="s11">
+  <div class="stage-head">
+    <div class="stage-num">۱۱</div>
+    <h2>به‌روزرسانی و نگه‌داری</h2>
+    <span class="time-chip">⏱️ ۵ دقیقه</span>
+    <span class="pos-chip">مرحله ۱۱ از ۱۲</span>
+  </div>
+
+  <p>OpenClaw پروژه‌ای فعال است و مرتب نسخهٔ جدید می‌دهد. روال درستِ به‌روزرسانی:</p>
+
+  <div class="step"><b class="sn">۱۱-۱)</b> نسخهٔ جدید را نصب کنید (همان روش نصب اولیه؛ مثلاً <code>npm install -g openclaw@latest</code>).</div>
+
+  <div class="step"><b class="sn">۱۱-۲)</b> بلافاصله «پزشک» را اجرا کنید — این توصیهٔ صریح مستندات رسمی بعد از هر ارتقاست:
+    <pre><code>openclaw doctor</code></pre>
+    اگر تنظیمات قدیمی‌شده‌ای داشته باشید، گاهی <code>openclaw doctor --fix</code> می‌تواند خودش آن‌ها را به قالب جدید مهاجرت دهد.
+  </div>
+
+  <div class="step"><b class="sn">۱۱-۳)</b> Gateway را دوباره راه‌اندازی کنید: <code>openclaw gateway restart</code>.</div>
+
+  <div class="box tip">💡 <b>نکته:</b>
+    پیش از ارتقاهای بزرگ، یک کپی از فایل <code>~/.openclaw/openclaw.json</code> در جایی امن نگه دارید — بازگشت به عقب را یک‌دقیقه‌ای می‌کند.
+  </div>
+
+  <div class="box check">✅ <b>ایست بازرسی:</b>
+    بعد از ارتقا: <code>openclaw --version</code> عدد جدید را نشان می‌دهد و <code>doctor</code> بدون خطای قرمز تمام می‌شود.
+  </div>
+</section>
+
+<!-- ============ مرحله ۱۲ ============ -->
+<section class="stage" id="s12">
+  <div class="stage-head">
+    <div class="stage-num">۱۲</div>
+    <h2>رفع اشکال 🔧</h2>
+    <span class="time-chip">⏱️ در صورت نیاز</span>
+    <span class="pos-chip">مرحله ۱۲ از ۱۲</span>
+  </div>
+
+  <table>
+    <tr><th>نشانه</th><th>علت رایج</th><th>راه‌حل</th></tr>
+    <tr>
+      <td>فرمان <code>openclaw</code> «پیدا نشد»</td>
+      <td>ترمینال قدیمی مسیرِ برنامهٔ تازه‌نصب را نمی‌شناسد</td>
+      <td>ترمینال را کاملاً ببندید و دوباره باز کنید؛ اگر حل نشد، سیستم را یک بار راه‌اندازی مجدد کنید</td>
+    </tr>
+    <tr>
+      <td>خطای <code>EACCES</code> هنگام نصب با npm</td>
+      <td>مشکل مجوز پوشهٔ npm</td>
+      <td>هرگز با <code>sudo</code> نصب نکنید؛ طبق مستندات، مسیر سراسری npm را به پوشهٔ کاربری منتقل کنید و دوباره نصب کنید</td>
+    </tr>
+    <tr>
+      <td>داشبورد باز نمی‌شود</td>
+      <td>Gateway روشن نیست</td>
+      <td><code>openclaw gateway status</code> را بزنید؛ اگر خاموش بود، <code>openclaw gateway restart</code></td>
+    </tr>
+    <tr>
+      <td>دستیار در چت جواب نمی‌دهد ولی داشبورد کار می‌کند</td>
+      <td>هنوز pairing تأیید نشده یا شناسهٔ شما در allowlist نیست</td>
+      <td><code>openclaw pairing list telegram</code> و سپس approve؛ یا شناسهٔ عددی‌تان را به <code>allowFrom</code> اضافه کنید</td>
+    </tr>
+    <tr>
+      <td>خطای <code>getMe returned 401</code> در لاگ</td>
+      <td>توکن ربات تلگرام اشتباه یا باطل‌شده است</td>
+      <td>توکن را از BotFather دوباره کپی یا با <code>/revoke</code> نو کنید و در تنظیمات جای‌گذاری کنید</td>
+    </tr>
+    <tr>
+      <td>ربات در گروه به پیام‌های بدون منشن جواب نمی‌دهد</td>
+      <td>حالت حریم خصوصی تلگرام (Privacy Mode) روشن است</td>
+      <td>در BotFather فرمان <code>/setprivacy</code> را Disable کنید، سپس ربات را از گروه حذف و دوباره اضافه کنید</td>
+    </tr>
+    <tr>
+      <td>اتصال تلگرام قطع‌ووصل می‌شود (<span dir="ltr">fetch failed</span>)</td>
+      <td>مشکل شبکه/DNS در مسیر <span dir="ltr">api.telegram.org</span></td>
+      <td>ترفند ۶ مرحلهٔ ۹ (پراکسی اختصاصی تلگرام) را اعمال کنید و restart بزنید</td>
+    </tr>
+    <tr>
+      <td>هر مشکل نامشخص دیگر</td>
+      <td>—</td>
+      <td>دو دوست همیشگی: <code>openclaw doctor</code> و <code>openclaw logs --follow</code>؛ پیام خطا معمولاً خودش راه را نشان می‌دهد</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ پایان ============ -->
+<section class="finale">
+  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+  <ul>
+    <li>✅ OpenClaw را نصب کنی و با ویزارد onboard تنظیمات اولیه را کامل انجام دهی</li>
+    <li>✅ Gateway را مدیریت کنی: وضعیت، restart، لاگ زنده و «پزشک» سیستم</li>
+    <li>✅ از داشبورد مرورگر و ترمینال با دستیارت کار کنی</li>
+    <li>✅ تلگرام را امن (با pairing و allowlist) وصل کنی و از گوشی فرمان بدهی</li>
+    <li>✅ ترفندهای حرفه‌ای را به‌کار ببری: مهارت‌ها، زمان‌بندی، چند Agent، پراکسی و منوی اختصاصی</li>
+    <li>✅ سیستم را امن نگه داری و اصولی به‌روزرسانی کنی</li>
+  </ul>
+  <p>🏔️ ایستگاه ۶ مسیر صعود را فتح کردی. حالا نه‌فقط بالای قله‌ای، بلکه در قله <b>خانه ساخته‌ای</b>.</p>
+</section>
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+<div style="margin-top:6px;font-size:12px;opacity:.75">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi */
+(function(){
+  var bar = document.getElementById('progressbar');
+  function update(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = p + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>
