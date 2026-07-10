@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<!-- ©️ 2026 Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- بخشی از گراول — کتابخانهٔ آموزش گام‌به‌گام | ایستگاه ورودیِ مسیر صعود -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نقشهٔ راه هوش مصنوعی — از کجا شروع کنیم؟ | گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="🤖 ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="🧭">
+<meta name="gravel:time"     content="حدود ۷۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="نقشهٔ راه کامل شروع هوش مصنوعی برای همه — از دانش‌آموز تا مدیر؛ ایستگاه ورودیِ مسیر صعود.">
+<meta name="gravel:keywords" content="هوش مصنوعی, آموزش هوش مصنوعی, از کجا شروع کنم, نقشه راه AI, یادگیری هوش مصنوعی, ChatGPT, Claude, Gemini, پرامپت, prompt, هوش مصنوعی برای کسب و کار, AI roadmap, learn AI, getting started with AI, هوش مصنوعی برای مبتدی">
+<meta name="gravel:order"    content="0">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<meta name="description" content="نقشهٔ راه حرفه‌ای و کاربردیِ شروع هوش مصنوعی برای هر مخاطبی — از صفرِ صفر، بدون هیچ پیش‌نیازی. ایستگاه ورودیِ مسیر صعودِ گراول.">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "نقشهٔ راه هوش مصنوعی — از کجا شروع کنیم؟",
+  "description": "نقشهٔ راه کامل و کاربردیِ شروع هوش مصنوعی برای همه، از دانش‌آموز تا مدیر. ایستگاه ورودیِ مسیر صعودِ گراول.",
+  "inLanguage": "fa-IR",
+  "educationalLevel": "Beginner",
+  "learningResourceType": "Roadmap",
+  "author": { "@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi" },
+  "publisher": { "@type": "Organization", "name": "گراول — کتابخانهٔ آموزش گام‌به‌گام" },
+  "copyrightHolder": { "@type": "Person", "name": "Mehdi Rezghi" },
+  "copyrightYear": 2026
+}
+</script>
+
+<style>
+  :root{
+    --bg:#F2F7F7;        /* زمینه */
+    --ink:#14303B;       /* جوهر */
+    --teal:#0E7C86;      /* فیروزه‌ای */
+    --saffron:#E8A317;   /* زعفرانی */
+    --night:#123B4A;     /* سرمه‌ای شب */
+    --card:#ffffff;
+    --line:rgba(18,59,74,.10);
+    --soft:#E7F1F1;
+    --shadow:0 10px 30px rgba(18,59,74,.08);
+    --shadow-lg:0 20px 50px rgba(18,59,74,.14);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+    background:
+      radial-gradient(1200px 600px at 90% -10%, rgba(14,124,134,.10), transparent 60%),
+      radial-gradient(1000px 500px at -10% 10%, rgba(232,163,23,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    direction:rtl;
+    text-align:right;
+    line-height:1.95;
+    font-size:17.5px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* نوار پیشرفت */
+  #progress{position:fixed;top:0;inset-inline:0;height:5px;background:transparent;z-index:100}
+  #progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--saffron));transition:width .1s linear}
+
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+
+  /* هدر قهرمان */
+  .hero{
+    position:relative;overflow:hidden;
+    margin:0 -20px 34px;padding:64px 26px 58px;
+    background:
+      radial-gradient(700px 340px at 82% 0%, rgba(14,124,134,.55), transparent 60%),
+      linear-gradient(160deg, var(--night), #0c2a35 70%);
+    color:#eafaf9;text-align:center;
+  }
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(232,163,23,.18);border:1px solid rgba(232,163,23,.5);
+    color:#ffe6ad;padding:7px 16px;border-radius:999px;font-size:13.5px;font-weight:700;
+    margin-bottom:20px;letter-spacing:.2px;
+  }
+  .hero h1{margin:.1em 0 .35em;font-size:38px;font-weight:900;line-height:1.35;color:#fff}
+  .hero h1 .hl{color:var(--saffron)}
+  .hero p.lead{margin:0 auto;max-width:640px;font-size:18.5px;color:#cfe9e7;font-weight:500}
+  .hero .motto{margin-top:22px;font-size:14.5px;color:#9fd0cd;font-style:italic;opacity:.95}
+  /* رشته‌کوه CSS */
+  .range{position:absolute;inset-inline:0;bottom:-2px;height:70px;opacity:.5}
+  .range svg{display:block;width:100%;height:100%}
+
+  /* جعبهٔ قلاب / مقدمه */
+  .hook{
+    background:linear-gradient(180deg,#fff, #fbfdfd);
+    border:1px solid var(--line);border-inline-start:6px solid var(--saffron);
+    border-radius:18px;padding:24px 26px;box-shadow:var(--shadow);margin-bottom:14px;
+  }
+  .hook h2{margin:.1em 0 .5em;font-size:22px;color:var(--night)}
+  .hook .who{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;
+  }
+  .hook .who span{
+    background:var(--soft);border:1px solid var(--line);border-radius:999px;
+    padding:6px 13px;font-size:13.5px;font-weight:700;color:var(--night)
+  }
+
+  /* فهرست */
+  nav.toc{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;box-shadow:var(--shadow);margin:26px 0 40px;
+  }
+  nav.toc h3{margin:0 0 12px;font-size:16px;color:var(--teal);font-weight:900}
+  nav.toc ol{margin:0;padding:0;list-style:none;counter-reset:t;
+    display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}
+  nav.toc li{counter-increment:t}
+  nav.toc a{
+    display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;
+    padding:7px 8px;border-radius:10px;font-size:15px;font-weight:500;transition:.15s
+  }
+  nav.toc a:hover{background:var(--soft);color:var(--teal)}
+  nav.toc a::before{
+    content:counter(t);flex:0 0 26px;height:26px;display:grid;place-items:center;
+    background:var(--soft);color:var(--teal);border-radius:8px;font-weight:900;font-size:13px
+  }
+
+  section{margin:44px 0}
+  h2.sec{font-size:26px;color:var(--night);font-weight:900;margin:0 0 6px;display:flex;align-items:center;gap:12px}
+  h2.sec .em{font-size:30px;line-height:1}
+  .sub{color:#4a6670;font-size:15.5px;margin:0 0 20px}
+
+  p{margin:.7em 0}
+  strong{color:var(--night)}
+  a.inline{color:var(--teal);font-weight:700;text-decoration:none;border-bottom:2px solid rgba(14,124,134,.25)}
+  a.inline:hover{border-color:var(--teal)}
+
+  /* کارت ایستگاه */
+  .station{
+    position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:20px;padding:28px 26px 24px;box-shadow:var(--shadow);margin:18px 0;
+    transition:.18s;
+  }
+  .station:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+  .station > .num{
+    position:absolute;top:-18px;inset-inline-start:22px;
+    width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+    background:linear-gradient(150deg,var(--teal),var(--night));color:#fff;
+    font-weight:900;font-size:22px;box-shadow:0 8px 18px rgba(14,124,134,.35)
+  }
+  .station.peak > .num{background:linear-gradient(150deg,var(--saffron),#c8850c)}
+  .station .head{display:flex;align-items:baseline;gap:12px;margin:10px 0 4px;padding-inline-start:40px}
+  .station h3{margin:0;font-size:21px;color:var(--night);font-weight:900}
+  .station .chip{
+    background:var(--soft);color:var(--teal);border-radius:999px;padding:3px 12px;
+    font-size:12.5px;font-weight:700;white-space:nowrap
+  }
+  .station .body{padding-inline-start:40px}
+
+  /* جعبه‌های تأکید */
+  .box{border-radius:14px;padding:15px 18px 15px 16px;margin:16px 0;border:1px solid var(--line);font-size:15.5px}
+  .box .t{font-weight:900;display:block;margin-bottom:4px}
+  .tip{background:#eef8ee;border-inline-start:5px solid #3aa655}
+  .tip .t{color:#2f8a48}
+  .warn{background:#fdf2ec;border-inline-start:5px solid #e2622e}
+  .warn .t{color:#c9531f}
+  .check{background:#eef6fb;border-inline-start:5px solid #2f7fb5}
+  .check .t{color:#276ea0}
+  .note{background:#fbf6ea;border-inline-start:5px solid var(--saffron)}
+  .note .t{color:#b9820f}
+
+  /* مثال جذاب / صحنه */
+  .scene{
+    display:flex;gap:14px;align-items:flex-start;
+    background:linear-gradient(180deg,#fff,#f7fbfb);
+    border:1px dashed rgba(14,124,134,.4);border-radius:14px;padding:16px 18px;margin:14px 0
+  }
+  .scene .ico{font-size:26px;flex:0 0 auto;filter:saturate(1.1)}
+  .scene .txt{font-size:15.5px}
+  .scene .txt b{color:var(--teal)}
+
+  /* مقایسهٔ قبل/بعد پرامپت */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .ba .col{border-radius:14px;padding:16px 16px 14px;border:1px solid var(--line)}
+  .ba .bad{background:#fdf1ee}
+  .ba .good{background:#eef7f1}
+  .ba .lbl{font-weight:900;font-size:13.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .ba .bad .lbl{color:#c9531f}
+  .ba .good .lbl{color:#2f8a48}
+  code, .mono{
+    font-family:'Consolas','SFMono-Regular',monospace;background:#eef3f4;
+    padding:1px 6px;border-radius:6px;font-size:14px
+  }
+  .prompt{
+    direction:ltr;text-align:right;/* متن فارسی داخل نمونه راست‌چین می‌ماند */
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-size:14.5px;line-height:1.85;color:var(--ink)
+  }
+  .prompt.rtl{direction:rtl}
+
+  /* شبکهٔ نقش‌ها */
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  .role{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 20px 18px;
+    box-shadow:var(--shadow);border-top:5px solid var(--teal)
+  }
+  .role.r2{border-top-color:var(--saffron)}
+  .role.r3{border-top-color:#c9531f}
+  .role.r4{border-top-color:var(--night)}
+  .role h4{margin:0 0 4px;font-size:18px;color:var(--night);font-weight:900;display:flex;align-items:center;gap:8px}
+  .role .role-sub{color:#5b7680;font-size:13.5px;margin:0 0 12px}
+  .role ul{margin:0;padding-inline-start:18px;font-size:15px}
+  .role ul li{margin:6px 0}
+  .role .red{margin-top:12px;font-size:13.5px;background:#fdf2ec;border-radius:10px;padding:9px 12px;color:#b34a20;font-weight:600}
+
+  /* برنامهٔ ۷ روزه */
+  .days{margin:14px 0;border-inline-start:3px solid var(--soft);padding-inline-start:20px}
+  .day{position:relative;margin:0 0 16px;padding:2px 0}
+  .day::before{
+    content:'';position:absolute;inset-inline-start:-27px;top:8px;width:13px;height:13px;
+    border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--bg)
+  }
+  .day b{color:var(--night)}
+  .day .d{font-size:12.5px;font-weight:900;color:var(--saffron);letter-spacing:.3px}
+
+  /* اتصال به ایستگاه‌های بعدی */
+  .next{
+    background:linear-gradient(160deg,var(--night),#0c2a35);color:#eafaf9;
+    border-radius:20px;padding:28px 26px;margin:40px 0;box-shadow:var(--shadow-lg)
+  }
+  .next h2{margin:0 0 6px;color:#fff;font-size:23px}
+  .next p.n-sub{color:#a9d4d0;margin:0 0 18px;font-size:15px}
+  .path{display:flex;flex-direction:column;gap:10px}
+  .step-link{
+    display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px 16px;
+    color:#eafaf9;text-decoration:none;transition:.15s
+  }
+  .step-link:hover{background:rgba(255,255,255,.12);transform:translateX(-4px)}
+  .step-link .o{
+    flex:0 0 40px;height:40px;border-radius:11px;display:grid;place-items:center;
+    background:rgba(232,163,23,.2);color:var(--saffron);font-weight:900;font-size:17px
+  }
+  .step-link .o.peak{background:rgba(232,163,23,.9);color:#3a2600}
+  .step-link .l b{display:block;color:#fff;font-size:15.5px}
+  .step-link .l span{font-size:13px;color:#a9d4d0}
+
+  /* افسانه/واقعیت */
+  .myth{display:grid;gap:12px;margin:16px 0}
+  .myth .row{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);
+    border-radius:14px;overflow:hidden
+  }
+  .myth .m{background:#fdf2ec;padding:14px 16px;font-size:15px}
+  .myth .f{background:#eef7f1;padding:14px 16px;font-size:15px}
+  .myth .m b{color:#c9531f}
+  .myth .f b{color:#2f8a48}
+
+  /* پاورقی */
+  .glossary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+  .glossary dl{margin:0}
+  .glossary dt{font-weight:900;color:var(--teal);margin-top:14px;font-size:15.5px}
+  .glossary dt:first-child{margin-top:0}
+  .glossary dd{margin:2px 0 0;font-size:15px;color:#3d5860}
+
+  /* جشن پایانی */
+  .finish{
+    text-align:center;background:linear-gradient(160deg,#0e7c86,#0a5a62);color:#eafaf9;
+    border-radius:22px;padding:38px 26px;margin-top:44px;box-shadow:var(--shadow-lg)
+  }
+  .finish h2{color:#fff;font-size:26px;margin:0 0 8px}
+  .finish p{color:#d3efec;max-width:560px;margin:6px auto}
+  .finish .recap{
+    display:inline-flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px
+  }
+  .finish .recap span{background:rgba(255,255,255,.12);border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:700}
+
+  .gravel-footer a{color:inherit}
+
+  /* موبایل */
+  @media (max-width:700px){
+    body{font-size:16.5px}
+    .hero{padding:48px 18px 46px}
+    .hero h1{font-size:29px}
+    .wrap{padding:0 15px 60px}
+    nav.toc ol{grid-template-columns:1fr}
+    .ba{grid-template-columns:1fr}
+    .roles{grid-template-columns:1fr}
+    .myth .row{grid-template-columns:1fr}
+    h2.sec{font-size:22px}
+    .station{padding:26px 18px 20px}
+    .station .head,.station .body{padding-inline-start:0}
+    .station > .num{position:static;margin-bottom:8px}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"><i></i></div>
+
+<div class="wrap">
+
+  <!-- ===== هدر قهرمان ===== -->
+  <header class="hero">
+    <span class="badge">🧭 ایستگاه ورودیِ مسیر صعود · گراول</span>
+    <h1>نقشهٔ راه هوش مصنوعی:<br><span class="hl">از کجا شروع کنیم؟</span></h1>
+    <p class="lead">تو این آموزش، بدون هیچ پیش‌نیازی و از صفرِ صفر، یاد می‌گیری هوش مصنوعی را چطور وارد زندگی و کارت کنی — چه دانش‌آموز باشی، چه پزشک، مهندس، مغازه‌دار یا مدیر.</p>
+    <div class="motto">«برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»</div>
+    <div class="range" aria-hidden="true">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,120 L0,70 L180,20 L340,80 L520,10 L700,85 L880,30 L1060,90 L1200,50 L1200,120 Z" fill="#F2F7F7"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ===== قلاب / برای چه کسی ===== -->
+  <div class="hook">
+    <h2>یک لحظه تصور کن…</h2>
+    <p>ساعت دو بعد از نیمه‌شب است. یک «همکار» داری که هیچ‌وقت خسته نمی‌شود، از هیچ سؤالی خسته نمی‌شود، و در چند ثانیه جواب می‌دهد:</p>
+    <div class="scene"><div class="ico">🛍️</div><div class="txt">یک <b>مغازه‌دار</b> از یک عکسِ محصول، ۳۰ کپشن آمادهٔ اینستاگرام می‌سازد — قبل از باز شدن مغازه.</div></div>
+    <div class="scene"><div class="ico">🩺</div><div class="txt">یک <b>پزشک</b> یک راهنمای بالینیِ ۶۰ صفحه‌ای را در فاصلهٔ یک فنجان قهوه به یک صفحهٔ خلاصه تبدیل می‌کند.</div></div>
+    <div class="scene"><div class="ico">🎓</div><div class="txt">یک <b>دانش‌آموز</b> نصفه‌شب برای یک مبحث سخت، یک معلم خصوصیِ صبور پیدا می‌کند که تا وقتی نفهمد، از زبان‌های مختلف توضیح می‌دهد.</div></div>
+    <p>این جادو نیست؛ یک <strong>مهارت</strong> است. و این صفحه، دقیقاً همان نقطه‌ای است که این مهارت از آن شروع می‌شود.</p>
+    <div class="who">
+      <span>🎓 دانش‌آموز و دانشجو</span>
+      <span>🛍️ فرد عادی و کاسب</span>
+      <span>🩺⚙️ پزشک، مهندس، وکیل</span>
+      <span>🧭 مدیر و صاحب کسب‌وکار</span>
+    </div>
+  </div>
+
+  <!-- ===== فهرست ===== -->
+  <nav class="toc">
+    <h3>مسیر امروز ما</h3>
+    <ol>
+      <li><a href="#mindset">طرز فکر درست (افسانه‌ها را کنار بزنیم)</a></li>
+      <li><a href="#spine">ستون فقرات: ۷ ایستگاهی که همه صعود می‌کنند</a></li>
+      <li><a href="#s0">ایستگاه ۰ — بفهم با چه چیزی طرفی</a></li>
+      <li><a href="#s1">ایستگاه ۱ — اولین تماس</a></li>
+      <li><a href="#s2">ایستگاه ۲ — کلید طلایی: پرامپت</a></li>
+      <li><a href="#s3">ایستگاه ۳ — ابزار درست برای کار درست</a></li>
+      <li><a href="#s4">ایستگاه ۴ — کاربرد در کارِ خودت</a></li>
+      <li><a href="#s5">ایستگاه ۵ — از «جواب می‌دهد» تا «انجام می‌دهد»</a></li>
+      <li><a href="#s6">ایستگاه ۶ — قضاوت و اعتماد</a></li>
+      <li><a href="#week">شروع واقعی: برنامهٔ ۷ روزه</a></li>
+      <li><a href="#next">ایستگاه بعدی روی مسیر صعود</a></li>
+      <li><a href="#glossary">واژه‌نامهٔ ساده</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===== طرز فکر ===== -->
+  <section id="mindset">
+    <h2 class="sec"><span class="em">🧠</span> اول از همه: طرز فکر درست</h2>
+    <p class="sub">قبل از هر ابزاری، باید سه افسانهٔ رایج را کنار بگذاریم. همین چند خط، جلوی بیشترین اشتباهاتِ تازه‌کارها را می‌گیرد.</p>
+
+    <div class="myth">
+      <div class="row">
+        <div class="m"><b>افسانه:</b> «هوش مصنوعی همه‌چیز را درست می‌گوید.»</div>
+        <div class="f"><b>واقعیت:</b> گاهی با اعتمادبه‌نفسِ کامل اشتباه می‌گوید و حتی منبعِ الکی می‌سازد. خروجی همیشه یک <strong>پیش‌نویس</strong> است، نه حکمِ نهایی.</div>
+      </div>
+      <div class="row">
+        <div class="m"><b>افسانه:</b> «باید برنامه‌نویس یا نابغه باشی.»</div>
+        <div class="f"><b>واقعیت:</b> فقط کافی است فارسیِ ساده و شفاف بنویسی. تو با یک همکار حرف می‌زنی، نه با یک ماشین رمز.</div>
+      </div>
+      <div class="row">
+        <div class="m"><b>افسانه:</b> «جای آدم‌ها را می‌گیرد.»</div>
+        <div class="f"><b>واقعیت:</b> جای آدم‌هایی که از آن استفاده نمی‌کنند را، آدم‌هایی می‌گیرند که استفاده می‌کنند. این یعنی همین امروز شروع کن.</div>
+      </div>
+    </div>
+
+    <div class="box note">
+      <span class="t">📌 سه قانون طلاییِ همراهِ همیشگی</span>
+      ۱) خروجی پیش‌نویس است، نه فتوا. ۲) هرچه ورودی‌ات دقیق‌تر، خروجی بهتر. ۳) مسئولیت نهایی همیشه با انسان است. این سه جمله را جایی بنویس؛ تا آخرِ مسیر همراهت هستند.
+    </div>
+  </section>
+
+  <!-- ===== ستون فقرات ===== -->
+  <section id="spine">
+    <h2 class="sec"><span class="em">🪜</span> ستون فقرات: ۷ ایستگاهی که همه صعود می‌کنند</h2>
+    <p class="sub">راز این نقشه ساده است: حدود ۹۰٪ آنچه یک دانش‌آموز، یک پزشک و یک مدیر لازم دارند، <strong>یکی است</strong>. همه از یک دامنه بالا می‌رویم؛ فقط در ایستگاه ۴ مسیرمان بر اساس مقصد شاخه می‌شود. پس اول با هم، بعد هرکس به سمت قلهٔ خودش.</p>
+
+    <!-- ایستگاه ۰ -->
+    <div class="station" id="s0">
+      <div class="num">۰</div>
+      <div class="head"><h3>بفهم با چه چیزی طرفی</h3><span class="chip">۵ دقیقه، اما تعیین‌کننده</span></div>
+      <div class="body">
+        <p>هوش مصنوعیِ گفتگویی (مثل چت‌بات‌ها) یک <strong>مدل زبانی</strong><sup>۱</sup> است: میلیاردها متن خوانده و یاد گرفته کلمهٔ بعدی را حدس بزند. برای همین در نوشتن، خلاصه‌کردن و توضیح‌دادن معجزه می‌کند — و برای همین گاهی در محاسبهٔ دقیق یا واقعیتِ روز، لغزش دارد. اگر این را بفهمی، دیگر نه بیش از حد اعتماد می‌کنی، نه بی‌خود می‌ترسی.</p>
+        <div class="box check"><span class="t">✅ ایست بازرسی</span>اگر می‌توانی این جمله را با زبان خودت بگویی، آماده‌ای: «هوش مصنوعی یک همکارِ فوق‌سریع ولی گاهی اشتباه‌کننده است.»</div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۱ -->
+    <div class="station" id="s1">
+      <div class="num">۱</div>
+      <div class="head"><h3>اولین تماس</h3><span class="chip">همین امروز</span></div>
+      <div class="body">
+        <p>به‌جای معرفی بیست ابزار، فقط <strong>یک</strong> دستیار عمومی انتخاب کن و یک هفته هر کاری را با آن انجام بده. سه انتخابِ اصلیِ امروز، هستهٔ کارِ مشابهی دارند:</p>
+        <div class="scene"><div class="ico">💬</div><div class="txt"><b><span dir="ltr">ChatGPT</span></b> — همه‌کارهٔ محبوب و ساده برای شروع.</div></div>
+        <div class="scene"><div class="ico">📚</div><div class="txt"><b><span dir="ltr">Claude</span></b> — قوی در متن‌های بلند، تحلیل‌های پیچیده و حفظ لحن یکدست در اسناد طولانی.</div></div>
+        <div class="scene"><div class="ico">🔎</div><div class="txt"><b><span dir="ltr">Gemini</span></b> — داخل ابزارهای گوگل (<span dir="ltr">Gmail، Docs، Sheets</span>) تنیده شده؛ اگر کارت آنجاست، انتخابِ طبیعی.</div></div>
+        <div class="box tip"><span class="t">💡 نکته</span>هدفِ این هفته فقط <strong>یک عادت</strong> است: «اول از هوش مصنوعی بپرس». یک ایمیل، یک پیام، یک خلاصه — هر کاری پیش آمد، اول به آن بسپار و بعد اصلاحش کن.</div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۲ -->
+    <div class="station" id="s2">
+      <div class="num">۲</div>
+      <div class="head"><h3>کلید طلایی: پرامپت‌نویسی</h3><span class="chip">بزرگ‌ترین اهرمِ واقعی</span></div>
+      <div class="body">
+        <p>اینجا جایی است که آدم‌های معمولی از آدم‌های <em>مؤثر</em> جدا می‌شوند. <strong>پرامپت</strong><sup>۲</sup> یعنی همان چیزی که به هوش مصنوعی می‌گویی. کیفیتِ درخواستت، مستقیم روی کیفیتِ جواب اثر می‌گذارد. به این دو نمونه نگاه کن — هر دو دنبال یک ایمیل‌اند:</p>
+
+        <div class="ba">
+          <div class="col bad">
+            <div class="lbl">✗ ضعیف</div>
+            <div class="prompt rtl">یک ایمیل بنویس.</div>
+          </div>
+          <div class="col good">
+            <div class="lbl">✓ قوی</div>
+            <div class="prompt rtl">تو یک مدیر فروشِ مؤدب هستی. به مشتری‌ای که دو بار پیگیری کرده ولی هنوز خرید نکرده، یک ایمیل کوتاه فارسی بنویس که فشار نیاورد، حداکثر ۴ جمله باشد و یک پیشنهادِ ارزش داشته باشد.</div>
+          </div>
+        </div>
+
+        <p>فرقشان زمین تا آسمان است. یک قالبِ ساده که همه‌جا جواب می‌دهد:</p>
+        <div class="box note"><span class="t">🗝️ قالب طلایی پرامپت</span><strong>نقش + زمینه + خواسته + قالبِ خروجی + مثال.</strong> یعنی: بگو چه کسی باشد («تو یک وکیلی…»)، چه شرایطی هست، دقیقاً چه می‌خواهی، خروجی چه شکلی باشد (فهرست؟ جدول؟ چند کلمه؟) و اگر داری، یک نمونه بده.</div>
+        <div class="box check"><span class="t">✅ ایست بازرسی</span>یک درخواستِ ضعیفِ خودت را بردار و با این قالب بازنویسی‌اش کن. تفاوتِ جواب را که دیدی، این ایستگاه را فتح کرده‌ای.</div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۳ -->
+    <div class="station" id="s3">
+      <div class="num">۳</div>
+      <div class="head"><h3>ابزار درست برای کارِ درست</h3><span class="chip">فراتر از چت‌بات</span></div>
+      <div class="body">
+        <p>حالا که پرامپت بلدی، یاد بگیر برای هر کار سراغ ابزارِ مناسب بروی — نه یک ابزار برای همه‌چیز. یک جعبه‌ابزارِ کوچک برای شروع:</p>
+        <div class="scene"><div class="ico">🔬</div><div class="txt"><b>تحقیق با منبع</b> → ابزارهایی مثل <span dir="ltr">Perplexity</span> که پاسخِ ارجاع‌دار می‌دهند و می‌توانی منبع را ببینی.</div></div>
+        <div class="scene"><div class="ico">✍️</div><div class="txt"><b>نوشتن و اصلاح لحن</b> → دستیارهای نگارش مثل <span dir="ltr">Grammarly</span>.</div></div>
+        <div class="scene"><div class="ico">🗂️</div><div class="txt"><b>کار داخل اسناد و یادداشت‌ها</b> → <span dir="ltr">Notion AI</span> که هوش مصنوعی را داخل فضای کاری‌ات می‌آورد.</div></div>
+        <div class="scene"><div class="ico">🎨</div><div class="txt"><b>ساخت تصویر</b> → <span dir="ltr">Midjourney</span> و مشابه‌ها، برای تصویر محصول تا کاور و طرح.</div></div>
+        <div class="scene"><div class="ico">🎬</div><div class="txt"><b>ویدئو و صدا</b> → <span dir="ltr">Synthesia</span> برای ویدئوی گوینده، <span dir="ltr">ElevenLabs</span> برای تبدیل متن به صدای طبیعی.</div></div>
+        <div class="box tip"><span class="t">💡 نکته</span>بهترین ابزار، پرزرق‌وبرق‌ترین نیست؛ آن است که با جریانِ کاریِ فعلیِ تو جفت شود. سراغِ همه نرو؛ فقط جایی که بیشترین وقتت را می‌گیرد.</div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۴ -->
+    <div class="station" id="s4">
+      <div class="num">۴</div>
+      <div class="head"><h3>کاربرد در کارِ واقعیِ خودت</h3><span class="chip">اینجا مسیر شاخه می‌شود</span></div>
+      <div class="body">
+        <p>تا اینجا همه کنار هم بودیم. از این نقطه، هرکس نقشهٔ خودش را برمی‌دارد. اصلِ مشترک: با یک <strong>کارِ تکراریِ واقعی از همین هفتهٔ خودت</strong> شروع کن، نه یک تمرینِ فرضی. نقشِ خودت را پیدا کن:</p>
+
+        <div class="roles">
+          <div class="role r1">
+            <h4>🎓 دانش‌آموز و دانشجو</h4>
+            <p class="role-sub">هوش مصنوعی = مربیِ خصوصی، نه ماشینِ تقلب</p>
+            <ul>
+              <li>یک مبحثِ سخت را بگو «انگار برای اولین بار می‌شنوم توضیح بده» — بعد بگو «حالا با یک مثالِ دیگر».</li>
+              <li>از جزوه‌ات آزمون بساز و خودت را بسنج.</li>
+              <li>روی انشا/مقاله‌ات بازخورد بگیر: «کجا ضعیف است؟»</li>
+            </ul>
+            <div class="red">خط قرمز: بازخورد گرفتن آری؛ تحویلِ متنِ خودِ هوش مصنوعی به‌جای کارِ خودت، نه.</div>
+          </div>
+
+          <div class="role r2">
+            <h4>🛍️ فرد عادی و کاسبِ کوچک</h4>
+            <p class="role-sub">تمرکز روی «برگرداندنِ وقت»</p>
+            <ul>
+              <li>از یک عکسِ محصول، ده‌ها کپشن و تبلیغِ آماده بساز.</li>
+              <li>برای سؤال‌های پرتکرارِ مشتری، پاسخِ آماده و مؤدب بنویس.</li>
+              <li>نامه‌های اداری و فرم‌ها را برایت به فارسیِ ساده ترجمه و توضیح بده.</li>
+            </ul>
+            <div class="red">اینجا نتیجه فوری دیده می‌شود؛ همین انگیزه‌ات را بالا نگه می‌دارد.</div>
+          </div>
+
+          <div class="role r3">
+            <h4>🩺⚙️ متخصص (پزشک/مهندس/وکیل)</h4>
+            <p class="role-sub">بالاترین ارزش، بالاترین ریسک</p>
+            <ul>
+              <li>مرورِ سریعِ مقالات و راهنماها و خلاصهٔ اسنادِ بلند.</li>
+              <li>پیش‌نویسِ گزارش، نامهٔ تخصصی و قرارداد.</li>
+              <li>کمک در محاسبات و کدِ مهندسی.</li>
+            </ul>
+            <div class="red">⚠️ در حوزه‌های دارای مسئولیت قانونی، هوش مصنوعی فقط دستیارِ پیش‌نویس است؛ تصمیم و صحت‌سنجیِ نهایی همیشه با توست.</div>
+          </div>
+
+          <div class="role r4">
+            <h4>🧭 مدیر و صاحب کسب‌وکار</h4>
+            <p class="role-sub">از استفادهٔ شخصی تا اهرمِ سازمانی</p>
+            <ul>
+              <li>تشخیص بده کجای کسب‌وکارت هوش مصنوعی بیشترین بازده را دارد.</li>
+              <li>فرایندهای تکراریِ تیم را خودکار کن (ایستگاه ۵).</li>
+              <li>کارکنانت را هم توانمند کن، نه فقط خودت را.</li>
+            </ul>
+            <div class="red">اصل راهنما: ابزار را با یک نیازِ مشخص جفت کن، نه adopt کردنِ گسترده به امیدِ استفاده.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۵ -->
+    <div class="station peak" id="s5">
+      <div class="num">۵</div>
+      <div class="head"><h3>از «جواب می‌دهد» تا «انجام می‌دهد»</h3><span class="chip">به‌سوی قله ⛰️</span></div>
+      <div class="body">
+        <p>بزرگ‌ترین پرشِ این مسیر همین‌جاست: از هوش مصنوعی‌ای که فقط <em>جواب می‌دهد</em>، به هوش مصنوعی‌ای که <em>کار را انجام می‌دهد</em>. اینها را <strong>اتوماسیون</strong><sup>۳</sup> و <strong>ایجنت</strong><sup>۴</sup> می‌گویند.</p>
+        <div class="scene"><div class="ico">🌙</div><div class="txt">تصور کن شب که می‌خوابی، یک دستیار خودکار به پیام‌های تکراریِ مشتری جواب می‌دهد، سفارش‌ها را در یک فایل مرتب می‌کند و صبح یک خلاصه برایت می‌فرستد.</div></div>
+        <p>اینجا سراغ ابزارهای اتصال‌دهنده مثل <span dir="ltr">n8n</span> و بعد ایجنت‌ها می‌روی. و خبر خوب: این دقیقاً همان قله‌ای است که <strong>ایستگاه‌های بعدیِ مسیر صعودِ گراول</strong> تو را قدم‌به‌قدم به آن می‌رسانند.</p>
+        <div class="box tip"><span class="t">💡 نکته</span>لازم نیست الان بلد باشی. فقط بدان که مقصد کجاست تا مسیر معنا پیدا کند.</div>
+      </div>
+    </div>
+
+    <!-- ایستگاه ۶ -->
+    <div class="station" id="s6">
+      <div class="num">۶</div>
+      <div class="head"><h3>قضاوت و اعتماد (بستنِ حلقه)</h3><span class="chip">همیشه روشن</span></div>
+      <div class="body">
+        <p>هرچه جلوتر بروی، این ایستگاه مهم‌تر می‌شود. سه عادت که هیچ‌وقت کنارشان نمی‌گذاری:</p>
+        <div class="box warn"><span class="t">⚠️ سه مواظبتِ همیشگی</span>
+        ۱) خروجی‌های حساس (پزشکی، حقوقی، مالی) را همیشه با منبعِ معتبر بررسی کن. ۲) داده‌های محرمانهٔ مشتری/بیمار را داخل ابزارهای عمومی نگذار. ۳) یادت باشد هوش مصنوعی «اعتمادبه‌نفسِ کاذب» دارد و می‌تواند اطلاعات یا منبعِ الکی بسازد.</div>
+        <div class="box check"><span class="t">✅ ایست بازرسی</span>از این به بعد، قبل از استفاده از هر خروجیِ مهم، از خودت بپرس: «اگر این اشتباه باشد، چه اتفاقی می‌افتد؟» همین یک سؤال، تو را حرفه‌ای نگه می‌دارد.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== برنامهٔ ۷ روزه ===== -->
+  <section id="week">
+    <h2 class="sec"><span class="em">📅</span> شروع واقعی: برنامهٔ ۷ روزه</h2>
+    <p class="sub">دانستنِ نقشه کافی نیست؛ باید قدم اول را برداری. این هفت روز، تو را از «شنیده‌ام» به «بلدم» می‌رساند — روزی فقط ۱۵ دقیقه.</p>
+    <div class="days">
+      <div class="day"><span class="d">روز ۱</span><br><b>یک دستیار انتخاب کن</b> و هر سؤالِ امروزت را از او بپرس.</div>
+      <div class="day"><span class="d">روز ۲</span><br><b>قالب طلایی پرامپت را تمرین کن:</b> سه درخواستِ ضعیف را بازنویسی کن.</div>
+      <div class="day"><span class="d">روز ۳</span><br><b>یک کارِ نوشتاریِ واقعی</b> (ایمیل، پیام، توضیح محصول) را کامل با هوش مصنوعی انجام بده.</div>
+      <div class="day"><span class="d">روز ۴</span><br><b>یک متنِ بلند</b> (مقاله، جزوه، قرارداد) را خلاصه بگیر و ازش سؤال بپرس.</div>
+      <div class="day"><span class="d">روز ۵</span><br><b>یک ابزارِ تخصصیِ کارت</b> را امتحان کن (تحقیق، تصویر یا صدا).</div>
+      <div class="day"><span class="d">روز ۶</span><br><b>نقشِ خودت را در ایستگاه ۴ پیدا کن</b> و یک کارِ تکراریِ واقعی را واگذار کن.</div>
+      <div class="day"><span class="d">روز ۷</span><br><b>یک اشتباهِ عمدی پیدا کن:</b> از هوش مصنوعی یک واقعیت بپرس و منبعش را چک کن تا حسِ «قضاوت» در تو جا بیفتد.</div>
+    </div>
+    <div class="box note"><span class="t">🏔️ بعدش چه؟</span>بعد از این هفت روز، آمادهٔ اولین ایستگاهِ عملیِ مسیر صعود هستی. بریم سراغش:</div>
+  </section>
+
+  <!-- ===== ایستگاه بعدی ===== -->
+  <section id="next" class="next">
+    <h2>ایستگاه بعدی روی مسیر صعود</h2>
+    <p class="n-sub">حالا که نقشه را داری، از دامنه به سمت قله حرکت کن. هر ایستگاه یک آموزش کامل در گراول است:</p>
+    <div class="path">
+      <a class="step-link" href="../tutorials/install-python-node-vscode-tutorial(1).html">
+        <div class="o">۱</div>
+        <div class="l"><b>نصب پایتون، Node.js و VS Code</b><span>ابزارهای پایه را روی سیستمت آماده کن.</span></div>
+      </a>
+      <a class="step-link" href="../tutorials/python-1hour-vibe-coding-tutorial.html">
+        <div class="o">۲</div>
+        <div class="l"><b>پایتون از صفر برای وایب‌کدینگ</b><span>با کمک هوش مصنوعی، اولین برنامه‌ات را بنویس.</span></div>
+      </a>
+      <a class="step-link" href="../tutorials/openrouter-crypto-wallet-tutorial.html">
+        <div class="o">۳</div>
+        <div class="l"><b>کیف‌پول کریپتو و OpenRouter</b><span>دسترسی به مدل‌های هوش مصنوعی را باز کن.</span></div>
+      </a>
+      <a class="step-link" href="../tutorials/docker-n8n-antigravity-tutorial.html">
+        <div class="o">۴</div>
+        <div class="l"><b>داکر و n8n</b><span>اولین اتوماسیون‌های واقعی‌ات را بساز.</span></div>
+      </a>
+      <a class="step-link" href="../tutorials/openclaw-tutorial.html">
+        <div class="o peak">۵</div>
+        <div class="l"><b>OpenClaw — قله ⛰️</b><span>ساخت ایجنتی که به‌جای تو کار انجام می‌دهد.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== نکتهٔ دسترسی ===== -->
+  <section>
+    <div class="box warn">
+      <span class="t">🌐 دربارهٔ دسترسی</span>
+      بخشی از ابزارهایی که در این نقشه نام برده شد، برای کاربرانِ داخلِ ایران محدودیتِ دسترسی دارند. این را صادقانه در نظر بگیر و هرجا ممکن است، از جایگزین‌های در دسترس استفاده کن. (این آموزش روشِ دور زدنِ محدودیت‌ها را ارائه نمی‌دهد.)
+    </div>
+  </section>
+
+  <!-- ===== اشتباهات رایج ===== -->
+  <section>
+    <h2 class="sec"><span class="em">🔧</span> اشتباهات رایجِ تازه‌کارها</h2>
+    <div class="box warn"><span class="t">⚠️ «همه‌ی ابزارها را با هم یاد می‌گیرم»</span>نتیجه‌اش خستگی و رهاکردن است. یک ابزار، یک کار، یک هفته. عمق مهم‌تر از تعداد است.</div>
+    <div class="box warn"><span class="t">⚠️ «هرچه گفت درست است»</span>مخصوصاً در اعداد، تاریخ‌ها و ادعاهای علمی/حقوقی، حتماً بررسی کن.</div>
+    <div class="box warn"><span class="t">⚠️ «پرامپتِ کوتاه و مبهم می‌نویسم»</span>جوابِ مبهم می‌گیری. یک جملهٔ زمینه‌ی بیشتر، کیفیت را چند برابر می‌کند.</div>
+    <div class="box warn"><span class="t">⚠️ «تمرین فرضی می‌کنم»</span>روی کارِ واقعیِ خودت تمرین کن؛ فقط این‌طور مهارت در تو می‌ماند.</div>
+  </section>
+
+  <!-- ===== واژه‌نامه ===== -->
+  <section id="glossary">
+    <h2 class="sec"><span class="em">📖</span> واژه‌نامهٔ ساده</h2>
+    <div class="glossary">
+      <dl>
+        <dt>۱. مدل زبانی <span dir="ltr">(LLM)</span></dt>
+        <dd>برنامه‌ای که با خواندنِ حجمِ عظیمی از متن، یاد گرفته زبان را بفهمد و متن تولید کند. قلبِ چت‌بات‌هایی مثل <span dir="ltr">ChatGPT</span> و <span dir="ltr">Claude</span> همین است.</dd>
+        <dt>۲. پرامپت <span dir="ltr">(Prompt)</span></dt>
+        <dd>همان درخواست یا دستوری که تو به هوش مصنوعی می‌دهی. هرچه شفاف‌تر و کامل‌تر، جواب بهتر.</dd>
+        <dt>۳. اتوماسیون <span dir="ltr">(Automation)</span></dt>
+        <dd>خودکارسازیِ کارهای تکراری، تا بدونِ دخالتِ دستیِ تو، خودشان انجام شوند.</dd>
+        <dt>۴. ایجنت <span dir="ltr">(Agent)</span></dt>
+        <dd>هوش مصنوعی‌ای که فقط جواب نمی‌دهد، بلکه چند قدم پشت سر هم برمی‌دارد و کاری را <em>انجام</em> می‌دهد (مثلاً جست‌وجو، تصمیم، و ثبتِ نتیجه).</dd>
+        <dt>مولتی‌مدال <span dir="ltr">(Multimodal)</span></dt>
+        <dd>هوش مصنوعی‌ای که فقط با متن کار نمی‌کند، بلکه تصویر، صدا و ویدئو را هم می‌فهمد و می‌سازد.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== جشن پایانی ===== -->
+  <section class="finish">
+    <h2>🎉 حالا نقشه را داری</h2>
+    <p>دیگر گم نمی‌شوی. می‌دانی از کجا شروع کنی، چه چیزی مهم است، و مقصد کجاست. تنها کاری که مانده، برداشتنِ قدمِ اول است — همین امروز.</p>
+    <div class="recap">
+      <span>🧠 طرز فکر درست</span>
+      <span>💬 اولین دستیار</span>
+      <span>🗝️ مهارت پرامپت</span>
+      <span>🧰 ابزار درست</span>
+      <span>🎯 نقشِ خودت</span>
+      <span>⛰️ مسیر تا قله</span>
+    </div>
+  </section>
+
+  <!-- ===== فوتر گراول ===== -->
+  <div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+<br><span style="font-size:12px;opacity:.8">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</span>
+  </div>
+
+</div>
+
+<script>
+  // نوار پیشرفت اسکرول
+  (function(){
+    var bar = document.querySelector('#progress > i');
+    function update(){
+      var h = document.documentElement;
+      var scrolled = h.scrollTop || document.body.scrollTop;
+      var height = (h.scrollHeight - h.clientHeight) || 1;
+      var pct = Math.min(100, Math.max(0, (scrolled / height) * 100));
+      bar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, {passive:true});
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>
+
+</body>
+</html>
