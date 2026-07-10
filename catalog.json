@@ -1,8 +1,21 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-05T16:48:31+00:00",
+  "generated": "2026-07-10T19:33:28+00:00",
   "tutorials": [
+    {
+      "id": "ai-roadmap-getting-started",
+      "file": "tutorials/ai-roadmap-getting-started-tutorial.html",
+      "emoji": "🧭",
+      "title": "نقشهٔ راه هوش مصنوعی — از کجا شروع کنیم؟ | گراول",
+      "desc": "نقشهٔ راه کامل شروع هوش مصنوعی برای همه — از دانش‌آموز تا مدیر؛ ایستگاه ورودیِ مسیر صعود.",
+      "time": "حدود ۷۵ دقیقه",
+      "level": "مبتدی",
+      "category": "ابزارهای هوش مصنوعی",
+      "order": 0,
+      "added": "2026-07-10",
+      "keywords": "هوش مصنوعی, آموزش هوش مصنوعی, از کجا شروع کنم, نقشه راه AI, یادگیری هوش مصنوعی, ChatGPT, Claude, Gemini, پرامپت, prompt, هوش مصنوعی برای کسب و کار, AI roadmap, learn AI, getting started with AI, هوش مصنوعی برای مبتدی"
+    },
     {
       "id": "install-python-node-vscode(1)",
       "file": "tutorials/install-python-node-vscode-tutorial(1).html",
