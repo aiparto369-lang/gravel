@@ -1,7 +1,7 @@
 {
   "name": "گراول",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-10T19:33:28+00:00",
+  "generated": "2026-07-11T07:51:52+00:00",
   "tutorials": [
     {
       "id": "ai-roadmap-getting-started",
@@ -62,7 +62,7 @@
       "title": "داکر و n8n: خط تولید اتوماسیون هوشمند",
       "desc": "نصب Docker و راه‌اندازی n8n تا کارهای تکراری را به ربات‌های هوشمند بسپاری.",
       "time": "حدود ۹۰ دقیقه",
-      "level": "مبتدی",
+      "level": "متوسط",
       "category": "اتوماسیون",
       "order": 4,
       "added": "2026-07-04",
