@@ -1,453 +1,434 @@
 <!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi | بخشی از گراول (Gravel) -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصال آنتی‌گراویتی گوگل به داکر و n8n — گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="⚙️ اتوماسیون">
+<meta name="gravel:emoji"    content="🐳">
+<meta name="gravel:time"     content="حدود ۹۰ دقیقه">
+<meta name="gravel:level"    content="متوسط">
+<meta name="gravel:desc"     content="از صفر: داکر و n8n را بالا بیاور، کلید API بساز، و آنتی‌گراویتی گوگل را با n8n-MCP به آن وصل کن تا با زبان ساده برایت ورک‌فلو بسازد.">
+<meta name="gravel:keywords" content="n8n, داکر, Docker, آنتی گراویتی, Antigravity, MCP, n8n-mcp, اتوماسیون, هوش مصنوعی, ورک‌فلو, Gemini, وایب کدینگ, self-hosted n8n, host.docker.internal, mcp_config.json">
+<meta name="gravel:order"    content="4">
+
+<!-- کپی‌رایت -->
 <meta name="author" content="Mehdi Rezghi">
-<meta name="copyright" content="© Mehdi Rezghi">
-<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
-<title>آموزش گام‌به‌گام: نصب Docker، راه‌اندازی n8n و اتصال Antigravity</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<meta name="description" content="آموزش گام‌به‌گام اتصال IDE هوش مصنوعی گوگل (Antigravity) به یک نمونهٔ n8n روی داکر با استفاده از سرور n8n-MCP — بخشی از کتابخانهٔ گراول.">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "اتصال آنتی‌گراویتی گوگل به داکر و n8n",
+  "description": "راه‌اندازی n8n روی داکر و اتصال آن به IDE هوش مصنوعی Google Antigravity از طریق سرور n8n-MCP.",
+  "totalTime": "PT90M",
+  "author": { "@type": "Person", "name": "Mehdi Rezghi" },
+  "step": [
+    { "@type": "HowToStep", "name": "نصب Docker Desktop" },
+    { "@type": "HowToStep", "name": "راه‌اندازی n8n در یک کانتینر داکر" },
+    { "@type": "HowToStep", "name": "تکمیل ثبت‌نام اولیهٔ n8n" },
+    { "@type": "HowToStep", "name": "ساخت کلید API در n8n" },
+    { "@type": "HowToStep", "name": "نصب Google Antigravity" },
+    { "@type": "HowToStep", "name": "باز کردن فایل پیکربندی MCP" },
+    { "@type": "HowToStep", "name": "افزودن سرور n8n-MCP" },
+    { "@type": "HowToStep", "name": "رفرش و تأیید اتصال" },
+    { "@type": "HowToStep", "name": "اولین تست واقعی" }
+  ]
+}
+</script>
+
 <style>
 :root{
-  --blue:#1e3a8a; --blue2:#2563eb; --sky:#e0f2fe;
-  --orange:#f59e0b; --orange-soft:#fff7e6;
-  --green:#16a34a; --green-soft:#ecfdf5;
-  --red:#dc2626; --red-soft:#fef2f2;
-  --purple:#7c3aed; --purple-soft:#f5f3ff;
-  --ink:#1f2937; --muted:#6b7280;
-  --card:#ffffff; --bg:#f4f7fb; --line:#dbe4f0;
-  --code-bg:#0f172a; --code-ink:#e2e8f0;
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --navy:#123B4A;
+  --card:#ffffff;
+  --soft:#E6F0F0;
+  --line:rgba(18,59,74,.12);
+  --code-bg:#0f2b34;
+  --code-ink:#e8f4f4;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
-  font-size:17.5px; line-height:1.95;
-  direction:rtl; text-align:right;
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  direction:rtl;
+  text-align:right;
+  line-height:1.95;
+  font-size:17.5px;
 }
-.wrap{max-width:940px; margin-inline:auto; padding-inline:18px; padding-block-end:60px}
 
-/* ---------- Hero ---------- */
+/* نوار پیشرفت بالای صفحه */
+#progressWrap{position:fixed;inset-block-start:0;inset-inline:0;height:6px;background:transparent;z-index:999}
+#progressBar{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--saffron));transition:width .12s ease}
+
+.wrap{max-width:900px;margin-inline:auto;padding:0 18px 60px}
+
+/* هدر قهرمانی */
 .hero{
-  background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#7c3aed 100%);
-  color:#fff; padding-block:44px 54px; padding-inline:18px;
-  border-end-start-radius:34px; border-end-end-radius:34px;
-  text-align:center;
+  background:linear-gradient(135deg,var(--navy),var(--teal));
+  color:#fff;border-radius:0 0 26px 26px;
+  padding:46px 26px 34px;margin-block-end:26px;position:relative;overflow:hidden;
 }
-.hero .big-emoji{font-size:56px; line-height:1}
-.hero h1{font-size:clamp(22px,4.2vw,34px); font-weight:900; margin-block:12px 8px}
-.hero p.promise{font-size:18px; opacity:.95; max-width:720px; margin-inline:auto}
-.hero .chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-block-start:16px}
-.hero .chip{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:4px 14px; font-size:14px}
+.hero::after{content:"⛰️";position:absolute;font-size:150px;opacity:.10;inset-block-end:-30px;inset-inline-start:-10px;transform:rotate(-8deg)}
+.hero .kicker{display:inline-block;background:rgba(255,255,255,.16);padding:4px 14px;border-radius:999px;font-size:13px;font-weight:700;margin-block-end:14px}
+.hero h1{margin:0 0 10px;font-size:29px;font-weight:900;line-height:1.5}
+.hero .slogan{font-size:15px;opacity:.92;font-weight:500;border-inline-start:3px solid var(--saffron);padding-inline-start:12px;margin-block-start:14px}
+.hero .chips{margin-block-start:18px;display:flex;flex-wrap:wrap;gap:8px}
+.hero .chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:999px;font-size:13px;font-weight:700}
 
-/* ---------- TOC ---------- */
-.toc{
-  background:var(--card); border:1px solid var(--line); border-radius:20px;
-  padding:20px 24px; margin-block-start:-30px; box-shadow:0 8px 24px rgba(30,58,138,.10);
-}
-.toc h2{margin:0 0 8px; font-size:19px; color:var(--blue)}
-.toc ol{margin:0; padding-inline-start:22px}
-.toc a{color:var(--blue2); text-decoration:none; font-weight:700}
+.promise{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-block-end:22px;box-shadow:0 6px 20px rgba(18,59,74,.05)}
+.promise h2{margin:0 0 8px;font-size:19px;color:var(--teal)}
+.promise ul{margin:8px 0 0;padding-inline-start:22px}
+.promise li{margin-block-end:6px}
+
+/* جعبه‌ها */
+.box{border-radius:16px;padding:16px 18px;margin:18px 0;border:1px solid var(--line)}
+.box .box-title{font-weight:900;margin-block-end:6px;display:flex;align-items:center;gap:8px}
+.box.assume{background:#eef6f6;border-color:#cfe6e6}
+.box.tip{background:#fff8e9;border-color:#f2dca0}
+.box.warn{background:#fdeee7;border-color:#f3c3ae}
+.box.check{background:#eaf7ef;border-color:#bce3c9}
+.box.note{background:#eef1f6;border-color:#cdd6e6}
+.box.foot{background:#f4f2ee;border-color:#ded7c9;font-size:15.5px}
+
+/* فهرست */
+.toc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 22px;margin-block-end:26px}
+.toc h2{margin:0 0 10px;font-size:18px;color:var(--navy)}
+.toc ol{margin:0;padding-inline-start:22px}
+.toc a{color:var(--teal);text-decoration:none;font-weight:500}
 .toc a:hover{text-decoration:underline}
-.toc li{margin-block:4px}
+.toc li{margin-block-end:5px}
 
-/* ---------- Sections & step cards ---------- */
-section{margin-block-start:38px}
-h2.stage-title{font-size:24px; font-weight:900; color:var(--blue); display:flex; align-items:center; gap:10px; margin-block-end:6px}
-.progress{
-  display:inline-block; background:var(--sky); color:var(--blue);
-  border-radius:999px; padding:2px 14px; font-size:13.5px; font-weight:700; margin-block-end:10px;
-}
-.bar{height:9px; background:#dbeafe; border-radius:99px; overflow:hidden; margin-block-end:16px}
-.bar>span{display:block; height:100%; background:linear-gradient(90deg,var(--blue2),var(--purple)); border-radius:99px}
+/* کارت مرحله */
+.stage{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 22px 18px;margin:26px 0;box-shadow:0 6px 22px rgba(18,59,74,.06);position:relative}
+.stage-head{display:flex;align-items:center;gap:14px;margin-block-end:8px;flex-wrap:wrap}
+.badge{min-width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--teal),var(--navy));color:#fff;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stage-head h3{margin:0;font-size:21px;font-weight:900;flex:1;min-width:200px}
+.time-chip{background:var(--soft);color:var(--navy);font-size:12.5px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.step-count{font-size:12.5px;color:var(--teal);font-weight:700;margin-block-end:12px}
+.stage p{margin:10px 0}
 
-.card{
-  background:var(--card); border:1px solid var(--line); border-radius:18px;
-  padding:18px 20px; margin-block-end:14px; box-shadow:0 3px 10px rgba(15,23,42,.05);
-  position:relative;
-}
-.stepnum{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-width:40px; height:40px; border-radius:12px; background:var(--blue2); color:#fff;
-  font-weight:900; font-size:19px; margin-inline-end:10px; vertical-align:middle;
-  box-shadow:0 3px 8px rgba(37,99,235,.35);
-}
-.card h3{display:inline; font-size:18.5px; font-weight:800; vertical-align:middle}
-.card .body{margin-block-start:10px}
+/* گام کوچک شماره‌دار */
+.mini{counter-reset:mini;list-style:none;margin:12px 0;padding:0}
+.mini>li{position:relative;padding:10px 44px 10px 4px;margin-block-end:8px;background:#f7fbfb;border:1px solid var(--line);border-radius:12px}
+.mini>li::before{counter-increment:mini;content:counter(mini);position:absolute;inset-inline-start:10px;inset-block-start:10px;width:26px;height:26px;background:var(--saffron);color:#3a2a00;border-radius:50%;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
 
-/* ---------- Code ---------- */
-pre{
-  direction:ltr; text-align:left;
-  background:var(--code-bg); color:var(--code-ink);
-  font-family:'Consolas','Courier New',monospace; font-size:15px; line-height:1.7;
-  border-radius:12px; padding:14px 16px; overflow-x:auto; margin-block:10px;
-  border-inline-start:5px solid var(--purple);
-}
-code[dir="ltr"], span[dir="ltr"].t{
-  direction:ltr; unicode-bidi:isolate; display:inline-block;
-  background:#eef2ff; color:#3730a3; border-radius:6px; padding:0 6px;
-  font-family:'Consolas',monospace; font-size:.92em;
-}
-pre code{background:transparent; color:inherit; padding:0}
+/* کد */
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px 16px;overflow-x:auto;direction:ltr;text-align:left;font-family:'Consolas','Courier New',monospace;font-size:14px;line-height:1.7;border:1px solid rgba(255,255,255,.08)}
+pre .cmt{color:#7fb8b8}
+code{background:#e4eeee;color:var(--navy);padding:2px 7px;border-radius:6px;font-family:'Consolas','Courier New',monospace;font-size:14px;direction:ltr;display:inline-block}
+.kbd{background:#fff;border:1px solid #bcc;border-block-end-width:2px;border-radius:6px;padding:1px 8px;font-family:'Consolas',monospace;font-size:13px;color:var(--navy);direction:ltr;display:inline-block}
 
-/* ---------- Boxes ---------- */
-.box{border-radius:14px; padding:12px 16px; margin-block:12px; border:1px solid; font-size:16.5px}
-.tip{background:var(--sky); border-color:#bae6fd}
-.tip b.lbl{color:var(--blue2)}
-.warn{background:var(--orange-soft); border-color:#fde68a}
-.warn b.lbl{color:#b45309}
-.why{background:var(--purple-soft); border-color:#ddd6fe}
-.why b.lbl{color:var(--purple)}
-.foot{background:#f8fafc; border-color:var(--line); font-size:15.5px; color:#374151}
-.foot b.lbl{color:var(--muted)}
-.check{background:var(--green-soft); border-color:#a7f3d0}
-.check b.lbl{color:var(--green)}
-.fix{background:var(--red-soft); border-color:#fecaca}
-.fix b.lbl{color:var(--red)}
+/* جدول رفع اشکال */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;background:var(--card);border-radius:12px;overflow:hidden}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:right;vertical-align:top}
+th{background:var(--navy);color:#fff;font-weight:700}
+tr:nth-child(even) td{background:#f7fbfb}
 
-/* ---------- Diagram ---------- */
-.diagram{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px;
-  background:var(--card); border:1px dashed var(--blue2); border-radius:16px; padding:16px; margin-block:14px;
-}
-.dbox{background:var(--sky); border:2px solid var(--blue2); color:var(--blue); border-radius:12px; padding:8px 14px; font-weight:800; font-size:15px; text-align:center}
-.dbox small{display:block; font-weight:400; color:#334155; font-size:12.5px}
-.darrow{font-size:22px; color:var(--purple); font-weight:900}
+/* دیاگرام جریان */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;justify-content:center;margin:18px 0}
+.flow .node{background:var(--card);border:2px solid var(--teal);border-radius:14px;padding:12px 14px;text-align:center;font-weight:700;font-size:14px;min-width:120px;flex:1}
+.flow .node small{display:block;font-weight:500;opacity:.75;font-size:12px;margin-block-start:3px}
+.flow .arrow{display:flex;align-items:center;font-size:22px;color:var(--saffron);font-weight:900}
 
-table{width:100%; border-collapse:collapse; margin-block:10px; font-size:15.5px}
-th,td{border:1px solid var(--line); padding:8px 10px; text-align:right; vertical-align:top}
-th{background:var(--sky); color:var(--blue)}
+.celebrate{background:linear-gradient(135deg,var(--saffron),#f6c65a);color:#3a2a00;border-radius:20px;padding:26px;margin:30px 0 10px;text-align:center}
+.celebrate h2{margin:0 0 10px;font-size:24px}
+.next{background:var(--card);border:1px dashed var(--teal);border-radius:16px;padding:18px 20px;margin:20px 0}
+.next h3{margin:0 0 8px;color:var(--teal)}
 
-.finale{
-  background:linear-gradient(135deg,#16a34a,#059669); color:#fff; border-radius:22px;
-  padding:26px; text-align:center; margin-block-start:40px;
-}
-.finale h2{margin:0 0 8px; font-size:26px}
-.finale ul{text-align:right; max-width:640px; margin-inline:auto}
-footer{margin-block-start:34px; text-align:center; color:var(--muted); font-size:13px}
-footer .sig{opacity:.65; font-size:12.5px}
+h2.sec{font-size:23px;margin:36px 0 6px;color:var(--navy);border-inline-start:5px solid var(--saffron);padding-inline-start:12px}
+
+.gravel-footer{margin-block-start:40px}
+a{color:var(--teal)}
+sup{color:var(--saffron);font-weight:900;cursor:default}
+
 @media (max-width:700px){
   body{font-size:16.5px}
-  .diagram{flex-direction:column}
-  .darrow{transform:rotate(90deg)}
+  .hero h1{font-size:23px}
+  .wrap{padding:0 12px 50px}
+  .flow{flex-direction:column}
+  .flow .arrow{transform:rotate(90deg)}
 }
 </style>
-<link rel="canonical" href="https://aiparto369-lang.github.io/gravel/tutorials/docker-n8n-antigravity-tutorial.html">
 </head>
 <body>
 
+<div id="progressWrap"><div id="progressBar"></div></div>
+
 <div class="hero">
-  <div class="big-emoji">🐳🤖⚡</div>
-  <h1>نصب Docker، راه‌اندازی n8n و اتصال هوش مصنوعی Antigravity</h1>
-  <p class="promise">قراره چی یاد بگیریم؟ از صفر مطلق: اول <span dir="ltr" class="t">Docker</span> را با پاورشل نصب می‌کنیم، بعد برنامهٔ اتوماسیون <span dir="ltr" class="t">n8n</span> را داخل یک «کانتینر» با تنظیمات استاندارد روشن می‌کنیم، و در آخر هوش مصنوعی <span dir="ltr" class="t">Antigravity</span> گوگل را طوری وصل می‌کنیم که خودش به‌صورت خودکار برایمان ورک‌فلو بسازد! 🎯</p>
+  <span class="kicker">⚙️ اتوماسیون · ایستگاه ۴ از مسیر صعود</span>
+  <h1>آنتی‌گراویتی گوگل را به داکر و n8n وصل کن 🐳🔗🤖</h1>
+  <div>یک IDE هوش مصنوعی که خودش برایت ورک‌فلوهای اتوماسیون می‌سازد و می‌آزماید.</div>
+  <div class="slogan">«برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»</div>
   <div class="chips">
-    <span class="chip">💻 ویندوز ۱۰ یا ۱۱</span>
-    <span class="chip">⌨️ فقط با PowerShell</span>
-    <span class="chip">🕒 حدود ۶۰ تا ۹۰ دقیقه</span>
-    <span class="chip">🧒 برای مبتدیِ مبتدی</span>
+    <span class="chip">🕒 حدود ۹۰ دقیقه</span>
+    <span class="chip">🎯 سطح: متوسط</span>
+    <span class="chip">🧩 از صفرِ صفر</span>
   </div>
 </div>
 
 <div class="wrap">
 
-<nav class="toc" id="toc">
-  <h2>🗺️ فهرست مراحل</h2>
-  <ol>
-    <li><a href="#pre">پیش‌نیازها — چی لازم داریم؟</a></li>
-    <li><a href="#concepts">مفهوم‌ها به زبان ساده (داکر، کانتینر، n8n، MCP)</a></li>
-    <li><a href="#s1">مرحله ۱: آماده‌سازی ویندوز و روشن‌کردن WSL2</a></li>
-    <li><a href="#s2">مرحله ۲: نصب Docker Desktop با پاورشل</a></li>
-    <li><a href="#s3">مرحله ۳: راه‌اندازی کانتینر n8n با تنظیمات استاندارد</a></li>
-    <li><a href="#s4">مرحله ۴: ساخت حساب کاربری در n8n</a></li>
-    <li><a href="#s5">مرحله ۵: ساخت کلید API در n8n</a></li>
-    <li><a href="#s6">مرحله ۶: نصب Antigravity</a></li>
-    <li><a href="#s7">مرحله ۷: داکرایزکردن n8n-MCP و اتصال به Antigravity</a></li>
-    <li><a href="#s8">مرحله ۸: فایل AGENTS.md و ساخت خودکار اولین ورک‌فلو + کردنشیال‌ها</a></li>
-    <li><a href="#trouble">🔧 رفع اشکال — اگر گیر کردی اینجا را بخوان</a></li>
-  </ol>
-</nav>
+  <div class="promise">
+    <h2>🎯 قرار است چه کار کنیم؟</h2>
+    <p>در پایان این آموزش، یک دستیارِ هوش مصنوعی خواهی داشت که می‌توانی به فارسیِ ساده به آن بگویی «یک ورک‌فلو بساز که هر صبح ایمیل‌های مهم را خلاصه کند» و او واقعاً داخل n8n تو آن را بسازد و بررسی کند. برای این کار سه قطعه را کنار هم می‌گذاریم:</p>
+    <ul>
+      <li>🐳 <b>Docker</b> — تا n8n را تمیز و بی‌دردسر روی کامپیوترت اجرا کنیم.</li>
+      <li>🔧 <b>n8n</b> — کارخانهٔ اتوماسیونِ خودت، روی همان کامپیوتر.</li>
+      <li>🤖 <b>Google Antigravity</b> — ویرایشگرِ هوشمند گوگل که با پلِ <span dir="ltr">n8n-MCP</span> به n8n تو وصل می‌شود.</li>
+    </ul>
+  </div>
 
-<!-- ================= PREREQ ================= -->
-<section id="pre">
-  <h2 class="stage-title">🎒 پیش‌نیازها — قبل از شروع چی لازم داریم؟</h2>
-  <div class="card">
-    <div class="body">
-      <table>
-        <tr><th>چی لازم داریم؟</th><th>چطور بفهمم دارمش؟</th></tr>
-        <tr><td>💻 کامپیوتر با <b>ویندوز ۱۰ (نسخهٔ جدید) یا ویندوز ۱۱</b> — نسخهٔ ۶۴ بیتی</td><td>دکمهٔ ⊞ ویندوز را بزن، بنویس <span dir="ltr" class="t">winver</span> و Enter بزن؛ پنجره‌ای باز می‌شود که نسخه را نشان می‌دهد.</td></tr>
-        <tr><td>🔑 دسترسی «مدیر سیستم» (Administrator)</td><td>اگر کامپیوتر مال خودت یا خانواده است، معمولاً داری. موقع نصب اگر پنجرهٔ آبی «آیا اجازه می‌دهید؟» آمد، یعنی داری — روی <b>Yes</b> بزن.</td></tr>
-        <tr><td>🌐 اینترنت نسبتاً خوب</td><td>باید چند فایل بزرگ (حدود ۱ تا ۲ گیگابایت) دانلود کنیم.</td></tr>
-        <tr><td>💾 حداقل ۱۰ گیگابایت فضای خالی روی درایو <span dir="ltr" class="t">C:</span></td><td>در <span dir="ltr" class="t">This PC</span> زیر درایو C نوشته چقدر خالی است.</td></tr>
-        <tr><td>🧠 هیچ دانش قبلی!</td><td>فقط بلد باش تایپ کنی و کپی/پیست کنی (<span dir="ltr" class="t">Ctrl+C</span> و <span dir="ltr" class="t">Ctrl+V</span>).</td></tr>
-      </table>
+  <div class="box assume">
+    <div class="box-title">📌 فرض‌های این آموزش</div>
+    فرض کرده‌ایم روی یک کامپیوتر ویندوز، مک یا لینوکس هستی، اینترنت پایدار داری، و یک حساب گوگل (Gmail) در اختیارت هست. هیچ دانش قبلی دربارهٔ داکر یا n8n لازم نیست؛ همه‌چیز را از پایه توضیح می‌دهیم. اگر تازه‌کاری، بهتر است ایستگاه‌های ۱ تا ۳ مسیر صعود را قبلاً دیده باشی، اما اجباری نیست.
+  </div>
+
+  <div class="box warn">
+    <div class="box-title">⚠️ دربارهٔ دسترسی از داخل ایران</div>
+    برای نصب و ورود به <span dir="ltr">Google Antigravity</span> باید با حساب گوگل وارد شوی و این سرویس به شبکهٔ گوگل وصل است؛ ممکن است دسترسی به آن و به بعضی از این دانلودها از داخل ایران با محدودیت روبه‌رو باشد. این آموزش صرفاً مراحل فنیِ اتصال را توضیح می‌دهد و راهکاری برای دور زدن محدودیت‌ها ارائه نمی‌کند.
+  </div>
+
+  <!-- فهرست -->
+  <div class="toc">
+    <h2>🗺️ نقشهٔ مسیر</h2>
+    <ol>
+      <li><a href="#concepts">این کلمه‌ها یعنی چه؟ (داکر، کانتینر، n8n، API، MCP، آنتی‌گراویتی)</a></li>
+      <li><a href="#prereq">پیش‌نیازها و یک نگاه به کل نقشه</a></li>
+      <li><a href="#s1">مرحله ۱ — نصب Docker Desktop</a></li>
+      <li><a href="#s2">مرحله ۲ — راه‌اندازی n8n در یک کانتینر</a></li>
+      <li><a href="#s3">مرحله ۳ — تکمیل ثبت‌نام اولیهٔ n8n</a></li>
+      <li><a href="#s4">مرحله ۴ — ساخت کلید API در n8n</a></li>
+      <li><a href="#s5">مرحله ۵ — نصب Google Antigravity</a></li>
+      <li><a href="#s6">مرحله ۶ — باز کردن فایل پیکربندی MCP</a></li>
+      <li><a href="#s7">مرحله ۷ — افزودن سرور n8n-MCP و کلید</a></li>
+      <li><a href="#s8">مرحله ۸ — رفرش و تأیید اتصال</a></li>
+      <li><a href="#s9">مرحله ۹ — اولین تست واقعی</a></li>
+      <li><a href="#trouble">🔧 رفع اشکال</a></li>
+      <li><a href="#glossary">📖 واژه‌نامه</a></li>
+      <li><a href="#next">🎉 پایان و مرحلهٔ بعد</a></li>
+    </ol>
+  </div>
+
+  <!-- مفاهیم -->
+  <h2 class="sec" id="concepts">این کلمه‌ها یعنی چه؟</h2>
+  <p>قبل از این‌که دست به کار شویم، بیایید چند اصطلاح را با یک تشبیه ساده جا بیندازیم. اگر همین‌ها را بفهمی، بقیهٔ راه خیلی روان می‌شود.</p>
+
+  <div class="box foot">
+    <div class="box-title">📖 <span dir="ltr">Docker</span> و «کانتینر» چیست؟</div>
+    یک <b>کانتینر</b><sup>۱</sup> را مثل یک «ظرفِ غذای دربسته و آماده» تصور کن: نرم‌افزار به‌همراه هرچه لازم دارد داخل این ظرف بسته‌بندی می‌شود، پس روی هر کامپیوتری یک‌جور اجرا می‌شود و کامپیوترت را شلوغ نمی‌کند. <b>Docker</b> همان «آشپزخانه و قفسه‌ای» است که این ظرف‌ها را می‌سازد و اجرا می‌کند. ما n8n را داخل یکی از این ظرف‌ها اجرا می‌کنیم تا نصب و پاک‌کردنش تمیز باشد.
+  </div>
+
+  <div class="box foot">
+    <div class="box-title">📖 <span dir="ltr">n8n</span> چیست؟</div>
+    <b>n8n</b> (بخوان: «اِن‌اِیت‌اِن») یک ابزار اتوماسیون است؛ مثل یک <b>تابلوی سیم‌کشی بلوکی</b> که در آن جعبه‌ها را با سیم به هم وصل می‌کنی تا کارها خودکار انجام شوند: «وقتی ایمیلی رسید ← خلاصه‌اش کن ← در تلگرام بفرست». هر جعبه یک «نُود»<sup>۲</sup> است.
+  </div>
+
+  <div class="box foot">
+    <div class="box-title">📖 «کلید API»<sup>۳</sup> چیست؟</div>
+    یک رشتهٔ رمزیِ مخصوص که مثل <b>کلید خانه</b> است: هر برنامه‌ای این کلید را داشته باشد، اجازه دارد از طرف تو با n8n کار کند. ما یک کلید می‌سازیم و آن را به آنتی‌گراویتی می‌دهیم. چون این کلید مثل رمز عبور است، آن را جایی عمومی منتشر نکن.
+  </div>
+
+  <div class="box foot">
+    <div class="box-title">📖 <span dir="ltr">MCP</span> و <span dir="ltr">n8n-MCP</span> چیست؟</div>
+    <b>MCP</b><sup>۴</sup> یک «زبانِ مشترکِ استاندارد» است تا هوش مصنوعی بتواند با ابزارهای بیرونی حرف بزند — مثل یک <b>درگاه USB-C برای هوش مصنوعی</b> که همه‌چیز را به هم وصل می‌کند. <b>n8n-MCP</b> هم یک قطعهٔ آمادهٔ کوچک است که مثلِ یک «مترجمِ متخصصِ n8n» عمل می‌کند: به هوش مصنوعی یاد می‌دهد که نُودهای n8n را بشناسد و برایت ورک‌فلو بسازد و اعتبارسنجی کند.
+  </div>
+
+  <div class="box foot">
+    <div class="box-title">📖 <span dir="ltr">Google Antigravity</span> چیست؟</div>
+    یک ویرایشگر کدِ هوشمند از گوگل که ظاهرش شبیه <span dir="ltr">VS Code</span> است، اما یک «عامل»<sup>۵</sup> (agent) دارد که خودش برنامه‌ریزی، کدنویسی و آزمایش می‌کند. با موتور <span dir="ltr">Gemini</span> کار می‌کند و در حال حاضر به‌صورت نسخهٔ پیش‌نمایشِ رایگان با حساب گوگل در دسترس است.
+  </div>
+
+  <div class="box note">
+    <div class="box-title">🧭 کل نقشه در یک نگاه</div>
+    <div class="flow">
+      <div class="node">🤖 Antigravity<small>عاملِ هوش مصنوعی</small></div>
+      <div class="arrow">←</div>
+      <div class="node">🔌 n8n-MCP<small>مترجم (در داکر)</small></div>
+      <div class="arrow">←</div>
+      <div class="node">🔧 n8n<small>کارخانهٔ اتوماسیون (در داکر)</small></div>
     </div>
-  </div>
-  <div class="box warn"><b class="lbl">⚠️ مواظب باش:</b> در این آموزش فرض کردیم ویندوز داری. اگر مک یا لینوکس داری، دستورها کمی فرق می‌کنند و این آموزش برایت مناسب نیست.</div>
-</section>
-
-<!-- ================= CONCEPTS ================= -->
-<section id="concepts">
-  <h2 class="stage-title">🧠 اول بفهمیم داریم چی می‌سازیم (به زبان ساده)</h2>
-
-  <div class="card">
-    <div class="body">
-      <p><b>🍱 داکر (Docker) چیست؟</b> فکر کن هر برنامه یک «غذا» است که کلی ظرف و قابلمه و مواد لازم دارد. اگر همهٔ برنامه‌ها را مستقیم روی ویندوز نصب کنی، آشپزخانه‌ات شلوغ و به‌هم‌ریخته می‌شود. داکر مثل <b>ظرف‌های یک‌بارمصرفِ دربسته</b> است: هر برنامه با همهٔ وسایلش داخل یک جعبهٔ جدا زندگی می‌کند. به هر جعبه می‌گوییم <b>کانتینر</b>.</p>
-      <p><b>⚡ n8n چیست؟</b> یک برنامهٔ «اتوماسیون» است؛ یعنی ربات‌ساز! مثلاً می‌توانی بگویی: «هر وقت ایمیل جدید آمد، خلاصه‌اش را در تلگرام بفرست». به این زنجیرهٔ کارها می‌گوییم <b>ورک‌فلو</b> (Workflow) یعنی «جریان کار».</p>
-      <p><b>🤖 Antigravity چیست؟</b> یک برنامهٔ هوش مصنوعی از گوگل است (شبیه یک ویرایشگر کد باهوش). ما به آن یاد می‌دهیم که خودش داخل n8n برود و ورک‌فلوها را <b>به جای ما و به‌صورت خودکار</b> بسازد.</p>
-      <p><b>🌉 n8n-MCP چیست؟</b> پلی است بین هوش مصنوعی و n8n. مثل یک <b>مترجم</b> که حرف‌های Antigravity را به زبان n8n ترجمه می‌کند. ما این پل را هم داخل داکر (داکرایز‌شده) اجرا می‌کنیم.</p>
-
-      <div class="diagram">
-        <div class="dbox">🤖 Antigravity<small>هوش مصنوعی گوگل</small></div>
-        <div class="darrow">⟵</div>
-        <div class="dbox">🌉 n8n-MCP<small>کانتینر داکر (پل/مترجم)</small></div>
-        <div class="darrow">⟵</div>
-        <div class="dbox">⚡ n8n<small>کانتینر داکر (ربات‌ساز)</small></div>
-        <div class="darrow">⟵</div>
-        <div class="dbox">🌍 سرویس‌ها<small>تلگرام، ایمیل، گوگل‌شیت…</small></div>
-      </div>
-    </div>
+    آنتی‌گراویتی با «مترجمِ» n8n-MCP حرف می‌زند، و آن مترجم از طریق کلید API با نمونهٔ n8n تو کار می‌کند. هر دو قطعهٔ داکری روی همان کامپیوتر تو اجرا می‌شوند.
   </div>
 
-  <div class="box foot"><b class="lbl">📖 پاورقی ۱ — چند کلمهٔ سخت:</b><br>
-  • <b>پاورشل (PowerShell):</b> پنجرهٔ آبی/مشکی‌رنگی در ویندوز که به جای کلیک‌کردن، با <b>تایپ‌کردن دستور</b> به کامپیوتر فرمان می‌دهی.<br>
-  • <b>کانتینر (Container):</b> جعبهٔ دربسته‌ای که یک برنامه با همهٔ نیازهایش داخل آن اجرا می‌شود.<br>
-  • <b>ایمیج (Image):</b> «دستور پختِ» کانتینر؛ فایل آماده‌ای که داکر از روی آن کانتینر می‌سازد.<br>
-  • <b>API:</b> دری مخصوص برنامه‌ها؛ راهی که یک برنامه بدون کلیک‌کردن با برنامهٔ دیگر حرف می‌زند.<br>
-  • <b>کردنشیال (Credential):</b> «کلید ورود» به یک سرویس — مثل نام کاربری/رمز یا کلید مخصوص؛ n8n با آن به حساب‌هایت وصل می‌شود.</div>
-</section>
-
-<!-- ================= STAGE 1 ================= -->
-<section id="s1">
-  <span class="progress">مرحله ۱ از ۸</span>
-  <h2 class="stage-title">🧰 مرحله ۱: آماده‌سازی ویندوز و روشن‌کردن WSL2</h2>
-  <div class="bar"><span style="width:12%"></span></div>
-
-  <div class="box why"><b class="lbl">🤔 چرا؟</b> داکر روی ویندوز برای کارکردن به چیزی به اسم <span dir="ltr" class="t">WSL2</span> نیاز دارد — یعنی «لینوکسِ کوچکِ داخل ویندوز». مثل این است که داخل خانه‌ات یک اتاق مخصوص برای مهمان خارجی بسازی!</div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>پاورشل را «به‌عنوان مدیر» باز کن</h3>
-    <div class="body">
-      <p>روی دکمهٔ ⊞ (استارت) <b>کلیک راست</b> کن. از منویی که باز می‌شود، گزینه‌ای شبیه <b><span dir="ltr" class="t">Terminal (Admin)</span></b> یا <b><span dir="ltr" class="t">Windows PowerShell (Admin)</span></b> را انتخاب کن.</p>
-      <div class="box tip"><b class="lbl">💡 نکته:</b> اگر پنجرهٔ آبی پرسید «Do you want to allow…»، روی <b>Yes</b> بزن. حالا یک پنجرهٔ تایپ‌کردن داری — از این به بعد اسمش را می‌گذاریم «پاورشلِ مدیر».</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="stepnum">۲</span><h3>این دستور را کپی کن و در پاورشل پیست کن</h3>
-    <div class="body">
-      <pre><code>wsl --install --no-distribution</code></pre>
-      <p>بعد از پیست‌کردن، دکمهٔ <b>Enter</b> را بزن و صبر کن تا کارش تمام شود.</p>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۲:</b> برای پیست‌کردن در پاورشل کافی است <b>کلیک راست</b> کنی یا <span dir="ltr" class="t">Ctrl+V</span> بزنی. علامت <span dir="ltr" class="t">--no-distribution</span> یعنی «فقط موتور WSL را نصب کن، لینوکس کامل لازم نداریم».</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="stepnum">۳</span><h3>کامپیوتر را ری‌استارت کن</h3>
-    <div class="body"><p>یک بار کامپیوتر را خاموش/روشن (Restart) کن تا تغییرها اعمال شود. بعد دوباره برگرد به همین آموزش. 😊</p></div>
-  </div>
-
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> پاورشل معمولی را باز کن و بنویس <span dir="ltr" class="t">wsl --status</span> و Enter بزن. اگر متنی دربارهٔ نسخه (Version: 2) یا وضعیت WSL دیدی، آفرین! اگر خطای «شناخته نشد» دیدی، برو به بخش <a href="#trouble">رفع اشکال</a>.</div>
-</section>
-
-<!-- ================= STAGE 2 ================= -->
-<section id="s2">
-  <span class="progress">مرحله ۲ از ۸</span>
-  <h2 class="stage-title">🐳 مرحله ۲: نصب Docker Desktop با پاورشل</h2>
-  <div class="bar"><span style="width:25%"></span></div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>در پاورشلِ مدیر، این دستور نصب را اجرا کن</h3>
-    <div class="body">
-      <pre><code>winget install -e --id Docker.DockerDesktop</code></pre>
-      <p>حالا Enter بزن. اگر سوالی دربارهٔ قبول‌کردن قوانین پرسید، حرف <span dir="ltr" class="t">Y</span> را تایپ کن و Enter بزن. دانلود بزرگ است — چند دقیقه صبور باش. ☕</p>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۳:</b> <span dir="ltr" class="t">winget</span> «فروشگاه دستوریِ» ویندوز است؛ به جای رفتن به سایت و دانلود دستی، با یک خط دستور برنامه نصب می‌کند. اگر winget نداشتی، به <a href="#trouble">رفع اشکال</a> نگاه کن.</div>
+  <!-- پیش‌نیازها -->
+  <h2 class="sec" id="prereq">پیش‌نیازها</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۰</div><h3>چه چیزهایی لازم داری</h3></div>
+    <ol class="mini">
+      <li>یک کامپیوتر با ویندوز ۱۰ (۶۴بیتی) به بالا، مکِ ۱۲ (Monterey) به بالا، یا لینوکس نسبتاً جدید.</li>
+      <li>اینترنت پایدار (هم برای دانلود ایمیج‌های داکر، هم چون آنتی‌گراویتی به‌صورت آنلاین کار می‌کند).</li>
+      <li>یک حساب گوگل (Gmail) برای ورود به آنتی‌گراویتی.</li>
+      <li>حدود ۴ تا ۸ گیگابایت رمِ آزاد؛ داکر و n8n سنگین نیستند اما به کمی جا نیاز دارند.</li>
+    </ol>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر این چهار مورد را داری، آماده‌ای. اگر حساب گوگل نداری، اول یک حساب بساز و بعد ادامه بده.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۲</span><h3>یک بار از حساب ویندوزت خارج و دوباره وارد شو (یا ری‌استارت کن)</h3>
-    <div class="body"><p>این کار باعث می‌شود دسترسی‌های داکر کامل شود.</p></div>
-  </div>
-
-  <div class="card">
-    <span class="stepnum">۳</span><h3>برنامهٔ Docker Desktop را باز کن</h3>
-    <div class="body">
-      <p>دکمهٔ ⊞ را بزن، بنویس <span dir="ltr" class="t">Docker Desktop</span> و Enter بزن. اولین بار ممکن است قرارداد استفاده را نشان دهد — قبول کن (Accept). اگر خواست حساب بسازی یا وارد شوی، می‌توانی گزینه‌ای شبیه <b>Skip</b> (ردکردن) را بزنی؛ برای کار ما حساب لازم نیست.</p>
-      <div class="box tip"><b class="lbl">💡 نکته:</b> صبر کن تا در پایین یا گوشهٔ پنجرهٔ داکر، نشانگر وضعیت <b>سبز</b> شود یا بنویسد چیزی شبیه «Engine running» (موتور روشن است). نهنگِ 🐳 کوچکی هم کنار ساعت ویندوز ظاهر می‌شود.</div>
+  <!-- مرحله ۱ -->
+  <h2 class="sec" id="s1">مرحله ۱ — نصب Docker Desktop</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۱</div><h3>داکر را نصب و روشن کن</h3><span class="time-chip">🕒 ~۱۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۱ از ۹</div>
+    <ol class="mini">
+      <li>به نشانی <code dir="ltr">https://www.docker.com/products/docker-desktop/</code> برو.</li>
+      <li>نسخهٔ مناسب سیستم‌عاملت را دانلود کن (Windows / Mac / Linux).</li>
+      <li>فایل نصب را اجرا کن و مراحل نصب را «بعدی، بعدی» جلو ببر. (روی ویندوز ممکن است از تو بخواهد یک قابلیت به نام <span dir="ltr">WSL 2</span><sup>۶</sup> را فعال کنی؛ اگر پرسید، اجازه بده.)</li>
+      <li>بعد از نصب، برنامهٔ <b>Docker Desktop</b> را باز کن و منتظر بمان تا وضعیتش سبز/«<span dir="ltr">running</span>» شود.</li>
+      <li>برای اطمینان، <b>ترمینال</b><sup>۷</sup> را باز کن و این دستور را بنویس و <span class="kbd">Enter</span> بزن:</li>
+    </ol>
+<pre><span class="cmt"># © Gravel — بررسی نصب داکر</span>
+docker --version</pre>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر خطی شبیه <code dir="ltr">Docker version 27.x.x</code> دیدی، داکر نصب و آماده است. اگر پیام «<span dir="ltr">command not found</span>» یا خطای اتصال دیدی، مطمئن شو برنامهٔ Docker Desktop باز و «در حال اجرا» باشد، بعد دوباره امتحان کن.
+    </div>
+    <div class="box tip">
+      <div class="box-title">💡 نکته</div>
+      روی ویندوز و مک، داکر باید مثل یک برنامهٔ معمولی «باز» باشد تا دستورها کار کنند. اگر آن را ببندی، کانتینرها هم متوقف می‌شوند.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۴</span><h3>امتحان کن که داکر واقعا کار می‌کند</h3>
-    <div class="body">
-      <p>یک پاورشل <b>معمولی</b> (بدون مدیر هم اشکال ندارد) باز کن و بنویس:</p>
-      <pre><code>docker run hello-world</code></pre>
+  <!-- مرحله ۲ -->
+  <h2 class="sec" id="s2">مرحله ۲ — راه‌اندازی n8n در یک کانتینر</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۲</div><h3>n8n را با یک دستور بالا بیاور</h3><span class="time-chip">🕒 ~۱۰ دقیقه</span></div>
+    <div class="step-count">مرحله ۲ از ۹</div>
+    <p>حالا با یک دستورِ ساده، n8n را داخل داکر اجرا می‌کنیم. این دستور ایمیج رسمی n8n را دانلود و یک کانتینر می‌سازد که روی درگاهِ<sup>۸</sup> <span dir="ltr">5678</span> در دسترس است و اطلاعاتت را ذخیره نگه می‌دارد.</p>
+    <ol class="mini">
+      <li>ترمینال را باز کن.</li>
+      <li>این دستور را کامل کپی کن، بچسبان و <span class="kbd">Enter</span> بزن:</li>
+    </ol>
+<pre><span class="cmt"># © Gravel — اجرای n8n در داکر (ذخیرهٔ دائمی داده‌ها + روشن‌ماندن خودکار)</span>
+docker run -d --restart unless-stopped \
+  --name n8n \
+  -p 5678:5678 \
+  -v n8n_data:/home/node/.n8n \
+  docker.n8n.io/n8nio/n8n</pre>
+    <div class="box note">
+      <div class="box-title">🧩 این دستور چه می‌کند؟</div>
+      <code dir="ltr">-d</code> یعنی در پس‌زمینه اجرا شود · <code dir="ltr">--restart unless-stopped</code> یعنی اگر کامپیوتر ری‌استارت شد، خودش دوباره بالا بیاید · <code dir="ltr">--name n8n</code> یک اسم به کانتینر می‌دهد · <code dir="ltr">-p 5678:5678</code> درگاه را باز می‌کند · <code dir="ltr">-v n8n_data:...</code> داده‌هایت (ورک‌فلوها و کلیدها) را برای همیشه نگه می‌دارد.
+    </div>
+    <p>چند لحظه صبر کن؛ بار اول ایمیج دانلود می‌شود. بعد برای اطمینان از روشن‌بودن کانتینر:</p>
+<pre>docker ps</pre>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      در خروجی <code dir="ltr">docker ps</code> باید یک خط با نامِ <code dir="ltr">n8n</code> و درگاهِ <code dir="ltr">5678</code> ببینی. حالا مرورگر را باز کن و به نشانی <code dir="ltr">http://localhost:5678</code> برو — باید صفحهٔ خوش‌آمدِ n8n بالا بیاید.
+    </div>
+    <div class="box warn">
+      <div class="box-title">⚠️ اشتباه رایج</div>
+      اگر پیامی شبیه «<span dir="ltr">port is already allocated</span>» گرفتی، یعنی درگاه <span dir="ltr">5678</span> قبلاً اشغال شده. یا برنامهٔ اشغال‌کننده را ببند، یا در دستور بالا و در همهٔ مراحل بعد، به‌جای <code dir="ltr">5678:5678</code> از <code dir="ltr">5679:5678</code> استفاده کن (آن‌وقت آدرست می‌شود <code dir="ltr">http://localhost:5679</code> و در پیکربندی MCP هم باید عدد <span dir="ltr">5679</span> بگذاری).
     </div>
   </div>
 
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> اگر بین متن‌ها جمله‌ای شبیه <span dir="ltr" class="t">Hello from Docker!</span> دیدی، یعنی داکر سالم نصب شده! 🎉 اگر خطا دیدی، به <a href="#trouble">رفع اشکال</a> برو.</div>
-</section>
-
-<!-- ================= STAGE 3 ================= -->
-<section id="s3">
-  <span class="progress">مرحله ۳ از ۸</span>
-  <h2 class="stage-title">⚡ مرحله ۳: راه‌اندازی کانتینر n8n با تنظیمات استاندارد</h2>
-  <div class="bar"><span style="width:38%"></span></div>
-
-  <div class="box why"><b class="lbl">🤔 چرا این تنظیمات؟</b> ما ۴ چیز استاندارد را رعایت می‌کنیم: ۱) یک «انبار دائمی» (Volume) تا با خاموش‌شدن کانتینر، ورک‌فلوها و کردنشیال‌هایت پاک نشوند. ۲) «درگاه» ۵۶۷۸ تا از مرورگر به n8n برسیم. ۳) ساعتِ درست (منطقهٔ زمانی تهران) تا زمان‌بندی‌ها اشتباه اجرا نشوند. ۴) روشن‌شدن خودکار بعد از هر ری‌استارت.</div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>اول انبار دائمی (Volume) را بساز</h3>
-    <div class="body">
-      <pre><code>docker volume create n8n_data</code></pre>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۴:</b> <b>Volume</b> مثل «کمد شخصیِ» کانتینر است؛ حتی اگر جعبه (کانتینر) را دور بیندازیم، کمد و وسایل داخلش می‌ماند.</div>
+  <!-- مرحله ۳ -->
+  <h2 class="sec" id="s3">مرحله ۳ — تکمیل ثبت‌نام اولیهٔ n8n</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۳</div><h3>حساب مالکِ n8n را بساز</h3><span class="time-chip">🕒 ~۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۳ از ۹</div>
+    <ol class="mini">
+      <li>در همان صفحهٔ <code dir="ltr">http://localhost:5678</code>، فرم ساخت حساب مالک (<span dir="ltr">owner account</span>) را می‌بینی.</li>
+      <li>یک ایمیل، نام، و یک رمز عبور بگذار. (این حساب فقط روی کامپیوتر خودت است.)</li>
+      <li>ثبت‌نام را کامل کن تا به داشبورد اصلی n8n برسی.</li>
+    </ol>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر محیط اصلی n8n با گزینه‌هایی مثل <span dir="ltr">Workflows</span> و <span dir="ltr">Credentials</span> را می‌بینی، این مرحله تمام است.
+    </div>
+    <div class="box tip">
+      <div class="box-title">💡 نکته</div>
+      رمزی که این‌جا می‌گذاری با «کلید API» مرحلهٔ بعد فرق دارد. این رمز برای ورودِ خودت به صفحهٔ n8n است؛ کلید API را بعداً به هوش مصنوعی می‌دهیم.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۲</span><h3>حالا کانتینر n8n را با این دستور روشن کن</h3>
-    <div class="body">
-      <p>کل این دستور <b>یک‌جا</b> کپی و در پاورشل پیست کن و Enter بزن (علامت <span dir="ltr" class="t">`</span> در آخر خط‌ها یعنی «دستور ادامه دارد» — دست نزن):</p>
-      <pre><code>docker run -d --name n8n `
-  --restart unless-stopped `
-  -p 5678:5678 `
-  -e GENERIC_TIMEZONE="Asia/Tehran" `
-  -e TZ="Asia/Tehran" `
-  -e N8N_RUNNERS_ENABLED=true `
-  -e N8N_SECURE_COOKIE=false `
-  -v n8n_data:/home/node/.n8n `
-  docker.n8n.io/n8nio/n8n</code></pre>
-      <p>بار اول، داکر خودش ایمیج n8n را دانلود می‌کند (چند دقیقه). در پایان یک رشتهٔ طولانی از حرف و عدد چاپ می‌شود — یعنی موفق شدی!</p>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۵ — این دستور چه می‌گوید؟</b><br>
-      • <span dir="ltr" class="t">-d</span>: در پس‌زمینه اجرا شو (پنجره را اشغال نکن).<br>
-      • <span dir="ltr" class="t">--name n8n</span>: اسم جعبه‌مان «n8n» باشد.<br>
-      • <span dir="ltr" class="t">--restart unless-stopped</span>: بعد از هر ری‌استارتِ کامپیوتر، خودت دوباره روشن شو.<br>
-      • <span dir="ltr" class="t">-p 5678:5678</span>: درِ شمارهٔ ۵۶۷۸ جعبه را به ویندوز وصل کن تا با مرورگر داخلش را ببینیم.<br>
-      • دو خط <span dir="ltr" class="t">TIMEZONE</span>: ساعت داخل جعبه = ساعت تهران.<br>
-      • <span dir="ltr" class="t">N8N_RUNNERS_ENABLED=true</span>: روش جدید و امن‌ترِ اجرای کدها (توصیهٔ خود n8n).<br>
-      • <span dir="ltr" class="t">N8N_SECURE_COOKIE=false</span>: چون روی کامپیوتر خودت و بدون <span dir="ltr" class="t">https</span> کار می‌کنیم، این را خاموش می‌کنیم تا صفحهٔ ورود گیر ندهد.<br>
-      • <span dir="ltr" class="t">-v n8n_data:...</span>: کمد دائمی را به جعبه وصل کن.</div>
-      <div class="box warn"><b class="lbl">⚠️ مواظب باش:</b> این تنظیم فقط برای <b>کامپیوتر شخصی خودت</b> است. اگر روزی خواستی n8n را روی اینترنت (سرور واقعی) بگذاری، باید <span dir="ltr" class="t">https</span> و تنظیمات امنیتی بیشتری داشته باشی.</div>
+  <!-- مرحله ۴ -->
+  <h2 class="sec" id="s4">مرحله ۴ — ساخت کلید API در n8n</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۴</div><h3>یک کلید API بساز و کپی کن</h3><span class="time-chip">🕒 ~۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۴ از ۹</div>
+    <ol class="mini">
+      <li>در n8n، از پایینِ منوی سمت، روی نام کاربری/تنظیمات کلیک کن تا وارد <b>Settings</b> شوی.</li>
+      <li>در تنظیمات، بخش <b>n8n API</b> (یا <span dir="ltr">API Keys</span>) را پیدا کن. (نام دقیق ممکن است بسته به نسخه کمی فرق کند.)</li>
+      <li>روی <b>Create an API key</b> بزن، یک نام دلخواه بده (مثلاً <code dir="ltr">antigravity</code>) و بسازش.</li>
+      <li>کلیدِ ساخته‌شده که با <code dir="ltr">n8n_api_</code> شروع می‌شود را <b>همان لحظه کپی کن</b> و جایی امن نگه دار.</li>
+    </ol>
+    <div class="box warn">
+      <div class="box-title">⚠️ خیلی مهم</div>
+      این کلید معمولاً <b>فقط یک بار</b> کامل نمایش داده می‌شود. اگر صفحه را ببندی و کپی نکرده باشی، باید کلید تازه بسازی. مثل رمز عبور با آن رفتار کن و در جای عمومی (مثل مخزن گیت عمومی) منتشرش نکن.
+    </div>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر یک رشتهٔ بلندِ شروع‌شونده با <code dir="ltr">n8n_api_...</code> در دستت داری، آمادهٔ اتصال هستی.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۳</span><h3>ببین کانتینر روشن است یا نه</h3>
-    <div class="body">
-      <pre><code>docker ps</code></pre>
-      <p>باید یک ردیف با اسم <span dir="ltr" class="t">n8n</span> و وضعیت <span dir="ltr" class="t">Up</span> (یعنی «روشن») ببینی.</p>
+  <!-- مرحله ۵ -->
+  <h2 class="sec" id="s5">مرحله ۵ — نصب Google Antigravity</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۵</div><h3>آنتی‌گراویتی را نصب و وارد شو</h3><span class="time-chip">🕒 ~۱۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۵ از ۹</div>
+    <ol class="mini">
+      <li>به صفحهٔ رسمی دانلود برو: <code dir="ltr">https://antigravity.google/download</code></li>
+      <li>نسخهٔ سیستم‌عاملت را دانلود کن (روی ویندوز معمولاً <span dir="ltr">x64</span>، روی مک بین <span dir="ltr">Apple Silicon</span> و <span dir="ltr">Intel</span> نسخهٔ درست را انتخاب کن).</li>
+      <li>فایل نصب را اجرا و برنامه را نصب کن.</li>
+      <li>برنامه را باز کن و با <b>حساب گوگل</b> وارد شو؛ مراحل احراز هویت و سیاست استفاده را تأیید کن.</li>
+      <li>اگر بین «<span dir="ltr">Antigravity</span>» و «<span dir="ltr">Antigravity IDE</span>» انتخاب داشتی، برای این آموزش <b>Antigravity IDE</b> را نصب کن (همان ویرایشگرِ شبیه <span dir="ltr">VS Code</span> که برای توسعه توصیه می‌شود).</li>
+    </ol>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر محیط آنتی‌گراویتی با یک ویرایشگرِ کد و یک پنلِ «عامل/Agent» در کنارش باز شده، این مرحله تمام است.
+    </div>
+    <div class="box tip">
+      <div class="box-title">💡 نکته</div>
+      محصولات آنتی‌گراویتی به‌سرعت به‌روزرسانی می‌شوند و ممکن است نام دقیق دکمه‌ها کمی فرق کند. اگر چیزی دقیقاً مطابق این متن نبود، دنبال دکمه‌ای با معنیِ مشابه بگرد.
     </div>
   </div>
 
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> مرورگرت (کروم/اج) را باز کن و برو به آدرس <span dir="ltr" class="t">http://localhost:5678</span> — باید صفحهٔ n8n باز شود. اگر باز نشد، ۳۰ ثانیه صبر کن و دوباره رفرش کن؛ باز هم نشد؟ برو به <a href="#trouble">رفع اشکال</a>.</div>
-
-  <div class="box foot"><b class="lbl">📖 پاورقی ۶:</b> <span dir="ltr" class="t">localhost</span> یعنی «همین کامپیوتر خودم». عدد بعد از دونقطه (۵۶۷۸) شمارهٔ همان دری است که در مرحلهٔ قبل باز کردیم.</div>
-</section>
-
-<!-- ================= STAGE 4 ================= -->
-<section id="s4">
-  <span class="progress">مرحله ۴ از ۸</span>
-  <h2 class="stage-title">👤 مرحله ۴: ساخت حساب کاربری (مالکِ) n8n</h2>
-  <div class="bar"><span style="width:50%"></span></div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>فرم اولین ورود را پر کن</h3>
-    <div class="body"><p>در صفحه‌ای که در مرورگر باز شد، ایمیل، نام و یک <b>رمز قوی</b> بنویس (رمز را جایی امن یادداشت کن!). این حساب، «مالکِ» n8n توست.</p></div>
-  </div>
-  <div class="card">
-    <span class="stepnum">۲</span><h3>سوال‌های آشنایی را رد کن یا جواب بده</h3>
-    <div class="body"><p>n8n ممکن است چند سوال ساده بپرسد (مثلاً «چطور از n8n استفاده می‌کنی؟»). هر جوابی دادی مهم نیست. اگر پیشنهاد کلید رایگان ویژگی‌ها را داد، می‌توانی فعلاً رد کنی.</p></div>
-  </div>
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> الان باید صفحهٔ اصلی n8n را ببینی؛ معمولاً دکمه‌ای برای ساخت اولین ورک‌فلو دارد. 🎉</div>
-</section>
-
-<!-- ================= STAGE 5 ================= -->
-<section id="s5">
-  <span class="progress">مرحله ۵ از ۸</span>
-  <h2 class="stage-title">🗝️ مرحله ۵: ساخت کلید API در n8n</h2>
-  <div class="bar"><span style="width:62%"></span></div>
-
-  <div class="box why"><b class="lbl">🤔 چرا؟</b> هوش مصنوعی برای اینکه بتواند به جای تو داخل n8n ورک‌فلو بسازد، به یک «کلید مخصوص» نیاز دارد — مثل کارت عبوری که به دوستِ موردِ اعتمادت می‌دهی تا وارد اتاقت شود.</div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>به تنظیمات n8n برو</h3>
-    <div class="body"><p>در صفحهٔ n8n، پایینِ منوی کناری روی نام یا آیکون خودت (یا چرخ‌دندهٔ <b>Settings</b>) کلیک کن.</p></div>
-  </div>
-  <div class="card">
-    <span class="stepnum">۲</span><h3>بخش «n8n API» را پیدا کن</h3>
-    <div class="body"><p>در فهرست تنظیمات، گزینه‌ای با نام <span dir="ltr" class="t">n8n API</span> هست — رویش کلیک کن. (اگر اسمش کمی فرق داشت، دنبال کلمهٔ <span dir="ltr" class="t">API</span> بگرد.)</p></div>
-  </div>
-  <div class="card">
-    <span class="stepnum">۳</span><h3>روی دکمهٔ ساخت کلید بزن</h3>
-    <div class="body"><p>دکمه‌ای شبیه <span dir="ltr" class="t">Create an API key</span> را بزن؛ یک اسم دلخواه بده (مثلاً <span dir="ltr" class="t">antigravity</span>) و بساز.</p></div>
-  </div>
-  <div class="card">
-    <span class="stepnum">۴</span><h3>کلید را همان لحظه کپی کن و در Notepad نگه دار</h3>
-    <div class="body">
-      <p>یک متن طولانی از حرف و عدد نشانت می‌دهد — این همان کلید است. کپی‌اش کن و در برنامهٔ <span dir="ltr" class="t">Notepad</span> پیست کن. بعداً لازمش داریم.</p>
-      <div class="box warn"><b class="lbl">⚠️ مواظب باش:</b> این کلید مثل رمز عبور است! به هیچ‌کس نده و در اینترنت نگذار. معمولاً فقط <b>همان یک بار</b> کامل نشان داده می‌شود.</div>
+  <!-- مرحله ۶ -->
+  <h2 class="sec" id="s6">مرحله ۶ — باز کردن فایل پیکربندی MCP</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۶</div><h3>به فایل خام تنظیمات MCP برو</h3><span class="time-chip">🕒 ~۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۶ از ۹</div>
+    <p>آنتی‌گراویتی سرورهای MCP را از یک فایل به‌نام <code dir="ltr">mcp_config.json</code> می‌خواند. مسیر رسیدن به آن معمولاً این‌طور است:</p>
+    <ol class="mini">
+      <li>وارد <b>Settings</b> شو (معمولاً از گوشهٔ پایین-چپ یا منوی تنظیماتِ ویرایشگر).</li>
+      <li>به تبِ <b>Customizations</b> برو.</li>
+      <li>دنبال دکمه‌ای مثل <b>Open MCP Config</b> یا <b>Manage MCP Servers → View raw config</b> بگرد و رویش بزن تا فایل <code dir="ltr">mcp_config.json</code> باز شود.</li>
+    </ol>
+    <div class="box note">
+      <div class="box-title">🧭 مسیر جایگزین</div>
+      اگر آن دکمه را ندیدی: در پنلِ «عامل»، روی منویِ «<span dir="ltr">…</span>» بالای پنل بزن ← گزینهٔ <b>MCP Servers</b> ← از داخل فروشگاهِ MCP، <b>Manage MCP Servers</b> ← <b>View raw config</b>.
     </div>
-  </div>
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> الان باید کلید API در Notepad ذخیره شده باشد.</div>
-</section>
-
-<!-- ================= STAGE 6 ================= -->
-<section id="s6">
-  <span class="progress">مرحله ۶ از ۸</span>
-  <h2 class="stage-title">🚀 مرحله ۶: نصب Antigravity</h2>
-  <div class="bar"><span style="width:75%"></span></div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>Antigravity را دانلود و نصب کن</h3>
-    <div class="body">
-      <p>در مرورگر برو به سایت رسمی: <span dir="ltr" class="t">https://antigravity.google</span> و نسخهٔ ویندوز را دانلود و مثل هر برنامهٔ معمولی نصب کن (Next → Next → Finish).</p>
-      <div class="box tip"><b class="lbl">💡 نکته:</b> برای ورود، حساب گوگل (جیمیل) لازم داری. Antigravity یک «ویرایشگر کد هوشمند» است — نترس، لازم نیست کدنویسی بلد باشی؛ فقط قرار است با آن <b>چت</b> کنیم!</div>
-    </div>
-  </div>
-  <div class="card">
-    <span class="stepnum">۲</span><h3>یک پوشهٔ کاری بساز و در Antigravity باز کن</h3>
-    <div class="body">
-      <p>در پاورشل این دو دستور را بزن تا پوشه ساخته شود:</p>
-      <pre><code>mkdir C:\n8n-agent
-</code></pre>
-      <p>سپس در Antigravity از منوی <span dir="ltr" class="t">File → Open Folder</span> پوشهٔ <span dir="ltr" class="t">C:\n8n-agent</span> را باز کن. این «خانهٔ پروژهٔ» ما می‌شود.</p>
-    </div>
-  </div>
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> Antigravity باز است، وارد حساب گوگل شده‌ای، و پوشهٔ <span dir="ltr" class="t">n8n-agent</span> در آن باز است.</div>
-</section>
-
-<!-- ================= STAGE 7 ================= -->
-<section id="s7">
-  <span class="progress">مرحله ۷ از ۸</span>
-  <h2 class="stage-title">🌉 مرحله ۷: داکرایزکردن پلِ n8n-MCP و اتصال به Antigravity</h2>
-  <div class="bar"><span style="width:87%"></span></div>
-
-  <div class="box why"><b class="lbl">🤔 چرا داکرایز؟</b> به‌جای نصب پلِ n8n-MCP روی خود ویندوز، آن را هم داخل یک کانتینر داکر اجرا می‌کنیم («داکرایز» یعنی همین: برنامه را داخل جعبهٔ داکر بردن). فایده‌اش: ویندوزت تمیز می‌ماند، نیازی به نصب <span dir="ltr" class="t">Node.js</span> نیست، و هر وقت Antigravity به پل نیاز داشت، داکر خودش جعبه را می‌سازد و بعد از کار، دور می‌اندازد.</div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>ایمیج n8n-MCP را از قبل دانلود کن</h3>
-    <div class="body">
-      <pre><code>docker pull ghcr.io/czlonkowski/n8n-mcp:latest</code></pre>
-      <p>این کار باعث می‌شود بار اول اتصال، معطلِ دانلود نشویم.</p>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر یک فایل با محتوای <span dir="ltr">JSON</span><sup>۹</sup> (چیزی شبیه <code dir="ltr">{ "mcpServers": { ... } }</code>) جلوی رویت باز شد، درست آمده‌ای. اگر فایل خالی بود، اشکالی ندارد؛ در مرحلهٔ بعد محتوایش را می‌گذاریم.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۲</span><h3>فایل تنظیمات MCP در Antigravity را باز کن</h3>
-    <div class="body">
-      <p>در پنل چتِ Antigravity، روی سه‌نقطهٔ <span dir="ltr" class="t">…</span> بالای چت کلیک کن ← گزینهٔ <b>MCP Servers</b> ← <b>Manage MCP Servers</b> ← <b>View raw config</b>. فایلی به این آدرس باز می‌شود:</p>
-      <pre><code>C:\Users\&lt;USER_NAME&gt;\.gemini\antigravity\mcp_config.json</code></pre>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۷:</b> نسخه‌های جدیدترِ Antigravity ممکن است این را در <b>Settings ← Customizations ← Installed MCP Servers</b> هم نشان دهند؛ نام دقیق منوها ممکن است کمی فرق کند — دنبال کلمهٔ <span dir="ltr" class="t">MCP</span> بگرد. <span dir="ltr" class="t">&lt;USER_NAME&gt;</span> یعنی نام کاربری ویندوز خودت.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="stepnum">۳</span><h3>این تنظیم را داخل فایل بگذار و ذخیره کن</h3>
-    <div class="body">
-      <p>محتوای زیر را کپی کن، در فایل <span dir="ltr" class="t">mcp_config.json</span> پیست کن و <b>فقط یک چیز را عوض کن</b>: به‌جای <span dir="ltr" class="t">PASTE_YOUR_KEY_HERE</span> کلید API را از Notepad بگذار. بعد با <span dir="ltr" class="t">Ctrl+S</span> ذخیره کن.</p>
-      <pre><code>{
+  <!-- مرحله ۷ -->
+  <h2 class="sec" id="s7">مرحله ۷ — افزودن سرور n8n-MCP و کلید</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۷</div><h3>پیکربندی را بچسبان و کلیدت را جا بزن</h3><span class="time-chip">🕒 ~۱۰ دقیقه</span></div>
+    <div class="step-count">مرحله ۷ از ۹</div>
+    <p>حالا این قطعهٔ پیکربندی را داخل فایل <code dir="ltr">mcp_config.json</code> قرار می‌دهیم. این تنظیم به آنتی‌گراویتی می‌گوید سرورِ <span dir="ltr">n8n-MCP</span> را با داکر اجرا کند و آن را به n8n تو وصل کند:</p>
+<pre><span class="cmt">// © Gravel — پیکربندی سرور n8n-MCP برای Google Antigravity</span>
+{
   "mcpServers": {
     "n8n-mcp": {
       "command": "docker",
@@ -457,140 +438,172 @@ footer .sig{opacity:.65; font-size:12.5px}
         "-e", "LOG_LEVEL=error",
         "-e", "DISABLE_CONSOLE_OUTPUT=true",
         "-e", "N8N_API_URL=http://host.docker.internal:5678",
-        "-e", "N8N_API_KEY=PASTE_YOUR_KEY_HERE",
+        "-e", "N8N_API_KEY=YOUR_N8N_API_KEY_HERE",
         "ghcr.io/czlonkowski/n8n-mcp:latest"
       ]
     }
   }
-}</code></pre>
-      <div class="box foot"><b class="lbl">📖 پاورقی ۸ — دو نکتهٔ خیلی مهم این تنظیم:</b><br>
-      • <span dir="ltr" class="t">host.docker.internal</span>: چون پلِ MCP <b>داخل جعبهٔ داکر</b> است، اگر بگوییم <span dir="ltr" class="t">localhost</span> فکر می‌کند منظورمان داخلِ خودِ جعبه است! این آدرس جادویی یعنی «کامپیوترِ میزبان» — همان‌جایی که n8n با درگاه ۵۶۷۸ در دسترس است.<br>
-      • <span dir="ltr" class="t">--rm</span>: بعد از تمام‌شدن کار، جعبه را خودکار دور بینداز تا کامپیوتر شلوغ نشود.</div>
-      <div class="box warn"><b class="lbl">⚠️ مواظب باش:</b> اگر قبلاً چیزی داخل این فایل بود، کلش را با متن بالا جایگزین نکن مگر اینکه خالی/پیش‌فرض باشد؛ در غیر این صورت فقط بخش <span dir="ltr" class="t">"n8n-mcp"</span> را داخل <span dir="ltr" class="t">"mcpServers"</span> موجود اضافه کن. همچنین Docker Desktop باید <b>روشن</b> باشد (نهنگ 🐳 کنار ساعت).</div>
+}</pre>
+    <ol class="mini">
+      <li>اگر فایلت خالی بود، همهٔ متن بالا را در آن بگذار.</li>
+      <li>عبارتِ <code dir="ltr">YOUR_N8N_API_KEY_HERE</code> را پاک کن و به‌جایش کلیدِ <code dir="ltr">n8n_api_...</code>ای که در مرحلهٔ ۴ ساختی بچسبان (بین همان دو گیومه).</li>
+      <li>اگر در مرحلهٔ ۲ درگاه را به <span dir="ltr">5679</span> تغییر داده بودی، این‌جا هم عدد داخلِ <code dir="ltr">host.docker.internal:5678</code> را به <span dir="ltr">5679</span> عوض کن.</li>
+      <li>فایل را ذخیره کن (<span class="kbd">Ctrl+S</span> در ویندوز/لینوکس، <span class="kbd">⌘+S</span> در مک).</li>
+    </ol>
+    <div class="box note">
+      <div class="box-title">🧩 چرا <span dir="ltr">host.docker.internal</span>؟</div>
+      این یک آدرسِ مخصوص است که به کانتینرِ <span dir="ltr">n8n-MCP</span> اجازه می‌دهد با کانتینرِ n8n که روی همان کامپیوتر (میزبان) اجرا می‌شود حرف بزند. اگر به‌جای آن <code dir="ltr">localhost</code> بگذاری، کانتینر فکر می‌کند «خودش» است و اتصال شکست می‌خورد.
+    </div>
+    <div class="box warn">
+      <div class="box-title">⚠️ اگر از قبل سرور MCP دیگری داری</div>
+      اگر فایل از قبل داخل <code dir="ltr">"mcpServers"</code> چند سرور داشت، این تکه را <b>جایگزینِ کل فایل نکن</b>؛ فقط بلوکِ <code dir="ltr">"n8n-mcp": { ... }</code> را کنارِ بقیه، داخل همان آکولادِ <code dir="ltr">"mcpServers"</code>، اضافه کن و یادت نرود بین سرورها ویرگول بگذاری. یک ویرگولِ جاافتاده، کل <span dir="ltr">JSON</span> را خراب می‌کند.
+    </div>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      فایل باید ذخیره شود بدون این‌که آنتی‌گراویتی زیرِ آن خطِ قرمزِ خطای <span dir="ltr">JSON</span> نشان دهد. اگر خطا دیدی، معمولاً یک گیومه یا ویرگول جا افتاده — بخش رفع اشکال را ببین.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۴</span><h3>سرورهای MCP را رفرش کن</h3>
-    <div class="body"><p>به همان صفحهٔ <b>Manage MCP Servers</b> برگرد و دکمهٔ <b>Refresh</b> (تازه‌سازی) را بزن. باید <span dir="ltr" class="t">n8n-mcp</span> با کلی ابزار، سبز و فعال شود.</p></div>
-  </div>
-
-  <div class="box check"><b class="lbl">✅ ایست بازرسی:</b> در فهرست MCPها، <span dir="ltr" class="t">n8n-mcp</span> فعال است و تعداد زیادی ابزار (Tools) نشان می‌دهد. اگر خطا داد، به <a href="#trouble">رفع اشکال</a> برو.</div>
-</section>
-
-<!-- ================= STAGE 8 ================= -->
-<section id="s8">
-  <span class="progress">مرحله ۸ از ۸</span>
-  <h2 class="stage-title">🪄 مرحله ۸: فایل AGENTS.md و ساخت خودکار اولین ورک‌فلو + کردنشیال‌ها</h2>
-  <div class="bar"><span style="width:100%"></span></div>
-
-  <div class="box why"><b class="lbl">🤔 چرا AGENTS.md؟</b> این فایل مثل «دفترچهٔ قوانین» برای هوش مصنوعی است. Antigravity قبل از هر کاری آن را می‌خواند و یاد می‌گیرد که ورک‌فلوها را دقیق، معتبر و بی‌دردسر بسازد.</p></div>
-
-  <div class="card">
-    <span class="stepnum">۱</span><h3>در پوشهٔ پروژه، فایل AGENTS.md بساز</h3>
-    <div class="body">
-      <p>در Antigravity روی پوشهٔ <span dir="ltr" class="t">n8n-agent</span> کلیک راست کن ← <span dir="ltr" class="t">New File</span> ← اسمش را دقیقاً بگذار: <span dir="ltr" class="t">AGENTS.md</span></p>
-      <p>سپس این متن سادهٔ آماده را داخلش پیست و ذخیره کن:</p>
-      <pre><code>You are an expert in n8n automation using n8n-MCP tools.
-
-Rules:
-1. Always start with tools_documentation() to learn best practices.
-2. Search templates FIRST before building from scratch.
-3. Explicitly set ALL node parameters. Never rely on defaults.
-4. Validate every node (validate_node) and the whole workflow
-   (validate_workflow) BEFORE deploying.
-5. Deploy with n8n_create_workflow, then n8n_validate_workflow.
-6. If a node needs credentials, create the workflow anyway,
-   attach credential placeholders, and tell the user exactly
-   which credentials to fill in the n8n UI and where.
-7. Show me the workflow plan for approval before deploying.</code></pre>
-      <div class="box tip"><b class="lbl">💡 نکته:</b> نسخهٔ کامل‌تر و حرفه‌ای‌ترِ این قوانین را سازندهٔ n8n-MCP در گیت‌هاب گذاشته (پروژهٔ <span dir="ltr" class="t">czlonkowski/n8n-mcp</span>، فایل <span dir="ltr" class="t">ANTIGRAVITY_SETUP.md</span>). همین نسخهٔ ساده هم برای شروع عالی است.</div>
+  <!-- مرحله ۸ -->
+  <h2 class="sec" id="s8">مرحله ۸ — رفرش و تأیید اتصال</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۸</div><h3>سرور را فعال کن</h3><span class="time-chip">🕒 ~۵ دقیقه</span></div>
+    <div class="step-count">مرحله ۸ از ۹</div>
+    <ol class="mini">
+      <li>به بخشِ <b>Installed MCP Servers</b> در تنظیمات برگرد و روی <b>Refresh</b> بزن. (یا کلاً آنتی‌گراویتی را ببند و دوباره باز کن.)</li>
+      <li>سرورِ <code dir="ltr">n8n-mcp</code> باید در فهرست ظاهر شود.</li>
+      <li>بارِ اول که هوش مصنوعی بخواهد از این سرور استفاده کند، داکر ایمیجِ <code dir="ltr">ghcr.io/czlonkowski/n8n-mcp</code> را دانلود می‌کند؛ کمی صبر لازم است.</li>
+      <li>اگر آنتی‌گراویتی برای استفاده از ابزارِ جدید از تو «اجازه» (Allow) خواست، تأیید کن.</li>
+    </ol>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر <code dir="ltr">n8n-mcp</code> در فهرستِ سرورهای نصب‌شده با وضعیتِ سالم دیده می‌شود، اتصال برقرار است. حالا وقتِ آزمایشِ واقعی است.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۲</span><h3>حالا اولین ورک‌فلو را با یک جمله بساز!</h3>
-    <div class="body">
-      <p>در چتِ Antigravity این را بنویس (یا هر ایدهٔ خودت):</p>
-      <pre><code>Using n8n-mcp, build and deploy an n8n workflow:
-every day at 9:00 fetch the weather for Tehran with an
-HTTP Request node and log the result. Validate it first.</code></pre>
-      <p>یعنی: «هر روز ساعت ۹ صبح، آب‌وهوای تهران را بگیر و نتیجه را ثبت کن.» Antigravity خودش گره‌ها (Node) را پیدا می‌کند، ورک‌فلو را می‌سازد، اعتبارسنجی می‌کند و مستقیم داخل n8n تو تحویل می‌دهد!</p>
+  <!-- مرحله ۹ -->
+  <h2 class="sec" id="s9">مرحله ۹ — اولین تست واقعی</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">۹</div><h3>از عامل بخواه با n8n تو کار کند</h3><span class="time-chip">🕒 ~۱۰ دقیقه</span></div>
+    <div class="step-count">مرحله ۹ از ۹</div>
+    <p>در پنلِ عاملِ آنتی‌گراویتی، این جمله را بنویس و بفرست:</p>
+<pre>لیست ورک‌فلوهای n8n من را نشان بده.</pre>
+    <p>عامل باید از ابزارِ n8n-MCP استفاده کند و به n8n تو وصل شود. چون تازه n8n را ساختی، احتمالاً فهرست خالی است — و همین یعنی اتصال کار می‌کند. حالا یک قدم جلوتر برو و بگو:</p>
+<pre>یک ورک‌فلوی ساده در n8n بساز که وقتی یک وب‌هوک صدا زده شد،
+پیام «سلام از گراول» را برگرداند. بعد ساختش را اعتبارسنجی کن.</pre>
+    <div class="box check">
+      <div class="box-title">✅ ایست بازرسی</div>
+      اگر بعد از این درخواست، به <code dir="ltr">http://localhost:5678</code> بروی و ورک‌فلوی تازه‌ساخته را در فهرستِ n8n ببینی — تبریک! عاملِ هوش مصنوعی حالا واقعاً به کارخانهٔ اتوماسیونِ تو دسترسی دارد.
+    </div>
+    <div class="box tip">
+      <div class="box-title">💡 نکته</div>
+      هرچه خواسته‌ات را دقیق‌تر و مرحله‌ای‌تر بگویی، خروجی بهتر است: به عامل بگو دقیقاً چه تریگری، چه نُودهایی، و چه خروجی‌ای می‌خواهی.
     </div>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۳</span><h3>کردنشیال‌ها را وصل کن (بخش انسانیِ ماجرا 🔑)</h3>
-    <div class="body">
-      <p>وقتی ورک‌فلو به سرویس‌هایی مثل تلگرام یا جیمیل نیاز دارد، هوش مصنوعی جای خالی کردنشیال را می‌گذارد و به تو می‌گوید چه چیزی لازم است. <b>رمزها و کلیدهای مخفی را همیشه خودت</b> در n8n وارد می‌کنی — این هم امن‌تر است، هم درست‌تر:</p>
-      <p>در n8n (مرورگر): منوی کناری ← <span dir="ltr" class="t">Credentials</span> ← دکمهٔ <span dir="ltr" class="t">Create credential</span> ← نوع سرویس را انتخاب کن (مثلاً Telegram) ← اطلاعات خواسته‌شده را وارد کن ← ذخیره. بعد در ورک‌فلو، روی گره کلیک کن و همین کردنشیال را از فهرست انتخاب کن.</p>
-      <div class="box warn"><b class="lbl">⚠️ مواظب باش:</b> هیچ‌وقت رمز یا کلید مخفی را داخل چتِ هوش مصنوعی پیست نکن. جای رمزها فقط داخل بخش Credentials خود n8n است (آنجا رمزگذاری‌شده نگه‌داری می‌شود).</div>
-    </div>
+  <!-- رفع اشکال -->
+  <h2 class="sec" id="trouble">🔧 رفع اشکال</h2>
+  <div class="stage">
+    <div class="stage-head"><div class="badge">🔧</div><h3>پرتکرارترین مشکل‌ها و راه‌حل</h3></div>
+    <table>
+      <tr><th>نشانه</th><th>علتِ محتمل</th><th>راه‌حل</th></tr>
+      <tr>
+        <td>دستورهای <code dir="ltr">docker</code> کار نمی‌کنند یا خطای اتصال می‌دهند.</td>
+        <td>برنامهٔ Docker Desktop باز/در حال اجرا نیست.</td>
+        <td>Docker Desktop را باز کن و منتظر بمان تا وضعیتش سبز شود، بعد دوباره امتحان کن.</td>
+      </tr>
+      <tr>
+        <td>هنگام اجرای n8n خطای <code dir="ltr">port is already allocated</code>.</td>
+        <td>درگاه <span dir="ltr">5678</span> اشغال است.</td>
+        <td>برنامهٔ اشغال‌کننده را ببند، یا درگاه را به <code dir="ltr">5679:5678</code> عوض کن و در پیکربندی MCP هم عدد را <span dir="ltr">5679</span> بگذار.</td>
+      </tr>
+      <tr>
+        <td>عامل می‌گوید نمی‌تواند به n8n وصل شود / <span dir="ltr">connection refused</span>.</td>
+        <td>آدرس اشتباه است یا کانتینرِ n8n روشن نیست.</td>
+        <td>مطمئن شو <code dir="ltr">docker ps</code> کانتینرِ n8n را نشان می‌دهد و در پیکربندی از <code dir="ltr">host.docker.internal</code> استفاده کرده‌ای، نه <code dir="ltr">localhost</code>.</td>
+      </tr>
+      <tr>
+        <td>روی <b>لینوکس</b> اتصال به <code dir="ltr">host.docker.internal</code> برقرار نمی‌شود.</td>
+        <td>در لینوکس این نام به‌صورت خودکار شناخته نمی‌شود.</td>
+        <td>در آرایهٔ <code dir="ltr">args</code>، بعد از <code dir="ltr">"--rm"</code> این دو را اضافه کن: <code dir="ltr">"--add-host=host.docker.internal:host-gateway"</code>.</td>
+      </tr>
+      <tr>
+        <td>خطای احراز هویت / <span dir="ltr">401 Unauthorized</span>.</td>
+        <td>کلید API اشتباه، ناقص یا منقضی است.</td>
+        <td>در n8n یک کلید تازه بساز، کامل کپی کن و دقیقاً بین گیومه‌ها در <code dir="ltr">N8N_API_KEY</code> بگذار (بدون فاصلهٔ اضافه).</td>
+      </tr>
+      <tr>
+        <td><code dir="ltr">n8n-mcp</code> بعد از رفرش در فهرست ظاهر نمی‌شود.</td>
+        <td>خطای نگارشِ JSON یا نیاز به راه‌اندازی مجدد.</td>
+        <td>گیومه‌ها و ویرگول‌ها را چک کن؛ فایل را ذخیره کن؛ آنتی‌گراویتی را کامل ببند و باز کن.</td>
+      </tr>
+      <tr>
+        <td>آنتی‌گراویتی خطا می‌دهد که فایل پیکربندی معتبر نیست.</td>
+        <td>یک ویرگول یا آکولادِ جاافتاده در JSON.</td>
+        <td>متن نمونهٔ این آموزش را دوباره با دقت بچسبان و فقط کلید را عوض کن؛ یک کاراکترِ اضافه کل فایل را خراب می‌کند.</td>
+      </tr>
+      <tr>
+        <td>در ورود به آنتی‌گراویتی گیر می‌کنی.</td>
+        <td>محدودیت دسترسیِ منطقه‌ای یا مشکل اینترنت.</td>
+        <td>اتصال اینترنتت را بررسی کن. همان‌طور که در ابتدای صفحه گفته شد، دسترسی از بعضی مناطق ممکن است محدود باشد.</td>
+      </tr>
+    </table>
   </div>
 
-  <div class="card">
-    <span class="stepnum">۴</span><h3>ورک‌فلو را روشن کن</h3>
-    <div class="body"><p>در n8n ورک‌فلوی جدید را باز کن، اول با دکمهٔ اجرای دستی امتحانش کن، و اگر درست بود کلید <b>Active</b> (فعال) را در بالای صفحه روشن کن تا خودکار طبق زمان‌بندی اجرا شود.</p></div>
+  <!-- واژه‌نامه -->
+  <h2 class="sec" id="glossary">📖 واژه‌نامه</h2>
+  <div class="box foot">
+    <p><sup>۱</sup> <b>کانتینر (Container):</b> بسته‌ای مستقل شامل نرم‌افزار و همهٔ نیازهایش که همه‌جا یک‌جور اجرا می‌شود.</p>
+    <p><sup>۲</sup> <b>نُود (Node):</b> هر جعبهٔ کاری در n8n؛ مثلاً «دریافت ایمیل» یا «ارسال پیام».</p>
+    <p><sup>۳</sup> <b>کلید API:</b> رشتهٔ رمزی که به یک برنامه اجازه می‌دهد از طرف تو با برنامهٔ دیگر کار کند.</p>
+    <p><sup>۴</sup> <b>MCP (Model Context Protocol):</b> استانداردی که هوش مصنوعی را به ابزارها و داده‌های بیرونی وصل می‌کند.</p>
+    <p><sup>۵</sup> <b>عامل (Agent):</b> یک هوش مصنوعی که خودش برنامه‌ریزی و اجرا می‌کند، نه فقط پاسخ‌دادن.</p>
+    <p><sup>۶</sup> <b>WSL 2:</b> لایه‌ای در ویندوز که اجازه می‌دهد ابزارهای مبتنی بر لینوکس (مثل داکر) اجرا شوند.</p>
+    <p><sup>۷</sup> <b>ترمینال (Terminal):</b> پنجرهٔ متنی برای اجرای دستور. در ویندوز «PowerShell» یا «Terminal»، در مک «Terminal».</p>
+    <p><sup>۸</sup> <b>درگاه (Port):</b> شمارهٔ «درِ» یک برنامه روی کامپیوتر؛ n8n روی درِ <span dir="ltr">5678</span> صدا زده می‌شود.</p>
+    <p><sup>۹</sup> <b>JSON:</b> یک قالبِ متنیِ ساختارمند برای تنظیمات که با <code dir="ltr">{ }</code> و گیومه نوشته می‌شود.</p>
   </div>
 
-  <div class="box check"><b class="lbl">✅ ایست بازرسی نهایی:</b> در صفحهٔ Workflows داخل n8n، ورک‌فلویی می‌بینی که خودت نساختی — هوش مصنوعی ساخته! 🤯 اگر اجرایش موفق بود، تو رسماً یک «اتوماسیون‌کار» شدی.</div>
-</section>
+  <!-- پایان -->
+  <div class="celebrate">
+    <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+    <p>داکر و n8n را از صفر بالا بیاوری، برایش کلید API بسازی، و یک IDE هوش مصنوعی (Google Antigravity) را از طریق n8n-MCP به آن وصل کنی — تا با زبان ساده برایت ورک‌فلو بسازد و بیازماید.</p>
+  </div>
 
-<!-- ================= TROUBLESHOOT ================= -->
-<section id="trouble">
-  <h2 class="stage-title">🔧 رفع اشکال — رایج‌ترین گیرکردن‌ها</h2>
+  <div class="next" id="next">
+    <h3>🧭 مرحلهٔ بعدیِ پیشنهادی</h3>
+    <p>حالا که عاملت به n8n وصل است، دو مسیرِ خوب پیشِ رو داری:</p>
+    <ol class="mini">
+      <li>یک ورک‌فلوی واقعی بساز: از عامل بخواه یک اتوماسیونِ مفید (مثلاً خلاصه‌سازیِ روزانهٔ خبرها یا اطلاع‌رسانی در تلگرام) را طراحی و در n8n پیاده کند.</li>
+      <li>به ایستگاهِ بعدیِ مسیر صعود برو: <b>ایستگاه ۵ — OpenClaw (قله)</b> تا اتوماسیون و عامل‌های هوش مصنوعی را یک پله جلوتر ببری.</li>
+    </ol>
+  </div>
 
-  <div class="box fix"><b class="lbl">🔧 مشکل ۱: دستور <span dir="ltr" class="t">winget</span> شناخته نمی‌شود.</b><br>
-  <b>علت:</b> ویندوزت قدیمی است یا «App Installer» ندارد.<br>
-  <b>راه‌حل:</b> از <span dir="ltr" class="t">Microsoft Store</span> برنامهٔ <b>App Installer</b> را نصب/به‌روزرسانی کن و پاورشل را ببند و دوباره باز کن. راه جایگزین: Docker Desktop را دستی از <span dir="ltr" class="t">https://www.docker.com</span> دانلود و نصب کن.</div>
+  <!-- فوتر گراول -->
+  <div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+  🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+   &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+  <a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+  <div style="margin-top:6px;font-size:12px;opacity:.8">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+  </div>
 
-  <div class="box fix"><b class="lbl">🔧 مشکل ۲: Docker Desktop بالا نمی‌آید یا خطای WSL/Virtualization می‌دهد.</b><br>
-  <b>علت:</b> WSL2 کامل نصب نشده یا «مجازی‌سازی» در BIOS خاموش است.<br>
-  <b>راه‌حل:</b> اول در پاورشل مدیر بزن: <span dir="ltr" class="t">wsl --update</span> و ری‌استارت کن. اگر باز هم نشد، «مجازی‌سازی» (Virtualization/SVM/VT-x) باید در تنظیمات BIOS کامپیوتر روشن شود — ⚠️ این بخش را <b>فقط با کمک یک بزرگ‌ترِ آشنا</b> انجام بده.</div>
-
-  <div class="box fix"><b class="lbl">🔧 مشکل ۳: خطای «port is already allocated» یا «درگاه ۵۶۷۸ اشغال است».</b><br>
-  <b>علت:</b> برنامهٔ دیگری (یا یک n8n قدیمی) از این در استفاده می‌کند.<br>
-  <b>راه‌حل:</b> کانتینر قبلی را پاک کن: <span dir="ltr" class="t">docker rm -f n8n</span> و دستور مرحلهٔ ۳ را دوباره بزن. یا در دستور، <span dir="ltr" class="t">-p 5678:5678</span> را به <span dir="ltr" class="t">-p 5679:5678</span> تغییر بده و در مرورگر به <span dir="ltr" class="t">http://localhost:5679</span> برو (در تنظیم MCP هم همین عدد جدید را بگذار).</div>
-
-  <div class="box fix"><b class="lbl">🔧 مشکل ۴: مرورگر <span dir="ltr" class="t">localhost:5678</span> را باز نمی‌کند.</b><br>
-  <b>علت:</b> کانتینر هنوز روشن نشده یا خوابیده.<br>
-  <b>راه‌حل:</b> بزن <span dir="ltr" class="t">docker ps -a</span>؛ اگر وضعیت n8n «Exited» بود، بزن <span dir="ltr" class="t">docker start n8n</span> و برای دیدن دلیل خطا: <span dir="ltr" class="t">docker logs n8n</span>. مطمئن شو Docker Desktop (نهنگ 🐳) روشن است.</div>
-
-  <div class="box fix"><b class="lbl">🔧 مشکل ۵: n8n-mcp در Antigravity قرمز است یا ابزار نشان نمی‌دهد.</b><br>
-  <b>علت:</b> یکی از این سه‌تا: Docker خاموش است، کلید API اشتباه کپی شده، یا آدرس را <span dir="ltr" class="t">localhost</span> گذاشته‌ای.<br>
-  <b>راه‌حل:</b> ۱) نهنگ 🐳 روشن باشد. ۲) در فایل <span dir="ltr" class="t">mcp_config.json</span> حتماً <span dir="ltr" class="t">host.docker.internal</span> نوشته شده باشد نه localhost. ۳) کلید API را دوباره از n8n بساز و جایگزین کن. بعد Refresh بزن.</div>
-
-  <div class="box fix"><b class="lbl">🔧 مشکل ۶: هوش مصنوعی ورک‌فلو ساخت ولی اجرا خطا می‌دهد.</b><br>
-  <b>علت:</b> معمولاً کردنشیالِ خالی یا پارامتر جاافتاده.<br>
-  <b>راه‌حل:</b> در n8n روی گرهٔ قرمزرنگ کلیک کن؛ پیام خطا می‌گوید چه چیزی کم است. کردنشیال را طبق مرحلهٔ ۸ بساز و وصل کن، یا خطا را عیناً در چت Antigravity پیست کن و بگو «fix it».</div>
-
-  <div class="box fix"><b class="lbl">🔧 مشکل ۷: بعد از ری‌استارت کامپیوتر همه‌چیز «پاک» به نظر می‌رسد.</b><br>
-  <b>علت:</b> نگران نباش — چیزی پاک نشده! داده‌ها در کمدِ <span dir="ltr" class="t">n8n_data</span> امن‌اند.<br>
-  <b>راه‌حل:</b> فقط Docker Desktop را باز کن؛ کانتینر n8n به‌خاطر <span dir="ltr" class="t">--restart unless-stopped</span> خودش روشن می‌شود و همه‌چیز سر جایش برمی‌گردد.</div>
-</section>
-
-<!-- ================= FINALE ================= -->
-<div class="finale">
-  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
-  <ul>
-    <li>🐳 با پاورشل، WSL2 و Docker Desktop نصب کنی و سلامتش را تست کنی؛</li>
-    <li>⚡ کانتینر n8n را با تنظیمات استاندارد (انبار دائمی، درگاه، ساعت تهران، روشن‌شدن خودکار) راه بیندازی؛</li>
-    <li>🗝️ کلید API بسازی و مثل یک حرفه‌ای از آن مراقبت کنی؛</li>
-    <li>🌉 پلِ n8n-MCP را «داکرایز‌شده» به Antigravity وصل کنی؛</li>
-    <li>🤖 با یک جمله، هوش مصنوعی را وادار کنی برایت ورک‌فلو بسازد، اعتبارسنجی کند و مستقر کند؛</li>
-    <li>🔑 کردنشیال‌ها را امن و درست در خود n8n وارد کنی.</li>
-  </ul>
-  <p>قدم بعدی؟ از Antigravity بخواه یک ربات تلگرامی یا خلاصه‌سازِ ایمیل برایت بسازد. آسمان، تازه اولِ راه است! 🚀</p>
 </div>
 
-<footer>
-  <div>این آموزش برای استفادهٔ شخصی و یادگیری ساخته شده است.</div>
-  <div class="sig">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
-</footer>
-
-</div>
-
-<!-- © Mehdi Rezghi — https://t.me/Mehdirezghi -->
-<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a> &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> — <a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a></div>
+<script>
+// © Gravel — نوار پیشرفت مطالعه
+(function(){
+  var bar=document.getElementById('progressBar');
+  function update(){
+    var h=document.documentElement;
+    var scrolled=h.scrollTop||document.body.scrollTop;
+    var height=(h.scrollHeight-h.clientHeight)||1;
+    var pct=Math.min(100,Math.max(0,(scrolled/height)*100));
+    bar.style.width=pct+'%';
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  update();
+})();
+</script>
 </body>
 </html>
