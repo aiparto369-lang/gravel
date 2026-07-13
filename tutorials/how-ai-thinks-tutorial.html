@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- بخشی از گراول — کتابخانهٔ آموزش گام‌به‌گام | «برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.» -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>داخل مغز هوش مصنوعی چه می‌گذرد؟ — از توکن تا توهم، بدون فرمول پیچیده</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="🤖 ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="🧠">
+<meta name="gravel:time"     content="حدود ۴۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="با آزمایش‌های زندهٔ داخل صفحه ببین مدل زبانی واقعاً چه می‌کند: توکن، حافظه، چرا اشتباه می‌گوید و کِی نباید اعتماد کرد.">
+<meta name="gravel:keywords" content="هوش مصنوعی چطور کار می‌کند, مدل زبانی, توکن, token, context window, توهم هوش مصنوعی, hallucination, دما, temperature, چرا هوش مصنوعی اشتباه می‌کند, LLM, ChatGPT چطور فکر می‌کند, حافظهٔ هوش مصنوعی, سواد هوش مصنوعی">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<meta name="description" content="آموزش گراول: مغز هوش مصنوعی چگونه فکر می‌کند؟ با آزمایش‌های تعاملی، توهم هوش مصنوعی را جلوی چشم خودت بساز و بفهم کِی نباید به پاسخ اعتماد کنی.">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "داخل مغز هوش مصنوعی چه می‌گذرد؟ از توکن تا توهم",
+  "description": "آموزش تعاملی گراول دربارهٔ نحوهٔ کار مدل‌های زبانی: توکن، پنجرهٔ متن، دما و توهم هوش مصنوعی — با آزمایش‌های زنده.",
+  "inLanguage": "fa-IR",
+  "author": { "@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi" },
+  "publisher": { "@type": "Organization", "name": "گراول — کتابخانهٔ آموزش گام‌به‌گام" },
+  "copyrightHolder": { "@type": "Person", "name": "Mehdi Rezghi" },
+  "copyrightYear": "2026",
+  "keywords": "هوش مصنوعی, مدل زبانی, توکن, توهم هوش مصنوعی, LLM, سواد هوش مصنوعی"
+}
+</script>
+
+<style>
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --turq:#0E7C86;
+  --saff:#E8A317;
+  --navy:#123B4A;
+  --card:#ffffff;
+  --soft:#e6f0f0;
+  --line:rgba(18,59,74,.12);
+  --warn:#b23c17;
+  --warn-bg:#fdeee7;
+  --tip-bg:#eefaf6;
+  --ok:#0E7C86;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  direction:rtl;
+  text-align:right;
+  line-height:1.95;
+  font-size:17.5px;
+}
+
+/* نوار پیشرفت اسکرول */
+#progress{
+  position:fixed;inset-block-start:0;inset-inline-start:0;
+  height:5px;width:0%;
+  background:linear-gradient(90deg,var(--turq),var(--saff));
+  z-index:9999;transition:width .12s ease;
+}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 80px}
+
+/* هدر قهرمان */
+.hero{
+  background:radial-gradient(120% 120% at 80% 0%,var(--turq) 0%,var(--navy) 60%,#0c2530 100%);
+  color:#fff;border-radius:0 0 28px 28px;
+  padding:46px 26px 40px;text-align:center;
+  box-shadow:0 14px 40px rgba(18,59,74,.28);
+  position:relative;overflow:hidden;
+}
+.hero::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(closest-side,rgba(232,163,23,.22),transparent 70%) 15% 120%/50% 90% no-repeat;}
+.brand{font-size:14px;opacity:.9;letter-spacing:.3px}
+.brand b{color:var(--saff)}
+.hero h1{font-size:clamp(24px,5.4vw,36px);font-weight:900;margin:12px 0 6px;line-height:1.5;position:relative}
+.hero .sub{font-size:16px;opacity:.95;position:relative}
+.slogan{margin-top:16px;font-size:13.5px;opacity:.9;border-top:1px solid rgba(255,255,255,.2);padding-top:12px;position:relative}
+.brainpic{font-size:56px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+
+.promise{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  margin:-26px auto 26px;max-width:760px;padding:20px 22px;position:relative;z-index:2;
+  box-shadow:0 10px 26px rgba(18,59,74,.1);
+}
+.promise h2{margin:0 0 8px;font-size:18px;color:var(--turq)}
+.promise ul{margin:6px 0 0;padding-inline-start:22px}
+.promise li{margin:5px 0}
+
+/* فهرست */
+.toc{background:var(--soft);border-radius:16px;padding:16px 20px;margin:0 0 30px}
+.toc h3{margin:0 0 10px;font-size:16px;color:var(--navy)}
+.toc a{display:inline-block;color:var(--ink);text-decoration:none;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;margin:4px 4px 4px 0;font-size:14px;transition:.15s}
+.toc a:hover{background:var(--turq);color:#fff;border-color:var(--turq)}
+
+/* کارت مرحله */
+.stage{background:var(--card);border:1px solid var(--line);border-radius:20px;
+  padding:24px 22px;margin:0 0 26px;box-shadow:0 6px 18px rgba(18,59,74,.06)}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.badge{background:linear-gradient(135deg,var(--turq),var(--navy));color:#fff;font-weight:900;
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:20px;flex:none}
+.stage-head h2{margin:0;font-size:21px;color:var(--navy);flex:1;min-width:200px}
+.chip{background:var(--saff);color:#3a2600;font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 12px;white-space:nowrap}
+.chip.step{background:var(--soft);color:var(--navy)}
+.stage p{margin:12px 0}
+.stage h3{color:var(--turq);font-size:17px;margin:20px 0 6px}
+
+/* جعبه‌های رنگی */
+.box{border-radius:14px;padding:14px 16px;margin:16px 0;font-size:16px}
+.tip{background:var(--tip-bg);border:1px solid #bfe6dd}
+.warn{background:var(--warn-bg);border:1px solid #f0c3b0;color:#6a2110}
+.note{background:#fff7e8;border:1px solid #f0dcae}
+.check{background:#eef6ff;border:1px dashed #9cc2e8}
+.box b{display:block;margin-bottom:4px}
+.warn b{color:var(--warn)}
+
+/* پانویس */
+.fn{background:#f7fbfb;border-inline-start:4px solid var(--turq);border-radius:8px;
+  padding:10px 14px;margin:12px 0;font-size:14.5px;color:#33525b}
+.fn b{color:var(--navy)}
+
+/* آزمایشگاه تعاملی */
+.lab{background:linear-gradient(180deg,#0f2c37,#123B4A);color:#eaf6f5;border-radius:18px;
+  padding:20px;margin:18px 0;border:1px solid #23515f}
+.lab h4{margin:0 0 4px;font-size:16px;color:var(--saff)}
+.lab .hint{font-size:13.5px;opacity:.85;margin:0 0 14px}
+.btn{background:var(--saff);color:#3a2600;border:0;border-radius:12px;padding:10px 18px;
+  font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;margin:4px}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:#eaf6f5;border:1px solid #3f6b78}
+.btn.small{padding:7px 12px;font-size:13.5px}
+.screen{background:#0a1e26;border:1px solid #23515f;border-radius:12px;padding:14px 16px;
+  min-height:52px;margin:10px 0;font-size:16px;line-height:2.1;overflow-wrap:anywhere}
+.word{display:inline-block;background:#164a58;border:1px solid #2b6979;border-radius:8px;
+  padding:2px 8px;margin:2px;font-weight:700}
+.cand{display:inline-block;background:#1c5a6a;border:1px solid #34899b;border-radius:10px;
+  padding:8px 12px;margin:5px;cursor:pointer;transition:.12s;font-size:15px}
+.cand:hover{background:var(--turq)}
+.cand .p{font-size:12px;opacity:.75;margin-inline-start:6px}
+.slot{display:inline-block;min-width:70px;background:#123B4A;border:1px solid #2b6979;
+  border-radius:8px;padding:6px 10px;margin:4px;font-size:14px;transition:.4s}
+.slot.gone{opacity:0;transform:translateY(-8px) scale(.8)}
+.tok{display:inline-block;padding:3px 6px;margin:2px;border-radius:6px;font-weight:700;
+  border:1px solid rgba(255,255,255,.25)}
+.fake-card{background:#0a1e26;border:1px solid #7a2a15;border-radius:12px;padding:16px;margin:10px 0;
+  font-size:15px;line-height:2.2}
+.reveal{background:#3a1109;border:1px solid var(--warn);border-radius:10px;padding:12px 14px;
+  margin-top:10px;font-size:14.5px;color:#ffd9cc;display:none}
+.reveal.on{display:block}
+input[type=range]{width:100%;accent-color:var(--saff)}
+input[type=text],textarea{width:100%;background:#0a1e26;color:#eaf6f5;border:1px solid #34899b;
+  border-radius:10px;padding:10px;font-family:inherit;font-size:15px}
+.tempval{font-weight:900;color:var(--saff)}
+kbd{background:#e6f0f0;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:'Consolas',monospace;direction:ltr;display:inline-block}
+code{background:#e6f0f0;color:var(--navy);border-radius:6px;padding:2px 7px;direction:ltr;display:inline-block;font-family:'Consolas','Courier New',monospace;font-size:14.5px}
+.copybox{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;position:relative}
+.copybox .q{direction:rtl;font-weight:700;color:var(--navy)}
+.copybox button{position:absolute;inset-block-start:10px;inset-inline-start:10px;background:var(--turq);color:#fff;border:0;border-radius:8px;padding:5px 10px;font-family:inherit;font-size:12.5px;cursor:pointer}
+
+.mermaidish{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  background:#fff;border:1px dashed var(--turq);border-radius:14px;padding:16px;margin:16px 0}
+.node{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:700}
+.arrow{color:var(--turq);font-weight:900;font-size:20px}
+
+table.tr{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;background:#fff;border-radius:12px;overflow:hidden}
+table.tr th,table.tr td{border:1px solid var(--line);padding:10px 12px;text-align:right;vertical-align:top}
+table.tr th{background:var(--navy);color:#fff}
+table.tr td:first-child{background:var(--soft);font-weight:700;white-space:nowrap}
+
+.finish{background:linear-gradient(135deg,var(--turq),var(--saff));color:#08252c;border-radius:22px;
+  padding:28px 24px;text-align:center;margin:30px 0 10px}
+.finish h2{margin:0 0 10px;font-size:24px}
+.finish ul{display:inline-block;text-align:right;margin:10px auto 0}
+
+.gravel-footer a{color:inherit}
+
+@media(max-width:700px){
+  body{font-size:16.5px}
+  .stage{padding:20px 15px}
+  .hero{padding:38px 16px 32px}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="hero">
+  <div class="brand"><b>گراول</b> — کتابخانهٔ آموزش گام‌به‌گام</div>
+  <div class="brainpic">🧠⚙️</div>
+  <h1>داخل مغز هوش مصنوعی چه می‌گذرد؟</h1>
+  <div class="sub">از توکن تا توهم — بدون هیچ فرمول پیچیده‌ای</div>
+  <div class="slogan">🏔️ «برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»</div>
+</header>
+
+<div class="wrap">
+
+  <section class="promise">
+    <h2>قراره چی یاد بگیریم؟</h2>
+    <p>در این آموزش، به‌جای اینکه فقط دربارهٔ هوش مصنوعی «بخوانی»، آن را با دست خودت <b>آزمایش می‌کنی</b>. چند آزمایشگاه کوچک داخل همین صفحه ساخته‌ایم که مستقیم در مرورگرت اجرا می‌شوند (بدون نیاز به اینترنت یا نصب چیزی). قرار است ببینی:</p>
+    <ul>
+      <li>یک «مدل زبانی» واقعاً چه کار می‌کند و چطور یک جمله می‌سازد.</li>
+      <li>توکن، Context و حافظه دقیقاً چه فرقی با هم دارند.</li>
+      <li>چرا هوش مصنوعی گاهی با اطمینانِ کامل، پاسخِ غلط می‌دهد.</li>
+      <li>چرا یک سؤالِ یکسان، هر بار پاسخِ متفاوت می‌دهد.</li>
+      <li>و مهم‌تر از همه: <b>کِی نباید</b> به پاسخِ هوش مصنوعی اعتماد کرد.</li>
+    </ul>
+    <p style="margin-top:12px">در «مرحلهٔ ۵» یک <b>توهمِ واقعیِ هوش مصنوعی</b> را عمداً جلوی چشمت می‌سازیم تا برای همیشه یادت بماند این پدیده چیست.</p>
+  </section>
+
+  <nav class="toc">
+    <h3>🗺️ فهرست مسیر (۶ مرحله + آزمایش‌های واقعی)</h3>
+    <a href="#s1">۱) چطور یک جمله می‌سازد؟</a>
+    <a href="#s2">۲) توکن چیست؟</a>
+    <a href="#s3">۳) Context و حافظه</a>
+    <a href="#s4">۴) چرا پاسخ متفاوت می‌شود؟</a>
+    <a href="#s5">۵) توهم هوش مصنوعی</a>
+    <a href="#s6">۶) کِی اعتماد نکنیم؟</a>
+    <a href="#real">🧪 آزمایش روی هوش مصنوعی واقعی</a>
+    <a href="#fix">🔧 سوءتفاهم‌های رایج</a>
+    <a href="#done">🎉 جمع‌بندی</a>
+  </nav>
+
+  <!-- پیش‌نیازها -->
+  <section class="stage">
+    <div class="stage-head">
+      <div class="badge">۰</div>
+      <h2>قبل از شروع — چه چیزی لازم داری؟</h2>
+      <span class="chip">۲ دقیقه</span>
+    </div>
+    <p>خبر خوب: تقریباً هیچ پیش‌نیازی لازم نیست. فقط این‌ها:</p>
+    <div class="mermaidish">
+      <span class="node">💻 یک مرورگر معمولی</span>
+      <span class="arrow">→</span>
+      <span class="node">🖱️ توانایی کلیک‌کردن</span>
+      <span class="arrow">→</span>
+      <span class="node">🤔 کمی کنجکاوی</span>
+    </div>
+    <p>همهٔ آزمایش‌ها داخل همین صفحه اجرا می‌شوند. برای بخش «آزمایش روی هوش مصنوعی واقعی» (اختیاری) هم فقط به یک دستیارِ گفتگو مثل ChatGPT یا Claude دسترسی لازم داری.</p>
+    <div class="fn"><b>یک نکتهٔ مهم از همین اول:</b> «هوش مصنوعی» در این آموزش یعنی <b>مدل‌های زبانیِ بزرگ</b> <span dir="ltr">(Large Language Model — LLM)</span>؛ همان چیزی که پشتِ ابزارهایی مثل ChatGPT است. این با ربات‌های فیلم‌های علمی‌تخیلی فرق دارد.</div>
+  </section>
+
+  <!-- مرحله ۱ -->
+  <section class="stage" id="s1">
+    <div class="stage-head">
+      <div class="badge">۱</div>
+      <h2>مدل زبانی واقعاً چه می‌کند؟ (بازیِ حدسِ کلمهٔ بعدی)</h2>
+      <span class="chip step">مرحلهٔ ۱ از ۶</span>
+      <span class="chip">۸ دقیقه</span>
+    </div>
+
+    <p>بیایید با یک واقعیتِ ساده اما تکان‌دهنده شروع کنیم:</p>
+    <div class="box tip"><b>💡 قلبِ ماجرا</b>
+    یک مدل زبانی، در بنیادی‌ترین حالت، فقط <b>یک کار</b> بلد است: با نگاه به کلماتی که تا الان آمده‌اند، حدس می‌زند <b>کلمهٔ بعدی</b> چه باشد. همین. بعد آن کلمه را اضافه می‌کند و دوباره حدس می‌زند، و باز و باز… تا یک جملهٔ کامل ساخته شود.</div>
+
+    <h3>🎈 تشبیه: بازیِ «کلمهٔ بعدی» با دوستانت</h3>
+    <p>احتمالاً این بازی را کرده‌ای: یک نفر می‌گوید «من امروز رفتم…» و نفر بعد یک کلمه اضافه می‌کند: «…مدرسه»، بعدی: «…و»، بعدی: «…دوستم». مدل زبانی دقیقاً همین بازی را انجام می‌دهد — با این تفاوت که میلیاردها جمله خوانده و می‌داند بعد از هر کلمه، معمولاً <b>کدام کلمه‌ها محتمل‌ترند</b>.</p>
+
+    <div class="lab">
+      <h4>🔬 آزمایشگاه ۱ — خودت مدل زبانی باش</h4>
+      <p class="hint">ما یک «مدلِ اسباب‌بازی» ساختیم که فقط چند جملهٔ فارسی خوانده. روی هر کلمه‌ای که پیشنهاد می‌دهد کلیک کن تا جمله رشد کند. عددِ کنارِ هر کلمه، «احتمالِ» آن از نگاهِ مدل است.</p>
+      <div class="screen" id="genScreen"><span style="opacity:.6">برای شروع، دکمهٔ زیر را بزن…</span></div>
+      <div id="candArea"></div>
+      <button class="btn" onclick="startGen()">شروع / از نو</button>
+      <button class="btn ghost small" onclick="autoGen()">بگذار خودش تا آخر بسازد ⟳</button>
+    </div>
+
+    <div class="box warn"><b>⚠️ چه چیزی را تازه دیدی؟</b>
+    مدل خیلی زود جمله‌ای می‌سازد که <b>از نظر دستوری درست</b> است ولی ممکن است <b>کاملاً بی‌معنی یا نادرست</b> باشد (مثلاً «دانشمندان طعمِ خوبی داشتند»). این نکتهٔ کلیدیِ کلِ آموزش است: مدل «روان‌بودن» را با «درست‌بودن» اشتباه نمی‌گیرد — چون اصلاً مفهومِ «درست» را نمی‌فهمد. او فقط دنبالِ کلمهٔ <b>محتمل</b> است، نه کلمهٔ <b>حقیقی</b>.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+    الان باید یک جملهٔ فارسیِ روان اما احتمالاً بی‌معنی روی صفحه ساخته باشی. اگر دکمه‌ها کار نکردند، صفحه را یک‌بار تازه کن <span dir="ltr">(Refresh)</span> و دوباره امتحان کن.</div>
+
+    <div class="fn"><b>پانویس ۱ — «مدل زبانی» یعنی چه؟</b> برنامه‌ای که روی حجمِ عظیمی از متن آموزش دیده تا الگوهای زبان را یاد بگیرد و بتواند متنِ جدید تولید کند. «مدلِ اسباب‌بازیِ» ما فقط چند جمله خوانده؛ مدل‌های واقعی، بخش بزرگی از متنِ اینترنت را.</div>
+  </section>
+
+  <!-- مرحله ۲ -->
+  <section class="stage" id="s2">
+    <div class="stage-head">
+      <div class="badge">۲</div>
+      <h2>توکن چیست؟ (هوش مصنوعی «حرف» نمی‌بیند)</h2>
+      <span class="chip step">مرحلهٔ ۲ از ۶</span>
+      <span class="chip">۷ دقیقه</span>
+    </div>
+
+    <p>گفتیم مدل «کلمهٔ بعدی» را حدس می‌زند. اما دقیق‌تر بگوییم: مدل نه با «حرف» کار می‌کند، نه دقیقاً با «کلمه». او متن را به تکه‌هایی به نامِ <b>توکن</b> می‌شکند.</p>
+
+    <h3>🍫 تشبیه: تابلوی شکلاتی</h3>
+    <p>یک تابلوی شکلات را در نظر بگیر که به مربع‌های کوچک تقسیم شده. تو نمی‌توانی نصفِ یک مربع را جدا کنی؛ کوچک‌ترین واحد، همان «مربع» است. برای هوش مصنوعی هم کوچک‌ترین واحدِ متن، «حرف» نیست، بلکه <b>توکن</b> است — گاهی یک کلمهٔ کامل، گاهی نصفِ یک کلمه.</p>
+
+    <div class="lab">
+      <h4>🔬 آزمایشگاه ۲ — توکن‌شکن</h4>
+      <p class="hint">یک عبارت فارسی بنویس و دکمه را بزن تا ببینی تقریباً به چند «توکن» شکسته می‌شود. (این یک شبیه‌سازیِ ساده است؛ روشِ دقیقِ مدل‌های واقعی کمی متفاوت است، اما ایده همین است.)</p>
+      <input type="text" id="tokIn" value="استقلال کشورمان برای ما ارزشمند است" dir="rtl">
+      <div style="margin-top:10px"><button class="btn" onclick="tokenize()">به توکن بشکن ✂️</button></div>
+      <div class="screen" id="tokOut"><span style="opacity:.6">هنوز چیزی نشکسته‌ایم…</span></div>
+    </div>
+
+    <div class="box warn"><b>⚠️ چرا این مهم است؟ (رازِ یک ضعفِ معروف)</b>
+    چون هوش مصنوعی حروف را جدا جدا نمی‌بیند، در کارهایی مثل «چند تا حرفِ «ا» در فلان کلمه هست؟» یا «این کلمه را برعکس بنویس» اغلب اشتباه می‌کند. این ضعف بی‌هوشی نیست؛ نتیجهٔ همین است که او متن را به‌صورتِ توکن می‌بیند، نه حرف‌به‌حرف.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+    باید عبارتت را به‌صورت چند تکهٔ رنگی (توکن) و یک عددِ «تعداد توکن» دیده باشی. جملهٔ بلندتر = توکنِ بیشتر.</div>
+
+    <div class="fn"><b>پانویس ۲ — چرا تعداد توکن مهم است؟</b> بسیاری از سرویس‌های هوش مصنوعی بر اساسِ تعداد توکن هزینه می‌گیرند و ظرفیتشان را با توکن می‌سنجند. یعنی «طولِ متن» برای آن‌ها با توکن اندازه‌گیری می‌شود، نه با تعداد کلمه یا حرف.</div>
+  </section>
+
+  <!-- مرحله ۳ -->
+  <section class="stage" id="s3">
+    <div class="stage-head">
+      <div class="badge">۳</div>
+      <h2>Context و حافظه چه فرقی دارند؟</h2>
+      <span class="chip step">مرحلهٔ ۳ از ۶</span>
+      <span class="chip">۸ دقیقه</span>
+    </div>
+
+    <p>خیلی‌ها فکر می‌کنند هوش مصنوعی مثلِ یک انسان، حرف‌هایی را که زده‌ای «به‌خاطر می‌سپارد». حقیقت ظریف‌تر است. دو چیز را باید از هم جدا کنیم:</p>
+
+    <table class="tr">
+      <tr><th>مفهوم</th><th>یعنی چه؟</th><th>تشبیه</th></tr>
+      <tr><td>Context<br><span style="font-weight:400;font-size:13px">(پنجرهٔ متن)</span></td>
+        <td>مقدارِ متنی که مدل در همین لحظه «جلوی چشمش» دارد و می‌تواند به آن نگاه کند: سؤالِ فعلی + بخشی از گفتگوی قبلی.</td>
+        <td>میزِ کار با فضای محدود؛ فقط چند برگه رویش جا می‌شود.</td></tr>
+      <tr><td>حافظه<br><span style="font-weight:400;font-size:13px">(Memory)</span></td>
+        <td>قابلیتی جداگانه که بعضی ابزارها اضافه می‌کنند تا نکته‌هایی از تو را ذخیره کنند و در گفتگوهای بعدی هم به یاد بیاورند.</td>
+        <td>یک دفترچهٔ یادداشتِ کنارِ میز که عمداً چیزهایی را در آن نوشته‌ای.</td></tr>
+    </table>
+
+    <div class="box note"><b>📖 نکتهٔ کلیدی</b>
+    مدلِ زبانیِ خالص، بینِ دو گفتگو <b>هیچ چیز</b> را به‌خاطر نمی‌آورد. هر بار مثلِ روزِ اول است. اگر گفتگوی طولانی شود، حتی حرف‌های اولِ همان گفتگو هم می‌توانند از «پنجرهٔ متن» بیرون بیفتند و فراموش شوند.</div>
+
+    <div class="lab">
+      <h4>🔬 آزمایشگاه ۳ — پنجرهٔ متنِ محدود</h4>
+      <p class="hint">این «میزِ کار» فقط جای ۵ پیام دارد. چند پیام بفرست تا پُر شود؛ وقتی پیامِ ششم بیاید، قدیمی‌ترین پیام از میز می‌افتد. بعد امتحان کن آیا مدل هنوز پیامِ اول را «یادش هست».</p>
+      <div class="screen" id="ctxScreen"><span style="opacity:.6">میز خالی است…</span></div>
+      <button class="btn" onclick="sendMsg()">یک پیام بفرست ➕</button>
+      <button class="btn ghost small" onclick="askFirst()">بپرس: پیامِ اولم چه بود؟ 🤨</button>
+      <button class="btn ghost small" onclick="resetCtx()">پاک‌کن</button>
+      <div class="screen" id="ctxAns" style="display:none"></div>
+    </div>
+
+    <div class="box warn"><b>⚠️ اشتباهِ رایج</b>
+    اگر در یک گفتگوی خیلی طولانی دیدی مدل نکته‌ای را که «اولِ کار» گفته بودی فراموش کرده، این خرابی نیست؛ آن نکته از پنجرهٔ متن بیرون افتاده. راه‌حل: نکته‌های مهم را دوباره و کوتاه یادآوری کن.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+    باید دیده باشی که با پُرشدنِ میز، قدیمی‌ترین پیام «محو» می‌شود و وقتی سراغِ پیامِ اول را می‌گیری، مدل می‌گوید دیگر آن را نمی‌بیند.</div>
+
+    <div class="fn"><b>پانویس ۳ — اندازهٔ پنجرهٔ متن</b> در مدل‌های واقعی این پنجره خیلی بزرگ‌تر از ۵ پیام است (می‌تواند ده‌ها یا صدها صفحه باشد) و مدام هم بزرگ‌تر می‌شود؛ اما همیشه یک <b>سقف</b> دارد. ایده همان است که در آزمایش دیدی، فقط در مقیاسِ بزرگ‌تر.</div>
+  </section>
+
+  <!-- مرحله ۴ -->
+  <section class="stage" id="s4">
+    <div class="stage-head">
+      <div class="badge">۴</div>
+      <h2>چرا یک سؤالِ یکسان، پاسخِ متفاوت می‌دهد؟</h2>
+      <span class="chip step">مرحلهٔ ۴ از ۶</span>
+      <span class="chip">۶ دقیقه</span>
+    </div>
+
+    <p>حتماً برایت پیش آمده: یک سؤال را دو بار می‌پرسی و دو جوابِ متفاوت می‌گیری. این باگ نیست؛ یک ویژگیِ عمدی است که به آن «دما» می‌گویند.</p>
+
+    <h3>🎲 تشبیه: تاسِ وزن‌دار</h3>
+    <p>یادت هست مدل برای هر کلمه، چند گزینه با «احتمال‌های» مختلف داشت؟ حالا مدل باید یکی را انتخاب کند. <b>دمای پایین</b> یعنی «همیشه محتمل‌ترین گزینه را بردار» (محتاط و تکراری). <b>دمای بالا</b> یعنی «گاهی گزینه‌های کم‌احتمال‌تر را هم انتخاب کن» (خلاق و غیرقابل‌پیش‌بینی). مثل تاسی که سنگینیِ وجه‌هایش را کم و زیاد می‌کنی.</p>
+
+    <div class="lab">
+      <h4>🔬 آزمایشگاه ۴ — پیچِ «دما»</h4>
+      <p class="hint">دما را تنظیم کن و چند بار دکمه را بزن. در دمای <b>صفر</b>، هر بار همان جواب می‌آید. در دمای <b>بالا</b>، هر بار یک جوابِ متفاوت.</p>
+      <label>دما: <span class="tempval" id="tval">۰٫۸</span></label>
+      <input type="range" id="temp" min="0" max="100" value="80" oninput="updateTemp()">
+      <div style="display:flex;justify-content:space-between;font-size:12px;opacity:.8"><span>۰ (محتاط و ثابت)</span><span>۱ (خلاق و پراکنده)</span></div>
+      <div style="margin-top:10px"><button class="btn" onclick="tempGen()">همین سؤال را دوباره بپرس 🔁</button></div>
+      <div class="screen" id="tempOut"><span style="opacity:.6">جوابی هنوز نیامده…</span></div>
+    </div>
+
+    <div class="box note"><b>📖 پس نتیجه چه شد؟</b>
+    «تفاوتِ پاسخ‌ها» به‌معنای «دروغ‌گوییِ» مدل نیست. مدل دارد بین گزینه‌های محتمل، یکی را کمی تصادفی انتخاب می‌کند. برای کارهای خلاقانه این خوب است؛ برای کارهایی که یک جوابِ دقیق می‌خواهی، دمای پایین بهتر است.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+    باید دیده باشی در دمای صفر جواب‌ها یکسان‌اند و با بالا بردنِ دما، تنوع بیشتر می‌شود.</div>
+  </section>
+
+  <!-- مرحله ۵ -->
+  <section class="stage" id="s5">
+    <div class="stage-head">
+      <div class="badge">۵</div>
+      <h2>توهم: چرا با اطمینانِ کامل، اشتباه می‌گوید؟</h2>
+      <span class="chip step">مرحلهٔ ۵ از ۶</span>
+      <span class="chip">۹ دقیقه</span>
+    </div>
+
+    <p>حالا مهم‌ترین بخش. وقتی هوش مصنوعی چیزی را با اطمینانِ کامل می‌گوید که <b>اصلاً وجود ندارد</b> — یک منبعِ ساختگی، یک آمارِ جعلی، یک نقلِ‌قولِ خیالی — به آن «<b>توهم</b>» <span dir="ltr">(Hallucination)</span> می‌گویند.</p>
+
+    <div class="box tip"><b>💡 چرا اصلاً این اتفاق می‌افتد؟</b>
+    یادت باشد مدل فقط «کلمهٔ محتمل بعدی» را می‌سازد و مفهومِ «درست/غلط» را نمی‌فهمد. وقتی چیزی را نمی‌داند، به‌جای اینکه بگوید «نمی‌دانم»، کلماتی می‌سازد که <b>شبیهِ یک جوابِ درست به نظر می‌رسند</b> — چون از نظرِ زبانی، «محتمل» هستند. نتیجه: متنی که کاملاً معتبر به‌نظر می‌آید اما از پایه ساختگی است.</div>
+
+    <div class="lab">
+      <h4>🔬 آزمایشگاه ۵ — توهم را با دستِ خودت بساز</h4>
+      <p class="hint">دکمه را بزن. یک «منبعِ علمیِ کاملاً معتبر» جلویت ساخته می‌شود: نویسنده، مجله، سال، شمارهٔ DOI… همه‌چیز حرفه‌ای به‌نظر می‌رسد. اما یک لحظه صبر کن…</p>
+      <button class="btn" onclick="hallucinate()">🎓 یک منبعِ علمیِ معتبر بساز</button>
+      <div class="fake-card" id="fakeCard"><span style="opacity:.6">هنوز منبعی ساخته نشده…</span></div>
+      <button class="btn ghost small" id="revealBtn" style="display:none" onclick="revealFake()">👁️ حقیقت را نشانم بده</button>
+      <div class="reveal" id="fakeReveal">
+        ⚠️ <b>این منبع کاملاً ساختگی است.</b> نویسنده، مجله، سال و شمارهٔ <span dir="ltr">DOI</span> را همین صفحه به‌صورت تصادفی از چند فهرست کنار هم چید. هیچ‌کدام واقعی نیستند — ولی دقیقاً <b>شبیهِ</b> یک منبعِ واقعی به‌نظر می‌رسند. هوش مصنوعیِ واقعی هم گاهی دقیقاً همین کار را می‌کند: تکه‌های «محتمل» را کنار هم می‌گذارد و چیزی می‌سازد که معتبر به‌نظر برسد.
+      </div>
+    </div>
+
+    <div class="box warn"><b>⚠️ خطرناک‌ترین ویژگیِ توهم</b>
+    توهم با «لحنِ مطمئن» بیان می‌شود. مدل هیچ علامتی نشان نمی‌دهد که «این قسمت را از خودم درآوردم». برای همین، جملهٔ درست و جملهٔ توهمی از بیرون <b>یک‌شکل</b> به‌نظر می‌رسند. تنها راهِ تشخیص، <b>راستی‌آزماییِ خودت</b> از یک منبعِ مستقل است.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+    باید یک منبعِ به‌ظاهر معتبر دیده باشی و بعد فهمیده باشی که کاملاً ساختگی بوده. حالا معنیِ «توهم» را نه از روی تعریف، بلکه با چشمِ خودت می‌دانی.</div>
+
+    <div class="fn"><b>پانویس ۴ — یعنی هوش مصنوعی بی‌فایده است؟</b> نه! این ابزار برای خیلی کارها فوق‌العاده است. فقط باید بدانی <b>چه‌جور ابزاری</b> است: عالی برای نوشتن، خلاصه‌کردن، ایده‌دادن و پیش‌نویس؛ اما برای «حقیقتِ دقیق و قابل‌استناد» همیشه باید راستی‌آزمایی شود.</div>
+  </section>
+
+  <!-- مرحله ۶ -->
+  <section class="stage" id="s6">
+    <div class="stage-head">
+      <div class="badge">۶</div>
+      <h2>پس کِی نباید اعتماد کرد؟ (چک‌لیستِ طلایی)</h2>
+      <span class="chip step">مرحلهٔ ۶ از ۶</span>
+      <span class="chip">۵ دقیقه</span>
+    </div>
+
+    <p>حالا که می‌دانی مغزِ این ماشین چطور کار می‌کند، این چک‌لیست را همیشه دمِ دستت داشته باش. هر وقت یکی از این‌ها پیش آمد، <b>حتماً از یک منبعِ مستقل راستی‌آزمایی کن</b>:</p>
+
+    <table class="tr">
+      <tr><th>موقعیت</th><th>چرا خطرناک است؟</th></tr>
+      <tr><td>آمار، تاریخ و عددِ دقیق</td><td>مدل ممکن است عددِ «محتمل» بسازد، نه عددِ «درست».</td></tr>
+      <tr><td>منبع، مقاله، کتاب یا لینک</td><td>محتمل‌ترین جای توهم؛ منبعِ خوش‌ظاهر ولی ناموجود.</td></tr>
+      <tr><td>اخبارِ خیلی تازه</td><td>مدل تا یک تاریخِ مشخص آموزش دیده و بعد از آن را نمی‌داند مگر جست‌وجوی زنده داشته باشد.</td></tr>
+      <tr><td>موضوعاتِ حقوقی، پزشکی و مالیِ حساس</td><td>اشتباه اینجا هزینهٔ واقعی دارد؛ همیشه به متخصصِ انسانی مراجعه کن.</td></tr>
+      <tr><td>حسابِ ریاضی و شمارشِ حروف</td><td>به‌خاطرِ ماجرای «توکن»، در محاسبه و شمارش لغزنده است.</td></tr>
+      <tr><td>وقتی خیلی «مطمئن» حرف می‌زند</td><td>لحنِ مطمئن هیچ ربطی به درست‌بودن ندارد.</td></tr>
+    </table>
+
+    <div class="box tip"><b>💡 قانونِ طلایی گراول</b>
+    هوش مصنوعی را مثلِ یک <b>دستیارِ باهوش اما گاهی خیال‌پرداز</b> ببین: از او ایده بگیر، پیش‌نویس بگیر، سرعت بگیر — اما <b>مسئولیتِ نهاییِ صحت</b> همیشه با توست. اعتماد کن، ولی راستی‌آزمایی کن.</div>
+  </section>
+
+  <!-- آزمایش‌های واقعی -->
+  <section class="stage" id="real">
+    <div class="stage-head">
+      <div class="badge">🧪</div>
+      <h2>حالا روی یک هوش مصنوعیِ واقعی امتحان کن</h2>
+      <span class="chip">اختیاری · ۶ دقیقه</span>
+    </div>
+    <p>آزمایش‌های داخلِ صفحه مفهوم را نشان دادند. حالا همین رفتارها را در یک دستیارِ واقعی (مثل ChatGPT یا Claude) ببین. این عبارت‌ها را کپی کن و بپرس:</p>
+
+    <div class="copybox"><button onclick="cp(this)">کپی</button><div class="q">«در کلمهٔ «استقلال»، حرفِ «ل» چند بار آمده؟ فقط عدد را بگو.» — بعد خودت بشمار و ببین درست گفت یا نه. (نمایشِ ماجرای توکن)</div></div>
+
+    <div class="copybox"><button onclick="cp(this)">کپی</button><div class="q">«یک مقالهٔ علمیِ معتبر دربارهٔ «فوایدِ خوابِ نیم‌روزی» با نامِ نویسنده، مجله و سال به من معرفی کن.» — بعد اسمِ مقاله را در گوگل جست‌وجو کن و ببین اصلاً وجود دارد یا نه. (نمایشِ توهم)</div></div>
+
+    <div class="copybox"><button onclick="cp(this)">کپی</button><div class="q">«یک شعرِ کوتاهِ چهارخطی دربارهٔ باران بساز.» — همین را دو بارِ پشتِ‌سرِ هم بپرس و دو جوابِ متفاوت را مقایسه کن. (نمایشِ دما)</div></div>
+
+    <div class="copybox"><button onclick="cp(this)">کپی</button><div class="q">«مهم‌ترین خبرِ امروزِ دنیا چه بود؟» — ببین آیا می‌گوید تا چه تاریخی اطلاعات دارد یا برای پاسخ باید جست‌وجو کند. (نمایشِ مرزِ دانش)</div></div>
+
+    <div class="box warn"><b>⚠️ مواظب باش</b>
+    وقتی جوابِ آزمایشِ دوم را گرفتی، آن «منبع» را باور نکن تا خودت پیدایش کنی. هدفِ این آزمایش این است که با چشمِ خودت یک توهمِ واقعی را شکار کنی.</div>
+  </section>
+
+  <!-- رفع اشکال / سوءتفاهم -->
+  <section class="stage" id="fix">
+    <div class="stage-head">
+      <div class="badge">🔧</div>
+      <h2>سوءتفاهم‌های رایج — و حقیقت</h2>
+      <span class="chip">۴ دقیقه</span>
+    </div>
+    <table class="tr">
+      <tr><th>باورِ رایج (غلط)</th><th>حقیقت</th></tr>
+      <tr><td>«هوش مصنوعی مثلِ آدم می‌فهمد و فکر می‌کند.»</td><td>او الگوهای زبان را یاد گرفته و کلمهٔ محتملِ بعدی را می‌سازد؛ «فهمیدن» به معنای انسانی‌اش ندارد.</td></tr>
+      <tr><td>«اگر با اطمینان جواب داد، پس درست است.»</td><td>لحنِ اطمینان و درستیِ محتوا دو چیزِ کاملاً جدا هستند.</td></tr>
+      <tr><td>«همه‌چیز را بلد است و همیشه به‌روز است.»</td><td>تا یک تاریخِ مشخص آموزش دیده؛ بعد از آن را فقط با جست‌وجوی زنده می‌داند.</td></tr>
+      <tr><td>«حرف‌های من را برای همیشه یادش می‌ماند.»</td><td>مدلِ خالص بینِ گفتگوها چیزی به یاد نمی‌آورد؛ مگر قابلیتِ حافظه جدا فعال باشد.</td></tr>
+      <tr><td>«اگر جوابش هر بار فرق کرد، یعنی خراب است.»</td><td>این نتیجهٔ «دما» و انتخابِ کمی تصادفی است، نه خرابی.</td></tr>
+    </table>
+  </section>
+
+  <!-- جمع‌بندی -->
+  <section class="finish" id="done">
+    <h2>🎉 تمام شد! حالا تو مغزِ هوش مصنوعی را می‌شناسی</h2>
+    <p>دیگر هوش مصنوعی برایت یک «جعبهٔ جادوییِ مرموز» نیست. تو با دستِ خودت دیدی که:</p>
+    <ul>
+      <li>✅ مدل فقط <b>کلمهٔ محتملِ بعدی</b> را می‌سازد.</li>
+      <li>✅ متن را به‌صورتِ <b>توکن</b> می‌بیند، نه حرف.</li>
+      <li>✅ <b>Context</b> محدود است و با حافظه فرق دارد.</li>
+      <li>✅ «<b>دما</b>» باعثِ تنوعِ پاسخ‌ها می‌شود.</li>
+      <li>✅ «<b>توهم</b>» یعنی ساختِ چیزِ ناموجود با لحنِ مطمئن.</li>
+      <li>✅ و می‌دانی <b>کِی باید راستی‌آزمایی کنی</b>.</li>
+    </ul>
+  </section>
+
+  <div class="box tip" style="text-align:center">
+    <b>🧭 مرحلهٔ بعدیِ پیشنهادی</b>
+    حالا که می‌دانی مدل چطور فکر می‌کند، گامِ منطقیِ بعد این است که یاد بگیری چطور <b>درست از او سؤال بپرسی</b> تا کمترین توهم و بهترین جواب را بگیری. آموزشِ پیشنهادیِ بعدی: «مهندسیِ پرامپت از صفر — چطور با هوش مصنوعی حرف بزنیم».
+  </div>
+
+  <p style="text-align:center;font-size:13px;opacity:.7;margin-top:24px">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</p>
+
+</div>
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+
+<script>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi | منطقِ آزمایشگاه‌های تعاملی گراول */
+
+/* --- کمک‌ابزار: تبدیل رقم لاتین به فارسی --- */
+function toFa(n){return String(n).replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);}
+
+/* --- نوار پیشرفت اسکرول --- */
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('progress').style.width=p+'%';
+});
+
+/* ================= مدلِ اسباب‌بازی (آزمایشگاه ۱ و ۴) ================= */
+const CORPUS=[
+  "دانشمندان امروز کشفِ بزرگی اعلام کردند",
+  "پژوهشگران نتیجه گرفتند که آب برای بدن مهم است",
+  "گربه روی پشتِ بام آرام نشسته بود",
+  "قهوهٔ صبح طعمِ خوبی داشت",
+  "کودکان در پارک با توپ بازی کردند",
+  "معلم درسِ تازه‌ای به بچه‌ها آموخت",
+  "باران دیشب تمامِ شهر را خیس کرد",
+  "ماشینِ جدید سریع‌تر از قبل حرکت کرد",
+  "دانشمندان دربارهٔ ستاره‌ها تحقیق کردند",
+  "بچه‌ها قهوهٔ تلخ را دوست نداشتند",
+  "پژوهشگران امروز طعمِ خوبی داشتند",
+  "گربه درسِ تازه‌ای به شهر آموخت"
+];
+const START="\u2b50";
+let BIGRAM={};
+(function buildModel(){
+  CORPUS.forEach(s=>{
+    const w=s.split(/\s+/);
+    let prev=START;
+    w.forEach(word=>{
+      (BIGRAM[prev]=BIGRAM[prev]||{});
+      BIGRAM[prev][word]=(BIGRAM[prev][word]||0)+1;
+      prev=word;
+    });
+    (BIGRAM[prev]=BIGRAM[prev]||{});
+    BIGRAM[prev]["\u2691"]=(BIGRAM[prev]["\u2691"]||0)+1; // پایان
+  });
+})();
+function candidates(prev){
+  const m=BIGRAM[prev]||BIGRAM[START];
+  const total=Object.values(m).reduce((a,b)=>a+b,0);
+  return Object.entries(m).map(([w,c])=>({w,p:c/total}))
+    .sort((a,b)=>b.p-a.p);
+}
+
+/* --- آزمایشگاه ۱: انتخاب دستی --- */
+let genWords=[],genPrev=START;
+function startGen(){
+  genWords=[];genPrev=START;
+  document.getElementById('genScreen').innerHTML='<span style="opacity:.6">یک کلمه انتخاب کن…</span>';
+  showCands();
+}
+function showCands(){
+  const cs=candidates(genPrev).slice(0,4);
+  const area=document.getElementById('candArea');
+  if(genPrev==="\u2691"||cs.every(c=>c.w==="\u2691")){area.innerHTML='<span style="opacity:.7">✅ جمله تمام شد. دوباره «شروع» را بزن.</span>';return;}
+  area.innerHTML=cs.filter(c=>c.w!=="\u2691").map(c=>
+    `<span class="cand" onclick="pick('${c.w}')">${c.w}<span class="p">${toFa(Math.round(c.p*100))}٪</span></span>`
+  ).join('')||'<span style="opacity:.7">✅ جمله تمام شد.</span>';
+}
+function pick(w){
+  genWords.push(w);genPrev=w;
+  document.getElementById('genScreen').innerHTML=genWords.map(x=>`<span class="word">${x}</span>`).join(' ');
+  showCands();
+}
+function autoGen(){
+  startGen();
+  let steps=0;
+  (function loop(){
+    const cs=candidates(genPrev).filter(c=>c.w!=="\u2691");
+    if(cs.length===0||steps>10){document.getElementById('candArea').innerHTML='<span style="opacity:.7">✅ خودش جمله را تمام کرد. دیدی چطور روان ولی گاهی بی‌معنی شد؟</span>';return;}
+    const pickw=cs[Math.floor(Math.random()*Math.min(3,cs.length))].w;
+    pick(pickw);steps++;
+    setTimeout(loop,420);
+  })();
+}
+
+/* --- آزمایشگاه ۴: دما --- */
+function updateTemp(){
+  const t=document.getElementById('temp').value/100;
+  document.getElementById('tval').textContent=toFa(t.toFixed(1)).replace('.','٫');
+}
+function sampleWithTemp(cs,t){
+  if(t<=0.02) return cs[0].w;                 // حریصانه: همیشه بالاترین
+  const k=Math.max(1,Math.round(1+t*(Math.min(cs.length,4)-1)));
+  const pool=cs.slice(0,k);
+  const total=pool.reduce((a,b)=>a+b.p,0);
+  let r=Math.random()*total;
+  for(const c of pool){r-=c.p;if(r<=0)return c.w;}
+  return pool[pool.length-1].w;
+}
+function tempGen(){
+  const t=document.getElementById('temp').value/100;
+  let prev=START,out=[],steps=0;
+  while(steps<9){
+    const cs=candidates(prev).filter(c=>c.w!=="\u2691");
+    if(cs.length===0)break;
+    const w=sampleWithTemp(cs,t);
+    out.push(w);prev=w;steps++;
+    if((BIGRAM[w]||{})["\u2691"] && Math.random()<0.4 && steps>4)break;
+  }
+  document.getElementById('tempOut').innerHTML=out.map(x=>`<span class="word">${x}</span>`).join(' ');
+}
+
+/* ================= آزمایشگاه ۲: توکن‌شکن ================= */
+const PALETTE=['#0E7C86','#E8A317','#3f6b78','#b23c17','#5a8f2a','#7a4fb5','#c2185b','#00838f'];
+function tokenize(){
+  const txt=document.getElementById('tokIn').value.trim();
+  if(!txt){document.getElementById('tokOut').innerHTML='<span style="opacity:.6">اول یک عبارت بنویس.</span>';return;}
+  let tokens=[];
+  txt.split(/\s+/).forEach(word=>{
+    // شبیه‌سازیِ ساده: کلمه‌های کوتاه یک توکن؛ بلندتر به تکه‌های ~۳ حرفی
+    if([...word].length<=3){tokens.push(word);}
+    else{
+      const ch=[...word];
+      for(let i=0;i<ch.length;i+=3){tokens.push(ch.slice(i,i+3).join(''));}
+    }
+  });
+  const html=tokens.map((t,i)=>`<span class="tok" style="background:${PALETTE[i%PALETTE.length]}33;border-color:${PALETTE[i%PALETTE.length]}">${t}</span>`).join('');
+  document.getElementById('tokOut').innerHTML=html+
+    `<div style="margin-top:10px;opacity:.85">تعداد توکن (تقریبی): <b style="color:var(--saff)">${toFa(tokens.length)}</b> — دیدی که یک کلمهٔ بلند می‌تواند چند توکن شود؟</div>`;
+}
+
+/* ================= آزمایشگاه ۳: پنجرهٔ متن ================= */
+const WIN=5;let msgs=[],counter=0,firstMsg=null;
+function renderCtx(){
+  const s=document.getElementById('ctxScreen');
+  if(msgs.length===0){s.innerHTML='<span style="opacity:.6">میز خالی است…</span>';return;}
+  s.innerHTML=msgs.map(m=>`<span class="slot">${m}</span>`).join('');
+}
+function sendMsg(){
+  counter++;
+  const m=`پیام #${toFa(counter)}`;
+  if(counter===1)firstMsg=m;
+  msgs.push(m);
+  if(msgs.length>WIN){
+    // انیمیشنِ افتادنِ قدیمی‌ترین
+    renderCtx();
+    const first=document.querySelector('#ctxScreen .slot');
+    if(first)first.classList.add('gone');
+    setTimeout(()=>{msgs.shift();renderCtx();},400);
+  }else{renderCtx();}
+  document.getElementById('ctxAns').style.display='none';
+}
+function askFirst(){
+  const a=document.getElementById('ctxAns');
+  a.style.display='block';
+  if(counter===0){a.innerHTML='<span style="opacity:.7">هنوز پیامی نفرستادی.</span>';return;}
+  const stillHere=msgs.includes(firstMsg);
+  if(stillHere){
+    a.innerHTML=`🤖 «پیامِ اولت <b style="color:var(--saff)">${firstMsg}</b> بود.» — چون هنوز روی میز است، آن را می‌بینم.`;
+  }else{
+    a.innerHTML=`🤖 «متأسفم، دیگر <b style="color:#ffb4a0">پیامِ اول را نمی‌بینم.</b>» — از پنجرهٔ متن بیرون افتاد و فراموش شد. دقیقاً همان چیزی که در گفتگوهای طولانیِ واقعی رخ می‌دهد.`;
+  }
+}
+function resetCtx(){msgs=[];counter=0;firstMsg=null;renderCtx();document.getElementById('ctxAns').style.display='none';}
+
+/* ================= آزمایشگاه ۵: توهمِ عمدی ================= */
+const AUTHORS=["دکتر مریم رضایی","پروفسور علی محمدی","دکتر سارا کریمی","ح. نوروزی و همکاران","دکتر رضا افشار","م. حسینی و ج. دیویس"];
+const JOURNALS=["مجلهٔ بین‌المللیِ علومِ شناختی","فصلنامهٔ پژوهش‌های نوینِ سلامت","Journal of Applied Cognition","مجلهٔ تحقیقاتِ رفتاری","Annual Review of Neuroscience"];
+const TOPICS=["تأثیرِ خوابِ نیم‌روزی بر حافظه","رابطهٔ نور و تمرکز","اثرِ موسیقی بر بهره‌وری","نقشِ آب در عملکردِ مغز"];
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function hallucinate(){
+  const y=2016+Math.floor(Math.random()*9);
+  const vol=10+Math.floor(Math.random()*40);
+  const iss=1+Math.floor(Math.random()*6);
+  const p1=100+Math.floor(Math.random()*300);
+  const doi=`10.${1000+Math.floor(Math.random()*8999)}/${['jcog','nhr','abr','neuro'][Math.floor(Math.random()*4)]}.${y}.${1000+Math.floor(Math.random()*8999)}`;
+  document.getElementById('fakeCard').innerHTML=
+   `<div style="font-size:13px;opacity:.7;margin-bottom:6px">📄 منبعِ پیشنهادیِ «هوش مصنوعی»:</div>
+    <b>${rnd(AUTHORS)}</b> (${toFa(y)}). «${rnd(TOPICS)}». <i>${rnd(JOURNALS)}</i>،
+    دورهٔ ${toFa(vol)}، شمارهٔ ${toFa(iss)}، صفحات ${toFa(p1)}–${toFa(p1+14)}.
+    <div style="direction:ltr;text-align:left;font-family:Consolas,monospace;font-size:13px;margin-top:8px;opacity:.9">DOI: ${doi}</div>`;
+  document.getElementById('revealBtn').style.display='inline-block';
+  document.getElementById('fakeReveal').classList.remove('on');
+}
+function revealFake(){document.getElementById('fakeReveal').classList.add('on');}
+
+/* ================= کپیِ آزمایش‌های واقعی ================= */
+function cp(btn){
+  const q=btn.parentElement.querySelector('.q').textContent.replace(/^«|».*$/g,'').split('»')[0];
+  const text=btn.parentElement.querySelector('.q').textContent;
+  const toCopy=text.substring(text.indexOf('«')+1, text.indexOf('»'));
+  navigator.clipboard.writeText(toCopy).then(()=>{
+    const old=btn.textContent;btn.textContent='✓ کپی شد';setTimeout(()=>btn.textContent=old,1400);
+  }).catch(()=>{btn.textContent='کپیِ دستی';});
+}
+
+/* مقداردهیِ اولیه */
+renderCtx();
+</script>
+</body>
+</html>
