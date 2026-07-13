@@ -4,7 +4,7 @@
    نسخه را ربات گراول خودکار جلو می‌برد؛ دستی دست نزن.
    ========================================================== */
 
-const VERSION = "20260713150635";
+const VERSION = "20260713161601";
 const CACHE = "gravel-" + VERSION;
 // GRAVEL_TUTORIALS: این خط را ربات گراول با هر آپلود تازه می‌کند.
 const TUTORIALS = ["./tutorials/ai-roadmap-getting-started-tutorial.html", "./tutorials/docker-n8n-antigravity-tutorial.html", "./tutorials/install-python-node-vscode-tutorial(1).html", "./tutorials/python-1hour-vibe-coding-tutorial.html", "./tutorials/openclaw-tutorial.html", "./tutorials/openclaw-pro-tutorial.html", "./tutorials/claude-cowork-tutorial.html", "./tutorials/powershell-tutorial.html", "./tutorials/openrouter-crypto-wallet-tutorial.html", "./tutorials/claude-usage-limit-tutorial.html"];
