@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Gravel Bot
         env:
-          SITE_URL: https://aiparto369-lang.github.io/gravel
+          SITE_URL: https://mygravel.ir
         run: python scripts/build_catalog.py
 
       - name: Commit & push results
