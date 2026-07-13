@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — مهدی رزقی — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — بخشی از گراول: کتابخانهٔ آموزش گام‌به‌گام -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصال n8n به اینترنت با ngrok، داکر و دامنهٔ ثابت — آموزش گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="⚙️ اتوماسیون">
+<meta name="gravel:emoji"    content="🌐">
+<meta name="gravel:time"     content="حدود ۵۰ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="از صفرِ صفر: ساخت حساب ngrok، گرفتن NGROK_AUTHTOKEN، رزرو دامنهٔ ثابت NGROK_DOMAIN و اتصال آن به n8n داخل داکر تا وبهوک‌ها کار کنند.">
+<meta name="gravel:keywords" content="ngrok, انگروک, ان‌گراک, tunnel, تونل, NGROK_AUTHTOKEN, NGROK_DOMAIN, دامنه ثابت, static domain, webhook, وبهوک, n8n, داکر, docker, docker compose, WEBHOOK_URL, اتوماسیون, localhost عمومی">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "اتصال n8n به اینترنت با ngrok، داکر و دامنهٔ ثابت",
+  "description": "آموزش گام‌به‌گام از صفر: ساخت حساب ngrok، گرفتن authtoken، رزرو دامنهٔ ثابت و اتصال آن به n8n داخل داکر برای فعال‌شدن وبهوک‌ها.",
+  "inLanguage": "fa-IR",
+  "author": { "@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi" },
+  "totalTime": "PT50M",
+  "step": [
+    { "@type": "HowToStep", "name": "ساخت حساب ngrok", "url": "#s1" },
+    { "@type": "HowToStep", "name": "گرفتن NGROK_AUTHTOKEN", "url": "#s2" },
+    { "@type": "HowToStep", "name": "رزرو دامنهٔ ثابت NGROK_DOMAIN", "url": "#s3" },
+    { "@type": "HowToStep", "name": "ساخت فایل env.", "url": "#s4" },
+    { "@type": "HowToStep", "name": "ساخت docker-compose.yaml", "url": "#s5" },
+    { "@type": "HowToStep", "name": "اجرای داکر", "url": "#s6" },
+    { "@type": "HowToStep", "name": "تست دامنه و پنل ngrok", "url": "#s7" },
+    { "@type": "HowToStep", "name": "تست وبهوک", "url": "#s8" }
+  ]
+}
+</script>
+
+<style>
+:root{
+  --bg:#F2F7F7;        /* زمینه */
+  --ink:#14303B;       /* جوهر (متن اصلی) */
+  --teal:#0E7C86;      /* فیروزه‌ای */
+  --saffron:#E8A317;   /* زعفرانی */
+  --midnight:#123B4A;  /* سرمه‌ای شب */
+  --card:#ffffff;
+  --soft:#e4eeef;
+  --code-bg:#0f2a33;
+  --ok:#1a7f5a;
+  --warn:#b8541a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  direction:rtl;text-align:right;line-height:1.95;font-size:17px;
+}
+
+/* نوار پیشرفت بالای صفحه */
+#progress{position:fixed;top:0;inset-inline:0;height:6px;background:transparent;z-index:100}
+#progress > i{display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--teal),var(--saffron));transition:width .1s}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 18px 60px}
+
+/* هدر قهرمان */
+.hero{
+  margin-top:6px;background:linear-gradient(140deg,var(--midnight),var(--teal));
+  color:#fff;border-radius:24px;padding:38px 26px;position:relative;overflow:hidden;
+  box-shadow:0 18px 40px rgba(18,59,74,.28)
+}
+.hero::after{content:"🌐";position:absolute;font-size:150px;opacity:.12;
+  inset-inline-start:-10px;bottom:-40px;transform:rotate(-8deg)}
+.hero .brand{font-size:14px;opacity:.9;font-weight:700;letter-spacing:.3px}
+.hero h1{font-size:30px;font-weight:900;margin:.35em 0 .2em;line-height:1.6}
+.hero .slogan{font-size:14px;opacity:.9;border-inline-start:3px solid var(--saffron);
+  padding-inline-start:10px;margin-top:14px}
+.hero .promise{margin-top:18px;background:rgba(255,255,255,.12);
+  border-radius:14px;padding:14px 16px;font-size:15.5px}
+.chips{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,.16);border-radius:999px;padding:5px 13px;font-size:13px;font-weight:500}
+
+/* فهرست */
+.toc{background:var(--card);border-radius:18px;padding:20px 22px;margin:26px 0;
+  box-shadow:0 6px 18px rgba(18,59,74,.08);border:1px solid var(--soft)}
+.toc h2{margin:0 0 12px;font-size:19px;color:var(--midnight)}
+.toc ol{margin:0;padding-inline-start:22px}
+.toc li{margin:7px 0}
+.toc a{color:var(--teal);text-decoration:none;font-weight:500}
+.toc a:hover{text-decoration:underline}
+
+h2.sec{font-size:23px;color:var(--midnight);margin:40px 0 6px;font-weight:900}
+.lead{color:#3a5560;font-size:16px;margin-top:2px}
+
+/* کارت مرحله */
+.step{background:var(--card);border-radius:20px;padding:24px 22px;margin:22px 0;
+  box-shadow:0 8px 22px rgba(18,59,74,.09);border:1px solid var(--soft);position:relative}
+.step .top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.badge{width:44px;height:44px;flex:0 0 44px;border-radius:14px;
+  background:linear-gradient(135deg,var(--teal),var(--midnight));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px}
+.step h3{margin:0;font-size:20px;color:var(--ink);font-weight:700}
+.time{margin-inline-start:auto;background:var(--soft);color:var(--midnight);
+  border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.stagechip{display:inline-block;background:#eaf5f6;color:var(--teal);
+  border-radius:8px;padding:2px 10px;font-size:12px;font-weight:700;margin-bottom:10px}
+.step p{margin:.6em 0}
+.step ul,.step ol{padding-inline-start:22px}
+.step li{margin:6px 0}
+
+/* بلوک کد LTR */
+.code{background:var(--code-bg);color:#e9f3f5;border-radius:14px;padding:16px 16px;
+  margin:14px 0;direction:ltr;text-align:left;overflow-x:auto;
+  font-family:'Consolas','Courier New',monospace;font-size:14px;line-height:1.75;
+  border:1px solid rgba(255,255,255,.08)}
+.code .c{color:#7fb9c2}      /* کامنت */
+.code .k{color:#ffcf6b}      /* کلید/کلمهٔ مهم */
+.code .s{color:#9fe0b0}      /* رشته */
+code.inline{background:#e7f0f1;color:var(--midnight);border-radius:6px;
+  padding:1px 7px;font-family:'Consolas',monospace;font-size:14px;direction:ltr;
+  display:inline-block}
+
+/* جعبه‌های رنگی */
+.box{border-radius:14px;padding:14px 16px;margin:14px 0;font-size:15.5px;line-height:1.85}
+.tip{background:#e8f7f0;border-inline-start:5px solid var(--ok)}
+.warn{background:#fdf1e6;border-inline-start:5px solid var(--warn)}
+.note{background:#eef4fb;border-inline-start:5px solid #3d6ea5}
+.check{background:#fff8e6;border-inline-start:5px solid var(--saffron)}
+.box b{color:var(--midnight)}
+.box .h{font-weight:900;display:block;margin-bottom:4px}
+
+/* پانویس */
+.fn{background:#f4f8f8;border:1px dashed #b8cdd0;border-radius:12px;
+  padding:12px 15px;margin:12px 0;font-size:14.5px;color:#33505a}
+.fn b{color:var(--teal)}
+
+/* جدول */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;
+  background:var(--card);border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 14px rgba(18,59,74,.07)}
+th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--soft);vertical-align:top}
+th{background:var(--midnight);color:#fff;font-weight:700}
+tr:last-child td{border-bottom:none}
+td code{direction:ltr;display:inline-block}
+
+/* دیاگرام جریان */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;
+  justify-content:center;margin:18px 0;text-align:center}
+.flow .node{background:var(--card);border:2px solid var(--teal);border-radius:14px;
+  padding:12px 14px;min-width:120px;font-size:13.5px;font-weight:700;color:var(--midnight);
+  box-shadow:0 4px 12px rgba(14,124,134,.14)}
+.flow .node small{display:block;font-weight:400;color:#5c757e;margin-top:3px}
+.flow .arrow{display:flex;align-items:center;color:var(--saffron);font-size:26px;font-weight:900}
+
+/* واژه‌نامه */
+.gloss{background:var(--card);border-radius:16px;padding:8px 6px;border:1px solid var(--soft)}
+.gloss dt{font-weight:900;color:var(--teal);margin-top:12px;padding-inline:12px}
+.gloss dd{margin:2px 0 0;padding-inline:12px;color:#33505a;font-size:15px}
+
+/* جشن پایانی */
+.done{background:linear-gradient(140deg,var(--saffron),#f0b84a);color:#3a2a06;
+  border-radius:22px;padding:28px 24px;margin:34px 0 10px;box-shadow:0 14px 30px rgba(232,163,23,.28)}
+.done h2{margin:0 0 8px;font-size:24px;color:#3a2a06}
+.done ul{padding-inline-start:22px}
+
+.next{background:var(--midnight);color:#fff;border-radius:16px;padding:18px 20px;margin:18px 0}
+.next a{color:var(--saffron);font-weight:700;text-decoration:none}
+
+.gravel-footer a{transition:opacity .2s}
+@media(max-width:700px){
+  body{font-size:16px}
+  .hero h1{font-size:24px}
+  .wrap{padding:0 12px 50px}
+  .time{margin-inline-start:0}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"><i></i></div>
+
+<div class="wrap">
+
+  <!-- ================= هدر ================= -->
+  <header class="hero">
+    <div class="brand">🏔️ گراول — کتابخانهٔ آموزش گام‌به‌گام</div>
+    <h1>n8n خودت را با <span dir="ltr">ngrok</span> به اینترنت وصل کن</h1>
+    <div class="slogan">«برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.»</div>
+    <div class="promise">
+      <b>قراره چی یاد بگیریم؟</b><br>
+      از صفرِ صفر و بدون هیچ پیش‌نیاز اضافه: یک حساب <span dir="ltr">ngrok</span> می‌سازیم،
+      کلید <code class="inline">NGROK_AUTHTOKEN</code> را می‌گیریم، یک آدرس ثابت
+      <code class="inline">NGROK_DOMAIN</code> رزرو می‌کنیم و آن را طوری به
+      <span dir="ltr">n8n</span> داخل داکر وصل می‌کنیم که آدرس عمومی
+      <code class="inline">https://${NGROK_DOMAIN}</code> واقعاً باز شود و وبهوک‌ها کار کنند.
+    </div>
+    <div class="chips">
+      <span class="chip">⚙️ دستهٔ اتوماسیون</span>
+      <span class="chip">🕒 حدود ۵۰ دقیقه</span>
+      <span class="chip">🎯 سطح: مبتدی</span>
+      <span class="chip">💻 ویندوز / مک / لینوکس</span>
+    </div>
+  </header>
+
+  <!-- ================= چرا اصلاً؟ ================= -->
+  <h2 class="sec">قبل از هر چیز: این کار به چه دردی می‌خورد؟ 🤔</h2>
+  <p class="lead">یک مثال ساده تا خیالت راحت شود که چرا این آموزش لازم است.</p>
+
+  <div class="step">
+    <p>
+      فرض کن <span dir="ltr">n8n</span> را روی کامپیوتر خودت با داکر بالا آورده‌ای و در مرورگر با آدرس
+      <code class="inline">http://localhost:5678</code> بازش می‌کنی. تا وقتی فقط خودت با آن کار می‌کنی همه‌چیز خوب است.
+      اما وقتی می‌خواهی یک سرویس بیرونی (مثل تلگرام، اسلک، یا یک فروشگاه) به <span dir="ltr">n8n</span> تو
+      <b>پیام بفرستد</b>، آن سرویس هیچ راهی برای رسیدن به کامپیوتر تو ندارد.
+    </p>
+    <div class="fn">
+      <b>پانویس ۱ — «localhost» یعنی چه؟</b><br>
+      <code class="inline">localhost</code> یعنی «همین کامپیوترِ خودم». آدرسی است که فقط از داخل همین دستگاه در دسترس است؛
+      مثل تلفن داخلیِ یک ساختمان که از بیرونِ ساختمان نمی‌شود آن را گرفت.
+    </div>
+    <div class="fn">
+      <b>پانویس ۲ — «وبهوک» (Webhook) یعنی چه؟</b><br>
+      وبهوک مثل یک <b>زنگِ در</b> است. تو یک آدرس به یک سرویس بیرونی می‌دهی و می‌گویی «هر وقت اتفاقی افتاد، این زنگ را بزن».
+      اما زنگ باید روی درِ خانه‌ای باشد که <b>از بیرون پیدا شود</b>؛ و <code class="inline">localhost</code> از بیرون پیدا نیست.
+    </div>
+    <p>
+      راه‌حل: یک ابزار به اسم <span dir="ltr">ngrok</span> یک <b>تونل امن</b> می‌سازد و به کامپیوترِ تو یک
+      آدرس عمومیِ اینترنتی (با قفل <span dir="ltr">HTTPS</span>) می‌دهد. هر کس آن آدرس را باز کند،
+      <span dir="ltr">ngrok</span> پشت‌پرده او را به <span dir="ltr">n8n</span> داخل کامپیوترِ تو وصل می‌کند.
+    </p>
+
+    <div class="flow">
+      <div class="node">سرویس بیرونی<small>تلگرام / اسلک</small></div>
+      <div class="arrow">→</div>
+      <div class="node" style="border-color:var(--saffron)"><span dir="ltr">https://${NGROK_DOMAIN}</span><small>آدرس عمومی و ثابت</small></div>
+      <div class="arrow">→</div>
+      <div class="node"><span dir="ltr">ngrok</span> tunnel<small>تونل امن</small></div>
+      <div class="arrow">→</div>
+      <div class="node"><span dir="ltr">n8n</span><small>روی کامپیوتر تو</small></div>
+    </div>
+
+    <div class="fn">
+      <b>پانویس ۳ — «تونل» (Tunnel) یعنی چه؟</b><br>
+      یک مسیرِ امن و رمزگذاری‌شده بین آدرس عمومیِ <span dir="ltr">ngrok</span> و کامپیوتر تو.
+      انگار یک لولهٔ نامرئی از اینترنت مستقیم وصل می‌شود به برنامهٔ روی دستگاهت.
+    </div>
+  </div>
+
+  <!-- ================= پیش‌نیازها ================= -->
+  <h2 class="sec">پیش‌نیازها ✅ (اول این‌ها را چک کن)</h2>
+  <p class="lead">این آموزش فرض می‌کند داکر و <span dir="ltr">n8n</span> را از قبل داری؛ اگر نداری، مسیرِ رسیدن به آن‌ها را پایین گفته‌ایم.</p>
+
+  <div class="step">
+    <ul>
+      <li><b>کامپیوتر با اینترنت</b> — ویندوز، مک یا لینوکس فرقی ندارد.</li>
+      <li><b>داکر نصب‌شده و روشن</b> — همان که در ایستگاه «داکر و n8n» گراول یاد گرفتی.</li>
+      <li><b>بلد باشی ترمینال باز کنی</b> — در ویندوز <span dir="ltr">PowerShell</span> یا <span dir="ltr">CMD</span>، در مک/لینوکس <span dir="ltr">Terminal</span>.</li>
+    </ul>
+
+    <p>برای مطمئن‌شدن از نصب بودن داکر، این دستور را در ترمینال بزن:</p>
+    <div class="code">docker --version</div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      اگر چیزی شبیه <code class="inline">Docker version 27.x.x</code> دیدی، عالی است.
+      اگر پیام خطا دیدی یا دستور شناخته نشد، هنوز داکر نصب یا روشن نیست؛ اول آن را درست کن.
+    </div>
+    <div class="box note">
+      <span class="h">📖 نداری؟ اشکالی ندارد</span>
+      اگر هنوز داکر یا <span dir="ltr">n8n</span> نداری، اول آموزش
+      <a href="../index.html">«داکر و n8n» در گراول</a> را کامل کن و بعد به این آموزش برگرد. این آموزش دقیقاً از همان‌جا شروع می‌شود.
+    </div>
+  </div>
+
+  <!-- ================= فهرست ================= -->
+  <nav class="toc">
+    <h2>🗺️ نقشهٔ راه — ۸ مرحلهٔ کوچک</h2>
+    <ol>
+      <li><a href="#s1">مرحله ۱ — ساخت حساب رایگان <span dir="ltr">ngrok</span></a></li>
+      <li><a href="#s2">مرحله ۲ — گرفتن <code class="inline">NGROK_AUTHTOKEN</code></a></li>
+      <li><a href="#s3">مرحله ۳ — رزرو دامنهٔ ثابت <code class="inline">NGROK_DOMAIN</code></a></li>
+      <li><a href="#s4">مرحله ۴ — ساخت فایل <code class="inline">.env</code></a></li>
+      <li><a href="#s5">مرحله ۵ — ساخت فایل <code class="inline">docker-compose.yaml</code></a></li>
+      <li><a href="#s6">مرحله ۶ — اجرا با یک دستور</a></li>
+      <li><a href="#s7">مرحله ۷ — تست آدرس عمومی و پنل <span dir="ltr">ngrok</span></a></li>
+      <li><a href="#s8">مرحله ۸ — تست یک وبهوک واقعی</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= مرحله ۱ ================= -->
+  <section class="step" id="s1">
+    <span class="stagechip">مرحله ۱ از ۸</span>
+    <div class="top">
+      <div class="badge">۱</div>
+      <h3>ساخت حساب رایگان <span dir="ltr">ngrok</span></h3>
+      <span class="time">⏱️ حدود ۵ دقیقه</span>
+    </div>
+    <ol>
+      <li>مرورگر را باز کن و به این آدرس برو:
+        <div class="code">https://dashboard.ngrok.com/signup</div>
+      </li>
+      <li>یکی از راه‌های ثبت‌نام را انتخاب کن: با <span dir="ltr">Google</span>، با <span dir="ltr">GitHub</span>، یا با ایمیل و رمز.</li>
+      <li>اگر با ایمیل ثبت‌نام کردی، به صندوق ایمیلت برو و روی لینک تأیید کلیک کن.</li>
+      <li>حالا وارد <b>داشبورد <span dir="ltr">ngrok</span></b> می‌شوی — همان صفحهٔ اصلی مدیریت حساب.</li>
+    </ol>
+    <div class="box tip">
+      <span class="h">💡 نکته</span>
+      حساب رایگان برای این آموزش کاملاً کافی است و <b>کارت بانکی نمی‌خواهد</b>. با همین حساب رایگان
+      یک دامنهٔ ثابت هم می‌گیری.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      الان باید داخل صفحه‌ای به اسم <b>Dashboard</b> باشی و منویی سمت صفحه ببینی که گزینه‌هایی مثل
+      <span dir="ltr">Domains</span> و <span dir="ltr">Your Authtoken</span> دارد.
+      اگر هنوز در صفحهٔ ورود گیر کرده‌ای، به بخش <a href="#trouble">رفع اشکال</a> برو.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۲ ================= -->
+  <section class="step" id="s2">
+    <span class="stagechip">مرحله ۲ از ۸</span>
+    <div class="top">
+      <div class="badge">۲</div>
+      <h3>گرفتن کلید <code class="inline">NGROK_AUTHTOKEN</code></h3>
+      <span class="time">⏱️ حدود ۳ دقیقه</span>
+    </div>
+    <p>این کلید مثل <b>کارت شناسایی</b> توست؛ به <span dir="ltr">ngrok</span> ثابت می‌کند که این تونل مالِ توست.</p>
+    <ol>
+      <li>در همان داشبورد به این صفحه برو:
+        <div class="code">https://dashboard.ngrok.com/get-started/your-authtoken</div>
+      </li>
+      <li>یک رشتهٔ بلندِ تصادفی می‌بینی (چیزی شبیه <code class="inline">2Xy...aBcD</code>). این همان authtoken است.</li>
+      <li>روی دکمهٔ <b>Copy</b> کنار آن بزن تا کامل کپی شود.</li>
+      <li>موقتاً آن را در یک فایل متنی یا جای امن نگه دار؛ چند مرحله بعد به آن نیاز داریم.</li>
+    </ol>
+    <div class="fn">
+      <b>پانویس ۴ — «authtoken» یعنی چه؟</b><br>
+      کوتاه‌شدهٔ <span dir="ltr">authentication token</span> یعنی «نشانهٔ احراز هویت». مثل یک رمزِ یک‌بار‌نمایش که ثابت می‌کند تو مجازی از این سرویس استفاده کنی.
+    </div>
+    <div class="box warn">
+      <span class="h">⚠️ مواظب باش</span>
+      این کلید <b>مثل رمز عبور</b> است. آن را در عکس، پیام عمومی، یا فایلی که روی گیت‌هاب <span dir="ltr">public</span> می‌گذاری قرار نده.
+      هر کس آن را داشته باشد می‌تواند از حساب تو تونل بسازد.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      باید یک رشتهٔ بلند را کپی کرده و جایی امن ذخیره کرده باشی. اگر یادت رفت کجا بود، همیشه می‌توانی به همین صفحه برگردی.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۳ ================= -->
+  <section class="step" id="s3">
+    <span class="stagechip">مرحله ۳ از ۸</span>
+    <div class="top">
+      <div class="badge">۳</div>
+      <h3>رزرو دامنهٔ ثابت <code class="inline">NGROK_DOMAIN</code></h3>
+      <span class="time">⏱️ حدود ۵ دقیقه</span>
+    </div>
+    <p>
+      اگر دامنهٔ ثابت نگیری، هر بار که <span dir="ltr">ngrok</span> را دوباره روشن کنی آدرست <b>عوض می‌شود</b> و باید همه‌جا آدرس جدید را بروزرسانی کنی.
+      خوشبختانه حساب رایگان یک <b>دامنهٔ ثابت</b> به تو می‌دهد که همیشه یکی می‌ماند.
+    </p>
+    <ol>
+      <li>در داشبورد به بخش <b>Domains</b> برو:
+        <div class="code">https://dashboard.ngrok.com/domains</div>
+      </li>
+      <li>روی دکمهٔ <b>New +</b> (یا <span dir="ltr">Create Domain</span>) بزن.</li>
+      <li><span dir="ltr">ngrok</span> یک دامنهٔ ثابتِ رایگان به تو پیشنهاد می‌دهد؛ چیزی شبیه:
+        <div class="code">happy-panda-1234.ngrok.app</div>
+      </li>
+      <li>آن را تأیید و <b>کپی</b> کن. این همان <code class="inline">NGROK_DOMAIN</code> ماست.</li>
+    </ol>
+    <div class="box note">
+      <span class="h">📖 آدرس کاملِ سایتت این می‌شود</span>
+      اگر دامنه‌ات <code class="inline">happy-panda-1234.ngrok.app</code> باشد، آدرس عمومیِ نهایی که در مرورگر باز می‌شود می‌شود:
+      <div class="code">https://happy-panda-1234.ngrok.app</div>
+      یعنی همان الگوی <code class="inline">https://${NGROK_DOMAIN}</code> که در عنوان این آموزش دیدی.
+    </div>
+    <div class="fn">
+      <b>پانویس ۵ — چرا «دامنهٔ ثابت» مهم است؟</b><br>
+      وبهوک‌ها را یک بار در سرویس‌های بیرونی ثبت می‌کنی. اگر آدرست هر بار عوض شود، همهٔ آن ثبت‌ها خراب می‌شوند.
+      دامنهٔ ثابت یعنی یک بار تنظیم، برای همیشه.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      الان باید سه چیز داشته باشی و کنار هم یادداشت کرده باشی:
+      کلید <code class="inline">NGROK_AUTHTOKEN</code>، دامنهٔ <code class="inline">NGROK_DOMAIN</code>، و بدانی آدرس نهایی
+      <code class="inline">https://${NGROK_DOMAIN}</code> است.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۴ ================= -->
+  <section class="step" id="s4">
+    <span class="stagechip">مرحله ۴ از ۸</span>
+    <div class="top">
+      <div class="badge">۴</div>
+      <h3>ساخت فایل <code class="inline">.env</code> (جای نگه‌داری تنظیمات)</h3>
+      <span class="time">⏱️ حدود ۷ دقیقه</span>
+    </div>
+    <p>یک پوشهٔ خالی بساز (مثلاً روی دسکتاپ اسمش را <code class="inline">n8n-ngrok</code> بگذار). همهٔ کارها را داخل همین پوشه انجام می‌دهیم.</p>
+    <ol>
+      <li>داخل این پوشه یک فایل جدید بساز و اسمش را دقیقاً بگذار <code class="inline">.env</code> (با یک نقطه در ابتدا، بدون هیچ پسوند دیگری).</li>
+      <li>این محتوا را داخلش بریز و مقدارها را با مقدار خودت جایگزین کن:</li>
+    </ol>
+    <div class="code"><span class="c"># © Mehdi Rezghi — Gravel | فایل .env</span>
+<span class="c"># دامنهٔ ثابتی که در مرحله ۳ رزرو کردی (بدون https)</span>
+<span class="k">NGROK_DOMAIN</span>=happy-panda-1234.ngrok.app
+
+<span class="c"># کلیدی که در مرحله ۲ کپی کردی</span>
+<span class="k">NGROK_AUTHTOKEN</span>=<span class="s">2Xy...کلیدِ_خودت...aBcD</span>
+
+<span class="c"># تنظیمات لازم n8n</span>
+<span class="k">N8N_HOST</span>=happy-panda-1234.ngrok.app
+<span class="k">WEBHOOK_URL</span>=<span class="s">"https://happy-panda-1234.ngrok.app/"</span>
+<span class="k">N8N_RUNNERS_ENABLED</span>=true
+<span class="k">N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS</span>=true
+
+<span class="c"># منطقهٔ زمانی (برای ایران):</span>
+<span class="k">TZ</span>=<span class="s">"Asia/Tehran"</span>
+<span class="k">GENERIC_TIMEZONE</span>=<span class="s">"Asia/Tehran"</span></div>
+
+    <div class="box warn">
+      <span class="h">⚠️ مهم‌ترین اشتباه رایج این آموزش</span>
+      داخل فایل <code class="inline">.env</code>، جلوی <code class="inline">WEBHOOK_URL</code> و <code class="inline">N8N_HOST</code>
+      باید <b>خودِ دامنه</b> را کامل تایپ کنی؛ اینجا نوشتنِ <code class="inline">${NGROK_DOMAIN}</code> کار <b>نمی‌کند</b>،
+      چون فایل <code class="inline">.env</code> متغیرها را داخل خودش جایگزین نمی‌کند.
+      الگوی <code class="inline">${NGROK_DOMAIN}</code> فقط در فایل بعدی (<code class="inline">docker-compose.yaml</code>) معنا دارد.
+    </div>
+    <div class="box tip">
+      <span class="h">💡 دو نکتهٔ ریز ولی مهم</span>
+      • دور و برِ علامت <code class="inline">=</code> فاصله نگذار (بنویس <code class="inline">TZ=Asia/Tehran</code> نه <code class="inline">TZ = Asia/Tehran</code>).<br>
+      • آدرس <code class="inline">WEBHOOK_URL</code> باید با <code class="inline">https://</code> شروع شود و به یک <code class="inline">/</code> ختم شود.
+    </div>
+    <div class="fn">
+      <b>پانویس ۶ — «فایل <span dir="ltr">.env</span>» یعنی چه؟</b><br>
+      یک فایل متنی ساده که «تنظیمات» را نگه می‌دارد تا مجبور نباشی آن‌ها را وسط دستورها تکرار کنی.
+      داکر خودش این فایل را می‌خواند. <span dir="ltr">env</span> کوتاه‌شدهٔ <span dir="ltr">environment</span> (محیط) است.
+    </div>
+    <div class="fn">
+      <b>پانویس ۷ — چرا <span dir="ltr">WEBHOOK_URL</span> لازم است؟</b><br>
+      اگر این را ست نکنی، <span dir="ltr">n8n</span> آدرسِ وبهوک‌ها را با <code class="inline">localhost</code> می‌سازد و سرویس‌های بیرونی نمی‌توانند به آن برسند.
+      با ست‌کردنِ آن روی دامنهٔ عمومی، آدرس وبهوک درست و قابل‌دسترسی می‌شود.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      باید یک فایل به اسم <code class="inline">.env</code> داخل پوشه‌ات داشته باشی که ۴ مقدار مهمش (دامنه، توکن، هاست، آدرس وبهوک) با مقدار واقعیِ خودت پر شده باشد.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۵ ================= -->
+  <section class="step" id="s5">
+    <span class="stagechip">مرحله ۵ از ۸</span>
+    <div class="top">
+      <div class="badge">۵</div>
+      <h3>ساخت فایل <code class="inline">docker-compose.yaml</code></h3>
+      <span class="time">⏱️ حدود ۸ دقیقه</span>
+    </div>
+    <p>
+      این فایل به داکر می‌گوید «دو تا برنامه را با هم بالا بیاور»: یکی <span dir="ltr">n8n</span> و یکی <span dir="ltr">ngrok</span>.
+      داخل همان پوشه یک فایل جدید بساز و اسمش را بگذار <code class="inline">docker-compose.yaml</code>. این محتوا را داخلش بریز:
+    </p>
+    <div class="code"><span class="c"># © Mehdi Rezghi — Gravel | docker-compose.yaml</span>
+<span class="k">services</span>:
+  <span class="k">n8n</span>:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    ports:
+      - <span class="s">"127.0.0.1:5678:5678"</span>
+    env_file: .env
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  <span class="k">ngrok</span>:
+    image: ngrok/ngrok:latest
+    restart: always
+    depends_on:
+      - n8n
+    env_file: .env
+    <span class="c"># اینجا ${NGROK_DOMAIN} از فایل .env خوانده و جایگزین می‌شود</span>
+    command: http --url=<span class="s">${NGROK_DOMAIN}</span> n8n:5678
+    ports:
+      - <span class="s">"4040:4040"</span>  <span class="c"># پنل مانیتورینگ ngrok</span>
+
+<span class="k">volumes</span>:
+  n8n_data:</div>
+
+    <div class="box warn">
+      <span class="h">⚠️ نکتهٔ طلایی: چرا <code class="inline">n8n:5678</code> و نه <code class="inline">localhost:5678</code>؟</span>
+      داخل داکر، وقتی یک ظرف (container) می‌خواهد با ظرف دیگر حرف بزند، <code class="inline">localhost</code> اشتباه است؛
+      چون <code class="inline">localhost</code> برای هر ظرف یعنی «خودِ همان ظرف». برای اینکه ظرفِ <span dir="ltr">ngrok</span>
+      به ظرفِ <span dir="ltr">n8n</span> برسد، باید از <b>اسم سرویس</b> یعنی <code class="inline">n8n</code> استفاده کنی.
+      داکر خودش این اسم را به آدرس درست وصل می‌کند.
+    </div>
+    <div class="fn">
+      <b>پانویس ۸ — «ظرف / container» یعنی چه؟</b><br>
+      هر برنامه در داکر داخل یک «جعبهٔ جدا» به اسم <span dir="ltr">container</span> اجرا می‌شود. این جعبه‌ها همسایه‌اند ولی هرکدام دنیای خودشان را دارند.
+    </div>
+    <div class="fn">
+      <b>پانویس ۹ — این خط‌ها یعنی چه؟</b><br>
+      • <code class="inline">image</code>: کدام برنامه را دانلود و اجرا کند.<br>
+      • <code class="inline">ports</code>: کدام درگاه (port) باز باشد؛ مثلاً <code class="inline">5678</code> درگاهِ <span dir="ltr">n8n</span> است.<br>
+      • <code class="inline">volumes</code>: جایی که اطلاعاتِ <span dir="ltr">n8n</span> ذخیره می‌شود تا با خاموش‌شدن پاک نشود.<br>
+      • <code class="inline">command</code>: دستوری که به <span dir="ltr">ngrok</span> می‌گوید تونلِ <span dir="ltr">HTTP</span> روی دامنهٔ تو به سمت <span dir="ltr">n8n</span> بساز.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      حالا باید داخل پوشه‌ات <b>دو فایل</b> کنار هم باشند: <code class="inline">.env</code> و <code class="inline">docker-compose.yaml</code>.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۶ ================= -->
+  <section class="step" id="s6">
+    <span class="stagechip">مرحله ۶ از ۸</span>
+    <div class="top">
+      <div class="badge">۶</div>
+      <h3>اجرا با یک دستور</h3>
+      <span class="time">⏱️ حدود ۴ دقیقه</span>
+    </div>
+    <ol>
+      <li>ترمینال را باز کن و با دستور <code class="inline">cd</code> برو داخل همان پوشه. مثلاً اگر روی دسکتاپ است:
+        <div class="code">cd Desktop/n8n-ngrok</div>
+      </li>
+      <li>این دستور را بزن تا هر دو برنامه با هم بالا بیایند:
+        <div class="code">docker compose up -d</div>
+      </li>
+    </ol>
+    <div class="fn">
+      <b>پانویس ۱۰ — این <code class="inline">-d</code> ته دستور چیست؟</b><br>
+      یعنی «در پس‌زمینه اجرا کن» تا ترمینال آزاد بماند. اگر آن را نگذاری، همه‌چیز کار می‌کند ولی ترمینال مشغول می‌ماند و پیام‌ها را زنده می‌بینی
+      (برای بستن باید <code class="inline">Ctrl + C</code> بزنی).
+    </div>
+    <p>برای دیدن اینکه همه‌چیز روشن است، این را بزن:</p>
+    <div class="code">docker compose ps</div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      در خروجی باید دو ردیف ببینی — یکی برای <code class="inline">n8n</code> و یکی برای <code class="inline">ngrok</code> — که وضعیت‌شان
+      <code class="inline">running</code> یا <code class="inline">Up</code> باشد. اگر یکی <code class="inline">Exited</code> بود، به
+      <a href="#trouble">رفع اشکال</a> برو.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۷ ================= -->
+  <section class="step" id="s7">
+    <span class="stagechip">مرحله ۷ از ۸</span>
+    <div class="top">
+      <div class="badge">۷</div>
+      <h3>تست آدرس عمومی و پنل <span dir="ltr">ngrok</span></h3>
+      <span class="time">⏱️ حدود ۵ دقیقه</span>
+    </div>
+    <ol>
+      <li>مرورگر را باز کن و آدرس عمومیِ خودت را برو (همان دامنهٔ مرحله ۳):
+        <div class="code">https://happy-panda-1234.ngrok.app</div>
+      </li>
+      <li>باید صفحهٔ خوش‌آمدِ <span dir="ltr">n8n</span> باز شود و از تو بخواهد یک حساب مدیر بسازی. همان‌جا نام، ایمیل و رمز بده.</li>
+      <li>برای دیدن ترافیکِ زنده، پنل داخلیِ <span dir="ltr">ngrok</span> را هم باز کن:
+        <div class="code">http://localhost:4040</div>
+      </li>
+    </ol>
+    <div class="fn">
+      <b>پانویس ۱۱ — پنل <code class="inline">4040</code> چیست؟</b><br>
+      یک صفحهٔ بازرسی که هر درخواستی که به تونلت می‌رسد را نشان می‌دهد. وقتی وبهوک کار نکرد، اینجا اولین جایی است که سر می‌زنی
+      تا ببینی درخواست اصلاً رسیده یا نه.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی</span>
+      اگر با آدرس <code class="inline">https://${NGROK_DOMAIN}</code> صفحهٔ <span dir="ltr">n8n</span> باز شد، <b>تونل کار می‌کند</b> 🎉.
+      می‌توانی همین آدرس را روی گوشیِ خودت هم باز کنی؛ چیزی که با <code class="inline">localhost</code> ممکن نبود.
+    </div>
+  </section>
+
+  <!-- ================= مرحله ۸ ================= -->
+  <section class="step" id="s8">
+    <span class="stagechip">مرحله ۸ از ۸</span>
+    <div class="top">
+      <div class="badge">۸</div>
+      <h3>تست یک وبهوک واقعی</h3>
+      <span class="time">⏱️ حدود ۶ دقیقه</span>
+    </div>
+    <p>حالا بیایید ثابت کنیم که وبهوک‌ها هم درست شده‌اند.</p>
+    <ol>
+      <li>در <span dir="ltr">n8n</span> یک <span dir="ltr">Workflow</span> جدید بساز.</li>
+      <li>یک گره (Node) از نوع <b>Webhook</b> اضافه کن.</li>
+      <li>در تنظیمات آن گره، آدرسِ <span dir="ltr">Test URL</span> یا <span dir="ltr">Production URL</span> را نگاه کن؛ باید حالا با دامنهٔ <span dir="ltr">ngrok</span> تو شروع شود، مثل:
+        <div class="code">https://happy-panda-1234.ngrok.app/webhook/....</div>
+      </li>
+      <li>روی <b>Listen for test event</b> بزن.</li>
+      <li>آن آدرس وبهوک را در یک تب دیگرِ مرورگر باز کن (یا با <span dir="ltr">Postman</span> صدا بزن).</li>
+    </ol>
+    <div class="fn">
+      <b>پانویس ۱۲ — «گره / Node» یعنی چه؟</b><br>
+      در <span dir="ltr">n8n</span> هر کار یک «گره» است؛ مثل قطعه‌های لِگو که کنار هم می‌چینی تا یک اتوماسیون کامل بسازی.
+    </div>
+    <div class="box check">
+      <span class="h">✅ ایست بازرسی نهایی</span>
+      اگر بعد از صدا زدنِ آن آدرس، در <span dir="ltr">n8n</span> پیام <b>موفقیت</b> دیدی و درخواست در پنل
+      <code class="inline">localhost:4040</code> ثبت شد، یعنی <b>همه‌چیز کامل کار می‌کند</b> و <span dir="ltr">n8n</span> تو آمادهٔ اتصال به سرویس‌های بیرونی است.
+    </div>
+    <div class="box tip">
+      <span class="h">💡 قدم بعدی طبیعی</span>
+      حالا که وبهوک عمومی داری، می‌توانی <span dir="ltr">n8n</span> را به تلگرام، اسلک یا سرویس‌های دیگر وصل کنی —
+      همه به این آدرسِ ثابتِ عمومی زنگ می‌زنند و اتوماسیونت اجرا می‌شود.
+    </div>
+  </section>
+
+  <!-- ================= امنیت اختیاری ================= -->
+  <h2 class="sec">🔒 (اختیاری) قفلِ اضافه روی درِ خانه</h2>
+  <p class="lead">آدرست حالا عمومی است؛ اگر خواستی امن‌ترش کنی، این دو راه ساده هست.</p>
+  <div class="step">
+    <p><b>۱) فقط اجازه به IP خودت.</b> می‌توانی به <span dir="ltr">ngrok</span> بگویی فقط اینترنتِ خودت اجازهٔ باز کردنِ پنل <span dir="ltr">n8n</span> را داشته باشد.
+      اول IP عمومی‌ات را از این ابزار بگیر:</p>
+    <div class="code">https://ipv4.ngrok.com/</div>
+    <p>بعد کنار فایل‌ها یک فایل به اسم <code class="inline">n8n.yaml</code> بساز:</p>
+    <div class="code"><span class="c"># © Mehdi Rezghi — Gravel | n8n.yaml — فقط IP خودت اجازه دارد</span>
+<span class="k">on_http_request</span>:
+  - actions:
+      - type: restrict-ips
+        config:
+          enforce: true
+          allow:
+            - <span class="s">"IP_خودت/32"</span></div>
+    <p>سپس در <code class="inline">docker-compose.yaml</code>، خط دستورِ <span dir="ltr">ngrok</span> و بخش <code class="inline">volumes</code> آن را این‌طور کن:</p>
+    <div class="code">    command: http --url=<span class="s">${NGROK_DOMAIN}</span> --traffic-policy-file /etc/n8n.yaml n8n:5678
+    volumes:
+      - ./n8n.yaml:/etc/n8n.yaml</div>
+    <p>و برای اعمال تغییر:</p>
+    <div class="code">docker compose down
+docker compose up -d</div>
+    <div class="box warn">
+      <span class="h">⚠️ حواست باشد</span>
+      اگر IP خودت را محدود کنی و <b>بعداً بخواهی از یک سرویس بیرونی وبهوک بگیری</b>، آن سرویس دیگر اجازه ندارد.
+      در آن حالت باید مسیرِ <code class="inline">/webhook/</code> را از محدودیت IP جدا کنی (سیاست کامل‌ترش در مستندات رسمی <span dir="ltr">ngrok</span> هست).
+    </div>
+    <div class="fn">
+      <b>پانویس ۱۳ — «IP عمومی» یعنی چه؟</b><br>
+      شمارهٔ خانهٔ تو در اینترنت. هر اتصالِ اینترنتی یک IP عمومی دارد که او را از بقیه جدا می‌کند.
+    </div>
+  </div>
+
+  <!-- ================= رفع اشکال ================= -->
+  <h2 class="sec" id="trouble">🔧 رفع اشکال — اگر جایی گیر کردی</h2>
+  <p class="lead">پرتکرارترین مشکل‌ها و راه‌حلِ ساده‌شان.</p>
+  <table>
+    <tr><th>نشانه (چه می‌بینی؟)</th><th>علت</th><th>راه‌حل</th></tr>
+    <tr>
+      <td>آدرس عمومی باز نمی‌شود و خطای <code>ERR_NGROK</code> می‌بینی</td>
+      <td>authtoken اشتباه یا جا‌افتاده</td>
+      <td>مقدار <code>NGROK_AUTHTOKEN</code> در فایل <code>.env</code> را دوباره از داشبورد کپی کن؛ فاصلهٔ اضافه نباشد. بعد <code>docker compose down</code> و دوباره <code>up -d</code>.</td>
+    </tr>
+    <tr>
+      <td>ظرف <code>ngrok</code> بالا می‌آید ولی سریع <code>Exited</code> می‌شود</td>
+      <td>دامنه اشتباه تایپ شده یا قبلاً جای دیگری استفاده شده</td>
+      <td>مقدار <code>NGROK_DOMAIN</code> را عیناً با چیزی که در بخش Domains رزرو کردی مطابقت بده (بدون <code>https://</code>).</td>
+    </tr>
+    <tr>
+      <td>صفحهٔ <code>n8n</code> باز می‌شود ولی وبهوک آدرسِ <code>localhost</code> می‌دهد</td>
+      <td><code>WEBHOOK_URL</code> ست نشده یا اشتباه است</td>
+      <td>در <code>.env</code> مطمئن شو <code>WEBHOOK_URL</code> با <code>https://</code> شروع و به <code>/</code> ختم می‌شود؛ سپس کانتینرها را ری‌استارت کن.</td>
+    </tr>
+    <tr>
+      <td>خطای <code>port is already allocated</code></td>
+      <td>درگاه <code>5678</code> یا <code>4040</code> را برنامهٔ دیگری گرفته</td>
+      <td>آن برنامه را ببند، یا سمت چپِ نگاشتِ درگاه را عوض کن (مثلاً <code>5679:5678</code>).</td>
+    </tr>
+    <tr>
+      <td>وبهوک از بیرون به <code>n8n</code> نمی‌رسد</td>
+      <td>یا محدودیت IP فعال است، یا درخواست اصلاً نرسیده</td>
+      <td>اول در پنل <code>localhost:4040</code> ببین درخواست ثبت شده یا نه. اگر نه، محدودیت IP یا فایروال را چک کن.</td>
+    </tr>
+    <tr>
+      <td><code>docker compose up</code> می‌گوید فایل پیدا نشد</td>
+      <td>در پوشهٔ اشتباه هستی</td>
+      <td>با <code>cd</code> برو داخل همان پوشه‌ای که دو فایل در آن است، بعد دستور را بزن.</td>
+    </tr>
+  </table>
+
+  <!-- ================= واژه‌نامه ================= -->
+  <h2 class="sec">📚 واژه‌نامهٔ کوتاه</h2>
+  <dl class="gloss">
+    <dt>tunnel (تونل)</dt><dd>مسیر امنی که کامپیوترِ تو را از راهِ یک آدرس عمومی به اینترنت وصل می‌کند.</dd>
+    <dt>authtoken</dt><dd>کلید شناساییِ تو نزد <span dir="ltr">ngrok</span>؛ مثل رمز عبور، محرمانه نگهش دار.</dd>
+    <dt>NGROK_DOMAIN</dt><dd>دامنهٔ ثابتِ رایگانِ تو، مثل <code>happy-panda-1234.ngrok.app</code>.</dd>
+    <dt>webhook (وبهوک)</dt><dd>آدرسی که به سرویس بیرونی می‌دهی تا هر وقت اتفاقی افتاد به تو خبر بدهد.</dd>
+    <dt>container (ظرف)</dt><dd>جعبهٔ جدا و مستقلی که یک برنامه داخل داکر در آن اجرا می‌شود.</dd>
+    <dt>localhost</dt><dd>«همین کامپیوترِ خودم»؛ از بیرونِ دستگاه در دسترس نیست.</dd>
+    <dt>docker compose</dt><dd>ابزاری برای بالا آوردنِ چند برنامه با هم، با یک فایل تنظیمات.</dd>
+    <dt>.env</dt><dd>فایل ساده‌ای که تنظیمات (دامنه، توکن و…) را نگه می‌دارد.</dd>
+  </dl>
+
+  <!-- ================= جشن ================= -->
+  <div class="done">
+    <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+    <ul>
+      <li>یک حساب <span dir="ltr">ngrok</span> بسازی و کلید <code class="inline" style="background:#00000018">NGROK_AUTHTOKEN</code> بگیری.</li>
+      <li>یک دامنهٔ ثابتِ رایگان <code class="inline" style="background:#00000018">NGROK_DOMAIN</code> رزرو کنی.</li>
+      <li>با فایل‌های <code class="inline" style="background:#00000018">.env</code> و <code class="inline" style="background:#00000018">docker-compose.yaml</code>، <span dir="ltr">n8n</span> و <span dir="ltr">ngrok</span> را با هم بالا بیاوری.</li>
+      <li>آدرس عمومیِ <code class="inline" style="background:#00000018">https://${NGROK_DOMAIN}</code> را باز کنی و وبهوک واقعی تست کنی.</li>
+    </ul>
+  </div>
+
+  <div class="next">
+    🧭 <b>قدم بعدیِ پیشنهادی:</b> حالا که <span dir="ltr">n8n</span> تو یک آدرس عمومیِ ثابت دارد، آماده‌ای که آن را به یک
+    ربات تلگرام یا یک جریانِ «تلگرام → هوش مصنوعی» وصل کنی. اگر بخواهی، آموزش گراولِ آن را هم برایت می‌سازم.
+    &nbsp;|&nbsp; بازگشت به <a href="../index.html">فهرست گراول</a>.
+  </div>
+
+  <p style="text-align:center;font-size:12.5px;opacity:.7;margin-top:26px">
+    ✍️ طراحی و تدوین: <span dir="ltr">Mehdi Rezghi</span> — مهدی رزقی
+  </p>
+
+</div>
+
+<!-- فوتر گراول -->
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+
+<script>
+/* © Mehdi Rezghi — Gravel | نوار پیشرفت اسکرول */
+(function(){
+  var bar=document.querySelector('#progress > i');
+  function upd(){
+    var h=document.documentElement;
+    var sc=h.scrollTop||document.body.scrollTop;
+    var mx=(h.scrollHeight-h.clientHeight)||1;
+    bar.style.width=(sc/mx*100)+'%';
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd);
+  upd();
+})();
+</script>
+
+</body>
+</html>
