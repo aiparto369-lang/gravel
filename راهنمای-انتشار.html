@@ -68,7 +68,7 @@ footer a{color:var(--teal)}
   <ol>
     <li>در مخزن به <span dir="ltr"><b>Settings</b></span> → <span dir="ltr"><b>Pages</b></span> برو.</li>
     <li>در قسمت <span dir="ltr">Branch</span> گزینهٔ <code>main</code> را انتخاب و <span dir="ltr"><b>Save</b></span> کن.</li>
-    <li>چند دقیقه صبر کن؛ آدرس سایتت بالای صفحه ظاهر می‌شود:<br><code>https://YOUR-USERNAME.github.io/gravel/</code></li>
+    <li>چند دقیقه صبر کن؛ سایت روی دامنهٔ اختصاصی باز می‌شود:<br><code>https://mygravel.ir</code></li>
   </ol>
   <div class="check">✅ ایست بازرسی: آدرس را باز کن — باید صفحهٔ «گراول» را با جست‌وجو و دسته‌بندی ببینی.</div>
 </div>
@@ -86,6 +86,7 @@ footer a{color:var(--teal)}
     <li>برچسب «جدید ✨» می‌زند و در بخش «تازه‌ها» نشانش می‌دهد،</li>
     <li>امضای © و لینک برگشت به گراول را <b>داخل خود فایل</b> تزریق می‌کند،</li>
     <li>کش آفلاین را به‌روز می‌کند تا کاربران قدیمی هم آموزش تازه را ببینند،</li>
+    <li>مسیر یادگیری، سطح مخاطب، رتبه و جایگاه کارت را هوشمند تعیین می‌کند،</li>
     <li>نقشهٔ سایت (sitemap) را برای گوگل تازه می‌کند.</li>
   </ul>
   <div class="tip">💡 می‌توانی کار ربات را تماشا کنی: تب <span dir="ltr"><b>Actions</b></span> در مخزن، هر اجرای «Gravel Bot» را با تیک سبز نشان می‌دهد.</div>
@@ -100,8 +101,12 @@ footer a{color:var(--teal)}
 &lt;meta name="gravel:level"    content="مبتدی"&gt;
 &lt;meta name="gravel:desc"     content="یک خط توضیح آموزش"&gt;
 &lt;meta name="gravel:keywords" content="کلمه‌هایی که مردم جست‌وجو می‌کنند"&gt;
-&lt;meta name="gravel:order"    content="5"&gt;  &lt;!-- فقط اگر عضو «مسیر صعود» است --&gt;</pre>
-  <p>دسته‌های مجاز: <b>برنامه‌نویسی</b>، <b>کریپتو و پرداخت</b>، <b>اتوماسیون</b>، <b>ابزارهای هوش مصنوعی</b>، <b>سایر</b>.</p>
+&lt;meta name="gravel:track"    content="ساخت و اتوماسیون"&gt;
+&lt;meta name="gravel:sequence" content="2"&gt;
+&lt;meta name="gravel:priority" content="80"&gt;
+&lt;meta name="gravel:featured" content="true"&gt;</pre>
+  <p>دسته‌های مجاز: <b>شروع هوش مصنوعی</b>، <b>برنامه‌نویسی</b>، <b>کریپتو و پرداخت</b>، <b>اتوماسیون</b>، <b>ابزارهای هوش مصنوعی</b> و <b>سایر</b>.</p>
+  <div class="check">✅ حتی اگر متاهای اختیاری track، sequence، priority و featured نوشته نشوند، ربات از عنوان، توضیحات و متن آموزش برای تعیین مسیر، سطح و رتبه استفاده می‌کند.</div>
   <div class="tip">💡 وقتی آموزش جدید سفارش می‌دهی، کافی است بگویی «برای گراول» — شناسنامه از همان اول داخل فایل گذاشته می‌شود و هیچ کار دستی نمی‌ماند.</div>
 </div>
 
@@ -113,7 +118,7 @@ footer a{color:var(--teal)}
 
 <div class="step" style="border-inline-start:6px solid var(--saffron)">
   <h2><span class="step-num" style="background:var(--saffron)">🎉</span>تمام شد!</h2>
-  <p>حالا گراول یک موجود زنده است: تو فقط آموزش تولید می‌کنی و آپلود؛ فهرست، دسته‌بندی، جست‌وجو، آفلاین، سئو و امضای © — همه خودکار.</p>
+  <p>حالا گراول یک موجود زنده است: تو فقط فایل استاندارد آموزش را در پوشهٔ <code>tutorials</code> آپلود می‌کنی؛ فهرست، مسیر، رتبه، دسته‌بندی، جست‌وجو، آفلاین، سئو و امضای © — همه خودکار.</p>
 </div>
 
 </main>

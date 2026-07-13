@@ -4,17 +4,24 @@
    نسخه را ربات گراول خودکار جلو می‌برد؛ دستی دست نزن.
    ========================================================== */
 
-const VERSION = "20260713142214";
+const VERSION = "20260713150635";
 const CACHE = "gravel-" + VERSION;
+// GRAVEL_TUTORIALS: این خط را ربات گراول با هر آپلود تازه می‌کند.
+const TUTORIALS = ["./tutorials/ai-roadmap-getting-started-tutorial.html", "./tutorials/docker-n8n-antigravity-tutorial.html", "./tutorials/install-python-node-vscode-tutorial(1).html", "./tutorials/python-1hour-vibe-coding-tutorial.html", "./tutorials/openclaw-tutorial.html", "./tutorials/openclaw-pro-tutorial.html", "./tutorials/claude-cowork-tutorial.html", "./tutorials/powershell-tutorial.html", "./tutorials/openrouter-crypto-wallet-tutorial.html", "./tutorials/claude-usage-limit-tutorial.html"];
 
 const PRECACHE = [
   "./",
   "./index.html",
   "./catalog.json",
+  "./assets/app.css",
+  "./assets/app.js",
   "./manifest.webmanifest",
   "./404.html",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./robots.txt",
+  "./sitemap.xml",
+  ...TUTORIALS
 ];
 
 self.addEventListener("install", (event) => {
