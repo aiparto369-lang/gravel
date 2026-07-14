@@ -18,6 +18,7 @@ TG_URL = "https://t.me/Mehdirezghi"
 COPYRIGHT = f"© {AUTHOR} — {TG_URL}"
 SITE_URL = os.environ.get("SITE_URL", "https://mygravel.ir").strip().rstrip("/")
 FOOTER_MARK = "gravel-footer"
+ANALYTICS_MARK = "gravel-analytics.js"
 
 CATEGORIES = ["شروع هوش مصنوعی", "برنامه‌نویسی", "اتوماسیون", "ابزارهای هوش مصنوعی", "کریپتو و پرداخت", "سایر"]
 CATEGORY_RULES = [
@@ -168,6 +169,17 @@ def inject_footer(path, text):
     return text
 
 
+def inject_analytics(path, text, tutorial_id):
+    if ANALYTICS_MARK in text or "</body>" not in text:
+        return text
+    snippet = f'''\n<script>window.GRAVEL_TUTORIAL_ID={json.dumps(tutorial_id, ensure_ascii=False)};</script>
+<script src="../assets/analytics-config.js"></script>
+<script src="../assets/gravel-analytics.js"></script>\n'''
+    text = text.replace("</body>", snippet + "</body>", 1)
+    path.write_text(text, encoding="utf-8")
+    return text
+
+
 def build_catalog():
     items = []
     if not TUTORIALS.exists():
@@ -176,8 +188,9 @@ def build_catalog():
         text = read(path)
         page_url = SITE_URL + "/" + urllib.parse.quote("tutorials/" + path.name)
         text = inject_head(path, text, page_url)
-        text = inject_footer(path, text)
         tid = path.stem.replace("-tutorial", "")
+        text = inject_footer(path, text)
+        text = inject_analytics(path, text, tid)
         legacy = LEGACY.get(tid, {})
         curated = CURATED.get(tid, {})
         title = clean_text(legacy.get("title") or meta(text, "gravel:title") or title_of(text) or path.stem)
@@ -238,7 +251,7 @@ def update_service_worker(items):
 
 def build_sitemap(items):
     today = datetime.date.today().isoformat()
-    records = [(SITE_URL + "/", today)] + [(SITE_URL + "/" + urllib.parse.quote(item["file"]), item["added"] or today) for item in items]
+    records = [(SITE_URL + "/", today), (SITE_URL + "/privacy.html", today)] + [(SITE_URL + "/" + urllib.parse.quote(item["file"]), item["added"] or today) for item in items]
     body = "\n".join(f"  <url><loc>{html.escape(url)}</loc><lastmod>{date}</lastmod></url>" for url, date in records)
     (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + body + "\n</urlset>\n", encoding="utf-8")
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n", encoding="utf-8")
