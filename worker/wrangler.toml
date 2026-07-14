@@ -1,0 +1,10 @@
+name = "gravel-events"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://mygravel.ir"
+
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "gravel_events"

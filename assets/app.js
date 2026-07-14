@@ -31,6 +31,7 @@ function norm(value){return String(value||"").toLowerCase().replace(/[يى]/g,"�
 function iconFor(item){return item.emoji||CATEGORY_ICONS[item.category]||"📘";}
 function byRank(a,b){return (b.rank||0)-(a.rank||0)||(b.added||"").localeCompare(a.added||"");}
 function toast(message){const el=document.createElement("div");el.className="toast";el.setAttribute("role","status");el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),2400);}
+function track(event,properties={}){if(window.GravelAnalytics)window.GravelAnalytics.track(event,properties);}
 
 async function loadCatalog(){
   const response=await fetch("catalog.json",{cache:"no-cache"});
@@ -54,7 +55,7 @@ function renderNext(){
   if(!item){host.hidden=true;return;} host.hidden=false;
   const icon=document.createElement("span");icon.className="next-icon";icon.textContent=iconFor(item);
   const copy=document.createElement("div");const title=document.createElement("h3");title.textContent="پیشنهاد بعدی برای تو: "+item.title;const desc=document.createElement("p");desc.textContent=item.desc||`${item.level} · ${item.track}`;copy.append(title,desc);
-  const link=document.createElement("a");link.href=item.file;link.textContent="شروع این آموزش";
+  const link=document.createElement("a");link.href=item.file;link.textContent="شروع این آموزش";link.addEventListener("click",()=>track("next_tutorial_clicked",{tutorialId:item.id}));
   host.append(icon,copy,link);
 }
 
@@ -69,7 +70,7 @@ function renderPaths(){
     const icon=document.createElement("span");icon.className="path-icon";icon.textContent=TRACK_ICONS[name]||"🧭";
     const heading=document.createElement("div");const h=document.createElement("h3");h.textContent=name;const p=document.createElement("p");p.className="path-summary";p.textContent=`${fa(items.length)} آموزش · ${TRACK_DESCRIPTIONS[name]||"یک مسیر موضوعی و منظم."}`;heading.append(h,p);head.append(icon,heading);
     const list=document.createElement("ol");list.className="path-steps";
-    items.slice(0,5).forEach((item,index)=>{const li=document.createElement("li");li.dataset.step=fa(index+1);const a=document.createElement("a");a.href=item.file;a.textContent=item.title;li.append(a);list.append(li);});
+    items.slice(0,5).forEach((item,index)=>{const li=document.createElement("li");li.dataset.step=fa(index+1);const a=document.createElement("a");a.href=item.file;a.textContent=item.title;a.addEventListener("click",()=>track("path_selected",{track:name,tutorialId:item.id}));li.append(a);list.append(li);});
     card.append(head,list);host.append(card);
   });
   document.getElementById("pathCount").textContent=fa(groups.size);
@@ -105,13 +106,14 @@ function makeCard(item){
   const fragment=document.getElementById("tutorialTemplate").content.cloneNode(true);
   const card=fragment.querySelector("article");card.dataset.id=item.id;card.classList.toggle("is-done",!!state.done[item.id]);
   const link=fragment.querySelector(".card-link");link.href=item.file;fragment.querySelector(".open-label").href=item.file;
+  [link,fragment.querySelector(".open-label")].forEach(a=>a.addEventListener("click",()=>track("tutorial_opened",{tutorialId:item.id,source:"library"})));
   fragment.querySelector(".card-icon").textContent=iconFor(item);
   fragment.querySelector(".level-badge").textContent=item.level;
   fragment.querySelector("h3").textContent=item.title;
   fragment.querySelector(".card-desc").textContent=item.desc||"آموزش گام‌به‌گام و کاربردی گراول.";
   const meta=fragment.querySelector(".card-meta");[item.track,item.time].filter(Boolean).forEach(value=>{const span=document.createElement("span");span.textContent=value;meta.append(span);});
   const checkbox=fragment.querySelector("input");checkbox.checked=!!state.done[item.id];
-  checkbox.addEventListener("change",()=>{state.done[item.id]=checkbox.checked;saveState();renderLibrary();renderNext();renderProgress();});
+  checkbox.addEventListener("change",()=>{state.done[item.id]=checkbox.checked;track(checkbox.checked?"tutorial_completed":"tutorial_opened",{tutorialId:item.id,source:"progress"});saveState();renderLibrary();renderNext();renderProgress();});
   return fragment;
 }
 
@@ -130,6 +132,7 @@ function renderProgress(){
 
 function applySearch(value){
   query=value.trim();document.getElementById("searchInput").value=query;renderLibrary();
+  if(query){const results=filteredItems().length;track(results?"search_performed":"search_no_result",{query:query.slice(0,80),results});}
   if(query)document.getElementById("library").scrollIntoView({behavior:"smooth"});
   const url=new URL(location.href);query?url.searchParams.set("q",query):url.searchParams.delete("q");history.replaceState({},"",url);
 }
@@ -139,10 +142,10 @@ function bindEvents(){
   search.addEventListener("change",()=>applySearch(search.value));
   document.querySelectorAll("[data-query]").forEach(button=>button.addEventListener("click",()=>applySearch(button.dataset.query)));
   document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();search.focus();search.select();}});
-  document.querySelectorAll("[data-audience]").forEach(button=>button.addEventListener("click",()=>{audience=button.dataset.audience;document.querySelectorAll("[data-audience]").forEach(x=>x.setAttribute("aria-pressed",String(x===button)));renderNext();}));
+  document.querySelectorAll("[data-audience]").forEach(button=>button.addEventListener("click",()=>{audience=button.dataset.audience;track("level_selected",{level:audience});document.querySelectorAll("[data-audience]").forEach(x=>x.setAttribute("aria-pressed",String(x===button)));renderNext();}));
   document.getElementById("sortSelect").addEventListener("change",renderLibrary);
   document.querySelector("#activeSearch button").addEventListener("click",()=>applySearch(""));
-  document.getElementById("requestButton").addEventListener("click",()=>{const value=document.getElementById("requestText").value.trim();if(!value){toast("اول موضوع آموزش را بنویس ✍️");return;}const text=`سلام مهدی! پیشنهاد آموزش برای گراول:\n«${value}»\nhttps://mygravel.ir`;window.open("https://t.me/Mehdirezghi?text="+encodeURIComponent(text),"_blank","noopener");});
+  document.getElementById("requestButton").addEventListener("click",()=>{const value=document.getElementById("requestText").value.trim();if(!value){toast("اول موضوع آموزش را بنویس ✍️");return;}track("topic_requested",{topic:value.slice(0,80)});const text=`سلام مهدی! پیشنهاد آموزش برای گراول:\n«${value}»\nhttps://mygravel.ir`;window.open("https://t.me/Mehdirezghi?text="+encodeURIComponent(text),"_blank","noopener");});
   window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();deferredInstall=event;document.getElementById("installBtn").hidden=false;});
   document.getElementById("installBtn").addEventListener("click",async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;document.getElementById("installBtn").hidden=true;});
 }
