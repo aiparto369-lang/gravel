@@ -2,12 +2,13 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-16T14:04:44+00:00",
+  "generated": "2026-07-16T14:41:04+00:00",
   "tracks": {
     "شروع هوشمند": 1,
     "ساخت و اتوماسیون": 6,
     "OpenClaw": 2,
-    "ابزارهای حرفه‌ای": 4
+    "ابزارهای حرفه‌ای": 4,
+    "آموزش‌های مستقل": 1
   },
   "tutorials": [
     {
@@ -255,6 +256,25 @@
       "featured": false,
       "added": "2026-07-16",
       "keywords": "داکر, نصب داکر, docker, docker desktop, n8n, نصب n8n, کانتینر, container, پاورشل, powershell, WSL 2, ولوم, volume, ذخیره سازی دائمی, اتوماسیون, ویندوز, self-host n8n, docker volume, localhost 5678",
+      "prerequisites": ""
+    },
+    {
+      "id": "google-custom-search-engine",
+      "file": "tutorials/google-custom-search-engine-tutorial.html",
+      "emoji": "🔍",
+      "title": "شخصی‌سازی موتور جستجوی گوگل — از ساخت تا بهینه‌سازی حرفه‌ای",
+      "desc": "ساخت موتور جستجوی سفارشی گوگل، کار با فیلترهای پیشرفتهٔ API، و لاگ‌گیری و بهینه‌سازی بازگشتی نتایج — در سه سطح مبتدی، متوسط و پیشرفته.",
+      "time": "حدود ۷۵ دقیقه",
+      "level": "حرفه‌ای",
+      "audience": "حرفه‌ای",
+      "category": "برنامه‌نویسی",
+      "track": "آموزش‌های مستقل",
+      "sequence": null,
+      "priority": 50,
+      "rank": 52,
+      "featured": false,
+      "added": "2026-07-16",
+      "keywords": "موتور جستجوی سفارشی گوگل, Programmable Search Engine, Custom Search JSON API, API Key, dateRestrict, fileType, ساخت موتور جستجو, جستجوی برنامه‌پذیر, cx, Google CSE, لاگ‌گیری جستجو, بهینه‌سازی نتایج",
       "prerequisites": ""
     }
   ]
