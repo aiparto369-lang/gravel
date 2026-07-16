@@ -19,6 +19,7 @@ COPYRIGHT = f"© {AUTHOR} — {TG_URL}"
 SITE_URL = os.environ.get("SITE_URL", "https://mygravel.ir").strip().rstrip("/")
 FOOTER_MARK = "gravel-footer"
 ANALYTICS_MARK = "gravel-analytics.js"
+TUTORIAL_UI_MARK = "gravel-tutorial-toolbar"
 
 CATEGORIES = ["شروع هوش مصنوعی", "برنامه‌نویسی", "اتوماسیون", "ابزارهای هوش مصنوعی", "کریپتو و پرداخت", "سایر"]
 CATEGORY_RULES = [
@@ -180,6 +181,31 @@ def inject_analytics(path, text, tutorial_id):
     return text
 
 
+def inject_tutorial_ui(path, text):
+    """Add a compact home/share toolbar to every current and future tutorial."""
+    changed = False
+    if "tutorial-enhancements.css" not in text and "</head>" in text:
+        text = text.replace("</head>", '<link rel="stylesheet" href="../assets/tutorial-enhancements.css">\n</head>', 1)
+        changed = True
+    if TUTORIAL_UI_MARK not in text:
+        toolbar = (
+            '\n<nav class="gravel-tutorial-toolbar" aria-label="ابزارهای آموزش گراول">'
+            '<a class="gravel-toolbar-brand" href="../index.html" aria-label="بازگشت به صفحه اصلی گراول">'
+            '🏔️ <span>گراول</span></a>'
+            '<div><a href="../index.html">⌂ صفحهٔ اصلی</a>'
+            '<button type="button" data-gravel-share>↗ اشتراک‌گذاری</button></div>'
+            '</nav>\n'
+        )
+        text, count = re.subn(r"(<body\b[^>]*>)", r"\1" + toolbar, text, count=1, flags=re.I)
+        changed = changed or bool(count)
+    if "tutorial-enhancements.js" not in text and "</body>" in text:
+        text = text.replace("</body>", '<script src="../assets/tutorial-enhancements.js"></script>\n</body>', 1)
+        changed = True
+    if changed:
+        path.write_text(text, encoding="utf-8")
+    return text
+
+
 def build_catalog():
     items = []
     if not TUTORIALS.exists():
@@ -189,6 +215,7 @@ def build_catalog():
         page_url = SITE_URL + "/" + urllib.parse.quote("tutorials/" + path.name)
         text = inject_head(path, text, page_url)
         tid = path.stem.replace("-tutorial", "")
+        text = inject_tutorial_ui(path, text)
         text = inject_footer(path, text)
         text = inject_analytics(path, text, tid)
         legacy = LEGACY.get(tid, {})

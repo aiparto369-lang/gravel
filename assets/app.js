@@ -32,6 +32,24 @@ function iconFor(item){return item.emoji||CATEGORY_ICONS[item.category]||"📘";
 function byRank(a,b){return (b.rank||0)-(a.rank||0)||(b.added||"").localeCompare(a.added||"");}
 function toast(message){const el=document.createElement("div");el.className="toast";el.setAttribute("role","status");el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),2400);}
 function track(event,properties={}){if(window.GravelAnalytics)window.GravelAnalytics.track(event,properties);}
+function shuffled(items){
+  const result=[...items];
+  for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
+  return result;
+}
+function renderTopicStream(){
+  const host=document.getElementById("topicStream");
+  if(!host||!catalog.length)return;
+  const group=document.createElement("div");group.className="topic-stream-group";
+  shuffled(catalog).forEach(item=>{
+    const link=document.createElement("a");link.href=item.file;link.className="topic-stream-item";
+    const icon=document.createElement("span");icon.className="topic-stream-dot";icon.setAttribute("aria-hidden","true");icon.textContent=iconFor(item);
+    const title=document.createElement("span");title.textContent=item.title;
+    link.append(icon,title);link.addEventListener("click",()=>track("tutorial_opened",{tutorialId:item.id,source:"topic_stream"}));group.append(link);
+  });
+  const clone=group.cloneNode(true);clone.setAttribute("aria-hidden","true");clone.querySelectorAll("a").forEach(link=>link.tabIndex=-1);
+  host.replaceChildren(group,clone);
+}
 
 async function loadCatalog(){
   const response=await fetch("catalog.json",{cache:"no-cache"});
@@ -152,7 +170,7 @@ function bindEvents(){
 
 async function init(){
   document.getElementById("year").textContent=fa(new Date().getFullYear());bindEvents();
-  try{catalog=await loadCatalog();document.getElementById("tutorialCount").textContent=fa(catalog.length);renderNext();renderPaths();renderFilters();renderLibrary();renderProgress();}
+  try{catalog=await loadCatalog();document.getElementById("tutorialCount").textContent=fa(catalog.length);renderTopicStream();renderNext();renderPaths();renderFilters();renderLibrary();renderProgress();}
   catch(error){document.getElementById("resultSummary").textContent="فهرست آموزش‌ها فعلاً در دسترس نیست.";document.getElementById("emptyState").hidden=false;console.error(error);}
   if("serviceWorker" in navigator&&location.protocol==="https:")window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }

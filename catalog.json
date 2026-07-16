@@ -2,7 +2,7 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-16T14:41:04+00:00",
+  "generated": "2026-07-16T15:21:41+00:00",
   "tracks": {
     "شروع هوشمند": 1,
     "ساخت و اتوماسیون": 6,
@@ -26,7 +26,7 @@
       "priority": 100,
       "rank": 114,
       "featured": true,
-      "added": "2026-07-10",
+      "added": "2026-07-13",
       "keywords": "هوش مصنوعی, آموزش هوش مصنوعی, از کجا شروع کنم, نقشه راه AI, یادگیری هوش مصنوعی, ChatGPT, Claude, Gemini, پرامپت, prompt, هوش مصنوعی برای کسب و کار, AI roadmap, learn AI, getting started with AI, هوش مصنوعی برای مبتدی",
       "prerequisites": ""
     },
@@ -45,7 +45,7 @@
       "priority": 82,
       "rank": 94,
       "featured": true,
-      "added": "2026-07-04",
+      "added": "2026-07-13",
       "keywords": "داکر docker n8n اتوماسیون workflow antigravity",
       "prerequisites": ""
     },
@@ -64,7 +64,7 @@
       "priority": 88,
       "rank": 94,
       "featured": false,
-      "added": "2026-07-04",
+      "added": "2026-07-13",
       "keywords": "نصب پایتون python node nodejs vscode ویندوز پیش نیاز",
       "prerequisites": ""
     },
@@ -83,7 +83,7 @@
       "priority": 86,
       "rank": 92,
       "featured": false,
-      "added": "2026-07-04",
+      "added": "2026-07-13",
       "keywords": "پایتون python کدنویسی برنامه نویسی vibe coding",
       "prerequisites": ""
     },
@@ -102,7 +102,7 @@
       "priority": 84,
       "rank": 90,
       "featured": false,
-      "added": "2026-07-04",
+      "added": "2026-07-13",
       "keywords": "openclaw هوش مصنوعی دستیار cli خط فرمان",
       "prerequisites": ""
     },
@@ -121,7 +121,7 @@
       "priority": 78,
       "rank": 90,
       "featured": true,
-      "added": "2026-07-05",
+      "added": "2026-07-13",
       "keywords": "OpenClaw, اوپن‌کلا, نصب OpenClaw, تنظیمات OpenClaw, آموزش OpenClaw, دستیار هوش مصنوعی شخصی, Gateway, openclaw onboard, ربات تلگرام هوش مصنوعی, self-hosted AI assistant, ترفند OpenClaw, openclaw dashboard, openclaw doctor, ClawHub",
       "prerequisites": ""
     },
@@ -140,7 +140,7 @@
       "priority": 74,
       "rank": 80,
       "featured": false,
-      "added": "2026-07-05",
+      "added": "2026-07-13",
       "keywords": "Claude Cowork, کلاد کوورک, آموزش Cowork, هوش مصنوعی ایجنت, AI agent, Anthropic, Claude Desktop, اتوماسیون کارهای اداری, تسک زمان‌بندی شده, اسکیل کلاد, کانکتور, Claude skills, scheduled tasks, آموزش فارسی کلاد",
       "prerequisites": ""
     },
@@ -159,7 +159,7 @@
       "priority": 72,
       "rank": 78,
       "featured": false,
-      "added": "2026-07-05",
+      "added": "2026-07-13",
       "keywords": "پاورشل, PowerShell, آموزش پاورشل, ترفندهای پاورشل, دستورات پاورشل, PowerShell tutorial, pwsh, cmdlet, خط فرمان ویندوز, اسکریپت نویسی ویندوز, PowerShell 7, ویندوز پاورشل, اتوماسیون ویندوز",
       "prerequisites": ""
     },
@@ -178,7 +178,7 @@
       "priority": 66,
       "rank": 72,
       "featured": false,
-      "added": "2026-07-04",
+      "added": "2026-07-13",
       "keywords": "متامسک metamask کیف پول کریپتو openrouter api تتر",
       "prerequisites": ""
     },
@@ -197,7 +197,7 @@
       "priority": 62,
       "rank": 68,
       "featured": false,
-      "added": "2026-07-05",
+      "added": "2026-07-13",
       "keywords": "لیمیت کلود, Claude usage limit, افزایش استفاده از کلود, Claude Pro, Claude Max, usage credits, پنجره کانتکست, context window, بهینه‌سازی مصرف کلود, Claude Projects, RAG",
       "prerequisites": ""
     },
