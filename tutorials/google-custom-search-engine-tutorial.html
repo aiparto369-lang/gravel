@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- بخشی از گراول — کتابخانهٔ آموزش گام‌به‌گام -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شخصی‌سازی موتور جستجوی گوگل — از ساخت تا بهینه‌سازی حرفه‌ای | گراول</title>
+
+<!-- شناسنامهٔ گراول -->
+<meta name="gravel:category" content="💻 برنامه‌نویسی">
+<meta name="gravel:emoji"    content="🔍">
+<meta name="gravel:time"     content="حدود ۷۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی تا پیشرفته">
+<meta name="gravel:desc"     content="ساخت موتور جستجوی سفارشی گوگل، کار با فیلترهای پیشرفتهٔ API، و لاگ‌گیری و بهینه‌سازی بازگشتی نتایج — در سه سطح مبتدی، متوسط و پیشرفته.">
+<meta name="gravel:keywords" content="موتور جستجوی سفارشی گوگل, Programmable Search Engine, Custom Search JSON API, API Key, dateRestrict, fileType, ساخت موتور جستجو, جستجوی برنامه‌پذیر, cx, Google CSE, لاگ‌گیری جستجو, بهینه‌سازی نتایج">
+
+<!-- کپی‌رایت -->
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "شخصی‌سازی موتور جستجوی گوگل — از ساخت تا بهینه‌سازی حرفه‌ای",
+  "inLanguage": "fa-IR",
+  "author": { "@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi" },
+  "publisher": { "@type": "Organization", "name": "گراول — Gravel" },
+  "description": "آموزش سه‌سطحی ساخت و شخصی‌سازی موتور جستجوی سفارشی گوگل، کار با فیلترهای پیشرفتهٔ Custom Search JSON API و لاگ‌گیری و بهینه‌سازی بازگشتی نتایج.",
+  "articleSection": "برنامه‌نویسی",
+  "keywords": "Programmable Search Engine, Custom Search JSON API, dateRestrict, fileType, API Key"
+}
+</script>
+
+<style>
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --turquoise:#0E7C86;
+  --saffron:#E8A317;
+  --navy:#123B4A;
+  --card:#ffffff;
+  --soft:#e4eeee;
+  --line:rgba(18,59,74,.10);
+  --code-bg:#0f2630;
+  --code-ink:#e8f3f2;
+  --radius:16px;
+  --shadow:0 8px 26px rgba(18,59,74,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  direction:rtl;
+  text-align:right;
+  line-height:1.95;
+  font-size:17.5px;
+}
+
+/* نوار پیشرفت */
+#progress-wrap{position:fixed;inset-block-start:0;inset-inline:0;height:6px;background:transparent;z-index:60}
+#progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--turquoise),var(--saffron));transition:width .12s ease}
+
+/* هدر */
+.hero{
+  background:radial-gradient(1200px 400px at 80% -10%,rgba(14,124,134,.35),transparent),
+             linear-gradient(135deg,var(--navy),var(--turquoise));
+  color:#fff;padding:56px 22px 44px;text-align:center;position:relative;overflow:hidden;
+}
+.hero .peak{font-size:54px;line-height:1;filter:drop-shadow(0 6px 12px rgba(0,0,0,.25))}
+.hero h1{font-weight:900;font-size:clamp(24px,5vw,38px);margin:14px 0 8px;letter-spacing:-.3px}
+.hero .slogan{opacity:.92;font-size:15px;margin-block-start:6px}
+.hero .promise{
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+  max-width:760px;margin:20px auto 0;padding:14px 18px;border-radius:var(--radius);font-size:16px;
+}
+.hero .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-block-start:18px}
+.hero .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 14px;font-size:13px}
+
+.wrap{max-width:880px;margin:0 auto;padding:26px 18px 60px}
+
+/* فهرست */
+.toc{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-block-end:30px}
+.toc h2{margin:0 0 12px;font-size:19px;color:var(--navy)}
+.toc ol{margin:0;padding-inline-start:22px}
+.toc a{color:var(--turquoise);text-decoration:none;font-weight:700}
+.toc a:hover{text-decoration:underline}
+.toc .lvl{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:1px 9px;margin-inline-start:6px}
+.lvl-b{background:var(--turquoise)}.lvl-m{background:var(--saffron);color:#3a2a00}.lvl-a{background:var(--navy)}
+
+/* عناوین سطح */
+.level-head{
+  display:flex;align-items:center;gap:14px;margin:44px 0 18px;padding:16px 18px;border-radius:var(--radius);
+  background:linear-gradient(120deg,var(--soft),#fff);border:1px solid var(--line)
+}
+.level-head .num{
+  flex:0 0 auto;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  font-weight:900;font-size:22px;color:#fff;background:var(--turquoise)
+}
+.level-head.m .num{background:var(--saffron);color:#3a2a00}
+.level-head.a .num{background:var(--navy)}
+.level-head h2{margin:0;font-size:23px;color:var(--navy)}
+.level-head small{display:block;color:var(--turquoise);font-weight:700;font-size:13px}
+
+/* کارت مرحله */
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-block-end:20px}
+.step-top{display:flex;align-items:center;gap:12px;margin-block-end:8px;flex-wrap:wrap}
+.badge{flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:900;color:#fff;background:var(--turquoise)}
+.step.m .badge{background:var(--saffron);color:#3a2a00}
+.step.a .badge{background:var(--navy)}
+.step h3{margin:0;font-size:19px;color:var(--navy);flex:1 1 auto;min-width:200px}
+.time-chip{font-size:12px;background:var(--soft);color:var(--navy);border-radius:999px;padding:3px 11px;font-weight:700;white-space:nowrap}
+.step p{margin:.5em 0}
+.why{background:#f6fbfb;border-inline-start:4px solid var(--turquoise);border-radius:10px;padding:10px 14px;margin-block-start:10px;font-size:15.5px}
+.why b{color:var(--turquoise)}
+
+/* جعبه‌ها */
+.box{border-radius:12px;padding:14px 16px;margin:14px 0;font-size:15.5px;border:1px solid transparent}
+.tip{background:#fff8e9;border-color:#f3d999}
+.warn{background:#fdecea;border-color:#f2b7ae}
+.note{background:#eef6f6;border-color:#c9e2e2}
+.check{background:#eafaf1;border-color:#bde8cd}
+.fix{background:#f3f1fb;border-color:#d3cbe9}
+.box .h{font-weight:900;display:block;margin-block-end:4px}
+
+/* کد */
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;direction:ltr;text-align:left;margin:14px 0;border:1px solid rgba(255,255,255,.06)}
+pre code{font-family:'Consolas','Courier New',monospace;font-size:14px;line-height:1.75;white-space:pre}
+code.inline{background:#dfeceb;color:var(--navy);border-radius:6px;padding:1px 7px;font-family:'Consolas',monospace;font-size:14px;direction:ltr;display:inline-block}
+.tok-c{color:#7fb0ad}   /* comment */
+.tok-k{color:#f0b458}   /* keyword */
+.tok-s{color:#9cd67f}   /* string  */
+.tok-u{color:#7fc7ff}   /* url/var */
+
+/* فوت‌نوت */
+.fn{background:#fbfdfd;border:1px dashed var(--line);border-radius:12px;padding:12px 15px;margin:12px 0;font-size:14.5px}
+.fn b{color:var(--navy)}
+sup.ref{color:var(--saffron);font-weight:900;font-size:12px;cursor:default}
+
+/* جدول */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.tbl th{background:var(--navy);color:#fff;padding:10px 12px;text-align:right;font-weight:700}
+.tbl td{padding:9px 12px;border-block-start:1px solid var(--line);vertical-align:top}
+.tbl tr:nth-child(even) td{background:#f7fbfb}
+.tbl code{background:#e9f2f1;border-radius:5px;padding:1px 6px;font-family:'Consolas',monospace;font-size:13px;direction:ltr;display:inline-block}
+
+/* دیاگرام حلقه */
+.loop{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:18px 0}
+.loop .node{background:#fff;border:2px solid var(--turquoise);border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;color:var(--navy)}
+.loop .arrow{color:var(--saffron);font-size:22px;font-weight:900}
+
+.celebrate{background:linear-gradient(135deg,var(--turquoise),var(--navy));color:#fff;border-radius:var(--radius);padding:28px 24px;text-align:center;margin-block-start:40px;box-shadow:var(--shadow)}
+.celebrate h2{margin:0 0 10px;font-size:26px}
+.celebrate ul{display:inline-block;text-align:right;margin:12px auto 0;padding-inline-start:22px}
+.next{background:#fff;border:2px dashed var(--saffron);border-radius:var(--radius);padding:18px 20px;margin-block-start:22px}
+.next h3{margin:0 0 8px;color:var(--navy)}
+
+.gravel-footer a{color:inherit}
+a.link{color:var(--turquoise);font-weight:700}
+hr.soft{border:none;border-block-start:1px solid var(--line);margin:26px 0}
+@media (max-width:700px){body{font-size:16.5px}.wrap{padding:18px 14px 50px}.hero{padding:40px 16px 34px}}
+</style>
+</head>
+<body>
+
+<div id="progress-wrap"><div id="progress-bar"></div></div>
+
+<header class="hero">
+  <div class="peak">🏔️🔍</div>
+  <h1>شخصی‌سازی موتور جستجوی گوگل</h1>
+  <div class="slogan">گراول — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</div>
+  <div class="promise">
+    قرار است یک موتور جستجوی <b>کاملاً از آنِ خودتان</b> بسازید: از ساخت اولیه و اتصال دامنه‌ها،
+    تا فیلترهای حرفه‌ای روی نتایج، و در نهایت لاگ‌گیری و بهینه‌سازیِ علمی و بازگشتی.
+    از صفرِ صفر، بدون هیچ پیش‌نیازی.
+  </div>
+  <div class="chips">
+    <span class="chip">⏱️ حدود ۷۵ دقیقه</span>
+    <span class="chip">📈 مبتدی → متوسط → پیشرفته</span>
+    <span class="chip">💻 مناسب مدیر، پژوهشگر و توسعه‌دهنده</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- فهرست -->
+  <nav class="toc" aria-label="فهرست مراحل">
+    <h2>🗺️ نقشهٔ مسیر</h2>
+    <ol>
+      <li><a href="#intro">این آموزش دربارهٔ چیست و چه چیزی می‌سازیم؟</a></li>
+      <li><a href="#must-read">⚠️ یک نکتهٔ مهم که باید قبل از شروع بدانید</a></li>
+      <li><a href="#level1">سطح مبتدی: ساخت موتور، دامنه‌ها و کلید API</a> <span class="lvl lvl-b">مبتدی</span></li>
+      <li><a href="#level2">سطح متوسط: فیلترهای پیشرفتهٔ نتایج</a> <span class="lvl lvl-m">متوسط</span></li>
+      <li><a href="#level3">سطح پیشرفته: لاگ‌گیری، تحلیل و بهینه‌سازی بازگشتی</a> <span class="lvl lvl-a">پیشرفته</span></li>
+      <li><a href="#troubleshoot">🔧 رفع اشکالات رایج</a></li>
+      <li><a href="#done">🎉 جمع‌بندی و مرحلهٔ بعدی</a></li>
+    </ol>
+  </nav>
+
+  <!-- مقدمه -->
+  <section id="intro">
+    <div class="step">
+      <div class="step-top"><span class="badge">i</span><h3>اول از همه: اصلاً دربارهٔ چه چیزی حرف می‌زنیم؟</h3></div>
+      <p>
+        گوگل ابزاری دارد به نام <b>موتور جستجوی برنامه‌پذیر</b>
+        <span dir="ltr">(Programmable Search Engine)</span> — که پیش‌تر «موتور جستجوی سفارشی» یا
+        <span dir="ltr">Custom Search Engine</span> نامیده می‌شد. با این ابزار می‌توانید نسخهٔ کوچک و
+        شخصی‌شدهٔ خودتان از گوگل را بسازید: موتوری که فقط در سایت‌هایی که <b>شما تعیین می‌کنید</b> جستجو کند.
+      </p>
+      <div class="why">
+        <b>یک مثال ملموس:</b> فرض کنید پژوهشگرِ حوزهٔ سلامت هستید و می‌خواهید موتوری داشته باشید که
+        فقط در سایت‌های معتبر پزشکی جستجو کند و بقیهٔ اینترنت را نادیده بگیرد. یا مدیری هستید که
+        می‌خواهید کارمندان فقط داخل چند سایت مرجعِ شرکت جستجو کنند. این دقیقاً همان کاری است که این ابزار می‌کند.
+      </div>
+      <p>در این آموزش، این مسیر سه‌مرحله‌ای را با هم طی می‌کنیم:</p>
+      <ul>
+        <li><b>مبتدی —</b> موتور را می‌سازیم، دامنه‌ها را وصل می‌کنیم و کلید دسترسی <span dir="ltr">(API Key)</span> می‌گیریم.</li>
+        <li><b>متوسط —</b> یاد می‌گیریم نتایج را با فیلترهای حرفه‌ای مثل «فقط فایل‌های PDF» یا «فقط مطالب ماه اخیر» دقیق کنیم.</li>
+        <li><b>پیشرفته —</b> جستجوها را لاگ می‌گیریم، کیفیت نتایج را می‌سنجیم و در یک حلقهٔ بازگشتی، موتور را مدام بهتر می‌کنیم.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- هشدار مهم -->
+  <section id="must-read">
+    <div class="box warn">
+      <span class="h">⚠️ مهم‌ترین نکتهٔ قبل از شروع — لطفاً کامل بخوانید</span>
+      <p style="margin:.4em 0">
+        بخش «برنامه‌پذیرِ» گوگل که با کد کار می‌کند، یعنی
+        <span dir="ltr">Custom Search JSON API</span>، از سال ۲۰۲۵ برای <b>مشتریان جدید بسته شده است</b>؛
+        یعنی اگر تا به حال از آن استفاده نکرده‌اید، ممکن است نتوانید کلید تازه‌ای برایش فعال کنید. همچنین گوگل اعلام کرده مشتریان فعلی
+        تا <b>۱ ژانویهٔ ۲۰۲۷</b> فرصت دارند به راهکار دیگری کوچ کنند.
+      </p>
+      <p style="margin:.4em 0">
+        <b>پس این آموزش برای شما همچنان کاملاً ارزشمند است، به دو دلیل:</b>
+      </p>
+      <ul style="margin:.3em 0">
+        <li><b>ساختِ خودِ موتور جستجو</b> (بخش مبتدی، نسخهٔ ویجت/صفحهٔ آمادهٔ گوگل) هنوز باز و رایگان است و برای همه کار می‌کند.</li>
+        <li>مفاهیم بخش‌های متوسط و پیشرفته (فیلترها، لاگ‌گیری، تحلیل و بهینه‌سازی) <b>مفاهیمی جهانی</b> هستند و عیناً روی جایگزین‌های امروزی مثل
+          <span dir="ltr">Vertex AI Search</span> یا سرویس‌های مشابه هم قابل استفاده‌اند.</li>
+      </ul>
+      <p style="margin:.4em 0">
+        ما مسیر را با API رسمی گوگل توضیح می‌دهیم چون استانداردترین و آموزنده‌ترین مرجع است؛ اما هرجا لازم باشد، جایگزین را هم یادآوری می‌کنیم.
+        <b>هیچ‌گاه در گراول واقعیت را از شما پنهان نمی‌کنیم.</b>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ سطح ۱ ============ -->
+  <section id="level1">
+    <div class="level-head b">
+      <div class="num">۱</div>
+      <div><small>سطح مبتدی</small><h2>ساخت موتور، تنظیم دامنه‌ها و گرفتن کلید API</h2></div>
+    </div>
+
+    <div class="box note">
+      <span class="h">🎒 پیش‌نیازها (همین و بس)</span>
+      یک <b>حساب گوگل</b> (همان حساب Gmail) و یک <b>مرورگر</b> (مثل کروم یا فایرفاکس). نیازی به نصب هیچ نرم‌افزاری نیست.
+      اگر حساب گوگل ندارید، اول یک حساب رایگان بسازید و بعد برگردید.
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۱</span><h3>وارد کنترل‌پنل موتور جستجو شوید</h3><span class="time-chip">۳ دقیقه</span></div>
+      <p>در مرورگر این نشانی را باز کنید و با حساب گوگلتان وارد شوید:</p>
+      <pre><code><span class="tok-u">https://programmablesearchengine.google.com/controlpanel/all</span></code></pre>
+      <p>روی دکمهٔ <b>افزودن / ساخت</b> <span dir="ltr">(Add / Create)</span> کلیک کنید تا فرم ساخت موتور جدید باز شود.</p>
+      <div class="box tip"><span class="h">💡 نکته</span> اگر نشانی بالا کمی تغییر کرد، کافی است در گوگل عبارت <code class="inline" dir="ltr">Programmable Search Engine control panel</code> را جستجو کنید؛ اولین نتیجهٔ رسمی گوگل همان کنترل‌پنل است.</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۲</span><h3>به موتورتان یک نام بدهید</h3><span class="time-chip">۱ دقیقه</span></div>
+      <p>در فیلد <b>نام موتور جستجو</b> یک اسم گویا بنویسید؛ مثلاً «جستجوگر منابع پزشکی». این نام را هر زمان می‌توانید عوض کنید.</p>
+      <div class="box warn"><span class="h">⚠️ مواظب باش</span> از کلمهٔ «Google» در نام موتورتان استفاده نکنید؛ این خلاف قوانین برندِ گوگل است.</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۳</span><h3>دامنه‌ها را تعیین کنید (قلب کار)</h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>در بخش <b>چه چیزی جستجو شود؟</b> <span dir="ltr">(What to search?)</span> سایت‌هایی را که می‌خواهید موتور فقط داخل آن‌ها بگردد، یکی‌یکی وارد کرده و روی <b>افزودن</b> بزنید. می‌توانید:</p>
+      <ul>
+        <li>کل یک سایت را اضافه کنید: <code class="inline" dir="ltr">example.com</code></li>
+        <li>فقط یک بخش را اضافه کنید: <code class="inline" dir="ltr">example.com/blog/*</code></li>
+        <li>چند سایت مختلف را کنار هم بگذارید.</li>
+      </ul>
+      <div class="box warn"><span class="h">⚠️ محدودیت مهم دامنه‌ها</span> از ژانویهٔ ۲۰۲۶، هر موتور جستجوی سفارشی می‌تواند حداکثر روی <b>۵۰ دامنه</b> جستجو کند. برای بیشترِ کاربردها این عدد بیش از کافی است، اما اگر پروژهٔ بزرگی دارید همین ابتدا آن را در نظر بگیرید.</div>
+      <div class="fn"><b>📖 دامنه یعنی چه؟</b> «دامنه» همان نشانی اصلی یک سایت است؛ مثل <code class="inline" dir="ltr">wikipedia.org</code>. وقتی دامنه‌ای را اضافه می‌کنید، یعنی «فقط داخل این خانه بگرد».</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۴</span><h3>تنظیمات نهایی و ساخت</h3><span class="time-chip">۲ دقیقه</span></div>
+      <p>اگر خواستید، گزینه‌های <b>جستجوی تصویر</b> <span dir="ltr">(Image search)</span> و <b>فیلتر محتوای امن</b> <span dir="ltr">(SafeSearch)</span> را روشن کنید. سپس تیک <b>«من ربات نیستم»</b> را بزنید و روی <b>ساخت</b> <span dir="ltr">(Create)</span> کلیک کنید. تبریک — موتورتان ساخته شد!</p>
+      <div class="box check"><span class="h">✅ ایست بازرسی</span> الان باید یک صفحهٔ تأیید ببینید که می‌گوید موتور جستجویتان آماده است و چند دکمه مثل «برو به کنترل‌پنل» یا «کد را بگیر» نشان می‌دهد. اگر این صفحه را می‌بینید، عالی است. اگر نه، به بخش <a class="link" href="#troubleshoot">رفع اشکال</a> بروید.</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۵</span><h3>شناسهٔ موتور <span dir="ltr">(cx)</span> را بردارید</h3><span class="time-chip">۳ دقیقه</span></div>
+      <p>وارد کنترل‌پنل موتورتان شوید. در بخش <b>نمای کلی</b> یا <b>پایه‌ای</b> <span dir="ltr">(Overview / Basics)</span> عبارتی می‌بینید به نام <b>Search engine ID</b>. این یک رشتهٔ حروف و عدد است؛ آن را کپی کنید و جایی امن نگه دارید.</p>
+      <div class="fn"><b>📖 این <code class="inline" dir="ltr">cx</code> چیست؟</b> شناسهٔ موتور جستجوی شماست — مثل «شمارهٔ پلاک» موتورتان. هر وقت با کد بخواهید از این موتور استفاده کنید، باید همین شناسه را بفرستید تا گوگل بداند کدام موتور را صدا می‌زنید. در کدها معمولاً با نام <code class="inline" dir="ltr">cx</code> ظاهر می‌شود.</div>
+      <div class="box tip"><span class="h">💡 اگر فقط می‌خواهید یک موتور جستجوی آمادهٔ رایگان داشته باشید</span> همین‌جا کارتان تمام است! گوگل یک «صفحهٔ عمومی» <span dir="ltr">(Public URL)</span> در همان بخش نمای کلی به شما می‌دهد. آن لینک را باز کنید یا برای دیگران بفرستید — یک موتور جستجوی کامل و کارآمد در دسترستان است، بدون نیاز به هیچ کدی. مراحل بعدی فقط برای کسانی است که می‌خواهند با <b>کد و API</b> کار کنند.</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۶</span><h3>کلید دسترسی <span dir="ltr">(API Key)</span> بگیرید</h3><span class="time-chip">۵ دقیقه</span></div>
+      <div class="fn"><b>📖 API و API Key یعنی چه؟</b> <b>API</b> یک «درِ رسمی» است که به برنامهٔ شما اجازه می‌دهد مستقیم با سرویس گوگل حرف بزند و نتیجه بگیرد. <b>API Key</b> هم مثل «کلید همان در» است؛ رشته‌ای مخفی که به گوگل می‌گوید «این درخواست از طرف من است». این کلید را مثل رمز عبور، هرگز جایی عمومی منتشر نکنید.</div>
+      <p>برای گرفتن کلید:</p>
+      <ol>
+        <li>به <b>Google Cloud Console</b> بروید و یک <b>پروژه</b> بسازید (یا پروژهٔ موجود را انتخاب کنید).</li>
+        <li>سرویس <span dir="ltr">Custom Search API</span> را برای آن پروژه فعال کنید.</li>
+        <li>به بخش <b>Credentials</b> (اعتبارنامه‌ها) بروید و یک <b>API Key</b> بسازید.</li>
+      </ol>
+      <div class="box tip"><span class="h">💡 میان‌بر</span> در صفحهٔ رسمی مستندات گوگل با عنوان <span dir="ltr">Custom Search JSON API</span> یک دکمهٔ <b>«Get a Key»</b> وجود دارد که همین مراحل را با چند کلیک برایتان انجام می‌دهد.</div>
+      <div class="box warn"><span class="h">⚠️ یادآوری صادقانه</span> همان‌طور که در ابتدا گفتیم، این API برای مشتریان جدید بسته شده است. اگر در این مرحله اجازهٔ فعال‌سازی نگرفتید، غافلگیر نشوید؛ به بخش پایانیِ آموزش برای جایگزین‌ها نگاه کنید. مفاهیم بعدی همچنان کاملاً برایتان مفیدند.</div>
+    </div>
+
+    <div class="step b">
+      <div class="step-top"><span class="badge">۷</span><h3>اولین جستجوی واقعی‌تان</h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>حالا دو چیز دارید: <b>کلید</b> <span dir="ltr">(API Key)</span> و <b>شناسهٔ موتور</b> <span dir="ltr">(cx)</span>. این نشانی را بسازید و در مرورگر باز کنید (جاهای بزرگ‌نوشته را با مقادیر خودتان جایگزین کنید):</p>
+      <pre><code><span class="tok-c"># © Mehdi Rezghi — اولین درخواست جستجو</span>
+<span class="tok-u">https://www.googleapis.com/customsearch/v1</span>?key=<span class="tok-k">YOUR_API_KEY</span>&amp;cx=<span class="tok-k">YOUR_CX_ID</span>&amp;q=<span class="tok-s">هوش+مصنوعی</span></code></pre>
+      <p>اگر همه‌چیز درست باشد، مرورگر یک متنِ ساختاریافته به نام <b>JSON</b> نشانتان می‌دهد که پر از نتایج جستجوست.</p>
+      <div class="fn"><b>📖 JSON چیست؟</b> یک قالب متنی ساده و منظم که ماشین‌ها به‌راحتی می‌خوانند. مثل یک فرم پرشده با برچسب و مقدار؛ مثلاً «عنوان: …»، «لینک: …». نگران نباشید، لازم نیست دستی بخوانیدش؛ برنامه‌ها آن را می‌فهمند.</div>
+      <div class="box check"><span class="h">✅ ایست بازرسی</span> اگر در مرورگر متنی دیدید که شامل کلیدواژه‌هایی مثل <code class="inline" dir="ltr">"items"</code>، <code class="inline" dir="ltr">"title"</code> و <code class="inline" dir="ltr">"link"</code> است، یعنی موتور و کلیدتان کار می‌کنند. 🎉 سطح مبتدی تمام شد.</div>
+    </div>
+  </section>
+
+  <!-- ============ سطح ۲ ============ -->
+  <section id="level2">
+    <div class="level-head m">
+      <div class="num">۲</div>
+      <div><small>سطح متوسط</small><h2>فیلترهای پیشرفته: نتایجِ دقیق به‌جای نتایجِ زیاد</h2></div>
+    </div>
+
+    <div class="box note">
+      <span class="h">🎯 هدف این سطح</span>
+      یک موتور خام همه‌چیز را برمی‌گرداند. یک حرفه‌ای، دقیقاً همان چیزی را می‌گیرد که می‌خواهد.
+      اینجا یاد می‌گیریم با افزودن چند «پارامتر» به نشانی جستجو، نتایج را مثل یک جراح فیلتر کنیم.
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۱</span><h3>آناتومی یک درخواست را بشناسید</h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>هر درخواست جستجو از چند تکه ساخته می‌شود که با <code class="inline" dir="ltr">&amp;</code> به هم می‌چسبند:</p>
+      <pre><code><span class="tok-u">https://www.googleapis.com/customsearch/v1</span>
+   ?key=<span class="tok-k">API_KEY</span>      <span class="tok-c"># کلید شما</span>
+   &amp;cx=<span class="tok-k">CX_ID</span>       <span class="tok-c"># شناسهٔ موتور شما</span>
+   &amp;q=<span class="tok-s">SEARCH_TEXT</span>  <span class="tok-c"># عبارت جستجو</span>
+   &amp;<span class="tok-k">PARAM</span>=<span class="tok-s">VALUE</span>   <span class="tok-c"># هر فیلتری که اضافه کنیم اینجا می‌آید</span></code></pre>
+      <div class="fn"><b>📖 پارامتر یعنی چه؟</b> یک «دستور اضافه» که به جستجو می‌چسبانید تا رفتارش را تغییر دهید. مثل وقتی در رستوران می‌گویید «قهوه، ولی بدون شکر»: «بدون شکر» همان پارامتر است.</div>
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۲</span><h3>فیلتر زمان: <code dir="ltr">dateRestrict</code></h3><span class="time-chip">۵ دقیقه</span></div>
+      <p>با این پارامتر می‌گویید «فقط نتایج تازه را بده». مقدارش یک حرف (بازهٔ زمانی) به‌علاوهٔ یک عدد است:</p>
+      <table class="tbl">
+        <tr><th>مقدار</th><th>معنی</th><th>مثال</th></tr>
+        <tr><td><code dir="ltr">d[عدد]</code></td><td>این تعداد روزِ اخیر</td><td><code dir="ltr">dateRestrict=d7</code> → ۷ روز اخیر</td></tr>
+        <tr><td><code dir="ltr">w[عدد]</code></td><td>این تعداد هفتهٔ اخیر</td><td><code dir="ltr">dateRestrict=w2</code> → ۲ هفتهٔ اخیر</td></tr>
+        <tr><td><code dir="ltr">m[عدد]</code></td><td>این تعداد ماهِ اخیر</td><td><code dir="ltr">dateRestrict=m1</code> → ۱ ماه اخیر</td></tr>
+        <tr><td><code dir="ltr">y[عدد]</code></td><td>این تعداد سالِ اخیر</td><td><code dir="ltr">dateRestrict=y1</code> → ۱ سال اخیر</td></tr>
+      </table>
+      <p><b>مثال حرفه‌ای:</b> «اخبار هوش مصنوعیِ فقط یک ماه اخیر»:</p>
+      <pre><code><span class="tok-u">.../customsearch/v1</span>?key=<span class="tok-k">KEY</span>&amp;cx=<span class="tok-k">CX</span>&amp;q=<span class="tok-s">AI+news</span>&amp;dateRestrict=<span class="tok-s">m1</span></code></pre>
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۳</span><h3>فیلتر نوع فایل: <code dir="ltr">fileType</code></h3><span class="time-chip">۵ دقیقه</span></div>
+      <p>می‌خواهید فقط فایل‌های خاصی برگردند؟ مثلاً فقط PDF یا فقط پاورپوینت؟ از این پارامتر استفاده کنید:</p>
+      <pre><code><span class="tok-c"># فقط فایل‌های PDF دربارهٔ «انرژی خورشیدی»</span>
+<span class="tok-u">.../customsearch/v1</span>?key=<span class="tok-k">KEY</span>&amp;cx=<span class="tok-k">CX</span>&amp;q=<span class="tok-s">solar+energy</span>&amp;fileType=<span class="tok-s">pdf</span></code></pre>
+      <p>مقادیر پرکاربرد: <code class="inline" dir="ltr">pdf</code>، <code class="inline" dir="ltr">doc</code>، <code class="inline" dir="ltr">docx</code>، <code class="inline" dir="ltr">ppt</code>، <code class="inline" dir="ltr">xls</code>، <code class="inline" dir="ltr">csv</code>.</p>
+      <div class="box tip"><span class="h">💡 ترکیب فیلترها = قدرت واقعی</span> فیلترها را می‌توانید با هم به کار ببرید. مثلاً «فقط فایل‌های PDFِ منتشرشده در یک سال اخیر»: کافی است هم <code class="inline" dir="ltr">fileType=pdf</code> و هم <code class="inline" dir="ltr">dateRestrict=y1</code> را کنار هم بگذارید.</div>
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۴</span><h3>تمرکز روی یک سایت: <code dir="ltr">siteSearch</code></h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>گاهی می‌خواهید فقط داخل یک سایت خاص بگردید (یا برعکس، یک سایت را حذف کنید). دو پارامتر با هم کار می‌کنند:</p>
+      <table class="tbl">
+        <tr><th>پارامتر</th><th>کار</th></tr>
+        <tr><td><code dir="ltr">siteSearch</code></td><td>نام همان سایت؛ مثلاً <code dir="ltr">siteSearch=who.int</code></td></tr>
+        <tr><td><code dir="ltr">siteSearchFilter</code></td><td><code dir="ltr">i</code> یعنی «فقط این سایت» — <code dir="ltr">e</code> یعنی «همه‌جا جز این سایت»</td></tr>
+      </table>
+      <pre><code><span class="tok-c"># فقط نتایجِ داخل سایت who.int</span>
+&amp;siteSearch=<span class="tok-s">who.int</span>&amp;siteSearchFilter=<span class="tok-s">i</span></code></pre>
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۵</span><h3>مرتب‌سازی و صفحه‌بندی</h3><span class="time-chip">۵ دقیقه</span></div>
+      <table class="tbl">
+        <tr><th>پارامتر</th><th>کار</th><th>نکته</th></tr>
+        <tr><td><code dir="ltr">sort=date</code></td><td>نتایج را از تازه‌ترین مرتب می‌کند</td><td>پیش‌فرض، مرتب‌سازی بر اساس ربط است</td></tr>
+        <tr><td><code dir="ltr">num</code></td><td>تعداد نتایج هر صفحه</td><td>حداکثر <b>۱۰</b> — بیشتر ممکن نیست</td></tr>
+        <tr><td><code dir="ltr">start</code></td><td>از کدام نتیجه شروع شود</td><td>برای صفحهٔ بعد: <code dir="ltr">start=11</code></td></tr>
+      </table>
+      <div class="box warn"><span class="h">⚠️ سقف نتایج</span> این API در کل حداکثر <b>۱۰۰ نتیجه</b> برمی‌گرداند (یعنی <code class="inline" dir="ltr">start</code> نمی‌تواند از حدود ۹۱ بیشتر شود). اگر بیشتر می‌خواهید، باید عبارت جستجو را دقیق‌تر کنید، نه اینکه صفحه‌ها را بیشتر ورق بزنید.</div>
+    </div>
+
+    <div class="step m">
+      <div class="step-top"><span class="badge">۶</span><h3>فیلترهای کلمه‌ای دقیق</h3><span class="time-chip">۴ دقیقه</span></div>
+      <table class="tbl">
+        <tr><th>پارامتر</th><th>کار</th></tr>
+        <tr><td><code dir="ltr">exactTerms</code></td><td>این عبارت حتماً در نتیجه باشد</td></tr>
+        <tr><td><code dir="ltr">excludeTerms</code></td><td>این کلمه در نتیجه <b>نباشد</b></td></tr>
+        <tr><td><code dir="ltr">orTerms</code></td><td>دست‌کم یکی از این کلمه‌ها باشد</td></tr>
+        <tr><td><code dir="ltr">lr=lang_fa</code></td><td>فقط نتایج فارسی</td></tr>
+      </table>
+      <p><b>مثال حرفه‌ای ترکیبی —</b> «مقالهٔ PDF فارسیِ یک سال اخیر دربارهٔ یادگیری ماشین، ولی بدون کلمهٔ تبلیغاتی»:</p>
+      <pre><code><span class="tok-u">.../customsearch/v1</span>?key=<span class="tok-k">KEY</span>&amp;cx=<span class="tok-k">CX</span>
+   &amp;q=<span class="tok-s">یادگیری+ماشین</span>
+   &amp;fileType=<span class="tok-s">pdf</span>
+   &amp;dateRestrict=<span class="tok-s">y1</span>
+   &amp;lr=<span class="tok-s">lang_fa</span>
+   &amp;excludeTerms=<span class="tok-s">تبلیغ</span></code></pre>
+      <div class="box check"><span class="h">✅ ایست بازرسی</span> اگر می‌توانید در ذهنتان یک نیاز واقعی (مثلاً «فقط اسلایدهای پاورپوینتِ ماه اخیر») را به ترکیب درستی از این پارامترها ترجمه کنید، سطح متوسط را کامل بلد شده‌اید.</div>
+    </div>
+  </section>
+
+  <!-- ============ سطح ۳ ============ -->
+  <section id="level3">
+    <div class="level-head a">
+      <div class="num">۳</div>
+      <div><small>سطح پیشرفته</small><h2>لاگ‌گیری، تحلیل نتایج و بهینه‌سازی بازگشتی</h2></div>
+    </div>
+
+    <div class="box note">
+      <span class="h">🧠 فلسفهٔ این سطح</span>
+      تا اینجا «جستجو کردیم». حالا می‌خواهیم <b>یاد بگیریم کدام جستجوها خوب کار می‌کنند و کدام نه</b> —
+      و بر اساس داده، موتور را قدم‌به‌قدم بهتر کنیم. این همان چیزی است که کار یک حرفه‌ای را از یک مبتدی جدا می‌کند.
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۱</span><h3>پیش‌نیاز کوچک: پایتون و کتابخانهٔ درخواست</h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>برای لاگ‌گیری خودکار، یک برنامهٔ کوچک پایتون می‌نویسیم. اگر پایتون ندارید، آموزش نصب پایتون در گراول موجود است. سپس این کتابخانه را نصب کنید:</p>
+      <pre><code><span class="tok-c"># © Mehdi Rezghi — نصب کتابخانهٔ درخواست‌های وب</span>
+pip install requests</code></pre>
+      <div class="fn"><b>📖 کتابخانه <code class="inline" dir="ltr">requests</code> چیست؟</b> ابزاری آمادهٔ پایتون که کار «صدا زدن یک نشانی اینترنتی و گرفتن پاسخ» را برایمان ساده می‌کند. به‌جای کدهای پیچیده، فقط یک خط می‌نویسیم.</div>
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۲</span><h3>یک جستجوگرِ لاگ‌گیر بسازید</h3><span class="time-chip">۸ دقیقه</span></div>
+      <p>این برنامه هر جستجو را انجام می‌دهد و نتیجه‌اش را در یک فایل <b>CSV</b> ذخیره می‌کند تا بعداً بتوانیم تحلیلش کنیم:</p>
+      <pre><code><span class="tok-c"># © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi</span>
+<span class="tok-c"># جستجوگر لاگ‌گیر گراول</span>
+<span class="tok-k">import</span> requests, csv, time
+<span class="tok-k">from</span> datetime <span class="tok-k">import</span> datetime
+
+API_KEY = <span class="tok-s">"YOUR_API_KEY"</span>
+CX_ID   = <span class="tok-s">"YOUR_CX_ID"</span>
+ENDPOINT = <span class="tok-s">"https://www.googleapis.com/customsearch/v1"</span>
+
+<span class="tok-k">def</span> search(query, **filters):
+    params = {<span class="tok-s">"key"</span>: API_KEY, <span class="tok-s">"cx"</span>: CX_ID, <span class="tok-s">"q"</span>: query}
+    params.update(filters)          <span class="tok-c"># مثلاً fileType="pdf", dateRestrict="m1"</span>
+    r = requests.get(ENDPOINT, params=params, timeout=<span class="tok-k">15</span>)
+    r.raise_for_status()
+    <span class="tok-k">return</span> r.json()
+
+<span class="tok-k">def</span> log_search(query, **filters):
+    data  = search(query, **filters)
+    total = data.get(<span class="tok-s">"searchInformation"</span>, {}).get(<span class="tok-s">"totalResults"</span>, <span class="tok-s">"0"</span>)
+    items = data.get(<span class="tok-s">"items"</span>, [])
+    top3  = <span class="tok-s">" | "</span>.join(i.get(<span class="tok-s">"link"</span>, <span class="tok-s">""</span>) <span class="tok-k">for</span> i <span class="tok-k">in</span> items[:<span class="tok-k">3</span>])
+
+    <span class="tok-k">with</span> open(<span class="tok-s">"search_log.csv"</span>, <span class="tok-s">"a"</span>, newline=<span class="tok-s">""</span>, encoding=<span class="tok-s">"utf-8"</span>) <span class="tok-k">as</span> f:
+        w = csv.writer(f)
+        w.writerow([
+            datetime.now().isoformat(timespec=<span class="tok-s">"seconds"</span>),
+            query, str(filters), total, len(items), top3
+        ])
+    print(<span class="tok-s">f"✔ '{query}' → کل نتایج: {total} | برگشتی: {len(items)}"</span>)
+
+<span class="tok-k">if</span> __name__ == <span class="tok-s">"__main__"</span>:
+    log_search(<span class="tok-s">"یادگیری ماشین"</span>, fileType=<span class="tok-s">"pdf"</span>, dateRestrict=<span class="tok-s">"y1"</span>)</code></pre>
+      <div class="box check"><span class="h">✅ ایست بازرسی</span> بعد از اجرا، باید کنار برنامه یک فایل به نام <code class="inline" dir="ltr">search_log.csv</code> بسازد و در ترمینال خطی مثل «✔ 'یادگیری ماشین' → کل نتایج: ...» چاپ شود.</div>
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۳</span><h3>چه چیزهایی را باید لاگ بگیریم؟</h3><span class="time-chip">۴ دقیقه</span></div>
+      <p>یک لاگ خوب باید بعداً به پرسش‌هایمان جواب بدهد. برای هر جستجو دست‌کم این‌ها را نگه دارید:</p>
+      <table class="tbl">
+        <tr><th>ستون</th><th>چرا مهم است؟</th></tr>
+        <tr><td>زمان</td><td>ببینیم کیفیت نتایج در طول زمان بهتر یا بدتر شده</td></tr>
+        <tr><td>عبارت جستجو + فیلترها</td><td>بفهمیم کدام ترکیب‌ها بهترند</td></tr>
+        <tr><td>تعداد کل نتایج</td><td>خیلی کم = عبارت بیش‌ازحد تنگ؛ خیلی زیاد = بیش‌ازحد گشاد</td></tr>
+        <tr><td>سه نتیجهٔ اول</td><td>معیار سریعِ اینکه نتایج «مرتبط» بوده‌اند یا نه</td></tr>
+      </table>
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۴</span><h3>تحلیل: یک نتیجه چقدر «خوب» است؟</h3><span class="time-chip">۶ دقیقه</span></div>
+      <p>برای سنجش کیفیت، دو معیار سادهٔ حرفه‌ای کافی است:</p>
+      <ul>
+        <li><b>دقت <span dir="ltr">(Precision):</span></b> از ده نتیجهٔ اول، چند تا واقعاً به کار آمدند؟ اگر ۸ تا مفید بود، دقت شما ۸۰٪ است.</li>
+        <li><b>نرخ نتیجهٔ خالی:</b> چند درصد جستجوها هیچ نتیجه‌ای برنگرداندند؟ این‌ها را باید بازطراحی کنید.</li>
+      </ul>
+      <div class="fn"><b>📖 دقت (Precision) به زبان ساده:</b> «از چیزهایی که موتور به من داد، چند درصدش واقعاً همانی بود که می‌خواستم؟» هرچه این عدد بالاتر، موتور شما هوشمندتر است.</div>
+      <div class="box tip"><span class="h">💡 یک ترفند عملی</span> در فایل CSV یک ستون دستیِ «مفید بود؟» اضافه کنید و برای هر ردیف نمرهٔ ۰ تا ۱۰ بدهید. همین جدولِ ساده، بعد از ۲۰ جستجو، الگوهای واضحی نشانتان می‌دهد.</div>
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۵</span><h3>حلقهٔ بهینه‌سازی بازگشتی</h3><span class="time-chip">۶ دقیقه</span></div>
+      <p>«بهینه‌سازی بازگشتی» یعنی یک چرخهٔ تکرارشونده که هر دور، موتور را کمی بهتر می‌کند:</p>
+      <div class="loop">
+        <span class="node">۱. جستجو + لاگ</span><span class="arrow">←</span>
+        <span class="node">۲. سنجش دقت</span><span class="arrow">←</span>
+        <span class="node">۳. یافتن ضعف</span><span class="arrow">←</span>
+        <span class="node">۴. اصلاح فیلتر/دامنه</span>
+      </div>
+      <p>و بعد دوباره از قدم ۱ شروع می‌کنید. چند نمونه از «اصلاح» در قدم ۴:</p>
+      <table class="tbl">
+        <tr><th>اگر دیدید…</th><th>این اصلاح را انجام دهید</th></tr>
+        <tr><td>نتایج نامرتبط زیادند</td><td>با <code dir="ltr">exactTerms</code> یا <code dir="ltr">excludeTerms</code> عبارت را تنگ‌تر کنید</td></tr>
+        <tr><td>نتایج قدیمی‌اند</td><td><code dir="ltr">dateRestrict</code> را سخت‌گیرانه‌تر کنید (مثلاً از <code dir="ltr">y1</code> به <code dir="ltr">m3</code>)</td></tr>
+        <tr><td>یک سایت مدام زباله می‌دهد</td><td>آن دامنه را از موتور حذف کنید</td></tr>
+        <tr><td>نتایج خیلی کم‌اند</td><td>یک فیلتر را بردارید یا دامنه‌های مرتبط بیشتری اضافه کنید</td></tr>
+      </table>
+      <div class="box check"><span class="h">✅ ایست بازرسی</span> اگر بتوانید یک بار این حلقه را کامل بچرخانید — جستجو، سنجش، پیدا کردن یک ضعف، و یک اصلاح مشخص — یعنی روش کار را یاد گرفته‌اید. بقیه‌اش فقط تکرار و تجربه است.</div>
+    </div>
+
+    <div class="step a">
+      <div class="step-top"><span class="badge">۶</span><h3>پایش سهمیه و مدیریت خطای فشار</h3><span class="time-chip">۵ دقیقه</span></div>
+      <div class="fn"><b>📖 سهمیه <span dir="ltr">(Quota)</span> چیست؟</b> سقفِ تعداد جستجوهایی که در روز اجازه دارید. نسخهٔ رایگان این API روزانه <b>۱۰۰ جستجو</b> می‌دهد؛ فراتر از آن هزینه دارد (حدود ۵ دلار برای هر ۱۰۰۰ جستجو، تا سقف ۱۰٬۰۰۰ در روز). سهمیه هر شب به وقت اقیانوس آرام صفر می‌شود.</div>
+      <p><b>پایش:</b> در <span dir="ltr">Google Cloud Console</span> به بخش <b>API Dashboard</b> بروید تا مصرف روزانه‌تان را ببینید. برای پایش دقیق‌تر می‌توانید در <span dir="ltr">Cloud Operations</span> روی سرویس <code class="inline" dir="ltr">customsearch.googleapis.com</code> هشدار (Alert) تنظیم کنید.</p>
+      <p><b>خطای فشار (Rate limit):</b> اگر زیادی سریع درخواست بفرستید، گوگل خطای <code class="inline" dir="ltr">429</code> می‌دهد. راه درست، «عقب‌نشینی نمایی» است: کمی صبر کن، اگر باز خطا داد صبر را دو برابر کن.</p>
+      <pre><code><span class="tok-c"># © Mehdi Rezghi — عقب‌نشینی نمایی هنگام خطای فشار</span>
+<span class="tok-k">import</span> time, requests
+
+<span class="tok-k">def</span> safe_search(query, **filters):
+    delay = <span class="tok-k">1</span>
+    <span class="tok-k">for</span> attempt <span class="tok-k">in</span> range(<span class="tok-k">5</span>):
+        <span class="tok-k">try</span>:
+            <span class="tok-k">return</span> search(query, **filters)
+        <span class="tok-k">except</span> requests.HTTPError <span class="tok-k">as</span> e:
+            <span class="tok-k">if</span> e.response.status_code == <span class="tok-k">429</span>:
+                print(<span class="tok-s">f"⏳ فشار زیاد؛ {delay} ثانیه صبر…"</span>)
+                time.sleep(delay)
+                delay *= <span class="tok-k">2</span>        <span class="tok-c"># 1 → 2 → 4 → 8 …</span>
+            <span class="tok-k">else</span>:
+                <span class="tok-k">raise</span>
+    <span class="tok-k">raise</span> RuntimeError(<span class="tok-s">"بعد از چند تلاش، همچنان خطای فشار."</span>)</code></pre>
+      <div class="fn"><b>📖 عقب‌نشینی نمایی <span dir="ltr">(Exponential Backoff)</span>:</b> یعنی بین تلاش‌های ناموفق، زمان انتظار را هربار دو برابر کنیم (۱ ثانیه، ۲، ۴، ۸…). این‌طور هم به سرور فشار نمی‌آوریم و هم شانس موفقیت بالا می‌رود.</div>
+    </div>
+  </section>
+
+  <!-- رفع اشکال -->
+  <section id="troubleshoot">
+    <hr class="soft">
+    <h2 style="color:var(--navy)">🔧 رفع اشکالات رایج</h2>
+    <div class="box fix"><span class="h">❌ خطای <code dir="ltr">API key not valid</code></span> کلید را اشتباه کپی کرده‌اید یا سرویس <span dir="ltr">Custom Search API</span> را برای پروژه فعال نکرده‌اید. کلید را دوباره از <span dir="ltr">Cloud Console</span> بردارید و مطمئن شوید سرویس روشن است.</div>
+    <div class="box fix"><span class="h">❌ خطای <code dir="ltr">Invalid Value</code> برای cx</span> شناسهٔ موتور را ناقص گذاشته‌اید. آن را از بخش <span dir="ltr">Overview/Basics</span> کنترل‌پنل دوباره و کامل کپی کنید.</div>
+    <div class="box fix"><span class="h">❌ هیچ <code dir="ltr">items</code> در پاسخ نیست</span> یعنی جستجو نتیجه‌ای نداشت. عبارت را گشادتر کنید، یک فیلتر را بردارید، یا مطمئن شوید دامنه‌های موتور محتوای مرتبط دارند.</div>
+    <div class="box fix"><span class="h">❌ خطای <code dir="ltr">429 / quota exceeded</code></span> به سقف ۱۰۰ جستجوی رایگانِ روزانه رسیده‌اید. تا فردا (نیمه‌شب به وقت اقیانوس آرام) صبر کنید یا از کد «عقب‌نشینی نمایی» استفاده کنید.</div>
+    <div class="box fix"><span class="h">❌ اصلاً اجازهٔ ساخت کلید جدید را ندارم</span> کاملاً طبیعی است — این API برای مشتریان جدید بسته شده. برای پروژهٔ تازه به سراغ جایگزین‌ها بروید (بخش بعد).</div>
+  </section>
+
+  <!-- جمع‌بندی -->
+  <section id="done">
+    <div class="celebrate">
+      <h2>🎉 تمام شد! حالا شما بلدید…</h2>
+      <ul>
+        <li>یک موتور جستجوی سفارشی بسازید و دامنه‌هایش را تنظیم کنید.</li>
+        <li>شناسهٔ موتور <span dir="ltr">(cx)</span> و کلید <span dir="ltr">(API Key)</span> بگیرید و اولین جستجو را بزنید.</li>
+        <li>نتایج را با فیلترهای حرفه‌ای مثل <code dir="ltr">dateRestrict</code>، <code dir="ltr">fileType</code> و <code dir="ltr">siteSearch</code> دقیق کنید.</li>
+        <li>جستجوها را لاگ بگیرید، دقتشان را بسنجید و در یک حلقهٔ بازگشتی، موتور را مدام بهتر کنید.</li>
+        <li>سهمیه را پایش کنید و خطای فشار را حرفه‌ای مدیریت کنید.</li>
+      </ul>
+    </div>
+
+    <div class="box note" style="margin-block-start:22px">
+      <span class="h">🧭 اگر مشتری جدید هستید و به جایگزین نیاز دارید</span>
+      چون API رسمی گوگل برای ثبت‌نام‌های تازه بسته شده، برای پروژهٔ جدید می‌توانید سراغ گزینه‌هایی مثل
+      <span dir="ltr">Vertex AI Search</span> گوگل (برای جستجوی تا ۵۰ دامنه) یا سرویس‌های مشابهِ جستجوی وب بروید.
+      خبر خوب این است که همهٔ مفاهیمی که اینجا یاد گرفتید — فیلتر، لاگ، سنجش دقت و بهینه‌سازی بازگشتی —
+      عیناً روی آن سرویس‌ها هم به کار می‌آیند.
+    </div>
+
+    <div class="next">
+      <h3>👣 مرحلهٔ بعدی پیشنهادی</h3>
+      <p style="margin:.3em 0">
+        حالا که می‌توانید نتایج جستجو را برنامه‌وار بگیرید، قدم بعدی طبیعی این است:
+        <b>ساختِ یک «چت با اسناد» مبتنی بر RAG</b> — که همین نتایج جستجو را به یک مدل هوش مصنوعی می‌دهد تا از دلشان پاسخ بسازد.
+        یا اگر می‌خواهید همین جستجوگر را خودکار کنید، آموزش <b>«ورک‌فلوی n8n: تلگرام → هوش مصنوعی»</b> گام بعدی عالی‌ای است.
+        بگویید کدام را برایتان بسازم.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- فوتر گراول -->
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+<div style="margin-top:6px;opacity:.8">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+</div>
+
+<script>
+// © Mehdi Rezghi — نوار پیشرفت اسکرول
+(function(){
+  var bar = document.getElementById('progress-bar');
+  function update(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop;
+    var height = h.scrollHeight - h.clientHeight;
+    var pct = height > 0 ? (scrolled / height) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>
