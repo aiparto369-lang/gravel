@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- گراول (Gravel) — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد. -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصال والت Obsidian به هوش مصنوعی — آموزش جامع سه دروازه | گراول</title>
+
+<meta name="gravel:category" content="🤖 ابزارهای هوش مصنوعی">
+<meta name="gravel:emoji"    content="🧠">
+<meta name="gravel:time"     content="حدود ۱۲۰ دقیقه">
+<meta name="gravel:level"    content="متوسط">
+<meta name="gravel:desc"     content="اتصال ابرمغز Obsidian به هوش مصنوعی از سه مسیر: پلاگین Copilot با OpenRouter، مدل کاملاً آفلاین با Ollama، و اتصال عامل‌محور Claude با MCP — همراه قوانین حریم خصوصی و حکمرانی">
+<meta name="gravel:keywords" content="Obsidian AI, ابسیدین هوش مصنوعی, اتصال Obsidian به هوش مصنوعی, Copilot for Obsidian, Smart Connections, Ollama, مدل محلی, local LLM, RAG, چت با یادداشت ها, MCP, Claude Desktop, mcp-obsidian, Local REST API, OpenRouter, مغز دوم و هوش مصنوعی, second brain AI">
+
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<meta name="description" content="آموزش فارسی و گام‌به‌گام اتصال والت Obsidian به هوش مصنوعی: چت با یادداشت‌ها (Vault QA)، جست‌وجوی معنایی، مدل آفلاین Ollama و اتصال Claude از طریق MCP — گراول">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi */
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --night:#123B4A;
+  --card:#FFFFFF;
+  --soft:#E4EFEF;
+  --line:rgba(20,48,59,.12);
+  --tip:#E8F6EE;   --tip-b:#1E8E5A;
+  --warn:#FDF0E4;  --warn-b:#C9702A;
+  --note:#EEF3FB;  --note-b:#3A6EA5;
+  --check:#F0F7EC; --check-b:#5B8C2A;
+  --fix:#F7EFF5;   --fix-b:#8E4585;
+  --code-bg:#0F2830;
+  --code-ink:#D8EEF2;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  font-size:17px;line-height:1.95;direction:rtl;text-align:right;
+}
+#gravel-progress{
+  position:fixed;top:0;inset-inline-start:0;height:5px;width:0%;
+  background:linear-gradient(90deg,var(--teal),var(--saffron));
+  z-index:1000;transition:width .15s ease;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+a{color:var(--teal)}
+h1,h2,h3,h4{line-height:1.6;color:var(--night)}
+h2{font-size:1.55rem;font-weight:900;margin:2.2em 0 .6em;border-inline-start:6px solid var(--saffron);padding-inline-start:14px}
+h3{font-size:1.2rem;font-weight:700;margin:1.6em 0 .4em}
+p{margin:.55em 0}
+ul,ol{padding-inline-start:1.4em;margin:.5em 0}
+li{margin:.3em 0}
+strong{color:var(--night)}
+.hero{
+  background:linear-gradient(150deg,var(--night) 0%,#0B5560 60%,var(--teal) 100%);
+  color:#F4FBFC;border-radius:0 0 28px 28px;
+  padding:52px 22px 40px;text-align:center;margin-bottom:26px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;opacity:.14;
+  background:
+    radial-gradient(circle at 18% 30%, #E8A317 0 5px, transparent 6px),
+    radial-gradient(circle at 78% 22%, #fff 0 4px, transparent 5px),
+    radial-gradient(circle at 60% 75%, #E8A317 0 4px, transparent 5px),
+    radial-gradient(circle at 32% 80%, #fff 0 3px, transparent 4px),
+    radial-gradient(circle at 88% 62%, #fff 0 5px, transparent 6px);
+}
+.hero h1{color:#fff;font-size:clamp(1.5rem,4.4vw,2.35rem);font-weight:900;margin:.3em 0}
+.hero .brand{font-size:.95rem;opacity:.92}
+.hero .promise{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  display:inline-block;border-radius:999px;padding:8px 20px;margin-top:14px;font-size:.98rem;
+}
+.hero .emoji{font-size:3.2rem;display:block;margin-bottom:6px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.meta-chips span{background:rgba(255,255,255,.16);border-radius:999px;padding:5px 15px;font-size:.85rem}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;margin:22px 0}
+.toc h2{margin-top:0;border:none;padding:0;font-size:1.2rem}
+.toc ol{columns:2;column-gap:34px;padding-inline-start:1.2em;font-size:.95rem}
+.toc li{break-inside:avoid;margin:.35em 0}
+.toc a{text-decoration:none;font-weight:500}
+.toc a:hover{color:var(--saffron)}
+.stage{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px 20px;margin:30px 0;box-shadow:0 2px 10px rgba(18,59,74,.05);position:relative;
+}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.stage-num{
+  min-width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:var(--night);color:#fff;font-weight:900;font-size:1.25rem;flex-shrink:0;
+}
+.stage.alt .stage-num{background:var(--teal)}
+.stage-head h2{margin:0;border:none;padding:0;font-size:1.35rem;flex:1;min-width:200px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--soft);color:var(--night);border-radius:999px;padding:3px 13px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.chip.time{background:#FBEED3;color:#8a5b00}
+.chip.pos{background:var(--night);color:#fff}
+.box{border-radius:12px;padding:14px 18px;margin:16px 0;border-inline-start:5px solid;font-size:.97rem}
+.box .box-title{font-weight:900;display:block;margin-bottom:4px}
+.box.tip{background:var(--tip);border-color:var(--tip-b)}
+.box.warn{background:var(--warn);border-color:var(--warn-b)}
+.box.note{background:var(--note);border-color:var(--note-b)}
+.box.check{background:var(--check);border-color:var(--check-b)}
+.box.fix{background:var(--fix);border-color:var(--fix-b)}
+.box.pro{background:#102E38;border-color:var(--saffron);color:#E8F4F6}
+.box.pro .box-title{color:var(--saffron)}
+.box.pro code{background:rgba(255,255,255,.12);color:#FFE7B3}
+.why{background:var(--soft);border-radius:10px;padding:10px 16px;margin:12px 0;font-size:.93rem}
+.why b{color:var(--teal)}
+pre{
+  direction:ltr;text-align:left;background:var(--code-bg);color:var(--code-ink);
+  border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:.88rem;line-height:1.75;
+  font-family:'Consolas','Courier New',monospace;
+}
+code{
+  direction:ltr;unicode-bidi:embed;background:#E6EFF1;color:#0B4A52;
+  border-radius:6px;padding:1px 7px;font-family:'Consolas','Courier New',monospace;font-size:.88em;
+}
+pre code{background:none;color:inherit;padding:0}
+kbd{
+  direction:ltr;unicode-bidi:embed;background:var(--night);color:#fff;border-radius:6px;
+  padding:1px 8px;font-size:.82em;font-family:'Consolas',monospace;border-bottom:2px solid var(--saffron);
+}
+.steps{counter-reset:st;list-style:none;padding:0;margin:14px 0}
+.steps>li{
+  counter-increment:st;position:relative;padding:10px 34px 10px 16px;margin:10px 0;
+  background:var(--bg);border-radius:12px;border:1px solid var(--line);
+  padding-inline-start:34px;padding-inline-end:16px;
+}
+.steps>li::before{
+  content:counter(st);position:absolute;inset-inline-start:-14px;top:10px;
+  width:34px;height:34px;border-radius:50%;background:var(--saffron);color:var(--night);
+  font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  box-shadow:0 0 0 4px var(--card);
+}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;background:var(--card)}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:right;vertical-align:top}
+th{background:var(--night);color:#fff;font-weight:700}
+tr:nth-child(even) td{background:var(--bg)}
+.tbl-scroll{overflow-x:auto}
+.diagram{background:var(--card);border:2px dashed var(--teal);border-radius:14px;padding:18px;margin:18px 0;text-align:center}
+.flow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.flow .nd{background:var(--soft);border:2px solid var(--teal);border-radius:12px;padding:8px 16px;font-weight:700;font-size:.9rem;color:var(--night)}
+.flow .nd.gold{background:#FBEED3;border-color:var(--saffron)}
+.flow .ar{font-size:1.3rem;color:var(--saffron);font-weight:900}
+.footnote{background:var(--note);border-radius:10px;border-inline-start:4px solid var(--note-b);padding:10px 16px;margin:10px 0;font-size:.9rem}
+.footnote b{color:var(--note-b)}
+dl.gloss dt{font-weight:900;color:var(--night);margin-top:14px}
+dl.gloss dd{margin:2px 0 0 0;padding-inline-start:14px;border-inline-start:3px solid var(--soft);font-size:.95rem}
+.party{background:linear-gradient(150deg,#0E7C86,#123B4A);color:#fff;border-radius:20px;padding:34px 28px;text-align:center;margin:40px 0 20px}
+.party h2{color:#fff;border:none;padding:0}
+.party ul{display:inline-block;text-align:right;margin-top:10px}
+.gravel-footer a:hover{color:var(--saffron)}
+.small{font-size:.85rem;opacity:.8}
+@media (max-width:700px){
+  body{font-size:16px}
+  .toc ol{columns:1}
+  .stage{padding:18px 16px}
+  .steps>li::before{inset-inline-start:-10px}
+}
+</style>
+</head>
+<body>
+<div id="gravel-progress"></div>
+
+<header class="hero">
+  <span class="emoji">🧠🤖</span>
+  <div class="brand">🏔️ گراول (Gravel) — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</div>
+  <h1>اتصال والت Obsidian به هوش مصنوعی — سه دروازه</h1>
+  <div class="promise">قراره چی یاد بگیریم؟ ابرمغزت با هوش مصنوعی حرف بزند، خودش یادداشت‌های مرتبط را پیدا کند، و حتی یک «عامل هوشمند» داخلش کار کند — با رعایت کامل حریم خصوصی</div>
+  <div class="meta-chips">
+    <span>⏱️ حدود ۱۲۰ دقیقه (در چند نشست)</span>
+    <span>🎯 سطح متوسط</span>
+    <span>🗓️ راستی‌آزمایی‌شده — تیر ۱۴۰۵ / ژوئیهٔ ۲۰۲۶</span>
+    <span>🔐 با فصل ویژهٔ حریم خصوصی</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="box note">
+<span class="box-title">📌 جای این آموزش در نقشهٔ گراول</span>
+این آموزش، ادامهٔ مستقیم <strong>«ساخت ابرمغز با Obsidian»</strong> است: فرض ما این است که یک والت با یادداشت‌های اتمیک و Properties دارید. اگر هنوز آن را ندیده‌اید، اول همان را کامل کنید. همچنین «دروازهٔ یک» به کلید OpenRouter نیاز دارد که در آموزش <strong>«کیف‌پول کریپتو و OpenRouter»</strong> از مسیر صعود گراول ساختیم — اگر آن کلید را دارید، اینجا فقط استفاده‌اش می‌کنیم.
+</div>
+
+<nav class="toc" id="toc">
+<h2>🗺️ فهرست مراحل</h2>
+<ol>
+  <li><a href="#s0">مرحله ۰ — نقشهٔ راه: سه دروازهٔ اتصال و مفهوم RAG</a></li>
+  <li><a href="#s1">مرحله ۱ — پیش‌نیازها و آماده‌سازی</a></li>
+  <li><a href="#s2">مرحله ۲ — قانون اساسی حریم خصوصی (قبل از هر اتصالی!)</a></li>
+  <li><a href="#s3">مرحله ۳ — دروازهٔ ۱ (الف): Smart Connections — حس ششم والت</a></li>
+  <li><a href="#s4">مرحله ۴ — دروازهٔ ۱ (ب): Copilot + OpenRouter — چت با کل والت</a></li>
+  <li><a href="#s5">مرحله ۵ — هنر پرامپت‌نویسی برای والت</a></li>
+  <li><a href="#s6">مرحله ۶ — دروازهٔ ۲: Ollama — هوش مصنوعی کاملاً آفلاین</a></li>
+  <li><a href="#s7">مرحله ۷ — دروازهٔ ۳: MCP — عامل هوشمند داخل والت</a></li>
+  <li><a href="#s8">مرحله ۸ — حکمرانی: قانون اساسی همکاری انسان و ماشین</a></li>
+  <li><a href="#trouble">🔧 رفع اشکال — ۶ مشکل رایج</a></li>
+  <li><a href="#gloss">📖 واژه‌نامه</a></li>
+</ol>
+</nav>
+
+<!-- ================= مرحله ۰ ================= -->
+<section class="stage" id="s0">
+<div class="stage-head">
+  <div class="stage-num">۰</div>
+  <h2>نقشهٔ راه: سه دروازهٔ اتصال و مفهوم RAG</h2>
+  <div class="chips"><span class="chip pos">مرحله ۰ از ۸</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<p>مهم‌ترین حقیقتی که باید از همین اول بدانید: Obsidian <strong>هیچ هوش مصنوعی داخلی ندارد</strong> — و این عمدی است. تیم Obsidian به «مالکیت داده» متعهد است و تصمیم دربارهٔ اینکه یادداشت‌هایتان به کدام مدل برسد (یا نرسد) را کاملاً به خودتان سپرده. پس اتصال از سه «دروازه» ممکن است که هر کدام فلسفه، هزینه و سطح حریم خصوصی متفاوتی دارند:</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>دروازه</th><th>چیست؟</th><th>سختی</th><th>هزینه</th><th>داده کجا می‌رود؟</th></tr>
+<tr><td><strong>۱ — پلاگین درون Obsidian</strong></td><td>Smart Connections (جست‌وجوی معنایی) + Copilot (چت با والت)</td><td>⭐⭐</td><td>رایگان تا چند دلار در ماه (کلید OpenRouter)</td><td>فقط بخش‌های مرتبط سؤالتان به سرویس ابری می‌رود</td></tr>
+<tr><td><strong>۲ — مدل محلی</strong></td><td>Ollama: مدل زبانی روی خودِ کامپیوترتان</td><td>⭐⭐⭐</td><td>رایگان (فقط سخت‌افزار)</td><td>هیچ‌جا! صددرصد آفلاین</td></tr>
+<tr><td><strong>۳ — عامل بیرونی با MCP</strong></td><td>Claude Desktop / Claude Code به‌عنوان «عامل» که والت را می‌خواند، می‌نویسد و سازمان‌دهی می‌کند</td><td>⭐⭐⭐⭐</td><td>اشتراک/کلید سرویس عامل</td><td>هر یادداشتی که عامل باز کند، به آن سرویس می‌رسد</td></tr>
+</table>
+</div>
+
+<h3>مفهوم کلیدی: RAG — چرا هوش مصنوعی می‌تواند «یادداشت‌های شما» را بلد باشد؟</h3>
+<div class="why">🧩 <b>تشبیه ساده:</b> مدل زبانی مثل یک استاد باهوش است که کتابخانهٔ شما را نخوانده. <strong>RAG</strong><sup>۱</sup> یعنی: قبل از هر سؤال، یک «کتابدار تندخوان» چند برگهٔ مرتبط را از قفسه بیرون می‌کشد و جلوی استاد می‌گذارد؛ استاد بر اساس همان برگه‌ها جواب می‌دهد. کتابدار = جست‌وجوی معنایی روی والت شما؛ استاد = مدل زبانی.</div>
+
+<div class="diagram">
+<div class="flow">
+  <div class="nd">❓ سؤال شما</div>
+  <div class="ar">←</div>
+  <div class="nd">🔎 جست‌وجوی معنایی<br><span class="small">در Embedding یادداشت‌ها</span></div>
+  <div class="ar">←</div>
+  <div class="nd">📄 چند قطعهٔ مرتبط از والت</div>
+  <div class="ar">←</div>
+  <div class="nd gold">🤖 مدل زبانی</div>
+  <div class="ar">←</div>
+  <div class="nd gold">💬 پاسخ با ارجاع به یادداشت‌ها</div>
+</div>
+</div>
+
+<p>یک قطعهٔ دیگر پازل: <strong>Embedding</strong><sup>۲</sup>. برای اینکه «کتابدار» بفهمد کدام یادداشت به سؤال شما ربط دارد (حتی اگر کلمه‌هایشان یکی نباشد)، هر یادداشت به یک «اثر انگشت عددیِ معنا» تبدیل می‌شود. یادداشت‌های هم‌معنا، اثر انگشت نزدیک دارند. خبر خوب: این تبدیل می‌تواند کاملاً محلی و رایگان انجام شود.</p>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — چرا والت شما «بهترین» دادهٔ ممکن برای RAG است؟</span>
+سیستم‌های RAG شرکتی میلیون‌ها دلار خرج می‌کنند تا اسناد آشفته را تکه‌تکه (Chunk) کنند. والتی که در آموزش قبل ساختید، از قبل بهینه است: <strong>یادداشت اتمیک = تکهٔ ایدئال</strong> (یک ایدهٔ کامل در هر واحد)، <strong>عنوان ادعایی = برچسب معنایی</strong>، و <strong>لینک‌ها = نقشهٔ ارتباط</strong> که بازیابی را دقیق‌تر می‌کنند. به زبان مهندسی: انضباط زتل‌کاستنِ شما، همان «مهندسی داده»ای است که دیگران بابتش پول می‌دهند. هر چه اتمی‌تر بنویسید، هوش مصنوعی‌تان باهوش‌تر جواب می‌دهد — این وابستگی مستقیم را همیشه به یاد داشته باشید.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۱ — RAG:</b> مخفف <span dir="ltr">Retrieval-Augmented Generation</span> یعنی «تولیدِ تقویت‌شده با بازیابی»: اول اسناد مرتبط پیدا می‌شوند، بعد مدل با تکیه بر آن‌ها جواب می‌سازد.</div>
+<div class="footnote">📖 <b>پانویس ۲ — Embedding (تعبیه‌سازی):</b> تبدیل متن به فهرستی از اعداد، طوری که متن‌های هم‌معنا اعداد نزدیک به هم بگیرند. مثل مختصات GPS برای «معنا».</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+می‌توانید با یک جمله بگویید RAG چه می‌کند و سه دروازهٔ اتصال از نظر «مقصد داده» چه فرقی دارند؟ اگر بله، ادامه بدهید.
+</div>
+</section>
+
+<!-- ================= مرحله ۱ ================= -->
+<section class="stage alt" id="s1">
+<div class="stage-head">
+  <div class="stage-num">۱</div>
+  <h2>پیش‌نیازها و آماده‌سازی</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱ از ۸</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<ul>
+  <li><strong>والت Obsidian</strong> با حداقل ۱۵–۲۰ یادداشت واقعی (خروجی آموزش «ساخت ابرمغز»). با والت خالی، هیچ‌کدام از جادوهای این آموزش دیده نمی‌شود!</li>
+  <li><strong>Obsidian به‌روز</strong> (نسخهٔ 1.13 یا جدیدتر): <span dir="ltr">Settings → General → Check for updates</span>.</li>
+  <li><strong>برای دروازهٔ ۱:</strong> کلید API از OpenRouter — همان که در آموزش «کیف‌پول کریپتو و OpenRouter» گراول ساختیم. چند دلار اعتبار کافی است؛ OpenRouter مدل‌های رایگان هم دارد.</li>
+  <li><strong>برای دروازهٔ ۲:</strong> کامپیوتری با حداقل ۸ گیگابایت RAM (با ۱۶ گیگابایت تجربه بهتر است).</li>
+  <li><strong>برای دروازهٔ ۳:</strong> آشنایی مقدماتی با نصب برنامه و ویرایش یک فایل تنظیمات؛ اگر مسیر صعود گراول (داکر و OpenClaw) را رفته باشید، کاملاً آماده‌اید.</li>
+</ul>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — لازم نیست هر سه دروازه را باز کنید</span>
+این آموزش طوری چیده شده که هر دروازه مستقل است. پیشنهاد ما برای شروع: مرحلهٔ ۲ (حریم خصوصی) را حتماً بخوانید، بعد دروازهٔ ۱ را کامل راه بیندازید، و دروازه‌های ۲ و ۳ را وقتی نیازشان را «حس کردید» اضافه کنید.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+والت پرمحتوا دارید، Obsidian به‌روز است، و کلید OpenRouter (برای دروازهٔ ۱) در دسترس است.
+</div>
+</section>
+
+<!-- ================= مرحله ۲ ================= -->
+<section class="stage" id="s2">
+<div class="stage-head">
+  <div class="stage-num">۲</div>
+  <h2>قانون اساسی حریم خصوصی — قبل از هر اتصالی!</h2>
+  <div class="chips"><span class="chip pos">مرحله ۲ از ۸</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>والت شما شاید خصوصی‌ترین فایل زندگی‌تان باشد: افکار، مالی، سلامت، کار. قبل از باز کردن هر دروازه، این چهار قانون را اجرا کنید — نه بعدش:</p>
+
+<h3>قانون ۱ — نقشهٔ حساسیت بکشید</h3>
+<ol class="steps">
+  <li>پوشه‌ای به نام <code>9-Private</code> در والت بسازید.</li>
+  <li>هر یادداشتی که هرگز نباید به هیچ سرویس ابری برسد (مالی، پزشکی، اسرار کاری، اطلاعات دیگران) را به این پوشه منتقل کنید.</li>
+  <li>از این به بعد، در تنظیمات هر ابزار هوش مصنوعی، این پوشه را از فهرست‌سازی خارج می‌کنیم (در مراحل بعد نشان می‌دهیم دقیقاً کجا).</li>
+</ol>
+
+<h3>قانون ۲ — بدانید هر دروازه چه چیزی را کجا می‌فرستد</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>سناریو</th><th>چه داده‌ای خارج می‌شود؟</th></tr>
+<tr><td>Smart Connections با تنظیم پیش‌فرض</td><td>هیچ — مدل Embedding محلی است و روی دستگاه شما اجرا می‌شود</td></tr>
+<tr><td>Copilot در حالت چت ساده</td><td>فقط متن پیام شما + قطعه‌هایی از یادداشت‌ها که خودتان به گفتگو اضافه کرده‌اید</td></tr>
+<tr><td>Copilot در حالت Vault QA (چت با کل والت)</td><td>قطعه‌های بازیابی‌شدهٔ مرتبط با هر سؤال — نه کل والت، ولی به‌مرور بخش زیادی از آن</td></tr>
+<tr><td>Ollama (دروازهٔ ۲)</td><td>هیچ — همه‌چیز روی دستگاه شما</td></tr>
+<tr><td>عامل MCP (دروازهٔ ۳)</td><td>هر فایلی که عامل باز کند؛ عملاً باید فرض کنید کل بخش مجاز والت در دسترس سرویس است</td></tr>
+</table>
+</div>
+
+<h3>قانون ۳ — کلید API مثل رمز کارت بانکی است</h3>
+<p>کلید OpenRouter را هرگز داخل یادداشتی در والت ذخیره نکنید (به‌خصوص اگر والت را با Git یا سرویس ابری همگام می‌کنید!). جای درستش فقط داخل تنظیمات پلاگین است که خارج از دید همگام‌سازی‌های عمومی قرار دارد — و اگر روزی لو رفت، از پنل OpenRouter فوراً باطلش کنید و کلید نو بسازید.</p>
+
+<h3>قانون ۴ — داده‌های دیگران، دو برابر حساس</h3>
+<p>جلسهٔ کاری، پیام دوستان، اطلاعات مشتری… این‌ها «مال شما» نیستند که دربارهٔ ابری‌شدنشان تصمیم بگیرید. یا در <code>9-Private</code> نگهشان دارید، یا فقط با دروازهٔ ۲ (آفلاین) پردازششان کنید.</p>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — «رایگان» یعنی بخوانید</span>
+بعضی مدل‌های رایگان در سرویس‌های واسطه، در ازای رایگان‌بودن ممکن است اجازهٔ استفاده از داده‌ها برای آموزش را در شرایط استفاده‌شان داشته باشند. برای گفتگوهای عادی مشکلی نیست؛ برای محتوای حساس، قانون همیشگی: <strong>حساس = آفلاین یا هیچ.</strong>
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+پوشهٔ <code>9-Private</code> ساخته شده و پر شده، جدول «مقصد داده» را فهمیده‌اید، و می‌دانید کلید API کجا ذخیره می‌شود و کجا نه.
+</div>
+</section>
+
+<!-- ================= مرحله ۳ ================= -->
+<section class="stage alt" id="s3">
+<div class="stage-head">
+  <div class="stage-num">۳</div>
+  <h2>دروازهٔ ۱ (الف): Smart Connections — حس ششم والت</h2>
+  <div class="chips"><span class="chip pos">مرحله ۳ از ۸</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>اولین و بی‌دردسرترین قدم: پلاگین <strong>Smart Connections</strong>. کارش این است که هنگام نوشتنِ هر یادداشت، در پنل کناری «مرتبط‌ترین یادداشت‌های دیگر» را نشان بدهد — نه بر اساس کلمهٔ مشترک، بلکه بر اساس <em>معنا</em>. جادویش: مدل Embedding آن <strong>محلی</strong> است؛ بدون کلید API، بدون هزینه، بدون خروج داده.</p>
+
+<div class="why">🧩 <b>چرا این «حس ششم» است؟</b> در آموزش قبل گفتیم <span dir="ltr">Unlinked mentions</span> فقط تکرارِ «نامِ» یادداشت را می‌بیند. Smart Connections یک پله بالاتر است: یادداشتی دربارهٔ «اهمال‌کاری» را به یادداشتی دربارهٔ «طراحی محیط» وصل می‌کند، حتی اگر هیچ کلمهٔ مشترکی نداشته باشند — چون معنایشان همسایه است. این یعنی موتور سرندیپیتی، خودکار شد.</div>
+
+<ol class="steps">
+  <li>به <span dir="ltr">Settings → Community plugins → Browse</span> بروید.</li>
+  <li>عبارت <span dir="ltr">Smart Connections</span> را جست‌وجو کنید (سازنده: <span dir="ltr">Brian Petro</span>).</li>
+  <li><span dir="ltr">Install</span> و سپس <span dir="ltr">Enable</span> را بزنید.</li>
+  <li>بار اول، پلاگین شروع به ساخت اثر انگشت معناییِ همهٔ یادداشت‌ها می‌کند (چند دقیقه، بسته به حجم والت). بگذارید تمام شود.</li>
+  <li>حالا یک یادداشت باز کنید و پنل Smart Connections را در نوار کناری ببینید: فهرست یادداشت‌های مرتبط، مرتب‌شده بر اساس نزدیکی معنا.</li>
+  <li>🔐 اجرای قانون ۱ حریم خصوصی: در تنظیمات پلاگین، بخش الگوهای مستثنا (Exclusion) را پیدا کنید و پوشهٔ <code>9-Private</code> را اضافه کنید تا اصلاً فهرست‌سازی نشود.</li>
+</ol>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — بهترین زمان استفاده</span>
+عادت طلایی: بعد از نوشتن هر نورون جدید، ۳۰ ثانیه به پنل Smart Connections نگاه کنید و بپرسید «کدام‌یک از این پیشنهادها واقعاً ربط دارد؟» — بعد لینک <code>[[...]]</code> واقعی بسازید. هوش مصنوعی پیشنهاد می‌دهد؛ <strong>سیناپس را شما می‌سازید.</strong> این تقسیم کار را در مرحلهٔ ۸ رسمی می‌کنیم.
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — پوشهٔ <code dir="ltr">.smart-env</code> و همگام‌سازی</span>
+اثر انگشت‌های معنایی در پوشهٔ <code dir="ltr">.smart-env</code> داخل والت ذخیره می‌شوند. اگر با Git یا سرویس فایل همگام‌سازی می‌کنید، بهتر است این پوشه را از همگام‌سازی خارج کنید (در Git: یک خط <code dir="ltr">.smart-env/</code> در فایل <code dir="ltr">.gitignore</code>) — چون حجیم است، مدام عوض می‌شود، و روی هر دستگاه قابل بازسازی است. قانون کلی مهندسی: «دادهٔ مشتق‌شدنی را همگام نکن؛ بازبسازش.»
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+با باز کردن هر یادداشت، فهرست یادداشت‌های مرتبط معنایی را در پنل کناری می‌بینید و پوشهٔ خصوصی از فهرست‌سازی خارج شده است.
+</div>
+</section>
+
+<!-- ================= مرحله ۴ ================= -->
+<section class="stage" id="s4">
+<div class="stage-head">
+  <div class="stage-num">۴</div>
+  <h2>دروازهٔ ۱ (ب): Copilot + OpenRouter — چت با کل والت</h2>
+  <div class="chips"><span class="chip pos">مرحله ۴ از ۸</span><span class="chip time">⏱️ ۲۵ دقیقه</span></div>
+</div>
+
+<p>حالا نوبت گفت‌وگوی واقعی است. <strong>Copilot for Obsidian</strong> (سازنده: <span dir="ltr">Logan Yang</span>) پرکاربردترین پلاگین چت است: پنجرهٔ گفتگو در نوار کناری، امکان «چت با کل والت» (Vault QA) با ذکر منبع، و پشتیبانی از تقریباً هر ارائه‌دهنده‌ای — از جمله <strong>OpenRouter</strong> که برای ما ایده‌آل است چون با همان کیف‌پول کریپتویی شارژ می‌شود و ده‌ها مدل (از جمله مدل‌های رایگان) را یک‌جا دارد. هستهٔ پلاگین رایگان و متن‌باز است؛ نسخهٔ پولی Plus هم دارد که برای این آموزش لازمش نداریم.</p>
+
+<h3>گام اول: نصب و اتصال کلید</h3>
+<ol class="steps">
+  <li>از <span dir="ltr">Settings → Community plugins → Browse</span> پلاگین <span dir="ltr">Copilot</span> را نصب و فعال کنید.</li>
+  <li>به تنظیمات پلاگین بروید: <span dir="ltr">Settings → Copilot → Basic</span> و روی <span dir="ltr">Set Keys</span> کلیک کنید.</li>
+  <li>در فهرست ارائه‌دهنده‌ها، کارت <span dir="ltr">OpenRouter</span> را پیدا کنید و کلید API خود را در آن بچسبانید؛ دکمهٔ تأیید (Verify) باید سبز شود.</li>
+  <li>در تب <span dir="ltr">Model</span>، مدل گفتگو را انتخاب کنید. پیشنهاد شروع: یک مدل ارزان و سریع (خانوادهٔ <span dir="ltr">Flash/Mini</span>)؛ بعداً برای کارهای سنگین، مدل قوی‌تر اضافه کنید — با دکمهٔ <span dir="ltr">Add Custom Model</span> هر مدل OpenRouter را با شناسه‌اش (مثلاً <code dir="ltr">anthropic/claude-sonnet-4.6</code>) اضافه می‌کنید.</li>
+  <li>پنجرهٔ چت را باز کنید: از پالت فرمان <kbd>Ctrl</kbd> + <kbd>P</kbd> فرمان <span dir="ltr">Open Copilot Chat Window</span>. یک سلام بدهید تا از برقراری اتصال مطمئن شوید.</li>
+</ol>
+
+<h3>گام دوم: سه حالت کار Copilot</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>حالت</th><th>چه می‌کند</th><th>کِی استفاده کنیم</th></tr>
+<tr><td><strong>Chat</strong></td><td>گفتگوی آزاد؛ فقط چیزی را می‌داند که خودتان به گفتگو بدهید</td><td>پرسش عمومی، بازنویسی متن انتخاب‌شده</td></tr>
+<tr><td><strong>افزودن زمینهٔ دستی</strong></td><td>با نوشتن <code dir="ltr">[[</code> در خود پنجرهٔ چت، یادداشت‌های مشخص را ضمیمهٔ گفتگو می‌کنید</td><td>«این سه یادداشت را با هم مقایسه کن» — دقیق‌ترین و کم‌هزینه‌ترین حالت</td></tr>
+<tr><td><strong>Vault QA</strong></td><td>همان RAG کامل: خودش قطعه‌های مرتبط را از کل والت پیدا می‌کند و با ذکر منبع جواب می‌دهد</td><td>«دربارهٔ X تا حالا چه نوشته‌ام؟» — وقتی نمی‌دانید جواب در کدام یادداشت است</td></tr>
+</table>
+</div>
+
+<ol class="steps">
+  <li>برای Vault QA، ابتدا باید والت فهرست‌سازی (Index) شود: در تنظیمات Copilot، بخش مدل Embedding را بررسی کنید و از منوی حالت در پنجرهٔ چت، حالت Vault QA را انتخاب کنید؛ پلاگین خودش پیشنهاد ساخت فهرست را می‌دهد.</li>
+  <li>🔐 اجرای قانون ۱: در تنظیمات Copilot بخش <span dir="ltr">QA / Exclusions</span> پوشهٔ <code>9-Private</code> را مستثنا کنید.</li>
+  <li>حالا بپرسید: <em>«بر اساس یادداشت‌های من، مهم‌ترین ایده‌هایی که دربارهٔ [موضوع والتتان] نوشته‌ام چیست؟ با ذکر منبع.»</em> — پاسخ باید به یادداشت‌های واقعی شما ارجاع بدهد.</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — اقتصاد توکن: چرا حالت دستی اغلب از Vault QA بهتر است؟</span>
+هر پیام به مدل ابری، بر اساس «توکن» (تقریباً هر ۳–۴ حرف یک توکن) هزینه دارد. Vault QA راحت است اما در هر سؤال، ده‌ها قطعه به مدل می‌فرستد. کاربران حرفه‌ای برای ۸۰٪ کارها از الگوی «زمینهٔ دستی» استفاده می‌کنند: اول با جست‌وجوی خود Obsidian یا Smart Connections، دو-سه یادداشتِ درست را پیدا می‌کنند، بعد فقط همان‌ها را با <code dir="ltr">[[</code> ضمیمه می‌کنند. نتیجه: پاسخ دقیق‌تر (زمینهٔ تمیزتر = خطای کمتر)، هزینهٔ یک‌دهم، و نشت دادهٔ کمینه. Vault QA را برای «نمی‌دانم کجاست» نگه دارید.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+Copilot با کلید OpenRouter وصل است، یک گفتگوی ساده جواب گرفته، و در حالت Vault QA پاسخ با ارجاع به یادداشت‌های خودتان می‌دهد. حالا ابرمغز شما رسماً حرف می‌زند! 🎉
+</div>
+</section>
+
+<!-- ================= مرحله ۵ ================= -->
+<section class="stage alt" id="s5">
+<div class="stage-head">
+  <div class="stage-num">۵</div>
+  <h2>هنر پرامپت‌نویسی برای والت — دستور آشپزی‌های آماده</h2>
+  <div class="chips"><span class="chip pos">مرحله ۵ از ۸</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>کیفیت پاسخ هوش مصنوعی مستقیماً به کیفیت درخواست شما بستگی دارد. این پنج «دستور آشپزی» آزموده‌شده را در یادداشتی به نام <code dir="rtl">پرامپت‌های والت</code> ذخیره کنید تا همیشه دم دست باشند:</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>هدف</th><th>پرامپت (کپی کنید)</th></tr>
+<tr><td>🧬 تبدیل خام به نورون</td><td>«این متن خام را به ۲ تا ۴ یادداشت اتمیک تبدیل کن. برای هر کدام: یک عنوان که ادعای کامل باشد، بدنهٔ ۳–۵ جمله‌ای، و پیشنهاد اینکه به کدام یادداشت‌های ضمیمه‌شده لینک بخورد. متن: [متن]»</td></tr>
+<tr><td>🥊 وکیل مدافع شیطان</td><td>«یادداشت ضمیمه را بخوان و قوی‌ترین سه استدلال علیه ادعای اصلی آن را بنویس. بعد بگو برای هر کدام، چه شواهدی نظرم را عوض می‌کرد.»</td></tr>
+<tr><td>🔍 کشف حفره</td><td>«با توجه به این یادداشت‌ها دربارهٔ [موضوع]، چه سؤال‌های مهمی هست که هنوز هیچ یادداشتی برایشان ندارم؟ فهرست کن.»</td></tr>
+<tr><td>🌉 پل‌ساز</td><td>«این دو یادداشت ظاهراً بی‌ربط را بخوان: [[الف]] و [[ب]]. سه ارتباط غیرمنتظره ولی معنادار بینشان پیدا کن.»</td></tr>
+<tr><td>📝 پیش‌نویس از دل والت</td><td>«فقط بر اساس یادداشت‌های ضمیمه (نه دانش عمومی خودت)، یک پیش‌نویس ۵۰۰ کلمه‌ای دربارهٔ [موضوع] بنویس و هر ادعا را به یادداشت منبعش ارجاع بده.»</td></tr>
+</table>
+</div>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — عبارت جادویی «فقط بر اساس یادداشت‌های من»</span>
+مدل‌های زبانی عاشق این‌اند که دانش عمومی خودشان را قاطی کنند و گاهی چیزهایی «از خودشان بسازند» (توهم / Hallucination<sup>۳</sup>). قید صریحِ «فقط بر اساس یادداشت‌های ضمیمه، و اگر جواب در آن‌ها نبود بگو نمی‌دانم» بهترین واکسن است.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۳ — توهم (Hallucination):</b> وقتی مدل زبانی با اعتمادبه‌نفس کامل، اطلاعات نادرست یا ساختگی می‌دهد. با محدودکردن مدل به منابع مشخص و درخواست ارجاع، احتمالش به‌شدت کم می‌شود ولی هرگز صفر نمی‌شود — پس ادعاهای مهم را همیشه خودتان چک کنید.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+یادداشت «پرامپت‌های والت» را ساخته‌اید و حداقل دستور «تبدیل خام به نورون» را روی یک متن واقعی امتحان کرده‌اید.
+</div>
+</section>
+
+<!-- ================= مرحله ۶ ================= -->
+<section class="stage" id="s6">
+<div class="stage-head">
+  <div class="stage-num">۶</div>
+  <h2>دروازهٔ ۲: Ollama — هوش مصنوعی کاملاً آفلاین</h2>
+  <div class="chips"><span class="chip pos">مرحله ۶ از ۸</span><span class="chip time">⏱️ ۲۵ دقیقه</span></div>
+</div>
+
+<p><strong>Ollama</strong> برنامه‌ای رایگان و متن‌باز است که مدل‌های زبانی را روی خودِ کامپیوتر شما اجرا می‌کند: بدون اینترنت، بدون کلید، بدون خروج حتی یک بایت. برای پردازش پوشهٔ <code>9-Private</code>، برای وقت‌های قطعی اینترنت، و برای هر کسی که «حریم خصوصی مطلق» می‌خواهد، این دروازهٔ اصلی است.</p>
+
+<div class="why">🧩 <b>انتظار واقع‌بینانه:</b> مدل محلی روی یک لپ‌تاپ معمولی، از مدل‌های ابری بزرگ ضعیف‌تر است — مثل مقایسهٔ موتورسیکلت با هواپیما. اما برای خلاصه‌سازی، بازنویسی، پرسش‌وپاسخ روی چند یادداشت و تبدیل خام به نورون، کاملاً کافی است. و موتورسیکلتِ توی حیاطِ خودتان، به هواپیمای شرکتِ دیگران یک برتری دارد: همیشه و بی‌قیدوشرط مال شماست.</div>
+
+<h3>نصب و اجرای اولین مدل</h3>
+<ol class="steps">
+  <li>به سایت رسمی <code dir="ltr">https://ollama.com</code> بروید و نسخهٔ ویندوز را دانلود و نصب کنید (اگر دانلود مستقیم مشکل داشت، صفحهٔ GitHub رسمی پروژه <code dir="ltr">ollama/ollama</code> همان فایل‌ها را دارد).</li>
+  <li>بعد از نصب، Ollama در پس‌زمینه اجرا می‌شود. برنامهٔ <span dir="ltr">PowerShell</span> را باز کنید (منوی استارت → تایپ <span dir="ltr">powershell</span> → Enter).</li>
+  <li>این فرمان را بنویسید و Enter بزنید تا یک مدل سبک و باکیفیت دانلود شود (چند گیگابایت — با اینترنت خوب انجامش دهید):
+  <pre><code>ollama pull llama3.2</code></pre></li>
+  <li>تست کنید:
+  <pre><code>ollama run llama3.2</code></pre>
+  حالا می‌توانید همان‌جا در PowerShell با مدل حرف بزنید. با نوشتن <code dir="ltr">/bye</code> خارج شوید.</li>
+</ol>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — کدام مدل برای کدام سخت‌افزار؟</span>
+قانون سرانگشتی: حجم دانلود مدل باید کمتر از نصف RAM شما باشد. ۸ گیگابایت RAM → مدل‌های ~۲ تا ۴ گیگابایتی (مثل <code dir="ltr">llama3.2</code> یا <code dir="ltr">qwen3:4b</code>)؛ ۱۶ گیگابایت → مدل‌های ۷–۹ گیگابایتی که به‌مراتب باهوش‌ترند. فهرست کامل مدل‌ها در <code dir="ltr">ollama.com/library</code> است. برای فارسی، مدل‌های خانوادهٔ <span dir="ltr">Qwen</span> و <span dir="ltr">Gemma</span> معمولاً عملکرد بهتری دارند — چند مدل را امتحان کنید و بهترین را نگه دارید.
+</div>
+
+<h3>اتصال Ollama به Copilot</h3>
+<p>زیبایی ماجرا: Ollama یک «درگاه محلی» با قالب استاندارد باز می‌کند (<code dir="ltr">http://localhost:11434</code>) و Copilot بلد است با آن حرف بزند — یعنی همان پنجرهٔ چتی که ساختید، با یک تغییر کوچک آفلاین می‌شود:</p>
+<ol class="steps">
+  <li>در تنظیمات Copilot، تب <span dir="ltr">Model</span>، روی <span dir="ltr">Add Custom Model</span> کلیک کنید.</li>
+  <li>نام مدل را دقیقاً همان که دانلود کردید بنویسید: <code dir="ltr">llama3.2</code> و ارائه‌دهنده را <span dir="ltr">Ollama</span> انتخاب کنید (آدرس پیش‌فرض همان <code dir="ltr">localhost:11434</code> است).</li>
+  <li>مدل را اضافه کنید و در پنجرهٔ چت، از منوی انتخاب مدل، به <code dir="ltr">llama3.2</code> سوئیچ کنید.</li>
+  <li>اینترنت را قطع کنید و یک سؤال بپرسید — جواب می‌گیرید. این لحظه را جشن بگیرید: یک هوش مصنوعی کاملاً شخصی دارید. 🎉</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — معماری دوسطحی حرفه‌ای‌ها</span>
+کاربران جدی به یک مدل قانع نمی‌شوند؛ یک «سبد مدل» می‌سازند: <strong>مدل محلی</strong> برای کارهای حساس، پیش‌نویس سریع و حجم بالا (رایگان)، و <strong>مدل ابری قوی</strong> فقط برای استدلال سنگین و نوشته‌های نهایی. چون Copilot سوئیچ مدل را وسط گفتگو هم اجازه می‌دهد، این معماری عملاً یعنی: «۹۰٪ کار مجانی و خصوصی، ۱۰٪ کار با بهترین مغز دنیا.» ضمناً اگر خواستید Embedding هم محلی شود، مدل <code dir="ltr">nomic-embed-text</code> را با <code dir="ltr">ollama pull</code> بگیرید و در تنظیمات Embedding پلاگین انتخابش کنید — آن‌وقت حتی فهرست‌سازی Vault QA هم آفلاین می‌شود.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+فرمان <code dir="ltr">ollama run llama3.2</code> در PowerShell جواب می‌دهد و همان مدل داخل Copilot به‌عنوان مدل سفارشی کار می‌کند — حتی بدون اینترنت.
+</div>
+</section>
+
+<!-- ================= مرحله ۷ ================= -->
+<section class="stage alt" id="s7">
+<div class="stage-head">
+  <div class="stage-num">۷</div>
+  <h2>دروازهٔ ۳: MCP — عامل هوشمند داخل والت</h2>
+  <div class="chips"><span class="chip pos">مرحله ۷ از ۸</span><span class="chip time">⏱️ ۲۵ دقیقه</span></div>
+</div>
+
+<p>دو دروازهٔ قبلی، هوش مصنوعی را «داخل Obsidian» آوردند. دروازهٔ سوم برعکس است: والت شما را در اختیار یک <strong>عامل هوشمند</strong><sup>۴</sup> بیرونی (مثل Claude Desktop یا Claude Code) می‌گذارد تا نه‌فقط جواب بدهد، بلکه <em>کار کند</em>: ده‌ها یادداشت را بخواند، یادداشت جدید بسازد، Properties را یکدست کند، و گزارش بنویسد. پل این اتصال، پروتکل <strong>MCP</strong><sup>۵</sup> است — استاندارد بازی که «زبان مشترک ابزارها و مدل‌ها» شده است.</p>
+
+<h3>دو مسیر فنی — و انتخاب درست</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>مسیر</th><th>چطور کار می‌کند</th><th>قوت</th><th>ضعف</th></tr>
+<tr><td><strong>الف) Filesystem MCP</strong></td><td>والت را همان‌که هست می‌بیند: یک پوشهٔ پر از فایل Markdown</td><td>ساده‌ترین راه‌اندازی؛ سریع حتی روی والت‌های چندهزار یادداشتی؛ به باز بودن Obsidian نیاز ندارد</td><td>از «دنیای درونی» Obsidian خبر ندارد (گراف، پلاگین‌ها…)</td></tr>
+<tr><td><strong>ب) Local REST API + mcp-obsidian</strong></td><td>پلاگین <span dir="ltr">Local REST API</span> (سازنده: coddingtonbear) یک درگاه محلی امن روی خود Obsidian باز می‌کند و سرور <code dir="ltr">mcp-obsidian</code> آن را به زبان MCP ترجمه می‌کند</td><td>با «Obsidianِ در حال اجرا» حرف می‌زند؛ عملیات عمیق‌تر</td><td>راه‌اندازی چندمرحله‌ای؛ Obsidian باید باز باشد</td></tr>
+</table>
+</div>
+<p><strong>توصیهٔ گراول: با مسیر الف شروع کنید.</strong> برای ۹۰٪ کارها (خواندن، جست‌وجو، نوشتن، ویرایش) کافی است و در پنج دقیقه راه می‌افتد. مسیر ب را وقتی بروید که محدودیتِ الف را «حس کردید».</p>
+
+<h3>راه‌اندازی مسیر الف با Claude Desktop</h3>
+<ol class="steps">
+  <li>Claude Desktop را از سایت رسمی <code dir="ltr">https://claude.ai/download</code> نصب کنید و وارد حساب شوید.</li>
+  <li>در Claude Desktop به <span dir="ltr">Settings → Developer → Edit Config</span> بروید؛ فایل <code dir="ltr">claude_desktop_config.json</code> باز می‌شود.</li>
+  <li>این پیکربندی را در آن قرار دهید (مسیر والت را با مسیر واقعی خودتان عوض کنید — دقت کنید در JSON، بک‌اسلش ویندوز باید دوتایی نوشته شود):
+<pre><code>{
+  "mcpServers": {
+    "obsidian-vault": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\YourName\\Documents\\Brain"
+      ]
+    }
+  }
+}</code></pre></li>
+  <li>پیش‌نیاز فرمان بالا، Node.js است — اگر مسیر صعود گراول (ایستگاه ۱) را رفته باشید، از قبل نصب است. Claude Desktop را کاملاً ببندید و دوباره باز کنید.</li>
+  <li>در گفتگوی جدید، آیکون ابزارها باید سرور <code dir="ltr">obsidian-vault</code> را نشان بدهد. تست کنید: <em>«فایل‌های پوشهٔ 2-Notes والت من را فهرست کن و بگو دربارهٔ چه موضوع‌هایی نوشته‌ام.»</em> — Claude قبل از هر عمل، اجازه می‌گیرد.</li>
+</ol>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — سه قانون ایمنی عامل</span>
+(۱) <strong>دسترسی حداقلی:</strong> اگر می‌خواهید عامل به <code>9-Private</code> دسترسی نداشته باشد، به‌جای مسیر ریشهٔ والت، فقط پوشه‌های مجاز را در config معرفی کنید (می‌توانید چند مسیر پشت‌سرهم بدهید). (۲) <strong>بکاپ قبل از عملیات بزرگ:</strong> قبل از هر «والت را مرتب کن»، یک کپی ZIP بگیرید — یا حرفه‌ای‌تر: والت را با Git نسخه‌بندی کنید تا هر تغییر عامل قابل بازگشت باشد. (۳) <strong>اجازه‌ها را بخوانید:</strong> وقتی عامل درخواست «نوشتن/حذف» می‌دهد، عادت نکنید کورکورانه تأیید کنید.
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — والت به‌عنوان «حافظهٔ بلندمدت» عامل‌ها</span>
+اینجا همان نقطه‌ای است که مسیر صعود گراول به هم گره می‌خورد: عامل‌هایی مثل OpenClaw و Claude Code می‌توانند والت شما را «حافظهٔ پایدار» خود کنند — نتیجهٔ تحقیق‌ها را به‌صورت نورون اتمیک با Properties درست بنویسند، پیش از هر کار، MOC مربوط را بخوانند، و گزارش روزانه را در Daily Note شما ثبت کنند. یک ترفند سطح‌بالا: در ریشهٔ والت یادداشتی به نام <code dir="ltr">AGENT-RULES.md</code> بسازید و قوانین والتتان را در آن بنویسید (قالب نورون، محل فایل‌ها، سبک عنوان‌ها) و در اولین پیام هر جلسه، از عامل بخواهید اول آن را بخواند — عملاً «آیین‌نامهٔ استخدام» عامل در ابرمغز شما.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۴ — عامل هوشمند (AI Agent):</b> هوش مصنوعی‌ای که فقط «جواب نمی‌دهد» بلکه با ابزارها «عمل می‌کند»: فایل می‌خواند، می‌نویسد، جست‌وجو می‌کند و چندمرحله‌ای کار را پیش می‌برد.</div>
+<div class="footnote">📖 <b>پانویس ۵ — MCP:</b> مخفف <span dir="ltr">Model Context Protocol</span>؛ پروتکل باز (معرفی‌شده توسط Anthropic) که مثل «درگاه USB» عمل می‌کند: هر ابزاری که MCP بدهد، به هر مدلی که MCP بفهمد وصل می‌شود — بدون کد اختصاصی برای هر جفت.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+Claude Desktop والت شما را می‌بیند، فهرست فایل‌ها را می‌خواند، و با اجازهٔ شما یادداشت تستی می‌سازد. سه قانون ایمنی عامل را هم اجرا کرده‌اید (دسترسی حداقلی + بکاپ + بازخوانی اجازه‌ها).
+</div>
+</section>
+
+<!-- ================= مرحله ۸ ================= -->
+<section class="stage" id="s8">
+<div class="stage-head">
+  <div class="stage-num">۸</div>
+  <h2>حکمرانی: قانون اساسی همکاری انسان و ماشین</h2>
+  <div class="chips"><span class="chip pos">مرحله ۸ از ۸</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<p>خطر واقعی اتصال هوش مصنوعی به ابرمغز، فنی نیست؛ <strong>فرهنگی</strong> است: والتی که آرام‌آرام از متن‌های ماشینیِ نخوانده پر شود، دیگر «مغز شما» نیست — انبار خروجی یک ماشین است. این پنج اصل را به‌عنوان قانون اساسی والتتان بپذیرید:</p>
+
+<ol>
+  <li><strong>اصل جوانه:</strong> هر متنی که هوش مصنوعی تولید کرد، در بدو ورود <code dir="ltr">status: seed</code> می‌گیرد و یک Property جدید: <code dir="ltr">ai_generated: true</code>. فقط بعد از بازخوانی، بازنویسی و تأیید خودتان است که حق ارتقا به <code dir="ltr">evergreen</code> را دارد. (یک Base با فیلتر <code dir="ltr">ai_generated is true</code> بسازید تا صف بازبینی همیشه جلوی چشمتان باشد.)</li>
+  <li><strong>اصل سیناپس انسانی:</strong> ماشین «پیشنهاد» لینک می‌دهد؛ تصمیم اتصال با شماست. لینکی که نفهمیده تأیید شود، دانش نیست، آلودگی گراف است.</li>
+  <li><strong>اصل تفکر اول:</strong> برای مسائل مهم، اول ۱۰ دقیقه خودتان فکر کنید و خام‌نویسی کنید، بعد از ماشین کمک بگیرید. مغز دوم قرار بود مغز اول را آزاد کند، نه بازنشسته.</li>
+  <li><strong>اصل راستی‌آزمایی:</strong> هر «واقعیت» مهمی که ماشین گفت (عدد، تاریخ، نقل‌قول)، قبل از دائمی‌شدن باید از منبع مستقل چک شود — توهم هرگز صفر نمی‌شود.</li>
+  <li><strong>اصل بازگشت‌پذیری:</strong> هیچ عملیات ماشینیِ گسترده روی والت، بدون بکاپ/نسخه‌بندی قبلش. (Git بهترین دوست شماست.)</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — سنجهٔ سلامت: نسبت خواندن به تولید</span>
+هر ماه از خودتان بپرسید: «چند درصد از متن‌های ماشینیِ این ماه را واقعاً خواندم و بازنویسی کردم؟» اگر زیر ۷۰٪ است، تولید را کم کنید، نه بازبینی را بیشتر. والت کوچکِ فهمیده، از والت بزرگِ نفهمیده هزار برابر ارزشمندتر است — این همان «توهم جمع‌آوری» آموزش قبل است که حالا با موتور ماشینی، هزار برابر خطرناک‌تر شده.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی نهایی</span>
+Property جدید <code dir="ltr">ai_generated</code> را به قالب نورون اضافه کرده‌اید، Base «صف بازبینی» ساخته شده، و پنج اصل را می‌توانید از حفظ بگویید. حالا شما نه فقط یک ابرمغز، بلکه یک <strong>ابرمغزِ خودآموز با حکمرانی سالم</strong> دارید. 🏔️
+</div>
+</section>
+
+<!-- ================= رفع اشکال ================= -->
+<section class="stage alt" id="trouble">
+<div class="stage-head">
+  <div class="stage-num" style="background:var(--fix-b)">🔧</div>
+  <h2>رفع اشکال — ۶ مشکل رایج</h2>
+  <div class="chips"><span class="chip time">⏱️ مراجعه در صورت نیاز</span></div>
+</div>
+
+<div class="box fix"><span class="box-title">۱) کلید OpenRouter در Copilot تأیید نمی‌شود</span>
+<strong>چک‌لیست:</strong> (۱) کلید را کامل و بدون فاصلهٔ اضافی چسبانده‌اید؟ (۲) حساب OpenRouter اعتبار دارد؟ (پنل <span dir="ltr">Credits</span> را ببینید)؛ (۳) کلید را در کارت «OpenRouter» گذاشته‌اید نه OpenAI؛ (۴) اگر خطای شبکه می‌گیرید، اتصال اینترنت/فیلترشکن را عوض کنید و دوباره Verify بزنید.</div>
+
+<div class="box fix"><span class="box-title">۲) Vault QA جواب‌های بی‌ربط می‌دهد یا می‌گوید چیزی پیدا نکرد</span>
+<strong>علت رایج:</strong> فهرست‌سازی ناقص یا قدیمی.<br>
+<strong>درمان:</strong> از پالت فرمان، فرمان بازسازی فهرست Copilot (<span dir="ltr">Force reindex vault</span> یا مشابه آن) را اجرا کنید و صبر کنید تمام شود. اگر مدل Embedding را عوض کرده‌اید، بازسازی الزامی است — اثر انگشت‌های دو مدل با هم قابل مقایسه نیستند.</div>
+
+<div class="box fix"><span class="box-title">۳) Ollama نصب شده ولی Copilot به آن وصل نمی‌شود</span>
+<strong>چک‌لیست:</strong> (۱) در PowerShell فرمان <code dir="ltr">ollama list</code> مدل را نشان می‌دهد؟ (۲) نام مدل در Copilot حرف‌به‌حرف با خروجی همان فرمان یکی است؟ (۳) Ollama در حال اجراست؟ (آیکونش در کنار ساعت ویندوز)؛ (۴) اگر خطای CORS دیدید، در تنظیمات مدل سفارشی Copilot گزینهٔ CORS را فعال کنید.</div>
+
+<div class="box fix"><span class="box-title">۴) مدل محلی خیلی کند است یا کامپیوتر هنگ می‌کند</span>
+<strong>درمان:</strong> مدل سبک‌تری بگیرید (نصف RAM قانون طلاست)، برنامه‌های سنگین دیگر را ببندید، و پاسخ‌های طولانی نخواهید. اگر لپ‌تاپ ضعیف است، دروازهٔ ۲ را رها کنید — دروازهٔ ۱ با مدل‌های رایگان OpenRouter جایگزین منطقی است.</div>
+
+<div class="box fix"><span class="box-title">۵) Claude Desktop سرور MCP را نشان نمی‌دهد</span>
+<strong>چک‌لیست:</strong> (۱) JSON را با یک بررسی‌کنندهٔ آنلاین یا دقت چشمی چک کنید — یک ویرگول جاافتاده کل config را می‌شکند؛ (۲) بک‌اسلش‌های مسیر ویندوز دوتایی‌اند؟ (<code dir="ltr">C:\\Users\\...</code>)؛ (۳) Node.js نصب است؟ (در PowerShell: <code dir="ltr">node --version</code>)؛ (۴) Claude Desktop را «کاملاً» بسته‌اید (از System Tray هم خارج شده) و دوباره باز کرده‌اید؟</div>
+
+<div class="box fix"><span class="box-title">۶) عامل، یادداشتی را خراب/بازنویسی کرده</span>
+<strong>درمان فوری:</strong> پلاگین هسته‌ای <span dir="ltr">File recovery</span> خود Obsidian عکس‌های لحظه‌ای دارد: پالت فرمان → <span dir="ltr">Open saved snapshots</span> و نسخهٔ قبلی را برگردانید. اگر Git دارید، <code dir="ltr">git checkout</code> فایل را برمی‌گرداند. <strong>و درس ماجرا:</strong> اصل ۵ حکمرانی (بازگشت‌پذیری) را از این به بعد جدی بگیرید.</div>
+</section>
+
+<!-- ================= واژه‌نامه ================= -->
+<section class="stage" id="gloss">
+<div class="stage-head">
+  <div class="stage-num" style="background:var(--note-b)">📖</div>
+  <h2>واژه‌نامه</h2>
+</div>
+<dl class="gloss">
+  <dt><span dir="ltr">RAG</span></dt><dd>تولیدِ تقویت‌شده با بازیابی: اول قطعه‌های مرتبط از والت پیدا می‌شوند، بعد مدل بر اساس آن‌ها جواب می‌سازد.</dd>
+  <dt><span dir="ltr">Embedding</span> — تعبیه‌سازی</dt><dd>اثر انگشت عددیِ معنا؛ متن‌های هم‌معنا اعداد نزدیک می‌گیرند و همین، جست‌وجوی معنایی را ممکن می‌کند.</dd>
+  <dt><span dir="ltr">Vault QA</span></dt><dd>حالت «چت با کل والت» در Copilot: پرسش‌وپاسخ با ارجاع به یادداشت‌های خودتان.</dd>
+  <dt><span dir="ltr">Token</span> — توکن</dt><dd>واحد شمارش متن برای مدل‌ها (تقریباً ۳–۴ حرف)؛ مبنای هزینهٔ سرویس‌های ابری.</dd>
+  <dt><span dir="ltr">Hallucination</span> — توهم</dt><dd>تولید اطلاعات نادرست با اعتمادبه‌نفس توسط مدل؛ با ارجاع اجباری به منابع کم می‌شود، صفر نمی‌شود.</dd>
+  <dt><span dir="ltr">Ollama</span></dt><dd>برنامهٔ رایگان اجرای مدل‌های زبانی روی کامپیوتر شخصی؛ درگاه محلی استاندارد <code dir="ltr">localhost:11434</code>.</dd>
+  <dt><span dir="ltr">Local LLM</span> — مدل محلی</dt><dd>مدل زبانی که کاملاً روی دستگاه شما اجرا می‌شود؛ حریم خصوصی مطلق، توان کمتر از غول‌های ابری.</dd>
+  <dt><span dir="ltr">MCP</span></dt><dd>پروتکل باز اتصال مدل‌ها به ابزارها؛ «درگاه USB» دنیای هوش مصنوعی.</dd>
+  <dt><span dir="ltr">MCP Server</span></dt><dd>برنامهٔ کوچکی که یک منبع (مثل والت شما) را به زبان MCP عرضه می‌کند.</dd>
+  <dt><span dir="ltr">AI Agent</span> — عامل هوشمند</dt><dd>مدلی که با ابزارها «عمل می‌کند»: می‌خواند، می‌نویسد، جست‌وجو می‌کند و کار چندمرحله‌ای انجام می‌دهد.</dd>
+  <dt><span dir="ltr">Local REST API</span></dt><dd>پلاگین اجتماعی که یک درگاه وب محلی و رمزدار روی Obsidianِ در حال اجرا باز می‌کند؛ زیربنای مسیر پیشرفتهٔ MCP.</dd>
+  <dt><span dir="ltr">OpenRouter</span></dt><dd>درگاه واحد دسترسی به ده‌ها مدل هوش مصنوعی با یک کلید؛ قابل شارژ با رمزارز (آموزش ایستگاه ۳ مسیر صعود گراول).</dd>
+  <dt><span dir="ltr">CORS</span></dt><dd>سازوکار امنیتی مرورگرها که گاهی مانع تماس پلاگین با درگاه‌های محلی می‌شود؛ در تنظیمات مدل سفارشی قابل عبور است.</dd>
+</dl>
+</section>
+
+<!-- ================= جشن پایان ================= -->
+<div class="party">
+<h2>🎉 تمام شد! حالا تو بلدی…</h2>
+<ul>
+  <li>🗺️ سه دروازهٔ اتصال والت به هوش مصنوعی را با تفاوت حریم خصوصی‌شان توضیح بدهی</li>
+  <li>🔐 با نقشهٔ حساسیت و پوشهٔ خصوصی، داده‌هایت را پیش از هر اتصالی مصون کنی</li>
+  <li>🧲 با Smart Connections، یادداشت‌های هم‌معنا را بدون هیچ کلیدی و کاملاً محلی کشف کنی</li>
+  <li>💬 با Copilot و کلید OpenRouter، با کل والتت گفتگو کنی — با ارجاع به منبع</li>
+  <li>🖥️ با Ollama یک هوش مصنوعی صددرصد آفلاین و شخصی راه بیندازی</li>
+  <li>🤖 با MCP، والتت را حافظهٔ بلندمدت عامل‌های هوشمند کنی — با دسترسی حداقلی و بازگشت‌پذیر</li>
+  <li>⚖️ با پنج اصل حکمرانی، نگذاری ابرمغزت به انبار متن ماشینی تبدیل شود</li>
+</ul>
+<p style="margin-top:16px">⛰️ <strong>مرحلهٔ بعدی پیشنهادی:</strong> حالا که والتت هم «مغز» دارد هم «زبان»، وقت اتوماسیون کامل است: در آموزش‌های مسیر صعود گراول (داکر + n8n و OpenClaw) یاد می‌گیری جریان‌های کاری بسازی که خودکار به همین ابرمغز غذا برسانند — مثلاً پیام‌های تلگرام یا مقاله‌های وب، خودشان نورون شوند.</p>
+</div>
+
+<p class="small" style="text-align:center">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</p>
+
+</div><!-- /wrap -->
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+
+<script>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi — نوار پیشرفت مطالعه */
+(function(){
+  var bar=document.getElementById('gravel-progress');
+  function upd(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    var p=max>0?(h.scrollTop||document.body.scrollTop)/max*100:0;
+    bar.style.width=p+'%';
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd);
+  upd();
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "اتصال والت Obsidian به هوش مصنوعی — آموزش جامع سه دروازه",
+  "description": "آموزش فارسی اتصال Obsidian به هوش مصنوعی: جست‌وجوی معنایی با Smart Connections، چت با والت از طریق Copilot و OpenRouter، مدل کاملاً آفلاین با Ollama، و اتصال عامل‌محور Claude با MCP — همراه قوانین حریم خصوصی و حکمرانی.",
+  "inLanguage": "fa-IR",
+  "totalTime": "PT2H",
+  "author": {"@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi"},
+  "step": [
+    {"@type": "HowToStep", "name": "نقشه راه: سه دروازه اتصال و مفهوم RAG", "url": "#s0"},
+    {"@type": "HowToStep", "name": "پیش‌نیازها و آماده‌سازی", "url": "#s1"},
+    {"@type": "HowToStep", "name": "قانون اساسی حریم خصوصی", "url": "#s2"},
+    {"@type": "HowToStep", "name": "Smart Connections: جست‌وجوی معنایی محلی", "url": "#s3"},
+    {"@type": "HowToStep", "name": "Copilot و OpenRouter: چت با کل والت", "url": "#s4"},
+    {"@type": "HowToStep", "name": "پرامپت‌نویسی برای والت", "url": "#s5"},
+    {"@type": "HowToStep", "name": "Ollama: هوش مصنوعی کاملاً آفلاین", "url": "#s6"},
+    {"@type": "HowToStep", "name": "MCP: عامل هوشمند داخل والت", "url": "#s7"},
+    {"@type": "HowToStep", "name": "حکمرانی همکاری انسان و ماشین", "url": "#s8"}
+  ]
+}
+</script>
+
+</body>
+</html>
