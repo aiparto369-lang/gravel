@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<!-- © 2026 Mehdi Rezghi — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<!-- گراول (Gravel) — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد. -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساخت ابرمغز با Obsidian — آموزش جامع و ریشه‌ای | گراول</title>
+
+<meta name="gravel:category" content="📦 سایر">
+<meta name="gravel:emoji"    content="🧠">
+<meta name="gravel:time"     content="حدود ۱۸۰ دقیقه">
+<meta name="gravel:level"    content="مبتدی تا پیشرفته">
+<meta name="gravel:desc"     content="ساخت مغز دوم (Second Brain) با Obsidian از صفرِ صفر تا سطح حرفه‌ای: یادداشت اتمیک، زتل‌کاستن، MOC، Properties، Bases، پلاگین‌ها و سیستم نگهداری دانش">
+<meta name="gravel:keywords" content="Obsidian, ابسیدین, آموزش ابسیدین, مغز دوم, second brain, ابرمغز, مدیریت دانش شخصی, PKM, Zettelkasten, زتل کاستن, PARA, MOC, Bases, Dataview, Templater, یادداشت برداری, note taking, مارک داون, Markdown, بک لینک, backlink, graph view, کانواس, Canvas">
+
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+<meta name="description" content="آموزش جامع و ریشه‌ای Obsidian به فارسی: ساخت مغز دوم از صفر، چیدمان نورون‌های دانش، لینک‌دهی حرفه‌ای، Bases، پلاگین‌ها و روش‌های تیم‌های حرفه‌ای — گراول">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi */
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --night:#123B4A;
+  --card:#FFFFFF;
+  --soft:#E4EFEF;
+  --line:rgba(20,48,59,.12);
+  --tip:#E8F6EE;   --tip-b:#1E8E5A;
+  --warn:#FDF0E4;  --warn-b:#C9702A;
+  --note:#EEF3FB;  --note-b:#3A6EA5;
+  --check:#F0F7EC; --check-b:#5B8C2A;
+  --fix:#F7EFF5;   --fix-b:#8E4585;
+  --code-bg:#0F2830;
+  --code-ink:#D8EEF2;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  font-size:17px;
+  line-height:1.95;
+  direction:rtl;
+  text-align:right;
+}
+#gravel-progress{
+  position:fixed;top:0;inset-inline-start:0;height:5px;width:0%;
+  background:linear-gradient(90deg,var(--teal),var(--saffron));
+  z-index:1000;transition:width .15s ease;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+a{color:var(--teal)}
+h1,h2,h3,h4{line-height:1.6;color:var(--night)}
+h2{font-size:1.55rem;font-weight:900;margin:2.2em 0 .6em;border-inline-start:6px solid var(--saffron);padding-inline-start:14px}
+h3{font-size:1.2rem;font-weight:700;margin:1.6em 0 .4em}
+p{margin:.55em 0}
+ul,ol{padding-inline-start:1.4em;margin:.5em 0}
+li{margin:.3em 0}
+strong{color:var(--night)}
+
+/* hero */
+.hero{
+  background:linear-gradient(150deg,var(--night) 0%,#0B5560 60%,var(--teal) 100%);
+  color:#F4FBFC;border-radius:0 0 28px 28px;
+  padding:52px 22px 40px;text-align:center;margin-bottom:26px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;opacity:.14;
+  background:
+    radial-gradient(circle at 18% 30%, #E8A317 0 5px, transparent 6px),
+    radial-gradient(circle at 78% 22%, #fff 0 4px, transparent 5px),
+    radial-gradient(circle at 60% 75%, #E8A317 0 4px, transparent 5px),
+    radial-gradient(circle at 32% 80%, #fff 0 3px, transparent 4px),
+    radial-gradient(circle at 88% 62%, #fff 0 5px, transparent 6px);
+}
+.hero h1{color:#fff;font-size:clamp(1.5rem,4.4vw,2.4rem);font-weight:900;margin:.3em 0}
+.hero .brand{font-size:.95rem;opacity:.92;letter-spacing:.3px}
+.hero .promise{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  display:inline-block;border-radius:999px;padding:8px 20px;margin-top:14px;font-size:.98rem;
+}
+.hero .emoji{font-size:3.2rem;display:block;margin-bottom:6px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.meta-chips span{
+  background:rgba(255,255,255,.16);border-radius:999px;padding:5px 15px;font-size:.85rem;
+}
+
+/* TOC */
+.toc{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 24px;margin:22px 0;
+}
+.toc h2{margin-top:0;border:none;padding:0;font-size:1.2rem}
+.toc ol{columns:2;column-gap:34px;padding-inline-start:1.2em;font-size:.95rem}
+.toc li{break-inside:avoid;margin:.35em 0}
+.toc a{text-decoration:none;font-weight:500}
+.toc a:hover{color:var(--saffron)}
+
+/* stage cards */
+.stage{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px 20px;margin:30px 0;box-shadow:0 2px 10px rgba(18,59,74,.05);
+  position:relative;
+}
+.stage-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.stage-num{
+  min-width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:var(--night);color:#fff;font-weight:900;font-size:1.25rem;flex-shrink:0;
+}
+.stage.alt .stage-num{background:var(--teal)}
+.stage-head h2{margin:0;border:none;padding:0;font-size:1.35rem;flex:1;min-width:200px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  background:var(--soft);color:var(--night);border-radius:999px;
+  padding:3px 13px;font-size:.8rem;font-weight:700;white-space:nowrap;
+}
+.chip.time{background:#FBEED3;color:#8a5b00}
+.chip.pos{background:var(--night);color:#fff}
+
+/* boxes */
+.box{border-radius:12px;padding:14px 18px;margin:16px 0;border-inline-start:5px solid;font-size:.97rem}
+.box .box-title{font-weight:900;display:block;margin-bottom:4px}
+.box.tip{background:var(--tip);border-color:var(--tip-b)}
+.box.warn{background:var(--warn);border-color:var(--warn-b)}
+.box.note{background:var(--note);border-color:var(--note-b)}
+.box.check{background:var(--check);border-color:var(--check-b)}
+.box.fix{background:var(--fix);border-color:var(--fix-b)}
+.box.pro{background:#102E38;border-color:var(--saffron);color:#E8F4F6}
+.box.pro .box-title{color:var(--saffron)}
+.box.pro code{background:rgba(255,255,255,.12);color:#FFE7B3}
+
+/* why mini box */
+.why{
+  background:var(--soft);border-radius:10px;padding:10px 16px;margin:12px 0;font-size:.93rem;
+}
+.why b{color:var(--teal)}
+
+/* code */
+pre{
+  direction:ltr;text-align:left;background:var(--code-bg);color:var(--code-ink);
+  border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:.88rem;line-height:1.75;
+  font-family:'Consolas','Courier New',monospace;
+}
+code{
+  direction:ltr;unicode-bidi:embed;background:#E6EFF1;color:#0B4A52;
+  border-radius:6px;padding:1px 7px;font-family:'Consolas','Courier New',monospace;font-size:.88em;
+}
+pre code{background:none;color:inherit;padding:0}
+kbd{
+  direction:ltr;unicode-bidi:embed;background:var(--night);color:#fff;border-radius:6px;
+  padding:1px 8px;font-size:.82em;font-family:'Consolas',monospace;border-bottom:2px solid var(--saffron);
+}
+
+/* steps */
+.steps{counter-reset:st;list-style:none;padding:0;margin:14px 0}
+.steps>li{
+  counter-increment:st;position:relative;padding:10px 52px 10px 14px;margin:10px 0;
+  background:var(--bg);border-radius:12px;border:1px solid var(--line);
+}
+.steps>li::before{
+  content:counter(st);position:absolute;inset-inline-start:-14px;top:10px;
+  width:34px;height:34px;border-radius:50%;background:var(--saffron);color:var(--night);
+  font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  box-shadow:0 0 0 4px var(--card);
+}
+.steps>li{padding-inline-start:34px;padding-inline-end:16px}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;background:var(--card)}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:right;vertical-align:top}
+th{background:var(--night);color:#fff;font-weight:700}
+tr:nth-child(even) td{background:var(--bg)}
+.tbl-scroll{overflow-x:auto}
+
+/* diagrams */
+.diagram{
+  background:var(--card);border:2px dashed var(--teal);border-radius:14px;
+  padding:18px;margin:18px 0;text-align:center;
+}
+.flow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.flow .nd{
+  background:var(--soft);border:2px solid var(--teal);border-radius:12px;
+  padding:8px 16px;font-weight:700;font-size:.9rem;color:var(--night);
+}
+.flow .nd.gold{background:#FBEED3;border-color:var(--saffron)}
+.flow .ar{font-size:1.3rem;color:var(--saffron);font-weight:900}
+
+/* footnotes */
+.footnote{
+  background:var(--note);border-radius:10px;border-inline-start:4px solid var(--note-b);
+  padding:10px 16px;margin:10px 0;font-size:.9rem;
+}
+.footnote b{color:var(--note-b)}
+
+/* glossary */
+dl.gloss dt{font-weight:900;color:var(--night);margin-top:14px}
+dl.gloss dd{margin:2px 0 0 0;padding-inline-start:14px;border-inline-start:3px solid var(--soft);font-size:.95rem}
+
+/* celebration */
+.party{
+  background:linear-gradient(150deg,#0E7C86,#123B4A);color:#fff;border-radius:20px;
+  padding:34px 28px;text-align:center;margin:40px 0 20px;
+}
+.party h2{color:#fff;border:none;padding:0}
+.party ul{display:inline-block;text-align:right;margin-top:10px}
+
+.gravel-footer a:hover{color:var(--saffron)}
+.small{font-size:.85rem;opacity:.8}
+
+@media (max-width:700px){
+  body{font-size:16px}
+  .toc ol{columns:1}
+  .stage{padding:18px 16px}
+  .steps>li::before{inset-inline-start:-10px}
+}
+</style>
+</head>
+<body>
+<div id="gravel-progress"></div>
+
+<header class="hero">
+  <span class="emoji">🧠⛰️</span>
+  <div class="brand">🏔️ گراول (Gravel) — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</div>
+  <h1>ساخت «ابرمغز» با Obsidian — آموزش جامع و ریشه‌ای</h1>
+  <div class="promise">قراره چی یاد بگیریم؟ ساخت یک مغز دوم واقعی: از نصب تا معماری نورون‌های دانش، دقیقاً به سبک تیم‌های حرفه‌ای</div>
+  <div class="meta-chips">
+    <span>⏱️ حدود ۱۸۰ دقیقه (در چند نشست)</span>
+    <span>🎯 مبتدی تا پیشرفته</span>
+    <span>🗓️ به‌روز شده بر اساس نسخهٔ 1.13 — تیر ۱۴۰۵ / ژوئیهٔ ۲۰۲۶</span>
+    <span>💰 کاملاً رایگان</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="box note">
+<span class="box-title">📌 این آموزش با بقیه فرق دارد</span>
+بیشتر آموزش‌های Obsidian فقط دکمه‌ها را نشان می‌دهند. اینجا قرار است <strong>معماری</strong> یاد بگیریم: چرا یادداشت باید «اتمی» باشد، چرا لینک از پوشه قوی‌تر است، چطور Properties و Bases والت شما را به یک پایگاه‌دادهٔ زنده تبدیل می‌کنند، و حرفه‌ای‌ها (پژوهشگرها، نویسنده‌ها و تیم‌های نرم‌افزاری) چه اشتباه‌هایی را دیگر تکرار نمی‌کنند. همه‌چیز از صفرِ صفر و بدون هیچ پیش‌نیازی توضیح داده می‌شود — اما تا عمقی می‌رویم که کمتر آموزشی رفته است.
+</div>
+
+<nav class="toc" id="toc">
+<h2>🗺️ فهرست مراحل</h2>
+<ol>
+  <li><a href="#s0">مرحله ۰ — نقشهٔ ذهنی: مغز دوم یعنی چه؟</a></li>
+  <li><a href="#s1">مرحله ۱ — پیش‌نیازها و نصب Obsidian</a></li>
+  <li><a href="#s2">مرحله ۲ — ساخت والت (Vault) و کالبدشناسی آن</a></li>
+  <li><a href="#s3">مرحله ۳ — زبان مغز: Markdown در ۱۵ دقیقه</a></li>
+  <li><a href="#s4">مرحله ۴ — نورون‌ها: یادداشت اتمیک و زتل‌کاستن</a></li>
+  <li><a href="#s5">مرحله ۵ — سیناپس‌ها: لینک، بک‌لینک و Graph View</a></li>
+  <li><a href="#s6">مرحله ۶ — معماری کلان: MOC و مقایسهٔ PARA و LYT</a></li>
+  <li><a href="#s7">مرحله ۷ — Properties: شناسنامهٔ هر نورون</a></li>
+  <li><a href="#s8">مرحله ۸ — Bases: پایگاه‌دادهٔ زندهٔ درون مغز</a></li>
+  <li><a href="#s9">مرحله ۹ — جست‌وجوی حرفه‌ای و تمپلیت‌ها</a></li>
+  <li><a href="#s10">مرحله ۱۰ — یادداشت روزانه: ضربان قلب سیستم</a></li>
+  <li><a href="#s11">مرحله ۱۱ — پلاگین‌ها: ارتقای مغز (با احتیاط)</a></li>
+  <li><a href="#s12">مرحله ۱۲ — Canvas: تختهٔ تفکر بصری</a></li>
+  <li><a href="#s13">مرحله ۱۳ — همگام‌سازی و پشتیبان‌گیری</a></li>
+  <li><a href="#s14">مرحله ۱۴ — سیستم نگهداری: مغزی که خودش یاد می‌گیرد</a></li>
+  <li><a href="#trouble">🔧 رفع اشکال — ۷ مشکل رایج</a></li>
+  <li><a href="#gloss">📖 واژه‌نامهٔ کامل</a></li>
+</ol>
+</nav>
+
+<!-- ================= مرحله ۰ ================= -->
+<section class="stage" id="s0">
+<div class="stage-head">
+  <div class="stage-num">۰</div>
+  <h2>نقشهٔ ذهنی: «مغز دوم» یعنی چه و چرا Obsidian؟</h2>
+  <div class="chips"><span class="chip pos">مرحله ۰ از ۱۴</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<p>مغز ما دو کار را هم‌زمان خوب انجام نمی‌دهد: <strong>فکر کردن</strong> و <strong>به‌خاطر سپردن</strong>. هر چه چیزهای بیشتری را به حافظه بسپاریم، فضای کمتری برای فکرِ عمیق می‌ماند. ایدهٔ «مغز دوم»<sup>۱</sup> دقیقاً همین است: یک سیستم بیرونی که <em>به‌خاطر سپردن</em> را به عهده می‌گیرد تا مغز اول شما آزاد شود برای <em>فکر کردن</em>.</p>
+
+<div class="why">🧩 <b>تشبیه ساده:</b> مغز دوم مثل یک کتابخانهٔ شخصی است که یک کتابدار بی‌خواب دارد. شما هر برگه‌ای را به او می‌دهید؛ او نه‌تنها جایش را حفظ می‌کند، بلکه با نخ قرمز آن را به برگه‌های مرتبط وصل می‌کند. سال‌ها بعد که سراغ یک موضوع می‌روید، یک شبکهٔ کامل از دانسته‌ها منتظر شماست — نه یک برگهٔ تنها.</div>
+
+<h3>چرا از بین این‌همه برنامه، Obsidian؟</h3>
+<p>Obsidian چهار اصل بنیادی دارد که آن را از Notion، Evernote و امثالشان جدا می‌کند:</p>
+<ol>
+  <li><strong>فایل‌های شما، روی دستگاه شما (Local-first):</strong> همهٔ یادداشت‌ها فایل‌های متنی سادهٔ <code>Markdown</code> هستند که روی هارد خودتان ذخیره می‌شوند. بدون اینترنت کار می‌کند؛ اگر روزی شرکت Obsidian تعطیل شود، فایل‌های شما سرِ جایشان هستند و با هر ویرایشگر متنی باز می‌شوند. این یعنی <strong>مالکیت واقعی داده</strong> — اصلی که در مانیفست رسمی Obsidian هم آمده: «یادداشت‌های شما باید تا آخر عمر مالِ شما بمانند».</li>
+  <li><strong>لینک به‌جای پوشه:</strong> واحد اصلی سازمان‌دهی، «ارتباط» بین یادداشت‌هاست، نه محل فیزیکی فایل. دقیقاً مثل نورون‌های مغز که قدرتشان از اتصال‌هاست، نه از جای قرارگیری.</li>
+  <li><strong>قابل گسترش:</strong> بیش از دو هزار پلاگین<sup>۲</sup> اجتماعی دارد؛ هر قابلیتی که کم دارید، احتمالاً کسی برایش پلاگین ساخته است.</li>
+  <li><strong>رایگان:</strong> خودِ برنامه برای استفادهٔ شخصی و حتی کاری کاملاً رایگان است. فقط دو سرویس اختیاریِ پولی دارد (همگام‌سازی ابری و انتشار وب) که در مرحلهٔ ۱۳ می‌بینیم و برای شروع به هیچ‌کدام نیاز نداریم.</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — چرا «متن ساده» یک تصمیم مهندسی است؟</span>
+تیم‌های حرفه‌ای (مثلاً تیم‌های مستندسازی نرم‌افزار) Obsidian را دقیقاً به‌خاطر «متن ساده بودن» انتخاب می‌کنند: فایل متنی را می‌شود با <code>Git</code> نسخه‌بندی کرد، با اسکریپت پردازش کرد، به هوش مصنوعی داد، و ۳۰ سال دیگر هم باز کرد. فرمت‌های بسته (مثل پایگاه‌دادهٔ Notion) هیچ‌کدام از این‌ها را تضمین نمی‌کنند. وقتی افق شما «یک عمر دانش» است، فرمتِ داده مهم‌ترین تصمیم است — نه رنگ و لعاب برنامه.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۱ — مغز دوم (Second Brain):</b> اصطلاحی که «تیاگو فورته» (Tiago Forte) در کتاب <span dir="ltr">Building a Second Brain</span> جا انداخت: سیستمی دیجیتال برای ذخیره و اتصال دانسته‌ها، تا ذهن برای خلاقیت آزاد بماند.</div>
+<div class="footnote">📖 <b>پانویس ۲ — پلاگین (Plugin):</b> افزونه؛ برنامهٔ کوچکی که به برنامهٔ اصلی وصل می‌شود و قابلیت جدید اضافه می‌کند. مثل لوازم جانبی یک ابزار برقی.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+قبل از رفتن به مرحلهٔ بعد باید بتوانید به این سؤال یک‌خطی جواب بدهید: «فرق اساسی Obsidian با یک برنامهٔ یادداشت معمولی چیست؟» (پاسخ: فایل‌های محلیِ متن ساده + سازمان‌دهی با لینک به‌جای پوشه.)
+</div>
+</section>
+
+<!-- ================= مرحله ۱ ================= -->
+<section class="stage alt" id="s1">
+<div class="stage-head">
+  <div class="stage-num">۱</div>
+  <h2>پیش‌نیازها و نصب Obsidian</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<h3>چه چیزهایی لازم داریم؟</h3>
+<ul>
+  <li>یک کامپیوتر (ویندوز، مک یا لینوکس) — این آموزش را روی <strong>ویندوز</strong> جلو می‌بریم؛ بقیه تقریباً یکسان‌اند.</li>
+  <li>حدود ۵۰۰ مگابایت فضای خالی.</li>
+  <li>هیچ دانش قبلی لازم نیست. حتی لازم نیست بدانید Markdown چیست — خودمان یاد می‌دهیم.</li>
+  <li>(اختیاری) گوشی اندروید یا آیفون برای نسخهٔ موبایل.</li>
+</ul>
+
+<h3>نصب روی ویندوز</h3>
+<ol class="steps">
+  <li>مرورگر را باز کنید و به آدرس رسمی بروید: <code>https://obsidian.md</code></li>
+  <li>روی دکمهٔ بزرگ دانلود کلیک کنید (چیزی شبیه <span dir="ltr">Get Obsidian for Windows</span>). فایلی با پسوند <code>.exe</code> دانلود می‌شود.</li>
+  <li>روی فایل دانلودشده دوبار کلیک کنید. نصب خودکار است و چند ثانیه بیشتر طول نمی‌کشد.</li>
+  <li>بعد از نصب، Obsidian خودش باز می‌شود و صفحهٔ مدیریت والت‌ها را نشان می‌دهد. فعلاً همین‌جا بمانید — ساخت والت را در مرحلهٔ بعد با دقت انجام می‌دهیم.</li>
+</ol>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — دانلود از سایت غیررسمی ممنوع</span>
+Obsidian را فقط از <code>obsidian.md</code> یا صفحهٔ رسمی <span dir="ltr">GitHub Releases</span> پروژه (مخزن <code dir="ltr">obsidianmd/obsidian-releases</code>) دانلود کنید. سایت‌های واسطه ممکن است نسخهٔ قدیمی یا حتی آلوده بدهند. اگر سایت اصلی برایتان باز نشد، همان صفحهٔ GitHub امن‌ترین جایگزین است.
+</div>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — نسخهٔ موبایل</span>
+اپ رسمی Obsidian برای اندروید (Google Play) و iOS (App Store) رایگان است و همان والت را باز می‌کند. پیشنهاد ما: اول یکی‌دو هفته فقط با کامپیوتر کار کنید تا معماری جا بیفتد، بعد موبایل را اضافه کنید (مرحلهٔ ۱۳ روش اتصال را می‌گوید).
+</div>
+
+<h3>اولین باز کردن: زبان و ظاهر</h3>
+<ol class="steps">
+  <li>در پایین/کنار پنجرهٔ اول، منوی انتخاب زبان هست؛ می‌توانید <span dir="ltr">English</span> را نگه دارید (پیشنهاد ما، چون منابع جهانی انگلیسی‌اند) یا فارسی را انتخاب کنید. این آموزش نام دکمه‌ها را انگلیسی می‌گوید تا با مستندات رسمی هماهنگ باشید.</li>
+  <li>بعداً از مسیر <span dir="ltr">Settings → Appearance</span> می‌توانید حالت تیره/روشن را عوض کنید. آیکون چرخ‌دندهٔ ⚙️ در پایینِ نوار کناری، همان <span dir="ltr">Settings</span> است.</li>
+</ol>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+الان باید Obsidian نصب شده باشد و پنجره‌ای ببینید که دربارهٔ ساخت یا باز کردن <span dir="ltr">Vault</span> حرف می‌زند. اگر برنامه باز نمی‌شود، به بخش «رفع اشکال» در انتهای همین صفحه بروید.
+</div>
+</section>
+
+<!-- ================= مرحله ۲ ================= -->
+<section class="stage" id="s2">
+<div class="stage-head">
+  <div class="stage-num">۲</div>
+  <h2>ساخت والت (Vault) و کالبدشناسی آن</h2>
+  <div class="chips"><span class="chip pos">مرحله ۲ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p><strong>والت</strong><sup>۳</sup> یعنی «گاوصندوق»: پوشه‌ای روی کامپیوتر شما که همهٔ نورون‌های ابرمغز داخل آن زندگی می‌کنند. تصمیم اول و مهم: <strong>یک والت واحد</strong> برای همهٔ زندگی بسازید، نه چند والت جدا. چرا؟ چون قدرت مغز از اتصال حوزه‌های مختلف است — ایده‌ای از کتاب روان‌شناسی ممکن است پروژهٔ کاری‌تان را نجات دهد؛ اگر در دو والت جدا باشند، این اتصال هرگز رخ نمی‌دهد.</p>
+
+<ol class="steps">
+  <li>در پنجرهٔ اول Obsidian روی <span dir="ltr">Create new vault</span> کلیک کنید.</li>
+  <li>در قسمت نام، بنویسید: <code>Brain</code> (یا هر اسمی که دوست دارید — فقط انگلیسی و بدون فاصله بهتر است تا بعداً با ابزارهای دیگر دردسر نداشته باشید).</li>
+  <li>روی <span dir="ltr">Browse</span> کلیک کنید و یک محل امن انتخاب کنید؛ مثلاً پوشهٔ <code dir="ltr">Documents</code>. (اگر بعداً خواستید با iCloud یا OneDrive همگام شود، همین انتخابِ محل مهم می‌شود — مرحلهٔ ۱۳.)</li>
+  <li>روی <span dir="ltr">Create</span> کلیک کنید. تمام! وارد فضای اصلی Obsidian شدید.</li>
+</ol>
+
+<h3>نقشهٔ صفحه — چهار منطقهٔ اصلی</h3>
+<div class="diagram">
+<div class="flow">
+  <div class="nd">📁 نوار کناری راست/چپ:<br>فایل‌ها، جست‌وجو، بوکمارک</div>
+  <div class="ar">|</div>
+  <div class="nd gold">📝 وسط: ویرایشگر<br>(محل نوشتن)</div>
+  <div class="ar">|</div>
+  <div class="nd">🔗 پنل مقابل:<br>بک‌لینک‌ها، فهرست مطالب</div>
+</div>
+<p class="small" style="margin-top:10px">+ نوار باریک آیکون‌ها (Ribbon) کنار صفحه و نوار وضعیت در پایین</p>
+</div>
+
+<h3>کالبدشناسی والت — چیزی که ۹۰٪ آموزش‌ها نمی‌گویند</h3>
+<p>والت شما فقط یک پوشهٔ معمولی است. اگر با <span dir="ltr">File Explorer</span> ویندوز داخلش را ببینید، این‌ها را پیدا می‌کنید:</p>
+<div class="tbl-scroll">
+<table>
+<tr><th>مورد</th><th>چیست؟</th><th>نکتهٔ حرفه‌ای</th></tr>
+<tr><td><code>*.md</code></td><td>هر یادداشت، یک فایل متنی Markdown</td><td>با Notepad هم باز می‌شود؛ این همان «آزادی داده» است</td></tr>
+<tr><td><code>.obsidian/</code></td><td>پوشهٔ مخفی تنظیمات: ظاهر، پلاگین‌ها، چیدمان</td><td>هر والت تنظیمات مستقل خودش را دارد؛ برای شروعِ دوباره کافی است این پوشه را پاک کنید — یادداشت‌ها دست‌نخورده می‌مانند</td></tr>
+<tr><td><code>.obsidian/plugins/</code></td><td>کد پلاگین‌های اجتماعی نصب‌شده</td><td>هنگام بکاپ‌گیری این پوشه را هم نگه دارید تا محیط‌تان بازسازی‌شدنی باشد</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — تنظیمات فایل‌های پیوست از روز اول</span>
+به <span dir="ltr">Settings → Files and links</span> بروید و گزینهٔ <span dir="ltr">Default location for new attachments</span> را روی <span dir="ltr">In the folder specified below</span> بگذارید و پوشه‌ای به نام <code>_attachments</code> معرفی کنید. اگر این کار را نکنید، عکس‌ها و PDFها وسط یادداشت‌ها پخش می‌شوند و بعد از یک سال، والت شما شبیه انباری می‌شود که هیچ‌کس جرئت مرتب‌کردنش را ندارد. حرفه‌ای‌ها ساختار فایل را <em>قبل از</em> بزرگ‌شدن والت می‌بندند.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۳ — Vault (والت):</b> در Obsidian یعنی پوشهٔ ریشه‌ای که برنامه آن را به‌عنوان «دنیای یادداشت‌ها» می‌شناسد. جست‌وجو، لینک‌ها و گراف فقط داخل همین دنیا کار می‌کنند.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+والتی به نام <code>Brain</code> ساخته‌اید، صفحهٔ اصلی Obsidian را می‌بینید، و در تنظیمات، پوشهٔ پیوست‌ها را مشخص کرده‌اید. اگر پنجره خالی و خاکستری است، نگران نباشید — هنوز هیچ یادداشتی نساخته‌ایم!
+</div>
+</section>
+
+<!-- ================= مرحله ۳ ================= -->
+<section class="stage alt" id="s3">
+<div class="stage-head">
+  <div class="stage-num">۳</div>
+  <h2>زبان مغز: Markdown در ۱۵ دقیقه</h2>
+  <div class="chips"><span class="chip pos">مرحله ۳ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p><strong>Markdown</strong><sup>۴</sup> زبان نوشتاری Obsidian است: چند علامت ساده که به متن، ساختار می‌دهند. مثل این است که به‌جای دکمه‌های «بولد» و «تیتر»، چند حرکت سریع با خودکار انجام بدهید. یک بار یاد می‌گیرید و تا ابد در ده‌ها برنامهٔ دیگر (GitHub، Discord، ابزارهای هوش مصنوعی…) هم استفاده می‌کنید.</p>
+
+<ol class="steps">
+  <li>کلیدهای <kbd>Ctrl</kbd> + <kbd>N</kbd> را بزنید تا یادداشت جدید ساخته شود. نامش را بگذارید: <code dir="rtl">تمرین مارک‌داون</code>.</li>
+  <li>متن زیر را خط‌به‌خط داخلش تایپ کنید و ببینید چه اتفاقی می‌افتد.</li>
+</ol>
+
+<pre><code># تیتر بزرگ (با یک #)
+## تیتر بخش (با دو #)
+
+**متن پررنگ**  و  *متن مورب*
+
+- آیتم فهرست
+- آیتم دوم
+    - آیتم تو در تو (با Tab)
+
+1. فهرست شماره‌دار
+2. مورد دوم
+
+- [ ] کار انجام‌نشده (چک‌باکس)
+- [x] کار انجام‌شده
+
+&gt; نقل‌قول: متنی از یک کتاب یا آدم دیگر
+
+`کد کوتاه داخل جمله`
+
+---
+(سه خط تیره = خط جداکننده)</code></pre>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — دو حالت نمایش</span>
+Obsidian به‌صورت پیش‌فرض در حالت <span dir="ltr">Live Preview</span> است: علامت‌ها هنگام تایپ دیده می‌شوند و بعد از رد شدن، متن آراسته می‌شود. با <kbd>Ctrl</kbd> + <kbd>E</kbd> بین حالت ویرایش و حالت خواندن (Reading) جابه‌جا شوید.
+</div>
+
+<h3>پنج کلید میان‌بری که واقعاً لازم دارید</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>میان‌بر</th><th>کار</th></tr>
+<tr><td><kbd>Ctrl</kbd> + <kbd>N</kbd></td><td>یادداشت جدید</td></tr>
+<tr><td><kbd>Ctrl</kbd> + <kbd>O</kbd></td><td>پرش سریع به هر یادداشت (Quick Switcher) — مهم‌ترین میان‌بر Obsidian</td></tr>
+<tr><td><kbd>Ctrl</kbd> + <kbd>P</kbd></td><td>پالت فرمان (Command Palette): هر فرمانی را با اسمش پیدا کنید<sup>۵</sup></td></tr>
+<tr><td><kbd>Ctrl</kbd> + <kbd>E</kbd></td><td>جابه‌جایی ویرایش/خواندن</td></tr>
+<tr><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd></td><td>جست‌وجو در کل والت</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — فارسی‌نویسی تمیز در Obsidian</span>
+Obsidian از راست‌به‌چپ پشتیبانی می‌کند: در <span dir="ltr">Settings → Editor</span> گزینهٔ جهت متن را روی <span dir="ltr">Auto</span> بگذارید تا هر پاراگراف بر اساس زبانش جهت بگیرد (پاراگراف فارسی راست‌چین، بلوک کد چپ‌چین). دو عادت طلایی: نیم‌فاصله را با <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd> (در کیبورد استاندارد فارسی ویندوز) تایپ کنید، و اسم فایل‌ها را ترجیحاً انگلیسی یا فارسیِ بدون علامت‌های خاص بگذارید تا لینک‌ها همیشه سالم بمانند.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۴ — Markdown (مارک‌داون):</b> یک قرارداد جهانی برای قالب‌بندی متن ساده با علامت‌هایی مثل <code>#</code> و <code>*</code>. فایل آن پسوند <code>.md</code> دارد.</div>
+<div class="footnote">📖 <b>پانویس ۵ — Command Palette (پالت فرمان):</b> جعبهٔ جست‌وجویی که همهٔ فرمان‌های برنامه را در خود دارد؛ به‌جای حفظ‌کردن جای دکمه‌ها، اسم کار را تایپ می‌کنید.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+یادداشت «تمرین مارک‌داون» را ساخته‌اید، تیتر و فهرست و چک‌باکس در آن درست نمایش داده می‌شوند، و با <kbd>Ctrl</kbd> + <kbd>O</kbd> می‌توانید بین یادداشت‌ها بپرید. اگر علامت‌ها اثر نمی‌کنند، مطمئن شوید بعد از <code>#</code> یک فاصله گذاشته‌اید.
+</div>
+</section>
+
+<!-- ================= مرحله ۴ ================= -->
+<section class="stage" id="s4">
+<div class="stage-head">
+  <div class="stage-num">۴</div>
+  <h2>نورون‌ها: یادداشت اتمیک و روش زتل‌کاستن</h2>
+  <div class="chips"><span class="chip pos">مرحله ۴ از ۱۴</span><span class="chip time">⏱️ ۲۰ دقیقه</span></div>
+</div>
+
+<p>حالا به قلب ماجرا رسیدیم. ابرمغز از «نورون» ساخته می‌شود و نورونِ ما <strong>یادداشت اتمیک</strong><sup>۶</sup> است: یادداشتی که <strong>فقط یک ایده</strong> را نگه می‌دارد. این مهم‌ترین اصل کل این آموزش است، پس با حوصله جلو می‌رویم.</p>
+
+<div class="why">🧩 <b>تشبیه ساده:</b> یادداشت اتمیک مثل یک آجر استاندارد است. با آجرهای هم‌اندازه می‌شود هر بنایی ساخت؛ اما اگر به‌جای آجر، تکه‌های بی‌شکل بتن داشته باشید (یادداشت‌های طولانی و درهم)، هیچ دو تکه‌ای به هم جفت نمی‌شوند.</div>
+
+<h3>ریشهٔ علمی: زتل‌کاستن</h3>
+<p><strong>زتل‌کاستن</strong> (Zettelkasten، به آلمانی یعنی «جعبهٔ برگه») روش «نیکلاس لومان»، جامعه‌شناس آلمانی است. او با حدود ۹۰ هزار برگهٔ به‌هم‌لینک‌شده، بیش از ۷۰ کتاب و ۴۰۰ مقاله نوشت. رمز کارش سه قانون بود که ما مستقیم در Obsidian پیاده می‌کنیم:</p>
+<ol>
+  <li><strong>اتمی بنویس:</strong> هر برگه، یک ایده.</li>
+  <li><strong>با زبان خودت بنویس:</strong> کپی‌کردن یعنی هیچ‌چیز نفهمیده‌ای. بازنویسی یعنی فهمیدی.</li>
+  <li><strong>هر برگه را به یک برگهٔ دیگر وصل کن:</strong> برگهٔ بی‌لینک، نورونِ مُرده است.</li>
+</ol>
+
+<h3>سه نوع یادداشت — مدل عملی</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>نوع</th><th>چیست؟</th><th>عمرش</th><th>مثال</th></tr>
+<tr><td>✏️ گذرا (Fleeting)</td><td>خام‌نویسی سریع: هر چیزی که به ذهن رسید</td><td>چند روز؛ یا پردازش می‌شود یا حذف</td><td>«ایده: عادت‌ها به محیط ربط دارند؟»</td></tr>
+<tr><td>📚 مرجع (Literature)</td><td>خلاصهٔ چیزی که خواندید/دیدید، به زبان خودتان + منبع</td><td>دائمی، ولی وابسته به منبع</td><td>خلاصهٔ فصل ۲ کتاب «عادت‌های اتمی»</td></tr>
+<tr><td>💎 دائمی (Permanent)</td><td>یک ایدهٔ کامل و مستقل که بدون منبع هم فهمیدنی است</td><td>دائمی — نورون واقعی ابرمغز</td><td>«محیط، قوی‌تر از اراده رفتار را شکل می‌دهد»</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — عنوان یادداشت را «جمله» بنویس، نه «برچسب»</span>
+اشتباه مبتدی: عنوان‌هایی مثل «عادت» یا «یادداشت کتاب ۱». حرفه‌ای‌ها (به پیروی از ایدهٔ «یادداشت‌های همیشه‌سبز» اندی ماتوشاک) عنوان را یک <em>ادعای کامل</em> می‌نویسند: «عادت‌ها با کاهش اصطکاک محیط ساخته می‌شوند، نه با انگیزه». چرا؟ چون وقتی در متنی <code>[[</code> را تایپ می‌کنید و فهرست عنوان‌ها بالا می‌آید، هر عنوان خودش یک واحد فکر است و می‌توانید مثل قطعات لگو، جمله‌ها را از جنس «ایده» بچینید. عنوانِ مبهم، لینک‌دادن آینده را فلج می‌کند.
+</div>
+
+<h3>تمرین عملی: سه نورون اول</h3>
+<ol class="steps">
+  <li>یادداشتی بسازید با عنوان: <code dir="rtl">مغز دوم به‌خاطر سپردن را بیرون‌سپاری می‌کند تا فکر آزاد شود</code></li>
+  <li>در بدنه، همین ایده را در ۳ تا ۵ جمله <em>با زبان خودتان</em> توضیح دهید (نه کپی از این آموزش!).</li>
+  <li>دو یادداشت دیگر هم بسازید: یکی دربارهٔ چیزی که این هفته یاد گرفتید، یکی دربارهٔ یک مسئلهٔ کاری/درسی فعلی‌تان. باز هم: یک ایده در هر یادداشت.</li>
+</ol>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — «توهم جمع‌آوری» (Collector's Fallacy)</span>
+ذخیره‌کردن ≠ دانستن. اگر فقط مقاله و نکته کپی کنید، انباری از کاغذ می‌سازید نه مغز. قانون طلایی: <strong>هیچ‌چیزی وارد بخش دائمی نمی‌شود مگر بازنویسی‌شده به زبان خودتان.</strong> این سخت‌ترین و ارزشمندترین عادت کل سیستم است.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۶ — یادداشت اتمیک (Atomic Note):</b> «اتم» یعنی کوچک‌ترین واحد تجزیه‌ناپذیر. یادداشت اتمیک کوچک‌ترین واحد معنادار دانش است: یک ایدهٔ کامل، نه کمتر و نه بیشتر.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+سه یادداشت دارید که (۱) هر کدام فقط یک ایده دارند، (۲) عنوانشان یک جملهٔ کامل است، (۳) با زبان خودتان نوشته شده‌اند. هنوز لینک نداریم — نگران نباشید، مرحلهٔ بعد دقیقاً همین است.
+</div>
+</section>
+
+<!-- ================= مرحله ۵ ================= -->
+<section class="stage alt" id="s5">
+<div class="stage-head">
+  <div class="stage-num">۵</div>
+  <h2>سیناپس‌ها: لینک، بک‌لینک و Graph View</h2>
+  <div class="chips"><span class="chip pos">مرحله ۵ از ۱۴</span><span class="chip time">⏱️ ۲۰ دقیقه</span></div>
+</div>
+
+<p>در مغز واقعی، دانایی در «اتصال» نورون‌هاست — سیناپس‌ها. در Obsidian، سیناپس همان <strong>لینک داخلی</strong> است و ساختنش فقط دو براکت می‌خواهد:</p>
+
+<ol class="steps">
+  <li>یکی از یادداشت‌های مرحلهٔ قبل را باز کنید.</li>
+  <li>وسط متن، دو براکت باز تایپ کنید: <code>[[</code> — بلافاصله فهرست همهٔ یادداشت‌ها ظاهر می‌شود.</li>
+  <li>چند حرف از عنوان یادداشت دیگر را تایپ کنید و با <kbd>Enter</kbd> انتخابش کنید. نتیجه چیزی است مثل: <code>[[عنوان یادداشت دیگر]]</code></li>
+  <li>حالا با نگه‌داشتن <kbd>Ctrl</kbd> و کلیک روی لینک، به آن یادداشت بپرید. (فقط نگه‌داشتن <kbd>Ctrl</kbd> و بردن ماوس روی لینک هم پیش‌نمایش شناور نشان می‌دهد!)</li>
+</ol>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — لینک به یادداشتی که هنوز وجود ندارد</span>
+می‌توانید به یادداشتی لینک بدهید که هنوز نساخته‌اید: <code>[[ایده‌ای برای آینده]]</code>. لینک کم‌رنگ نمایش داده می‌شود و اولین کلیک، آن یادداشت را می‌سازد. حرفه‌ای‌ها همین‌طور «جای خالی نورون‌های آینده» را رزرو می‌کنند — به این‌ها لینک‌های قرمز/خالی می‌گویند و وجودشان کاملاً سالم است.
+</div>
+
+<h3>بک‌لینک: نصفِ پنهان جادو</h3>
+<p>وقتی یادداشت A به B لینک می‌دهد، Obsidian به‌طور خودکار در یادداشت B ثبت می‌کند که «A به من اشاره کرده». به این <strong>بک‌لینک</strong><sup>۷</sup> می‌گویند:</p>
+<ol class="steps">
+  <li>یادداشت مقصد را باز کنید.</li>
+  <li>در پنل کناری، تب <span dir="ltr">Backlinks</span> را پیدا کنید (اگر بسته است، از پالت فرمان <kbd>Ctrl</kbd> + <kbd>P</kbd> عبارت <span dir="ltr">Backlinks</span> را جست‌وجو کنید).</li>
+  <li>بخش <span dir="ltr">Linked mentions</span> همهٔ یادداشت‌هایی را نشان می‌دهد که به اینجا لینک داده‌اند.</li>
+  <li>پایین‌تر، <span dir="ltr">Unlinked mentions</span> را باز کنید: جاهایی که <em>متنِ</em> عنوان این یادداشت آمده ولی لینک نشده. با یک کلیک روی <span dir="ltr">Link</span> تبدیل به لینک واقعی می‌شود. این یعنی سیستم، اتصال‌های فراموش‌شده را به شما پیشنهاد می‌دهد!</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — سیناپسِ قوی «جمله‌دار» است</span>
+لینکِ لخت (فقط <code>[[...]]</code> در انتهای صفحه) سیناپس ضعیفی است؛ شش ماه بعد یادتان نمی‌آید چرا وصلش کردید. قانون حرفه‌ای‌ها: لینک را <strong>داخل جمله</strong> بنشانید و «چرایی» را بنویسید: «این ایده در ظاهر مخالفِ [[انگیزه موتور اصلی تغییر است]] است، چون…». به این کار می‌گویند لینک‌دهی زمینه‌دار (Contextual Linking) — تفاوت اصلی والت‌های زنده و والت‌های موزه‌ای همین یک عادت است.
+</div>
+
+<h3>سه ابزار مکمل لینک</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>ابزار</th><th>نحوهٔ نوشتن</th><th>کاربرد</th></tr>
+<tr><td>لینک به بخشی از یادداشت</td><td><code>[[یادداشت#تیتر بخش]]</code></td><td>اشاره به یک بخش خاص، نه کل یادداشت</td></tr>
+<tr><td>لینک به یک بلوک/پاراگراف</td><td><code>[[یادداشت#^شناسه]]</code> — بعد از <code>^</code> از فهرست انتخاب کنید</td><td>دقیق‌ترین سطح ارجاع؛ برای نقل‌قول علمی عالی است</td></tr>
+<tr><td>تعبیه (Embed)</td><td><code>![[یادداشت]]</code> — با علامت تعجب اول</td><td>محتوای آن یادداشت همین‌جا نمایش داده می‌شود؛ «یک منبع حقیقت، چند محل نمایش»</td></tr>
+</table>
+</div>
+
+<h3>Graph View: عکس رادیولوژی مغزتان</h3>
+<ol class="steps">
+  <li><kbd>Ctrl</kbd> + <kbd>G</kbd> را بزنید (یا از پالت فرمان: <span dir="ltr">Open graph view</span>).</li>
+  <li>هر نقطه یک یادداشت است و هر خط یک لینک. نقطه‌های بزرگ‌تر = یادداشت‌های پرلینک‌تر (هاب‌های مغز شما).</li>
+  <li>در تنظیمات گراف (آیکون چرخ‌دنده داخل صفحهٔ گراف)، بخش <span dir="ltr">Groups</span> را باز کنید و مثلاً برای مسیر <code dir="ltr">path:Projects</code> یک رنگ انتخاب کنید تا حوزه‌ها رنگی شوند.</li>
+  <li>در هر یادداشت، از پالت فرمان <span dir="ltr">Open local graph</span> را اجرا کنید: فقط همسایه‌های همان یادداشت را نشان می‌دهد — برای «فکر کردن» به‌مراتب مفیدتر از گراف کلی است.</li>
+</ol>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش</span>
+گراف کلی زیباست اما ابزار نمایش است، نه ابزار کار. حرفه‌ای‌ها بیشتر از گراف محلی (Local Graph) و بک‌لینک‌ها استفاده می‌کنند. اگر دیدید ساعت‌ها به گراف خیره شده‌اید و رنگش را عوض می‌کنید، در دام «سرگرمی به‌جای تفکر» افتاده‌اید!
+</div>
+
+<div class="footnote">📖 <b>پانویس ۷ — بک‌لینک (Backlink):</b> لینک برعکس؛ فهرست خودکارِ «چه کسانی به من اشاره کرده‌اند». در مغز واقعی هم سیناپس‌ها دوطرفه پیام‌رسانی را ممکن می‌کنند.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+سه یادداشت‌تان حداقل با دو لینک به هم وصل شده‌اند، پنل بک‌لینک را باز کرده‌اید و در Graph View نقطه‌های متصل را می‌بینید. اگر گراف خالی است، یعنی لینک‌ها را داخل یادداشت‌ها نساخته‌اید — برگردید به قدم اول همین مرحله.
+</div>
+</section>
+
+<!-- ================= مرحله ۶ ================= -->
+<section class="stage" id="s6">
+<div class="stage-head">
+  <div class="stage-num">۶</div>
+  <h2>معماری کلان: MOC و مقایسهٔ چارچوب‌های PARA و LYT</h2>
+  <div class="chips"><span class="chip pos">مرحله ۶ از ۱۴</span><span class="chip time">⏱️ ۲۵ دقیقه</span></div>
+</div>
+
+<p>تا اینجا نورون داریم و سیناپس. اما مغز واقعی «قشر» و «ناحیه» هم دارد: ساختارهای بزرگ‌تری که نورون‌ها را حول یک کارکرد جمع می‌کنند. در دنیای Obsidian، سه چارچوب مشهور برای این کار وجود دارد. هر سه را می‌شناسیم، مقایسه می‌کنیم، و در پایان یک معماری ترکیبیِ عملی می‌سازیم.</p>
+
+<h3>۱) MOC — نقشهٔ محتوا (قلب روش LYT)</h3>
+<p><strong>MOC</strong> (مخفف <span dir="ltr">Map of Content</span>) ایدهٔ محوری روش <span dir="ltr">LYT</span> (ساختهٔ نیک میلو) است: <strong>یک یادداشت معمولی که کارش لینک‌دادن به یادداشت‌های یک موضوع است</strong> — مثل میدان اصلی یک شهر که همهٔ خیابان‌ها به آن می‌رسند.</p>
+
+<div class="why">🧩 <b>فرق MOC با پوشه:</b> یک یادداشت فقط در «یک» پوشه می‌تواند باشد، اما می‌تواند هم‌زمان در «ده» MOC حضور داشته باشد. پوشه دیوار می‌کشد؛ MOC نخ وصل می‌کند. ضمناً داخل MOC می‌توانید کنار هر لینک توضیح بنویسید، لینک‌ها را دسته‌بندی کنید و ترتیب معنادار بدهید — کاری که پوشه هرگز بلد نیست.</div>
+
+<ol class="steps">
+  <li>یادداشتی بسازید به نام <code dir="ltr">MOC - یادگیری</code> (یا هر موضوعی که یادداشت‌هایتان دربارهٔ آن است).</li>
+  <li>داخل آن، تیترهایی مثل «مفاهیم پایه»، «تجربه‌های شخصی»، «سؤال‌های باز» بسازید.</li>
+  <li>زیر هر تیتر، به یادداشت‌های مرتبط لینک بدهید: <code>[[...]]</code> و کنار هر لینک یک نیم‌خط توضیح بنویسید که چرا مهم است.</li>
+  <li>قانون سرانگشتی حرفه‌ای‌ها: وقتی حس کردید حدود ۱۰ یادداشت دربارهٔ یک موضوع دارید و پیدا کردنشان سخت شده، وقت تولد یک MOC است. MOC را از قبل نسازید — بگذارید از دل نیاز متولد شود.</li>
+</ol>
+
+<h3>۲) PARA — سازمان‌دهی بر اساس «عملی بودن»</h3>
+<p>روش تیاگو فورته که می‌گوید اطلاعات را نه بر اساس «موضوع»، بلکه بر اساس <strong>فاصله تا عمل</strong> بچین:</p>
+<div class="tbl-scroll">
+<table>
+<tr><th>پوشه</th><th>یعنی</th><th>مثال</th></tr>
+<tr><td><code>1 Projects</code></td><td>پروژه: کارِ دارای هدف مشخص و مهلت (Deadline)</td><td>«نوشتن پایان‌نامه»، «راه‌اندازی سایت»</td></tr>
+<tr><td><code>2 Areas</code></td><td>حوزهٔ مسئولیت دائمی، بدون خط پایان</td><td>سلامتی، امور مالی، تیمی که مدیریت می‌کنید</td></tr>
+<tr><td><code>3 Resources</code></td><td>منابع: علاقه‌ها و موضوع‌هایی که شاید بعداً به کار بیایند</td><td>هوش مصنوعی، عکاسی، تاریخ</td></tr>
+<tr><td><code>4 Archive</code></td><td>بایگانی: هر چیز غیرفعال از سه پوشهٔ بالا</td><td>پروژهٔ تمام‌شده</td></tr>
+</table>
+</div>
+
+<h3>مقایسهٔ صادقانه — کدام برای شما؟</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>معیار</th><th>Zettelkasten خالص</th><th>PARA خالص</th><th>LYT / MOC</th></tr>
+<tr><td>هدف اصلی</td><td>تولید ایده و بینش جدید</td><td>تحویل پروژه و عمل</td><td>جهت‌یابی در دانش رو به رشد</td></tr>
+<tr><td>واحد سازمان‌دهی</td><td>لینک بین اتم‌ها</td><td>پوشه بر اساس عملی بودن</td><td>یادداشت‌های نقشه (MOC)</td></tr>
+<tr><td>نقطهٔ قوت</td><td>عمق فکری بی‌رقیب</td><td>سادگی و تمرکز بر خروجی</td><td>انعطاف؛ ساختار از پایین می‌روید</td></tr>
+<tr><td>نقطهٔ ضعف</td><td>برای مدیریت پروژه ساخته نشده</td><td>پوشه‌محوری، قدرت لینک را کم‌رنگ می‌کند</td><td>بدون انضباط، MOCها هم شلوغ می‌شوند</td></tr>
+<tr><td>مناسبِ</td><td>پژوهشگر، نویسنده</td><td>مدیر، فریلنسر پرپروژه</td><td>تقریباً همه — پل بین آن دو</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — معماری ترکیبی که تیم‌های حرفه‌ای واقعاً استفاده می‌کنند</span>
+دوگانهٔ «پوشه یا لینک» یک دوراهی دروغین است. الگوی رایج میان کاربران حرفه‌ای: <strong>پوشه‌های کم و کارکردی + سازمان‌دهی واقعی با لینک و MOC</strong>. ساختار پیشنهادی ما برای شروع:
+<pre><code>Brain/
+├── 0-Inbox/        ← ورودی: هر چیز خام اول اینجا می‌افتد
+├── 1-Projects/     ← پروژه‌های فعال (روح PARA)
+├── 2-Notes/        ← همهٔ نورون‌های دائمی، تختِ تخت، بدون زیرپوشه!
+├── 3-MOCs/         ← نقشه‌های محتوا (روح LYT)
+├── 4-Daily/        ← یادداشت‌های روزانه (مرحلهٔ ۱۰)
+├── 5-Archive/      ← بایگانی
+└── _attachments/   ← عکس و فایل پیوست</code></pre>
+پوشهٔ <code>2-Notes</code> عمداً «تخت» است: چون جست‌وجو و لینک، فایل را پیدا می‌کنند و زیرپوشه‌سازی فقط شما را به تصمیم‌های بی‌ارزش («این یادداشت مال کدام زیرپوشه است؟») مجبور می‌کند. این تصمیم‌ها همان اصطکاکی هستند که سیستم‌ها را می‌کُشند.
+</div>
+
+<ol class="steps">
+  <li>در نوار کناری فایل‌ها، راست‌کلیک کنید و با <span dir="ltr">New folder</span> هفت پوشهٔ بالا را بسازید.</li>
+  <li>یادداشت‌های فعلی‌تان را با کشیدن و رها کردن به <code>2-Notes</code> منتقل کنید. نگران لینک‌ها نباشید — Obsidian موقع جابه‌جایی، همهٔ لینک‌ها را خودکار به‌روز می‌کند.</li>
+  <li>اولین MOC خود را در <code>3-MOCs</code> بسازید.</li>
+</ol>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+ساختار پوشه‌ای بالا را دارید، یادداشت‌ها در <code>2-Notes</code> هستند و یک MOC ساخته‌اید که به همهٔ آن‌ها لینک می‌دهد. تست طلایی: از صفحهٔ MOC، با <kbd>Ctrl</kbd> + کلیک می‌توانید به هر نورون برسید؟
+</div>
+</section>
+
+<!-- ================= مرحله ۷ ================= -->
+<section class="stage alt" id="s7">
+<div class="stage-head">
+  <div class="stage-num">۷</div>
+  <h2>Properties: شناسنامهٔ ساخت‌یافتهٔ هر نورون</h2>
+  <div class="chips"><span class="chip pos">مرحله ۷ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>هر نورونِ حرفه‌ای یک «شناسنامه» دارد: نوع، وضعیت، تاریخ، برچسب‌ها. در Obsidian به این شناسنامه <strong>Properties</strong> (ویژگی‌ها) می‌گویند که در قالب <strong>YAML</strong><sup>۸</sup> در ابتدای فایل ذخیره می‌شود. این مرحله زیربنای مرحلهٔ بعدی (Bases) است — بدون شناسنامه، پایگاه‌داده معنا ندارد.</p>
+
+<ol class="steps">
+  <li>یک یادداشت باز کنید و از پالت فرمان، فرمان <span dir="ltr">Add file property</span> را اجرا کنید (یا مکان‌نما را در خط اول بگذارید و سه خط تیره <code>---</code> تایپ کنید و Enter بزنید).</li>
+  <li>نام ویژگی را بنویسید: <code>status</code> و مقدارش را: <code>seed</code></li>
+  <li>ویژگی دیگری اضافه کنید: <code>type</code> با مقدار <code>permanent</code></li>
+  <li>ویژگی <code>tags</code> را اضافه کنید و مقدار <code>learning</code> بدهید.</li>
+</ol>
+
+<p>در حالت متنی (Source mode)، این شناسنامه چنین شکلی دارد:</p>
+<pre><code>---
+type: permanent
+status: seed
+tags:
+  - learning
+created: 2026-07-23
+---</code></pre>
+
+<h3>پیشنهاد یک «استاندارد شناسنامه» برای کل والت</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>ویژگی</th><th>نوع</th><th>مقدارهای مجاز (پیشنهادی)</th><th>چرا؟</th></tr>
+<tr><td><code>type</code></td><td>متن</td><td><code>fleeting</code> / <code>literature</code> / <code>permanent</code> / <code>moc</code> / <code>project</code></td><td>جنس نورون را مشخص می‌کند</td></tr>
+<tr><td><code>status</code></td><td>متن</td><td><code>seed</code> (جوانه) / <code>growing</code> (در حال رشد) / <code>evergreen</code> (همیشه‌سبز)</td><td>بلوغ ایده را نشان می‌دهد؛ الهام از باغبانی دیجیتال</td></tr>
+<tr><td><code>created</code></td><td>تاریخ</td><td><code dir="ltr">YYYY-MM-DD</code></td><td>مرتب‌سازی زمانی در Bases</td></tr>
+<tr><td><code>source</code></td><td>متن/لینک</td><td>نام کتاب، آدرس وب…</td><td>ردیابی منبع برای یادداشت‌های مرجع</td></tr>
+<tr><td><code>tags</code></td><td>فهرست</td><td>حوزه‌های کلان مثل <code>ai</code>، <code>health</code></td><td>فیلتر عرضی روی همهٔ نورون‌ها</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — قانون «تگ کم، لینک زیاد»</span>
+مبتدی‌ها برای هر یادداشت ده تگ می‌زنند و بعد از سه ماه، سیستم تگ‌شان به باتلاق تبدیل می‌شود (<code>#ai</code> و <code>#AI</code> و <code>#هوش‌مصنوعی</code> هم‌زمان!). قانون حرفه‌ای: تگ فقط برای <strong>دسته‌های محدود و پایدار</strong> (حداکثر ۱۵–۲۰ تگ در کل والت)؛ برای «موضوع»، لینک به MOC بدهید نه تگ. دلیل فنی: تگ فقط می‌گوید «این‌ها هم‌خانواده‌اند»، ولی لینک می‌گوید «این دو، این‌طور به هم ربط دارند» — اطلاعاتِ رابطه همیشه از اطلاعاتِ عضویت ارزشمندتر است. ضمناً از Obsidian 1.9 به بعد، ویژگی‌های <code>tag</code> و <code>alias</code> مفرد رسماً حذف شده‌اند؛ حتماً شکل جمع <code>tags</code> و <code>aliases</code> را به‌صورت فهرست به کار ببرید.
+</div>
+
+<div class="footnote">📖 <b>پانویس ۸ — YAML (یَمِل):</b> یک قالب متنی سادهٔ «کلید: مقدار» برای ذخیرهٔ دادهٔ ساخت‌یافته. بخشِ بین دو <code>---</code> در ابتدای فایل را <span dir="ltr">Frontmatter</span> می‌نامند.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+هر سه نورون اولیه‌تان شناسنامه دارند: <code>type</code>، <code>status</code> و <code>tags</code>. در بالای یادداشت، جدول مرتب ویژگی‌ها دیده می‌شود. حالا آماده‌ایم این شناسنامه‌ها را به یک پایگاه‌دادهٔ زنده تبدیل کنیم.
+</div>
+</section>
+
+<!-- ================= مرحله ۸ ================= -->
+<section class="stage" id="s8">
+<div class="stage-head">
+  <div class="stage-num">۸</div>
+  <h2>Bases: پایگاه‌دادهٔ زندهٔ درون مغز</h2>
+  <div class="chips"><span class="chip pos">مرحله ۸ از ۱۴</span><span class="chip time">⏱️ ۲۵ دقیقه</span></div>
+</div>
+
+<p><strong>Bases</strong> جدیدترین قابلیت بزرگ Obsidian است (از نسخهٔ 1.9 به بعد، به‌صورت پلاگین هسته‌ای و رایگان): هر مجموعه از یادداشت‌ها را به یک <strong>جدول/دیتابیس قابل فیلتر و ویرایش</strong> تبدیل می‌کند — چیزی شبیه دیتابیس‌های Notion، اما با یک تفاوت بنیادی: <strong>هیچ داده‌ای جای جدیدی ذخیره نمی‌شود.</strong> همه‌چیز از همان Properties فایل‌های Markdown شما خوانده می‌شود و اگر سلولی را در جدول ویرایش کنید، مستقیم Frontmatter همان فایل تغییر می‌کند.</p>
+
+<div class="why">🧩 <b>تشبیه ساده:</b> Bases مثل «برگهٔ گزارش‌گیری» مدرسه است: خودش هیچ نمره‌ای ندارد؛ فقط نمره‌های ثبت‌شده در پروندهٔ دانش‌آموزها را به شکل جدول نشان می‌دهد. پرونده = یادداشت شما، نمره = Property.</div>
+
+<ol class="steps">
+  <li>اول مطمئن شوید پلاگین فعال است: <span dir="ltr">Settings → Core plugins → Bases</span> باید روشن باشد.</li>
+  <li>روی پوشهٔ <code>2-Notes</code> راست‌کلیک کنید و <span dir="ltr">New base</span> را بزنید. نامش را بگذارید <code dir="ltr">All Notes</code>. فایلی با پسوند <code>.base</code> ساخته می‌شود.</li>
+  <li>جدولی می‌بینید که همهٔ یادداشت‌ها ردیف‌های آن هستند. از دکمهٔ <span dir="ltr">Properties</span> در نوار بالای جدول، ستون‌های <code>type</code>، <code>status</code> و <code>created</code> را نمایان کنید.</li>
+  <li>روی <span dir="ltr">Filters</span> کلیک کنید و شرط بگذارید: <code dir="ltr">type is permanent</code>. حالا فقط نورون‌های دائمی را می‌بینید.</li>
+  <li>روی یکی از سلول‌های <code>status</code> کلیک کنید و مقدارش را عوض کنید — سپس فایل اصلی را باز کنید و ببینید Frontmatter واقعاً تغییر کرده است. این همان «پایگاه‌دادهٔ زنده» است.</li>
+</ol>
+
+<h3>نماها (Views): یک داده، چند عینک</h3>
+<ul>
+  <li><strong>Table:</strong> جدول کلاسیک — بهترین نما برای ویرایش گروهی Properties.</li>
+  <li><strong>Cards:</strong> کارت‌های تصویری — برای کتابخانهٔ کتاب/فیلم عالی است (تصویر جلد را با یک Property تصویری تعیین می‌کنید).</li>
+  <li><strong>List:</strong> فهرست ساده (از نسخهٔ 1.10 به بعد).</li>
+  <li>هر Base می‌تواند چند View با فیلترهای متفاوت داشته باشد؛ از منوی نام View در بالا-چپ جدول، View جدید بسازید.</li>
+</ul>
+
+<h3>سه دیتابیس کاربردی که همین امروز بسازید</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>Base</th><th>فیلتر</th><th>ستون‌ها</th><th>کارش</th></tr>
+<tr><td>🌱 نورون‌های جوانه</td><td><code dir="ltr">status is seed</code></td><td>عنوان، created</td><td>فهرست ایده‌های نیازمند پرورش — خوراک مرور هفتگی</td></tr>
+<tr><td>📚 کتابخانه</td><td><code dir="ltr">type is literature</code></td><td>عنوان، source، status</td><td>هرچه خوانده‌اید/می‌خوانید، یک‌جا</td></tr>
+<tr><td>🚀 داشبورد پروژه‌ها</td><td><code dir="ltr">type is project</code></td><td>عنوان، status، deadline</td><td>نمای مدیریتی همهٔ پروژه‌ها</td></tr>
+</table>
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — تعبیهٔ Base و فرمول‌ها</span>
+<p style="margin-top:6px">۱) هر Base یا حتی یک View مشخص از آن را می‌توانید داخل هر یادداشتی تعبیه کنید: <code dir="ltr">![[All Notes.base]]</code> یا <code dir="ltr">![[All Notes.base#ViewName]]</code>. کاربرد قاتلانه: داخل هر MOC، یک View زنده از یادداشت‌های همان موضوع بگذارید تا MOC «خودش خودش را به‌روز کند».</p>
+<p>۲) Bases زبان فرمول هم دارد: در بخش Properties جدول می‌توانید ستون فرمولی بسازید؛ مثلاً فرمولی مثل <code dir="ltr">file.backlinks.length</code> که تعداد بک‌لینک‌های هر یادداشت را می‌شمارد — یعنی «پرسیناپس‌ترین نورون‌ها»ی مغزتان را رتبه‌بندی می‌کنید. نحو کامل فرمول‌ها در راهنمای رسمی <span dir="ltr">Bases syntax</span> در <code dir="ltr">help.obsidian.md</code> آمده است.</p>
+<p style="margin-bottom:0">۳) فایل <code>.base</code> خودش یک فایل متنی YAML است؛ حرفه‌ای‌ها آن را مستقیم ویرایش می‌کنند تا فیلترهای ترکیبی پیچیده (and/or تو در تو) بسازند.</p>
+</div>
+
+<div class="box note">
+<span class="box-title">📌 Bases یا پلاگین Dataview؟</span>
+سال‌ها کاربران حرفه‌ای برای این نوع جدول‌ها از پلاگین اجتماعی <strong>Dataview</strong> استفاده می‌کردند (با زبان کوئری شبیه SQL). امروز قاعدهٔ تصمیم ساده است: <strong>نیازهای معمول → Bases</strong> (رسمی، سریع، بدون کدنویسی، آیندهٔ تضمین‌شده)؛ <strong>کوئری‌های برنامه‌نویسانهٔ خیلی خاص → Dataview/Datacore</strong>. اگر تازه شروع کرده‌اید، با Bases بمانید.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+یک فایل <code>.base</code> دارید که یادداشت‌ها را جدول کرده، حداقل یک فیلتر فعال دارد، و ویرایش سلول در جدول، Frontmatter فایل اصلی را تغییر می‌دهد. اگر جدول خالی است: یا فیلتر اشتباه است یا Properties مرحلهٔ ۷ را ذخیره نکرده‌اید.
+</div>
+</section>
+
+<!-- ================= مرحله ۹ ================= -->
+<section class="stage alt" id="s9">
+<div class="stage-head">
+  <div class="stage-num">۹</div>
+  <h2>جست‌وجوی حرفه‌ای و تمپلیت‌ها</h2>
+  <div class="chips"><span class="chip pos">مرحله ۹ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<h3>عملگرهای جست‌وجو — زبان بازجویی از مغز</h3>
+<p><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> را بزنید. جست‌وجوی Obsidian فقط «کلمه پیدا کن» نیست؛ یک زبان کامل دارد:</p>
+<div class="tbl-scroll">
+<table>
+<tr><th>عملگر</th><th>مثال</th><th>چه می‌کند</th></tr>
+<tr><td><code dir="ltr">"..."</code></td><td><code dir="ltr">"مغز دوم"</code></td><td>عبارت دقیق</td></tr>
+<tr><td><code dir="ltr">path:</code></td><td><code dir="ltr">path:2-Notes عادت</code></td><td>فقط داخل یک پوشه/مسیر</td></tr>
+<tr><td><code dir="ltr">file:</code></td><td><code dir="ltr">file:MOC</code></td><td>جست‌وجو در نام فایل</td></tr>
+<tr><td><code dir="ltr">tag:</code></td><td><code dir="ltr">tag:learning</code></td><td>بر اساس تگ (سریع‌تر و دقیق‌تر از تایپ #)</td></tr>
+<tr><td><code dir="ltr">line:(...)</code></td><td><code dir="ltr">line:(عادت محیط)</code></td><td>هر دو کلمه در «یک خط» باشند</td></tr>
+<tr><td><code dir="ltr">section:(...)</code></td><td><code dir="ltr">section:(تعریف عادت)</code></td><td>هر دو در یک «بخشِ زیر یک تیتر»</td></tr>
+<tr><td><code dir="ltr">[property]</code></td><td><code dir="ltr">[status:seed]</code></td><td>جست‌وجو بر اساس Property</td></tr>
+<tr><td><code dir="ltr">-</code></td><td><code dir="ltr">عادت -ورزش</code></td><td>حذف نتایج شامل کلمه</td></tr>
+<tr><td><code dir="ltr">OR</code></td><td><code dir="ltr">تمرکز OR توجه</code></td><td>یکی از دو کلمه کافی است</td></tr>
+</table>
+</div>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — جست‌وجوی ذخیره‌شده</span>
+هر جست‌وجوی پرکاربرد را می‌توانید به‌صورت بلوک زندهٔ <code dir="ltr">```query</code> داخل یادداشت بگذارید؛ مثلاً در داشبورد اصلی‌تان بلوکی که همیشه یادداشت‌های دارای «TODO» را نشان می‌دهد.
+</div>
+
+<h3>تمپلیت‌ها: قالب آمادهٔ نورون‌ها</h3>
+<p>هر بار ساختن دستی شناسنامهٔ مرحلهٔ ۷ خسته‌کننده است. پلاگین هسته‌ای <span dir="ltr">Templates</span> این را حل می‌کند:</p>
+<ol class="steps">
+  <li>پوشه‌ای به نام <code>_templates</code> بسازید.</li>
+  <li>در <span dir="ltr">Settings → Core plugins</span> پلاگین <span dir="ltr">Templates</span> را روشن کنید؛ بعد در <span dir="ltr">Settings → Templates</span> مسیر پوشه را <code>_templates</code> بدهید.</li>
+  <li>داخل <code>_templates</code> یادداشتی به نام <code dir="ltr">tpl-note</code> بسازید با این محتوا:</li>
+</ol>
+<pre><code>---
+type: permanent
+status: seed
+created: {{date:YYYY-MM-DD}}
+tags: []
+---
+
+## ایدهٔ اصلی
+
+
+## چرا مهم است؟
+
+
+## مرتبط است با
+- [[]]
+</code></pre>
+<ol class="steps" start="4">
+  <li>حالا در هر یادداشت خالی، از پالت فرمان <span dir="ltr">Templates: Insert template</span> را اجرا کنید و <code dir="ltr">tpl-note</code> را انتخاب کنید. عبارت <code dir="ltr">{{date}}</code> خودکار با تاریخ امروز پر می‌شود.</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — بخش «مرتبط است با» یک ترفند شناختی است</span>
+وجود تیتر خالیِ «مرتبط است با - [[]]» در قالب، مغز شما را هر بار <em>مجبور به جست‌وجوی اتصال</em> می‌کند — دقیقاً همان تمرینی که لومان با جعبهٔ برگه‌هایش می‌کرد. قالب خوب فقط صرفه‌جویی در تایپ نیست؛ <strong>مهندسیِ عادت فکری</strong> است. (وقتی جلوتر رفتید، پلاگین اجتماعی Templater نسخهٔ برنامه‌پذیر همین قابلیت است — مرحلهٔ ۱۱.)
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+یک جست‌وجوی ترکیبی مثل <code dir="ltr">path:2-Notes [status:seed]</code> جواب درست می‌دهد و قالب <code dir="ltr">tpl-note</code> با یک فرمان در یادداشت جدید تزریق می‌شود.
+</div>
+</section>
+
+<!-- ================= مرحله ۱۰ ================= -->
+<section class="stage" id="s10">
+<div class="stage-head">
+  <div class="stage-num">۱۰</div>
+  <h2>یادداشت روزانه: ضربان قلب سیستم</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱۰ از ۱۴</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<p>ابرمغز بدون ورودیِ روزانه می‌میرد. <strong>یادداشت روزانه (Daily Note)</strong> دفترچهٔ ورودی سیستم است: هر فکر، لینک، جلسه و ایدهٔ خام، اول اینجا فرود می‌آید و بعداً پردازش می‌شود. این الگو «ثبت بدون اصطکاک» را ممکن می‌کند — چون هیچ‌وقت مجبور نیستید وسط کار تصمیم بگیرید «این را کجا بنویسم؟». جواب همیشه یکی است: در یادداشت امروز.</p>
+
+<ol class="steps">
+  <li>پلاگین هسته‌ای <span dir="ltr">Daily notes</span> را از <span dir="ltr">Settings → Core plugins</span> روشن کنید.</li>
+  <li>در تنظیمات همان پلاگین: <span dir="ltr">New file location</span> را <code>4-Daily</code> بگذارید و <span dir="ltr">Template file location</span> را به قالبی که الان می‌سازیم وصل کنید.</li>
+  <li>در <code>_templates</code> فایل <code dir="ltr">tpl-daily</code> بسازید:</li>
+</ol>
+<pre><code>## 🎯 سه کار مهم امروز
+- [ ]
+- [ ]
+- [ ]
+
+## 📝 ثبت لحظه‌ها
+-
+
+## 🌙 مرور شب
+چه چیزی امروز یاد گرفتم که ارزش «نورون شدن» دارد؟
+-
+</code></pre>
+<ol class="steps" start="4">
+  <li>حالا هر روز صبح روی آیکون تقویم در نوار کناری کلیک کنید (یا فرمان <span dir="ltr">Open today's daily note</span>) — یادداشت امروز با قالب آماده باز می‌شود.</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — قانون «جعبهٔ ورودی خالی»</span>
+یادداشت روزانه و پوشهٔ <code>0-Inbox</code> «ورودی» هستند، نه «انبار». حرفه‌ای‌ها یک قرار هفتگی ۲۰ دقیقه‌ای دارند (مثلاً جمعه‌ها) به اسم «مرور هفتگی»: خط‌به‌خط ورودی‌های هفته را می‌خوانند و برای هر مورد یکی از سه تصمیم را می‌گیرند: <strong>حذف</strong> (بی‌ارزش بود)، <strong>ارتقا</strong> (تبدیل به نورون دائمی با قالب tpl-note و لینک به بقیه)، یا <strong>ارجاع</strong> (انتقال به یادداشت پروژهٔ مربوط). سیستم بدون این ضربان هفتگی، ظرف دو ماه به قبرستان یادداشت تبدیل می‌شود — این جمله را قاب کنید.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+با یک کلیک، یادداشت امروز با قالب آماده باز می‌شود و در پوشهٔ <code>4-Daily</code> ذخیره شده است.
+</div>
+</section>
+
+<!-- ================= مرحله ۱۱ ================= -->
+<section class="stage alt" id="s11">
+<div class="stage-head">
+  <div class="stage-num">۱۱</div>
+  <h2>پلاگین‌ها: ارتقای مغز (با احتیاطِ مهندس)</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱۱ از ۱۴</span><span class="chip time">⏱️ ۲۰ دقیقه</span></div>
+</div>
+
+<p>پلاگین‌های Obsidian دو دسته‌اند: <strong>هسته‌ای (Core)</strong> که رسمی و از پیش نصب‌اند (فقط روشنشان می‌کنید) و <strong>اجتماعی (Community)</strong> که کاربران ساخته‌اند و باید نصب شوند.</p>
+
+<h3>فعال‌سازی پلاگین‌های اجتماعی</h3>
+<ol class="steps">
+  <li>به <span dir="ltr">Settings → Community plugins</span> بروید.</li>
+  <li>روی <span dir="ltr">Turn on community plugins</span> کلیک کنید. Obsidian هشدار می‌دهد که پلاگین اجتماعی کد شخص ثالث است — این هشدار را جدی بگیرید و ادامه دهید.</li>
+  <li>روی <span dir="ltr">Browse</span> کلیک کنید تا فروشگاه پلاگین‌ها باز شود.</li>
+  <li>برای هر پلاگین: جست‌وجو → <span dir="ltr">Install</span> → <span dir="ltr">Enable</span>.</li>
+</ol>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — امنیت پلاگین، مثل یک مهندس</span>
+پلاگین اجتماعی، کدی است که با دسترسی کامل به فایل‌های والت شما اجرا می‌شود. چهار قانون حرفه‌ای: (۱) فقط پلاگین‌های پرنصب و فعال (تعداد دانلود بالا، به‌روزرسانی اخیر) را نصب کنید؛ (۲) هر مشکل عجیبی پیش آمد، اول در حالت <span dir="ltr">Restricted mode</span> تست کنید (همهٔ پلاگین‌ها خاموش می‌شوند)؛ (۳) کم نصب کنید — هر پلاگین یک بدهی نگهداری است؛ (۴) برای والت‌های حاوی اطلاعات حساس کاری، فهرست پلاگین‌ها را حداقلی نگه دارید.
+</div>
+
+<h3>شش پلاگین که حرفه‌ای‌ها تقریباً همه دارند</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>پلاگین</th><th>چه می‌کند</th><th>چه زمانی نصب کنید</th></tr>
+<tr><td><strong>Calendar</strong></td><td>تقویم کوچک در نوار کناری؛ کلیک روی هر روز = یادداشت روزانهٔ همان روز</td><td>همین امروز — مکمل مرحلهٔ ۱۰</td></tr>
+<tr><td><strong>Templater</strong></td><td>نسخهٔ فوق‌قدرتمند Templates: قالب با متغیر، شرط و اسکریپت جاوااسکریپت</td><td>وقتی قالب‌های پویا خواستید (مثلاً «عنوان جلسه از من بپرس و فایل را در پوشهٔ درست بساز»)</td></tr>
+<tr><td><strong>Excalidraw</strong></td><td>نقاشی و دیاگرام دست‌آزاد داخل والت</td><td>اگر بصری فکر می‌کنید</td></tr>
+<tr><td><strong>Kanban</strong></td><td>برد کارها به سبک Trello، ذخیره‌شده به‌صورت Markdown</td><td>برای مدیریت پروژه‌های شخصی</td></tr>
+<tr><td><strong>Omnisearch</strong></td><td>جست‌وجوی هوشمندتر با تحمل غلط تایپی؛ حتی داخل PDF و عکس</td><td>وقتی والت بزرگ شد (۳۰۰+ یادداشت)</td></tr>
+<tr><td><strong>Dataview / Datacore</strong></td><td>کوئری برنامه‌نویسانه روی یادداشت‌ها</td><td>فقط اگر Bases جواب نیازتان را نداد</td></tr>
+</table>
+</div>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — Web Clipper رسمی</span>
+افزونهٔ مرورگر <span dir="ltr">Obsidian Web Clipper</span> (رسمی و رایگان برای Chrome و Firefox و…) هر صفحهٔ وب را با یک کلیک به Markdown تمیز تبدیل و در والت ذخیره می‌کند — بهترین راه تغذیهٔ ابرمغز از اینترنت. بعد از ذخیره، یادتان نرود در مرور هفتگی پردازشش کنید!
+</div>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — سنجهٔ «هزینهٔ راه‌اندازی مجدد»</span>
+یک تست حرفه‌ای برای سلامت سیستم: «اگر امروز مجبور شوم Obsidian را از صفر نصب کنم، چند دقیقه طول می‌کشد به وضعیت فعلی برگردم؟» اگر جواب بیش از ۳۰ دقیقه است، بیش از حد به پلاگین و شخصی‌سازی وابسته شده‌اید. راه‌حل: پوشهٔ <code>.obsidian</code> را در بکاپ نگه دارید (مرحلهٔ ۱۳) و فلسفهٔ «اول با امکانات هسته‌ای، بعد پلاگین» را رعایت کنید. یادتان باشد: <strong>سیستمی که به ۳۰ پلاگین وابسته است، مالِ شما نیست؛ شما مالِ او هستید.</strong>
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+پلاگین Calendar نصب و فعال است و کلیک روی روزها، یادداشت روزانه باز می‌کند. بقیهٔ پلاگین‌ها را فقط بر اساس نیاز واقعی نصب کرده‌اید، نه هیجان!
+</div>
+</section>
+
+<!-- ================= مرحله ۱۲ ================= -->
+<section class="stage" id="s12">
+<div class="stage-head">
+  <div class="stage-num">۱۲</div>
+  <h2>Canvas: تختهٔ تفکر بصری</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱۲ از ۱۴</span><span class="chip time">⏱️ ۱۰ دقیقه</span></div>
+</div>
+
+<p><strong>Canvas</strong> پلاگین هسته‌ای رایگان Obsidian است: یک بوم بی‌نهایت که روی آن کارت متنی، یادداشت‌های موجود، عکس و حتی PDF می‌چینید و با فلش به هم وصل می‌کنید. اگر Graph View «عکس رادیولوژی» مغز بود، Canvas «میز کار جراحی» است: جایی که یک مسئله را باز می‌کنید و قطعاتش را با دست جابه‌جا می‌کنید.</p>
+
+<ol class="steps">
+  <li>در پوشهٔ یک پروژه، راست‌کلیک → <span dir="ltr">New canvas</span>.</li>
+  <li>با دوبار کلیک روی بوم، کارت متنی بسازید؛ سؤال اصلی پروژه را در آن بنویسید.</li>
+  <li>یادداشت‌های موجود را از نوار کناری بگیرید و روی بوم رها کنید — خودِ نورون‌ها (نه کپی‌شان) روی بوم می‌نشینند.</li>
+  <li>از لبهٔ هر کارت، فلش بکشید به کارت دیگر و روی فلش برچسب بزنید («دلیل می‌آورد برای»، «مخالف است با»…).</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — Canvas قالبِ باز دارد</span>
+فایل <code>.canvas</code> یک فایل متنی با قالب باز و مستند به نام <span dir="ltr">JSON Canvas</span> است (سایت رسمی: <code dir="ltr">jsoncanvas.org</code>) که خود تیم Obsidian منتشرش کرده تا حتی تخته‌های بصری‌تان هم اسیر هیچ برنامه‌ای نباشند. کاربرد حرفه‌ای Canvas در تیم‌ها: طراحی معماری نرم‌افزار، نقشهٔ استدلال مقاله، و «اتاق جنگ» تصمیم‌های بزرگ — هر جا که ترتیب فضایی ایده‌ها خودش اطلاعات است.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+یک Canvas ساخته‌اید که حداقل یک کارت متنی، یک یادداشت واقعی و یک فلش برچسب‌دار دارد.
+</div>
+</section>
+
+<!-- ================= مرحله ۱۳ ================= -->
+<section class="stage alt" id="s13">
+<div class="stage-head">
+  <div class="stage-num">۱۳</div>
+  <h2>همگام‌سازی و پشتیبان‌گیری: بیمهٔ عمر ابرمغز</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱۳ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>مغزی که بکاپ ندارد، یک خرابی هارد با نابودی کامل فاصله دارد. چون والت فقط یک پوشهٔ معمولی است، همهٔ راه‌های دنیا برایش باز است:</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>روش</th><th>هزینه</th><th>سختی</th><th>مناسبِ</th><th>نکتهٔ مهم</th></tr>
+<tr><td><strong>Obsidian Sync (رسمی)</strong></td><td>پلن Standard حدود ۴ دلار/ماه (پرداخت سالانه؛ ماهانه ۵ دلار) — پلن Plus با فضای و تاریخچهٔ بیشتر، بالاتر</td><td>⭐ (یک کلیک)</td><td>کسی که موبایل+دسکتاپ می‌خواهد و پرداخت ارزی برایش ممکن است</td><td>رمزنگاری سرتاسری (E2E): حتی خود شرکت هم محتوای یادداشت‌ها را نمی‌بیند</td></tr>
+<tr><td><strong>iCloud / OneDrive / Google Drive</strong></td><td>رایگان</td><td>⭐⭐</td><td>شروع سریع بدون هزینه</td><td>والت را داخل پوشهٔ همگام‌شونده بسازید؛ روی iOS فقط iCloud رسماً روان است؛ مواظب تداخل هم‌زمانی (Conflict) باشید — دو دستگاه هم‌زمان یک فایل را ویرایش نکنند</td></tr>
+<tr><td><strong>Syncthing</strong></td><td>رایگان و متن‌باز</td><td>⭐⭐⭐</td><td>حریم‌خصوصی‌گراها؛ همگام‌سازی مستقیم دستگاه‌به‌دستگاه بدون سرور واسطه</td><td>در اندروید عالی؛ در iOS محدودیت دارد</td></tr>
+<tr><td><strong>Git + GitHub (مخزن خصوصی)</strong></td><td>رایگان</td><td>⭐⭐⭐⭐</td><td>برنامه‌نویس‌ها</td><td>نسخه‌بندی کامل: می‌توانید به «مغزِ سه ماه پیش» برگردید؛ با پلاگین اجتماعی Git خودکار هم می‌شود</td></tr>
+</table>
+</div>
+
+<div class="box warn">
+<span class="box-title">⚠️ مواظب باش — همگام‌سازی ≠ پشتیبان‌گیری</span>
+اگر فایلی را اشتباه پاک کنید، همگام‌ساز همان حذف را به همهٔ دستگاه‌ها «تکثیر» می‌کند! قانون حرفه‌ای <strong>۳-۲-۱</strong>: سه نسخه از داده، روی دو نوع رسانهٔ متفاوت، که یکی خارج از خانه باشد. حداقلِ عملی: همگام‌سازی + یک کپی فشردهٔ (ZIP) هفتگی از کل والت روی فلش یا هارد جدا. ضمناً Obsidian یک محافظ داخلی هم دارد: <span dir="ltr">Settings → Files and links → File recovery</span> که از یادداشت‌ها عکس لحظه‌ای (Snapshot) نگه می‌دارد — روشن بودنش را همین حالا چک کنید.
+</div>
+
+<div class="box tip">
+<span class="box-title">💡 نکته — اتصال موبایل</span>
+اپ موبایل را نصب کنید؛ هنگام اولین اجرا، به‌جای ساخت والت جدید، همان والت همگام‌شده را باز کنید (در iOS پوشهٔ iCloud مربوط به Obsidian، در اندروید پوشهٔ Syncthing یا Sync رسمی). از این به بعد ایده‌ها را در خیابان هم شکار می‌کنید — مستقیم داخل یادداشت روزانه.
+</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی</span>
+(۱) یک روش همگام‌سازی یا حداقل برنامهٔ بکاپ هفتگی دارید، (۲) <span dir="ltr">File recovery</span> روشن است، (۳) می‌دانید همگام‌سازی جای بکاپ را نمی‌گیرد.
+</div>
+</section>
+
+<!-- ================= مرحله ۱۴ ================= -->
+<section class="stage" id="s14">
+<div class="stage-head">
+  <div class="stage-num">۱۴</div>
+  <h2>سیستم نگهداری: مغزی که خودش یاد می‌گیرد</h2>
+  <div class="chips"><span class="chip pos">مرحله ۱۴ از ۱۴</span><span class="chip time">⏱️ ۱۵ دقیقه</span></div>
+</div>
+
+<p>ساختن سیستم آسان است؛ زنده نگه داشتنش هنر است. این مرحله «سیستم ایمنی و رشد» ابرمغز شماست — همان چیزی که آموزش‌های سطحی هرگز نمی‌گویند.</p>
+
+<h3>چرخهٔ حیات دانش — از جرقه تا حکمت</h3>
+<div class="diagram">
+<div class="flow">
+  <div class="nd">⚡ جرقه<br><span class="small">یادداشت روزانه / Inbox</span></div>
+  <div class="ar">←</div>
+  <div class="nd">🌱 جوانه<br><span class="small">نورون اتمیک، status: seed</span></div>
+  <div class="ar">←</div>
+  <div class="nd">🌿 رشد<br><span class="small">لینک‌خوردن، بازنویسی</span></div>
+  <div class="ar">←</div>
+  <div class="nd gold">🌳 همیشه‌سبز<br><span class="small">evergreen، عضو MOC</span></div>
+  <div class="ar">←</div>
+  <div class="nd gold">💡 خروجی<br><span class="small">مقاله، تصمیم، پروژه</span></div>
+</div>
+</div>
+
+<h3>آیین‌های نگهداری (تقویم‌تان را باز کنید و ثبت کنید)</h3>
+<div class="tbl-scroll">
+<table>
+<tr><th>آیین</th><th>زمان</th><th>چه می‌کنید</th></tr>
+<tr><td>مرور شب</td><td>هر شب، ۳ دقیقه</td><td>در یادداشت روزانه: «امروز چه چیزی ارزش نورون شدن دارد؟»</td></tr>
+<tr><td>مرور هفتگی</td><td>هفته‌ای یک‌بار، ۲۰ دقیقه</td><td>خالی‌کردن Inbox و یادداشت‌های روزانه: حذف / ارتقا / ارجاع (مرحلهٔ ۱۰)</td></tr>
+<tr><td>باغبانی ماهانه</td><td>ماهی یک‌بار، ۳۰ دقیقه</td><td>باز کردن Base «نورون‌های جوانه»: کدام جوانه‌ها لینک نخورده‌اند؟ کدام MOC از کنترل خارج شده و باید دو تا شود؟</td></tr>
+<tr><td>گردش تصادفی</td><td>هر وقت گیر کردید</td><td>فرمان <span dir="ltr">Open random note</span> از پالت فرمان: یادداشتی تصادفی باز کنید و بپرسید «این به مسئلهٔ الان من چه ربطی دارد؟» — موتور سرندیپیتی<sup>۹</sup></td></tr>
+</table>
+</div>
+
+<h3>پنج ضدالگو (Anti-Pattern) که سیستم‌ها را می‌کُشند</h3>
+<ol>
+  <li><strong>سندرم تنظیمات ابدی:</strong> هر روز تم و پلاگین عوض کردن به‌جای نوشتن. درمان: قانون «اول ۲۵ دقیقه نوشتن، بعد حق تنظیمات».</li>
+  <li><strong>توهم جمع‌آوری:</strong> ذخیرهٔ صدها مقالهٔ نخوانده (مرحلهٔ ۴ را ببینید). درمان: هیچ ذخیره‌ای بدون یک خط «چرا ذخیره کردم؟».</li>
+  <li><strong>پوشه‌بازی افراطی:</strong> ساخت ۴۰ زیرپوشه. درمان: ساختار تختِ مرحلهٔ ۶.</li>
+  <li><strong>کمال‌گرایی نورونی:</strong> ننوشتن چون «هنوز کامل نیست». درمان: وضعیت <code>seed</code> دقیقاً برای همین است — جوانهٔ ناقص، از ایدهٔ فراموش‌شده بی‌نهایت بهتر است.</li>
+  <li><strong>مغز موزه‌ای:</strong> نوشتن بدون خروجی. مغز دوم باید به تصمیم، مقاله، پروژه و محصول ختم شود؛ هر ماه حداقل یک «خروجی» از دل والت بیرون بکشید.</li>
+</ol>
+
+<div class="box pro">
+<span class="box-title">🏔️ نکتهٔ فوق‌پیشرفته — ابرمغز شما بهترین هم‌نشین هوش مصنوعی است</span>
+چون والت شما متن سادهٔ ساخت‌یافته است، بهترین «حافظهٔ شخصی» برای ابزارهای هوش مصنوعی محسوب می‌شود: می‌توانید یادداشت‌هایتان را به یک مدل زبانی بدهید تا با «دانش خودتان» جواب بدهد (الگوی RAG)، یا از دستیارهایی مثل Claude بخواهید نورون‌های خام را به یادداشت اتمیک تبدیل کنند. دو قانون ایمنی: (۱) هرگز یادداشت‌های حساس/محرمانه را به سرویس‌های ابری نفرستید؛ (۲) خروجی هوش مصنوعی همیشه «جوانه» است — تا بازنویسی و تأییدش نکرده‌اید، نورون دائمی نیست. (به‌زودی در گراول، آموزش جداگانهٔ اتصال والت به ابزارهای هوش مصنوعی خواهد آمد.)
+</div>
+
+<div class="footnote">📖 <b>پانویس ۹ — سرندیپیتی (Serendipity):</b> کشفِ خوش‌شانسانه؛ وقتی دنبال چیزی نبودید ولی چیز ارزشمندی پیدا کردید. سیستم‌های لینک‌محور، احتمال این کشف‌ها را مهندسی‌شده بالا می‌برند.</div>
+
+<div class="box check">
+<span class="box-title">✅ ایست بازرسی نهایی</span>
+در تقویم‌تان «مرور هفتگی» ثبت شده، پنج ضدالگو را می‌شناسید، و می‌توانید چرخهٔ «جرقه تا خروجی» را از حفظ توضیح دهید. تبریک — شما دیگر «کاربر Obsidian» نیستید؛ <strong>معمار یک ابرمغز</strong> هستید. 🏔️
+</div>
+</section>
+
+<!-- ================= رفع اشکال ================= -->
+<section class="stage" id="trouble">
+<div class="stage-head">
+  <div class="stage-num" style="background:var(--fix-b)">🔧</div>
+  <h2>رفع اشکال — ۷ مشکل رایج</h2>
+  <div class="chips"><span class="chip time">⏱️ مراجعه در صورت نیاز</span></div>
+</div>
+
+<div class="box fix"><span class="box-title">۱) لینک <code>[[...]]</code> ساخته نمی‌شود / فهرست پیشنهاد باز نمی‌شود</span>
+<strong>علت:</strong> کیبورد فارسی گاهی به‌جای براکت انگلیسی <code>[</code> نویسهٔ دیگری تایپ می‌کند.<br>
+<strong>درمان:</strong> لحظهٔ تایپ دو براکت، زبان کیبورد را انگلیسی کنید (<kbd>Alt</kbd> + <kbd>Shift</kbd> یا <kbd>Win</kbd> + <kbd>Space</kbd>). لینک ساخته‌شده با متن فارسی داخلش مشکلی ندارد.</div>
+
+<div class="box fix"><span class="box-title">۲) متن فارسی چپ‌چین نمایش داده می‌شود</span>
+<strong>درمان:</strong> به <span dir="ltr">Settings → Editor</span> بروید و جهت متن را روی <span dir="ltr">Auto</span> بگذارید (در نسخه‌های جدید معمولاً پیش‌فرض است). اگر فقط یک خط خراب است، احتمالاً خط با یک نویسهٔ انگلیسی شروع شده — یک حرف فارسی اول خط بگذارید.</div>
+
+<div class="box fix"><span class="box-title">۳) Base خالی است، در حالی که یادداشت دارم</span>
+<strong>علت‌های رایج:</strong> فیلتر اشتباه (مثلاً <code dir="ltr">type is Permanent</code> با حرف بزرگ، در حالی که مقدار شما <code>permanent</code> است — مقادیر به بزرگی/کوچکی حساس‌اند)، یا Property در فایل‌ها اصلاً وجود ندارد.<br>
+<strong>درمان:</strong> اول فیلترها را موقتاً حذف کنید؛ اگر ردیف‌ها آمدند، فیلتر را قدم‌به‌قدم برگردانید.</div>
+
+<div class="box fix"><span class="box-title">۴) Properties به‌جای جدول مرتب، به‌صورت متن خام <code>---</code> دیده می‌شود</span>
+<strong>علت:</strong> یا در حالت Source mode هستید، یا YAML خطای نگارشی دارد (مثلاً دونقطهٔ فارسی «:» به‌جای انگلیسی <code>:</code>).<br>
+<strong>درمان:</strong> با <kbd>Ctrl</kbd> + <kbd>P</kbd> فرمان <span dir="ltr">Toggle Live Preview/Source mode</span> را بزنید؛ سپس دونقطه‌ها و فاصلهٔ بعدشان را بررسی کنید.</div>
+
+<div class="box fix"><span class="box-title">۵) یادداشتی را جابه‌جا/تغییرنام دادم و می‌ترسم لینک‌ها شکسته باشند</span>
+<strong>خیال راحت:</strong> اگر جابه‌جایی داخل خود Obsidian بوده، همهٔ لینک‌ها خودکار به‌روز شده‌اند. اگر بیرون از برنامه (با File Explorer) تغییر نام داده‌اید، لینک‌ها می‌شکنند — قانون: جابه‌جایی و تغییرنام همیشه داخل Obsidian.</div>
+
+<div class="box fix"><span class="box-title">۶) برنامه کند شده است</span>
+<strong>درمان به ترتیب:</strong> (۱) پلاگین‌های اجتماعی را یکی‌یکی خاموش کنید تا مقصر پیدا شود؛ (۲) Graph View کلی را در والت‌های خیلی بزرگ کمتر باز کنید؛ (۳) مطمئن شوید هزاران فایل غیرمرتبط (مثل پوشهٔ دانلود!) را داخل والت نریخته‌اید.</div>
+
+<div class="box fix"><span class="box-title">۷) یادداشتی را اشتباه پاک کردم / محتوای قدیمی می‌خواهم</span>
+<strong>درمان:</strong> (۱) <span dir="ltr">Settings → Files and links → Deleted files</span> نشان می‌دهد حذف‌شده‌ها به سطل بازیافت سیستم می‌روند یا پوشهٔ <code>.trash</code> والت؛ (۲) از <span dir="ltr">File recovery</span> (پلاگین هسته‌ای) عکس‌های لحظه‌ای قبلی فایل را بازگردانید: پالت فرمان → <span dir="ltr">Open saved snapshots</span>.</div>
+</section>
+
+<!-- ================= واژه‌نامه ================= -->
+<section class="stage alt" id="gloss">
+<div class="stage-head">
+  <div class="stage-num" style="background:var(--note-b)">📖</div>
+  <h2>واژه‌نامهٔ کامل</h2>
+</div>
+<dl class="gloss">
+  <dt><span dir="ltr">Vault</span> — والت</dt><dd>پوشهٔ ریشه‌ای که کل ابرمغز داخل آن است.</dd>
+  <dt><span dir="ltr">Markdown</span> — مارک‌داون</dt><dd>زبان قالب‌بندی متن ساده با علامت‌هایی مثل <code>#</code> و <code>**</code>؛ پسوند فایل: <code>.md</code>.</dd>
+  <dt><span dir="ltr">Frontmatter / Properties</span></dt><dd>شناسنامهٔ YAML ابتدای هر یادداشت: نوع، وضعیت، تگ‌ها…</dd>
+  <dt><span dir="ltr">Internal Link</span> — لینک داخلی</dt><dd>اتصال دو یادداشت با <code>[[...]]</code>؛ سیناپس ابرمغز.</dd>
+  <dt><span dir="ltr">Backlink</span> — بک‌لینک</dt><dd>فهرست خودکار یادداشت‌هایی که به یادداشت فعلی لینک داده‌اند.</dd>
+  <dt><span dir="ltr">Unlinked Mentions</span></dt><dd>جاهایی که نام یادداشت آمده ولی هنوز لینک نشده — پیشنهادهای اتصال.</dd>
+  <dt><span dir="ltr">Embed</span> — تعبیه</dt><dd>نمایش زندهٔ محتوای یک یادداشت داخل یادداشت دیگر با <code>![[...]]</code>.</dd>
+  <dt><span dir="ltr">Graph View</span></dt><dd>نمایش شبکه‌ای همهٔ یادداشت‌ها و لینک‌ها.</dd>
+  <dt><span dir="ltr">Zettelkasten</span> — زتل‌کاستن</dt><dd>روش «جعبهٔ برگه» لومان: یادداشت‌های اتمیِ به‌هم‌لینک‌شده.</dd>
+  <dt><span dir="ltr">Atomic Note</span> — یادداشت اتمیک</dt><dd>یادداشتی با دقیقاً یک ایدهٔ کامل.</dd>
+  <dt><span dir="ltr">Evergreen Note</span> — یادداشت همیشه‌سبز</dt><dd>نورون بالغ: بارها بازنویسی‌شده، پرلینک، با عنوانِ ادعایی.</dd>
+  <dt><span dir="ltr">MOC (Map of Content)</span></dt><dd>یادداشت نقشه: مرکز لینک‌دهی یک موضوع.</dd>
+  <dt><span dir="ltr">PARA</span></dt><dd>چارچوب تیاگو فورته: Projects، Areas، Resources، Archive.</dd>
+  <dt><span dir="ltr">LYT</span></dt><dd>چارچوب نیک میلو مبتنی بر MOCها.</dd>
+  <dt><span dir="ltr">Bases</span></dt><dd>پلاگین هسته‌ای دیتابیس: نمایش جدولی/کارتی یادداشت‌ها بر اساس Properties؛ فایل <code>.base</code>.</dd>
+  <dt><span dir="ltr">Canvas</span> — بوم</dt><dd>تختهٔ بی‌نهایت بصری؛ فایل <code>.canvas</code> با قالب باز JSON Canvas.</dd>
+  <dt><span dir="ltr">Daily Note</span> — یادداشت روزانه</dt><dd>دفترچهٔ ورودی روزانهٔ سیستم.</dd>
+  <dt><span dir="ltr">Template</span> — قالب</dt><dd>ساختار آمادهٔ تزریق‌شدنی به یادداشت‌های جدید.</dd>
+  <dt><span dir="ltr">Core / Community Plugin</span></dt><dd>افزونهٔ رسمی داخلی / افزونهٔ ساختهٔ جامعهٔ کاربران.</dd>
+  <dt><span dir="ltr">Sync (E2E Encryption)</span></dt><dd>سرویس همگام‌سازی رسمی با رمزنگاری سرتاسری: فقط شما کلید خواندن داده را دارید.</dd>
+  <dt><span dir="ltr">Second Brain</span> — مغز دوم</dt><dd>سیستم بیرونی ذخیره و اتصال دانش برای آزادکردن ذهن.</dd>
+</dl>
+</section>
+
+<!-- ================= جشن پایان ================= -->
+<div class="party">
+<h2>🎉 تمام شد! حالا تو بلدی…</h2>
+<ul>
+  <li>🧠 معماری کامل یک مغز دوم را از صفر طراحی کنی</li>
+  <li>⚛️ نورون‌های اتمیک با عنوان ادعایی بنویسی و با سیناپس‌های زمینه‌دار وصلشان کنی</li>
+  <li>🗺️ با MOC و ساختار ترکیبی PARA+LYT، دانشِ در حال رشد را مهار کنی</li>
+  <li>🗃️ با Properties و Bases، والت را به پایگاه‌دادهٔ زنده تبدیل کنی</li>
+  <li>🔍 با عملگرهای جست‌وجو از مغزت بازجویی حرفه‌ای کنی</li>
+  <li>♻️ با آیین‌های نگهداری، سیستمی بسازی که هر هفته باهوش‌تر می‌شود</li>
+</ul>
+<p style="margin-top:16px">⛰️ <strong>مرحلهٔ بعدی پیشنهادی:</strong> دو هفته فقط بنویس و لینک بده — هدف: ۳۰ نورون دائمی و ۲ MOC. بعد از آن، آموزش‌های «مسیر صعود» گراول (داکر، n8n و OpenClaw) را ببین تا ابرمغزت را به ابزارهای اتوماسیون و هوش مصنوعی وصل کنی.</p>
+</div>
+
+<p class="small" style="text-align:center">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</p>
+
+</div><!-- /wrap -->
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+</div>
+
+<script>
+/* © 2026 Mehdi Rezghi — @Mehdirezghi — نوار پیشرفت مطالعه */
+(function(){
+  var bar=document.getElementById('gravel-progress');
+  function upd(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    var p=max>0?(h.scrollTop||document.body.scrollTop)/max*100:0;
+    bar.style.width=p+'%';
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd);
+  upd();
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "ساخت ابرمغز (مغز دوم) با Obsidian — آموزش جامع و ریشه‌ای",
+  "description": "آموزش کامل فارسی Obsidian از صفر تا سطح حرفه‌ای: نصب، یادداشت اتمیک، زتل‌کاستن، لینک و بک‌لینک، MOC و PARA، Properties، Bases، پلاگین‌ها، Canvas، همگام‌سازی و سیستم نگهداری دانش.",
+  "inLanguage": "fa-IR",
+  "totalTime": "PT3H",
+  "author": {"@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi"},
+  "step": [
+    {"@type": "HowToStep", "name": "نقشه ذهنی: مغز دوم یعنی چه", "url": "#s0"},
+    {"@type": "HowToStep", "name": "نصب Obsidian", "url": "#s1"},
+    {"@type": "HowToStep", "name": "ساخت والت و کالبدشناسی آن", "url": "#s2"},
+    {"@type": "HowToStep", "name": "یادگیری Markdown", "url": "#s3"},
+    {"@type": "HowToStep", "name": "یادداشت اتمیک و زتل‌کاستن", "url": "#s4"},
+    {"@type": "HowToStep", "name": "لینک، بک‌لینک و Graph View", "url": "#s5"},
+    {"@type": "HowToStep", "name": "MOC و چارچوب‌های PARA و LYT", "url": "#s6"},
+    {"@type": "HowToStep", "name": "Properties", "url": "#s7"},
+    {"@type": "HowToStep", "name": "Bases: پایگاه داده زنده", "url": "#s8"},
+    {"@type": "HowToStep", "name": "جست‌وجوی حرفه‌ای و تمپلیت", "url": "#s9"},
+    {"@type": "HowToStep", "name": "یادداشت روزانه", "url": "#s10"},
+    {"@type": "HowToStep", "name": "پلاگین‌ها", "url": "#s11"},
+    {"@type": "HowToStep", "name": "Canvas", "url": "#s12"},
+    {"@type": "HowToStep", "name": "همگام‌سازی و پشتیبان‌گیری", "url": "#s13"},
+    {"@type": "HowToStep", "name": "سیستم نگهداری دانش", "url": "#s14"}
+  ]
+}
+</script>
+
+</body>
+</html>
