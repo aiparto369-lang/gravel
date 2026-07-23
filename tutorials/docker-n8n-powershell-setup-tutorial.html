@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<!-- © 2026 Mehdi Rezghi — مهدی رزقی — https://t.me/Mehdirezghi -->
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نصب داکر و n8n با پاورشل — آموزش کامل ویندوز و مک | گراول</title>
+
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi — https://t.me/Mehdirezghi">
+
+<meta name="gravel:category" content="اتوماسیون">
+<meta name="gravel:emoji"    content="🐳">
+<meta name="gravel:time"     content="حدود ۷۵ دقیقه">
+<meta name="gravel:level"    content="مبتدی">
+<meta name="gravel:desc"     content="نصب کامل Docker و n8n فقط با دستورات پاورشل و ترمینال، همراه با پوشه‌های پشتیبان، پیش‌بینی خطاها و راه‌حل دقیق هرکدام — برای ویندوز و مک">
+<meta name="gravel:keywords" content="نصب داکر, نصب n8n, داکر ویندوز, داکر مک, پاورشل, PowerShell, Docker Desktop, n8n docker, WSL2, winget, homebrew, brew, بکاپ n8n, پشتیبان گیری, اتوماسیون, رفع خطای داکر, docker install, n8n install, automation">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "نصب داکر و n8n با دستورات پاورشل و ترمینال (ویندوز و مک)",
+  "description": "آموزش گام‌به‌گام نصب Docker Desktop و راه‌اندازی n8n با خط فرمان، ساخت پوشه‌های پشتیبان و رفع خطاهای رایج",
+  "inLanguage": "fa-IR",
+  "author": {"@type": "Person", "name": "Mehdi Rezghi", "url": "https://t.me/Mehdirezghi"},
+  "totalTime": "PT75M",
+  "step": [
+    {"@type": "HowToStep", "name": "بررسی پیش‌نیازهای سیستم", "text": "بررسی نسخهٔ ویندوز یا مک و فعال بودن مجازی‌سازی"},
+    {"@type": "HowToStep", "name": "فعال‌سازی WSL2 در ویندوز", "text": "اجرای wsl --install و ری‌استارت سیستم"},
+    {"@type": "HowToStep", "name": "نصب Docker Desktop", "text": "نصب با winget در ویندوز یا brew در مک"},
+    {"@type": "HowToStep", "name": "راستی‌آزمایی نصب داکر", "text": "اجرای docker --version و docker run hello-world"},
+    {"@type": "HowToStep", "name": "ساخت پوشه‌های پشتیبان و Volume", "text": "ساخت n8n_data و پوشه‌های بکاپ"},
+    {"@type": "HowToStep", "name": "اجرای n8n", "text": "اجرای کانتینر n8n با دستور رسمی و ورود به localhost:5678"},
+    {"@type": "HowToStep", "name": "پشتیبان‌گیری و به‌روزرسانی", "text": "بکاپ گرفتن از ورک‌فلوها و آپدیت ایمن n8n"}
+  ]
+}
+</script>
+
+<style>
+/* © Mehdi Rezghi — گراول */
+:root{
+  --bg:#F2F7F7;
+  --ink:#14303B;
+  --teal:#0E7C86;
+  --saffron:#E8A317;
+  --navy:#123B4A;
+  --card:#FFFFFF;
+  --soft:#E4EFF0;
+  --danger:#C0392B;
+  --ok:#1E8449;
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  direction:rtl;
+  text-align:right;
+  font-size:17px;
+  line-height:1.9;
+}
+#progressbar{
+  position:fixed;top:0;inset-inline-start:0;height:5px;width:0%;
+  background:linear-gradient(90deg,var(--saffron),var(--teal));
+  z-index:999;transition:width .15s ease;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px 40px}
+header.hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);
+  color:#fff;border-radius:0 0 28px 28px;
+  padding:44px 20px 34px;text-align:center;margin-bottom:26px;
+}
+header.hero .logo{font-size:56px;line-height:1}
+header.hero h1{font-size:clamp(22px,4.5vw,34px);font-weight:900;margin:10px 0 6px}
+header.hero .promise{opacity:.95;font-size:16px;max-width:640px;margin:0 auto}
+header.hero .slogan{margin-top:14px;font-size:13.5px;opacity:.8}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:4px 14px;font-size:13px}
+
+.card{background:var(--card);border-radius:var(--radius);padding:22px 20px;margin-bottom:22px;box-shadow:0 2px 10px rgba(18,59,74,.07)}
+.intro-box{border-inline-start:6px solid var(--saffron)}
+.intro-box h2{font-size:19px;margin-bottom:8px}
+.intro-box ul{margin:8px 24px 0 0}
+.intro-box li{margin-bottom:5px}
+
+nav.toc{border-inline-start:6px solid var(--teal)}
+nav.toc h2{font-size:19px;margin-bottom:10px}
+nav.toc ol{margin:0 22px 0 0}
+nav.toc li{margin-bottom:6px}
+nav.toc a{color:var(--teal);text-decoration:none;font-weight:700}
+nav.toc a:hover{text-decoration:underline}
+.os-tag{font-size:12px;border-radius:99px;padding:1px 10px;font-weight:700;margin-inline-start:6px;white-space:nowrap}
+.os-win{background:#E3F2FD;color:#0B5394}
+.os-mac{background:#F3E5F5;color:#6A1B9A}
+.os-both{background:#E8F5E9;color:#1E8449}
+
+.stage{position:relative;border:1px solid var(--soft)}
+.stage-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.stage-num{
+  background:var(--teal);color:#fff;font-weight:900;font-size:22px;
+  min-width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 8px rgba(14,124,134,.35)
+}
+.stage h2{font-size:20px;font-weight:900;flex:1;min-width:200px}
+.chip{background:var(--soft);color:var(--navy);border-radius:99px;padding:3px 13px;font-size:13px;font-weight:700;white-space:nowrap}
+.stage h3{font-size:17px;margin:18px 0 8px;color:var(--navy)}
+.stage p{margin-bottom:10px}
+.stage ol.steps{margin:6px 24px 10px 0}
+.stage ol.steps li{margin-bottom:10px}
+.stage ul{margin:6px 24px 10px 0}
+.stage ul li{margin-bottom:7px}
+
+pre{
+  direction:ltr;text-align:left;
+  background:#0F2530;color:#D9F1F4;
+  border-radius:12px;padding:14px 16px;margin:10px 0 14px;
+  overflow-x:auto;font-family:'Consolas','Courier New',monospace;font-size:14.5px;line-height:1.7;
+  border-inline-start:4px solid var(--saffron);
+}
+pre .cmt{color:#7FB6BE}
+code{
+  direction:ltr;display:inline-block;unicode-bidi:isolate;
+  background:#E9F2F3;color:#0B4A52;border-radius:6px;padding:1px 7px;
+  font-family:'Consolas','Courier New',monospace;font-size:14px;
+}
+.box{border-radius:12px;padding:13px 16px;margin:12px 0;font-size:15.5px}
+.box b.ttl{display:block;margin-bottom:4px;font-size:15.5px}
+.tip{background:#FFF7E6;border-inline-start:5px solid var(--saffron)}
+.warn{background:#FDECEA;border-inline-start:5px solid var(--danger)}
+.note{background:#EAF4FB;border-inline-start:5px solid #2471A3}
+.check{background:#EAF7EF;border-inline-start:5px solid var(--ok)}
+.foot{background:#F4F0FA;border-inline-start:5px solid #7D3C98;font-size:14.5px}
+
+table.tbl{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:15px}
+table.tbl th{background:var(--navy);color:#fff;padding:8px 10px;text-align:right}
+table.tbl td{border:1px solid var(--soft);padding:8px 10px;vertical-align:top}
+table.tbl tr:nth-child(even) td{background:#F7FBFB}
+
+.trouble{border:1px solid var(--soft);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.trouble summary{
+  cursor:pointer;background:#FBF3F2;padding:12px 16px;font-weight:800;color:var(--danger);
+  list-style:none;
+}
+.trouble summary::-webkit-details-marker{display:none}
+.trouble summary::before{content:"🔧 "}
+.trouble .body{padding:12px 16px}
+.trouble .body b{color:var(--navy)}
+
+.diagram{
+  display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap;margin:16px 0
+}
+.dbox{
+  background:var(--soft);border:2px solid var(--teal);border-radius:12px;
+  padding:10px 14px;text-align:center;font-size:14px;font-weight:700;min-width:120px;
+  display:flex;flex-direction:column;justify-content:center
+}
+.dbox small{font-weight:400;font-size:12px;opacity:.8}
+.darrow{display:flex;align-items:center;font-size:22px;color:var(--saffron);padding:0 8px;font-weight:900}
+
+.finish{background:linear-gradient(135deg,#0E7C86,#123B4A);color:#fff;text-align:center}
+.finish h2{font-size:24px;margin-bottom:10px}
+.finish ul{list-style:none;margin:12px 0 0}
+.finish li{margin-bottom:7px}
+
+.gravel-footer a{text-decoration:none}
+@media(max-width:700px){
+  body{font-size:16px}
+  .stage-head{gap:10px}
+  .darrow{transform:rotate(90deg);padding:4px 0}
+  .diagram{flex-direction:column;align-items:center;gap:4px}
+}
+</style>
+</head>
+<body>
+<div id="progressbar"></div>
+
+<header class="hero">
+  <div class="logo">🐳⚙️</div>
+  <h1>نصب داکر و n8n فقط با خط فرمان — ویندوز و مک</h1>
+  <p class="promise">قراره چی یاد بگیریم؟ از صفرِ صفر، بدون هیچ پیش‌نیازی: Docker Desktop را با دستورات پاورشل (ویندوز) و ترمینال (مک) نصب می‌کنیم، n8n را با دستور رسمی و به‌روز راه می‌اندازیم، پوشه‌های پشتیبان می‌سازیم و برای هر خطای احتمالی، راه‌حل دقیق داریم.</p>
+  <div class="badges">
+    <span class="badge">⏱ حدود ۷۵ دقیقه</span>
+    <span class="badge">🎯 سطح: مبتدی</span>
+    <span class="badge">🪟 ویندوز + 🍎 مک</span>
+    <span class="badge">📅 به‌روزشده: تیر ۱۴۰۵ / ژوئیهٔ ۲۰۲۶</span>
+  </div>
+  <div class="slogan">🏔️ گراول — برای رسیدن به قله باید از سنگ‌ریزه عبور کرد.</div>
+</header>
+
+<div class="wrap">
+
+<!-- ================= مقدمه ================= -->
+<section class="card intro-box">
+  <h2>📌 قبل از شروع، این‌ها را بدانیم</h2>
+  <ul>
+    <li><b>داکر (Docker)</b> چیست؟ تصور کنید هر نرم‌افزار داخل یک «جعبهٔ دربسته» اجرا شود که همه‌چیزِ موردنیازش را با خودش دارد. به این جعبه‌ها «کانتینر»<sup>۱</sup> می‌گویند. نتیجه: نصبِ تمیز، بدون به‌هم‌ریختن سیستم، و حذفِ یک‌ضربه‌ای.</li>
+    <li><b>n8n</b> چیست؟ ابزار اتوماسیون است: کارهای تکراری (مثل «هر ایمیل جدید را در تلگرام بفرست») را به‌صورت ورک‌فلو<sup>۲</sup> خودکار می‌کند. ما آن را داخل داکر اجرا می‌کنیم.</li>
+    <li><b>خط فرمان کجاست؟</b> در ویندوز از <b>PowerShell</b> استفاده می‌کنیم و در مک از <b>Terminal</b> (پوستهٔ پیش‌فرض zsh). دستورات مک را دقیقاً برای ترمینال نوشته‌ایم؛ نیازی به نصب پاورشل روی مک نیست.</li>
+    <li><b>فرض‌های ما:</b> ویندوز ۱۰ (نسخهٔ 22H2 به بعد) یا ویندوز ۱۱ / مک با macOS 14 به بعد، دسترسی ادمین، و اینترنت پایدار. اگر سیستم شما قدیمی‌تر است، بخش رفع اشکال را ببینید.</li>
+  </ul>
+  <div class="box foot"><b class="ttl">📖 پانویس‌ها</b>
+  ۱) <b>کانتینر (Container):</b> محیط ایزولهٔ سبک برای اجرای یک برنامه با همهٔ وابستگی‌هایش.<br>
+  ۲) <b>ورک‌فلو (Workflow):</b> زنجیره‌ای از مراحل خودکار؛ مثل دستور آشپزی که کامپیوتر خودش اجرایش می‌کند.</div>
+</section>
+
+<!-- ================= فهرست ================= -->
+<nav class="card toc">
+  <h2>🗺️ فهرست مراحل</h2>
+  <ol>
+    <li><a href="#s1">بررسی پیش‌نیازهای سیستم</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s2">فعال‌سازی WSL2</a> <span class="os-tag os-win">فقط ویندوز</span></li>
+    <li><a href="#s3">نصب Docker Desktop با winget</a> <span class="os-tag os-win">فقط ویندوز</span></li>
+    <li><a href="#s4">نصب Docker Desktop با Homebrew</a> <span class="os-tag os-mac">فقط مک</span></li>
+    <li><a href="#s5">اجرای اولیهٔ داکر و راستی‌آزمایی</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s6">ساخت Volume و پوشه‌های پشتیبان</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s7">اجرای n8n با دستور رسمی</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s8">ورود به n8n و ساخت حساب مدیر</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s9">پشتیبان‌گیری واقعی (ورک‌فلو + Volume)</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s10">به‌روزرسانی و مدیریت روزمره</a> <span class="os-tag os-both">هر دو</span></li>
+    <li><a href="#s11">🔧 رفع اشکال — ۹ خطای رایج</a></li>
+  </ol>
+</nav>
+
+<!-- نقشه کلی -->
+<section class="card">
+  <h2 style="font-size:19px;margin-bottom:6px">🧭 نقشهٔ کلی مسیر</h2>
+  <div class="diagram">
+    <div class="dbox">💻 سیستم شما<small>ویندوز / مک</small></div>
+    <div class="darrow">←</div>
+    <div class="dbox">🐳 Docker Desktop<small>موتور کانتینرها</small></div>
+    <div class="darrow">←</div>
+    <div class="dbox">📦 کانتینر n8n<small>روی پورت 5678</small></div>
+    <div class="darrow">←</div>
+    <div class="dbox">💾 n8n_data + بکاپ<small>داده‌های شما</small></div>
+  </div>
+  <p style="font-size:15px;opacity:.85">داکر مثل «نیروگاه» است و n8n مثل «دستگاهی» که به آن وصل می‌شود. داده‌ها هم در انباری جدا (Volume) نگه‌داری می‌شوند تا با خاموش‌شدن دستگاه از بین نروند.</p>
+</section>
+
+<!-- ================= مرحله ۱ ================= -->
+<section class="card stage" id="s1">
+  <div class="stage-head">
+    <div class="stage-num">۱</div>
+    <h2>بررسی پیش‌نیازهای سیستم <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۱۰ دقیقه</span>
+  </div>
+
+  <h3>🪟 ویندوز — سه بررسی ساده</h3>
+  <ol class="steps">
+    <li>روی دکمهٔ Start کلیک راست کنید و گزینهٔ <b>Terminal (Admin)</b> یا <b>Windows PowerShell (Admin)</b> را بزنید. (پنجرهٔ آبی یا مشکی که باز می‌شود، همان پاورشل است. اجرای «به‌عنوان ادمین» برای مراحل بعد ضروری است.)</li>
+    <li>نسخهٔ ویندوز را ببینید:
+<pre>winver</pre>
+    پنجرهٔ کوچکی باز می‌شود. باید ویندوز ۱۱، یا ویندوز ۱۰ نسخهٔ <span dir="ltr">22H2</span> به بعد باشد.</li>
+    <li>بررسی فعال‌بودن مجازی‌سازی<sup>۳</sup>:
+<pre>systeminfo | Select-String "Virtualization"</pre>
+    اگر جلوی <code>Virtualization Enabled In Firmware</code> نوشته بود <code>Yes</code>، عالی است. اگر <code>No</code> بود، به بخش رفع اشکال (خطای شمارهٔ ۲) بروید — باید از تنظیمات BIOS فعالش کنید.</li>
+    <li>بررسی وجود winget<sup>۴</sup>:
+<pre>winget --version</pre>
+    اگر شماره‌ای مثل <code>v1.28.x</code> دید، آماده‌اید. اگر خطای «not recognized» گرفتید → رفع اشکال، خطای ۵.</li>
+  </ol>
+
+  <h3>🍎 مک — دو بررسی ساده</h3>
+  <ol class="steps">
+    <li>ترمینال را باز کنید: کلیدهای <code>Cmd + Space</code> را بزنید، بنویسید <code>Terminal</code> و Enter بزنید.</li>
+    <li>نسخهٔ macOS و نوع چیپ را ببینید:
+<pre>sw_vers -productVersion
+uname -m</pre>
+    خروجی اول باید <code>14</code> به بالا باشد (مثلاً <code>15.5</code>). خروجی دوم اگر <code>arm64</code> بود یعنی چیپ اپل (M1 تا M4) دارید و اگر <code>x86_64</code> بود یعنی اینتل — هر دو پشتیبانی می‌شوند و ادامهٔ مسیر یکی است.</li>
+  </ol>
+
+  <div class="box foot"><b class="ttl">📖 پانویس‌ها</b>
+  ۳) <b>مجازی‌سازی (Virtualization):</b> قابلیتی در سخت‌افزار که اجازه می‌دهد یک «کامپیوتر کوچک مجازی» داخل کامپیوتر شما اجرا شود؛ داکر به آن نیاز دارد.<br>
+  ۴) <b>winget:</b> «فروشگاه خط فرمانی» رسمی مایکروسافت؛ با یک دستور، نرم‌افزار نصب می‌کند.</div>
+
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۱</b>
+  الان باید: نسخهٔ سیستم‌عامل مناسب باشد، مجازی‌سازی <code>Yes</code> باشد (ویندوز) و <code>winget --version</code> یا <code>sw_vers</code> جواب داده باشند. اگر نه → بخش رفع اشکال.</div>
+</section>
+
+<!-- ================= مرحله ۲ ================= -->
+<section class="card stage" id="s2">
+  <div class="stage-head">
+    <div class="stage-num">۲</div>
+    <h2>فعال‌سازی WSL2 <span class="os-tag os-win">فقط ویندوز</span></h2>
+    <span class="chip">⏱ ۱۰ دقیقه + ری‌استارت</span>
+  </div>
+  <p>داکر در ویندوز، کانتینرها را داخل یک لینوکسِ کوچک به نام WSL2<sup>۵</sup> اجرا می‌کند. پس اول باید آن را فعال کنیم. کاربران مک این مرحله را رد کنند و به <a href="#s4">مرحلهٔ ۴</a> بروند.</p>
+  <ol class="steps">
+    <li>در همان پاورشلِ ادمین، این دستور را اجرا کنید:
+<pre>wsl --install --no-distribution</pre>
+    <span style="font-size:14.5px">سوییچ <code>--no-distribution</code> یعنی «فقط موتور WSL را نصب کن، لینوکس جدا نمی‌خواهم» — چون داکر خودش لینوکس خودش را می‌آورد و این‌طوری حجم کمتری دانلود می‌شود.</span></li>
+    <li>وقتی نصب تمام شد، کامپیوتر را ری‌استارت کنید. (این ری‌استارت اجباری است — بدون آن، داکر بالا نمی‌آید.)</li>
+    <li>بعد از ری‌استارت، دوباره پاورشل ادمین را باز کنید و WSL را به آخرین نسخه برسانید:
+<pre>wsl --update
+wsl --status</pre>
+    در خروجی <code>wsl --status</code> باید عبارتی شبیه <code>Default Version: 2</code> ببینید. اگر عدد ۱ بود:
+<pre>wsl --set-default-version 2</pre></li>
+  </ol>
+  <div class="box tip"><b class="ttl">💡 نکته</b> اگر قبلاً WSL داشتید، دستور <code>wsl --install</code> به شما می‌گوید «already installed» — هیچ اشکالی ندارد؛ فقط <code>wsl --update</code> را بزنید و ادامه دهید.</div>
+  <div class="box foot"><b class="ttl">📖 پانویس</b> ۵) <b>WSL2 (Windows Subsystem for Linux 2):</b> فناوری رسمی مایکروسافت برای اجرای لینوکس واقعی داخل ویندوز، بدون نصب جداگانه.</div>
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۲</b> خروجی <code>wsl --status</code> نسخهٔ پیش‌فرض ۲ را نشان می‌دهد و هیچ پیغام خطایی ندارید. اگر خطای <code>0x80370102</code> یا مشابه دیدید → رفع اشکال، خطای ۲.</div>
+</section>
+
+<!-- ================= مرحله ۳ ================= -->
+<section class="card stage" id="s3">
+  <div class="stage-head">
+    <div class="stage-num">۳</div>
+    <h2>نصب Docker Desktop با winget <span class="os-tag os-win">فقط ویندوز</span></h2>
+    <span class="chip">⏱ ۱۵ دقیقه</span>
+  </div>
+  <ol class="steps">
+    <li>در پاورشل ادمین، این دستور را اجرا کنید (یک خط کامل است؛ کپی کنید و Enter بزنید):
+<pre>winget install -e --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements</pre>
+    <span style="font-size:14.5px">حجم دانلود بالاست (بیش از ۵۰۰ مگابایت) — بسته به سرعت اینترنت، صبور باشید. دو سوییچ آخر یعنی «توافق‌نامه‌ها را قبول دارم؛ وسط کار سؤال نپرس».</span></li>
+    <li>وقتی پیام <code>Successfully installed</code> دیدید، یک‌بار دیگر کامپیوتر را ری‌استارت کنید تا گروه کاربری <code>docker-users</code> روی حساب شما اعمال شود.</li>
+  </ol>
+  <div class="box warn"><b class="ttl">⚠️ مواظب باش</b> اگر winget پیام «No package found matching input criteria» داد، اول منبع‌ها را تازه‌سازی کنید: <code>winget source update</code> و دوباره امتحان کنید. اگر دانلود وسط راه قطع شد، همان دستور نصب را دوباره اجرا کنید؛ winget ادامه می‌دهد یا از نو می‌گیرد.</div>
+  <div class="box tip"><b class="ttl">💡 ترفند</b> برای دیدن نسخهٔ نصب‌شده و آپدیت‌های بعدی: <code>winget list Docker.DockerDesktop</code> و <code>winget upgrade Docker.DockerDesktop</code>. در زمان نگارش این آموزش، نسخهٔ جاری Docker Desktop حدود <span dir="ltr">4.83</span> است؛ اگر عدد شما بالاتر بود کاملاً طبیعی است.</div>
+  <p>حالا به <a href="#s5">مرحلهٔ ۵</a> بروید.</p>
+</section>
+
+<!-- ================= مرحله ۴ ================= -->
+<section class="card stage" id="s4">
+  <div class="stage-head">
+    <div class="stage-num">۴</div>
+    <h2>نصب Docker Desktop با Homebrew <span class="os-tag os-mac">فقط مک</span></h2>
+    <span class="chip">⏱ ۱۵ دقیقه</span>
+  </div>
+  <ol class="steps">
+    <li>اول ببینید Homebrew<sup>۶</sup> دارید یا نه:
+<pre>brew --version</pre>
+    اگر شماره نسخه دید، به قدم ۳ بپرید. اگر خطای <code>command not found</code> گرفتید، قدم ۲ را انجام دهید.</li>
+    <li>نصب Homebrew با دستور رسمی (کل خط را یک‌جا کپی کنید؛ وسط کار رمز مک را می‌پرسد و هنگام تایپِ رمز چیزی نمایش داده نمی‌شود — طبیعی است):
+<pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+    در پایان، اگر ترمینال دو خط شبیه <code>eval "$(/opt/homebrew/bin/brew shellenv)"</code> به شما داد، همان‌ها را هم اجرا کنید تا دستور <code>brew</code> شناخته شود. سپس ترمینال را ببندید و دوباره باز کنید.</li>
+    <li>حالا Docker Desktop را نصب کنید:
+<pre>brew install --cask docker-desktop</pre></li>
+  </ol>
+  <div class="box warn"><b class="ttl">⚠️ مواظب باش — نام جدید cask</b> نام رسمی این بسته اکنون <code>docker-desktop</code> است (قبلاً فقط <code>docker</code> بود و هنوز در خیلی از آموزش‌های قدیمی همان را می‌بینید). اگر <code>brew install docker</code> بزنید فقط ابزار خط فرمان نصب می‌شود، نه خودِ برنامه — و بعداً خطای «Cannot connect to the Docker daemon» می‌گیرید. اگر اشتباهاً نصبش کردید: <code>brew uninstall --formula docker</code> و بعد دستور درست را بزنید.</div>
+  <div class="box foot"><b class="ttl">📖 پانویس</b> ۶) <b>Homebrew:</b> محبوب‌ترین «مدیر بسته» در مک؛ معادل winget ویندوز — نصب نرم‌افزار با یک دستور.</div>
+</section>
+
+<!-- ================= مرحله ۵ ================= -->
+<section class="card stage" id="s5">
+  <div class="stage-head">
+    <div class="stage-num">۵</div>
+    <h2>اجرای اولیهٔ داکر و راستی‌آزمایی <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۱۰ دقیقه</span>
+  </div>
+  <ol class="steps">
+    <li><b>ویندوز:</b> از منوی Start برنامهٔ <b>Docker Desktop</b> را باز کنید. <b>مک:</b> در ترمینال بنویسید <code>open -a Docker</code> (یا از Launchpad بازش کنید).</li>
+    <li>بار اول یک صفحهٔ توافق‌نامه می‌آید — <b>Accept</b> را بزنید. اگر پیشنهاد ورود به حساب Docker داد، می‌توانید <b>Skip</b> کنید؛ برای این آموزش حساب لازم نیست.</li>
+    <li>منتظر بمانید تا آیکون نهنگ 🐳 در نوار پایین ویندوز یا بالای مک <b>ثابت</b> شود (وقتی تکان می‌خورد یعنی هنوز در حال روشن‌شدن است — گاهی ۱ تا ۲ دقیقه طول می‌کشد).</li>
+    <li>حالا در پاورشل/ترمینال (این‌بار ادمین‌بودن لازم نیست) راستی‌آزمایی کنید:
+<pre>docker --version
+docker run hello-world</pre></li>
+  </ol>
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۳ — مهم‌ترین ایست کل مسیر</b>
+  دستور دوم باید متنی چاپ کند که داخلش نوشته: <code>Hello from Docker!</code>. یعنی داکر سالم است: تصویر<sup>۷</sup> را دانلود کرد، کانتینر ساخت و اجرا کرد. اگر به‌جای آن خطا دیدید:
+  <ul style="margin-top:6px">
+    <li><code>error during connect</code> یا <code>cannot connect to the Docker daemon</code> → داکر دسکتاپ باز نیست یا هنوز کامل بالا نیامده → رفع اشکال، خطای ۳.</li>
+    <li>خطای دانلود / <code>timeout</code> / <code>403</code> → مشکل دسترسی به مخزن تصاویر → رفع اشکال، خطای ۴.</li>
+  </ul></div>
+  <div class="box foot"><b class="ttl">📖 پانویس</b> ۷) <b>ایمیج/تصویر (Image):</b> «قالب آماده» یک برنامه؛ کانتینر از روی آن ساخته می‌شود — مثل قالب کیک و خودِ کیک.</div>
+</section>
+
+<!-- ================= مرحله ۶ ================= -->
+<section class="card stage" id="s6">
+  <div class="stage-head">
+    <div class="stage-num">۶</div>
+    <h2>ساخت Volume و پوشه‌های پشتیبان <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+  <p>قبل از اجرای n8n، دو «انبار» می‌سازیم: یکی <b>Volume</b><sup>۸</sup> که داکر داده‌های زندهٔ n8n را در آن نگه می‌دارد، و یکی پوشه‌های پشتیبان روی خودِ سیستم شما که نسخه‌های بکاپ آن‌جا می‌روند.</p>
+
+  <h3>قدم ۱ — ساخت Volume (هر دو سیستم، دستور یکسان)</h3>
+<pre>docker volume create n8n_data</pre>
+
+  <h3>قدم ۲ — ساخت پوشه‌های پشتیبان</h3>
+  <p>🪟 <b>ویندوز (پاورشل):</b></p>
+<pre>New-Item -ItemType Directory -Force -Path "$HOME\n8n-backups\workflows"
+New-Item -ItemType Directory -Force -Path "$HOME\n8n-backups\credentials"
+New-Item -ItemType Directory -Force -Path "$HOME\n8n-backups\volume"</pre>
+  <p>🍎 <b>مک (ترمینال):</b></p>
+<pre>mkdir -p "$HOME/n8n-backups/workflows" "$HOME/n8n-backups/credentials" "$HOME/n8n-backups/volume"</pre>
+  <p style="font-size:15px">ساختار ساخته‌شده: پوشهٔ <code>n8n-backups</code> داخل پوشهٔ خانگی شما، با سه زیرپوشه: <code>workflows</code> (بکاپ ورک‌فلوها)، <code>credentials</code> (بکاپ اتصال‌ها) و <code>volume</code> (بکاپ کامل انبار داده).</p>
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۴</b> دستور <code>docker volume ls</code> باید <code>n8n_data</code> را در فهرست نشان دهد؛ و در ویندوز <code>dir $HOME\n8n-backups</code> (در مک: <code>ls $HOME/n8n-backups</code>) سه پوشه را نشان دهد.</div>
+  <div class="box foot"><b class="ttl">📖 پانویس</b> ۸) <b>Volume:</b> فضای ذخیره‌سازی جدا از کانتینر. کانتینر را می‌شود حذف کرد و دوباره ساخت، ولی Volume سر جایش می‌ماند — پس ورک‌فلوها و رمزها گم نمی‌شوند.</div>
+</section>
+
+<!-- ================= مرحله ۷ ================= -->
+<section class="card stage" id="s7">
+  <div class="stage-head">
+    <div class="stage-num">۷</div>
+    <h2>اجرای n8n با دستور رسمی <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۱۰ دقیقه</span>
+  </div>
+  <p>این دستور از مستندات رسمی n8n گرفته شده و برای منطقهٔ زمانی ایران تنظیم شده است. کانتینر را با نام <code>n8n</code>، در پس‌زمینه و طوری اجرا می‌کند که بعد از ری‌استارت سیستم هم خودش دوباره بالا بیاید.</p>
+
+  <h3>🪟 ویندوز — پاورشل (چندخطی با بک‌تیک <code>`</code>)</h3>
+<pre>docker run -d --name n8n `
+  --restart unless-stopped `
+  -p 5678:5678 `
+  -e GENERIC_TIMEZONE="Asia/Tehran" `
+  -e TZ="Asia/Tehran" `
+  -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true `
+  -e N8N_RUNNERS_ENABLED=true `
+  -v n8n_data:/home/node/.n8n `
+  docker.n8n.io/n8nio/n8n</pre>
+
+  <h3>🍎 مک — ترمینال (چندخطی با بک‌اسلش <code>\</code>)</h3>
+<pre>docker run -d --name n8n \
+  --restart unless-stopped \
+  -p 5678:5678 \
+  -e GENERIC_TIMEZONE="Asia/Tehran" \
+  -e TZ="Asia/Tehran" \
+  -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+  -e N8N_RUNNERS_ENABLED=true \
+  -v n8n_data:/home/node/.n8n \
+  docker.n8n.io/n8nio/n8n</pre>
+
+  <div class="box warn"><b class="ttl">⚠️ مواظب باش — تفاوت مهم پاورشل و ترمینال</b> در پاورشل، علامت ادامهٔ خط «بک‌تیک» <code>`</code> است ولی در مک/لینوکس «بک‌اسلش» <code>\</code>. اگر دستورِ مک را در پاورشل کپی کنید، خطاهای عجیبی مثل <code>docker: invalid reference format</code> می‌گیرید. اگر شک دارید، این نسخهٔ تک‌خطی را در هر دو سیستم بزنید:
+<pre>docker run -d --name n8n --restart unless-stopped -p 5678:5678 -e GENERIC_TIMEZONE="Asia/Tehran" -e TZ="Asia/Tehran" -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true -e N8N_RUNNERS_ENABLED=true -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n</pre></div>
+
+  <h3>این دستور دقیقاً چه می‌کند؟</h3>
+  <table class="tbl">
+    <tr><th>بخش دستور</th><th>معنی به زبان ساده</th></tr>
+    <tr><td><code>-d</code></td><td>در پس‌زمینه اجرا شو؛ ترمینال را اشغال نکن.</td></tr>
+    <tr><td><code>--name n8n</code></td><td>اسم کانتینر «n8n» باشد تا بعداً راحت صدایش کنیم.</td></tr>
+    <tr><td><code>--restart unless-stopped</code></td><td>اگر سیستم ری‌استارت شد، خودت دوباره روشن شو — مگر خودم خاموشت کرده باشم.</td></tr>
+    <tr><td><code>-p 5678:5678</code></td><td>درِ شمارهٔ 5678 کانتینر را به همان در روی سیستم من وصل کن (آدرس مرورگر).</td></tr>
+    <tr><td><code>GENERIC_TIMEZONE</code> و <code>TZ</code></td><td>ساعت ایران؛ تا زمان‌بندی‌های n8n (مثلاً «هر روز ۸ صبح») درست کار کنند.</td></tr>
+    <tr><td><code>N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS</code></td><td>تنظیم امنیتی توصیه‌شدهٔ خود n8n برای فایل تنظیمات.</td></tr>
+    <tr><td><code>N8N_RUNNERS_ENABLED</code></td><td>اجراکننده‌های کد را فعال می‌کند (روش جدید و امن‌تر اجرای کد در n8n).</td></tr>
+    <tr><td><code>-v n8n_data:/home/node/.n8n</code></td><td>انبار <code>n8n_data</code> را به پوشهٔ دادهٔ n8n وصل کن — راز ماندگاری داده‌ها.</td></tr>
+    <tr><td><code>docker.n8n.io/n8nio/n8n</code></td><td>آدرس رسمی تصویر n8n (مخزن خودِ شرکت n8n).</td></tr>
+  </table>
+
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۵</b> دستور <code>docker ps</code> باید یک ردیف با نام <code>n8n</code> و وضعیت <code>Up</code> نشان دهد. اگر ردیفی نبود، با <code>docker logs n8n</code> دلیل را ببینید و به رفع اشکال بروید.</div>
+</section>
+
+<!-- ================= مرحله ۸ ================= -->
+<section class="card stage" id="s8">
+  <div class="stage-head">
+    <div class="stage-num">۸</div>
+    <h2>ورود به n8n و ساخت حساب مدیر <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+  <ol class="steps">
+    <li>مرورگر را باز کنید و این آدرس را بزنید: <code>http://localhost:5678</code></li>
+    <li>صفحهٔ خوش‌آمد n8n می‌آید و اطلاعات «حساب مالک» (Owner) را می‌پرسد: ایمیل، نام و یک رمز قوی وارد کنید. این حساب فقط روی کامپیوتر خودتان است و جایی ارسال نمی‌شود.</li>
+    <li>فرم را ثبت کنید — وارد محیط اصلی n8n می‌شوید: بوم سفیدی که ورک‌فلوها را روی آن می‌سازید. 🎉</li>
+  </ol>
+  <div class="box tip"><b class="ttl">💡 نکته</b> رمز حساب مالک را جایی امن یادداشت کنید. اگر فراموشش کنید، بازیابی آن روی نصب محلی دردسر دارد.</div>
+  <div class="box note"><b class="ttl">📘 خوب است بدانید</b> این n8n فقط از داخل کامپیوتر شما در دسترس است؛ سرویس‌های بیرونی (مثل تلگرام) نمی‌توانند مستقیم به <code>localhost</code> پیام بفرستند. برای وب‌هوک‌های بیرونی به ابزار تونل (مثل ngrok) نیاز است — که آموزش جداگانه‌اش در گراول هست.</div>
+</section>
+
+<!-- ================= مرحله ۹ ================= -->
+<section class="card stage" id="s9">
+  <div class="stage-head">
+    <div class="stage-num">۹</div>
+    <h2>پشتیبان‌گیری واقعی <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۱۰ دقیقه</span>
+  </div>
+  <p>دو نوع بکاپ می‌گیریم: <b>بکاپ سبک</b> (فایل JSON ورک‌فلوها و اتصال‌ها — برای جابه‌جایی و نگه‌داری روزمره) و <b>بکاپ کامل</b> (کل Volume در یک فایل فشرده — بیمه‌نامهٔ نهایی شما).</p>
+
+  <h3>الف) بکاپ سبک — ورک‌فلوها و اتصال‌ها</h3>
+  <p>🪟 <b>ویندوز (پاورشل):</b></p>
+<pre><span class="cmt"># 1) خروجی گرفتن داخل کانتینر</span>
+docker exec n8n n8n export:workflow --all --output=/home/node/.n8n/wf-backup.json
+docker exec n8n n8n export:credentials --all --output=/home/node/.n8n/cred-backup.json
+<span class="cmt"># 2) کپی به پوشه‌های پشتیبان روی سیستم شما</span>
+docker cp n8n:/home/node/.n8n/wf-backup.json "$HOME\n8n-backups\workflows\"
+docker cp n8n:/home/node/.n8n/cred-backup.json "$HOME\n8n-backups\credentials\"</pre>
+  <p>🍎 <b>مک (ترمینال):</b> همان چهار دستور، فقط مسیر مقصد با اسلش معمولی:</p>
+<pre>docker exec n8n n8n export:workflow --all --output=/home/node/.n8n/wf-backup.json
+docker exec n8n n8n export:credentials --all --output=/home/node/.n8n/cred-backup.json
+docker cp n8n:/home/node/.n8n/wf-backup.json "$HOME/n8n-backups/workflows/"
+docker cp n8n:/home/node/.n8n/cred-backup.json "$HOME/n8n-backups/credentials/"</pre>
+  <div class="box tip"><b class="ttl">💡 نکته</b> اگر هنوز هیچ ورک‌فلویی نساخته‌اید، دستور export ممکن است بگوید چیزی برای خروجی نیست — طبیعی است؛ بعد از ساخت اولین ورک‌فلو دوباره امتحان کنید.</div>
+
+  <h3>ب) بکاپ کامل — کل Volume در یک فایل فشرده</h3>
+  <p>🪟 <b>ویندوز (پاورشل):</b></p>
+<pre>docker run --rm -v n8n_data:/data -v "${HOME}\n8n-backups\volume:/backup" alpine tar czf /backup/n8n-volume-backup.tar.gz -C /data .</pre>
+  <p>🍎 <b>مک (ترمینال):</b></p>
+<pre>docker run --rm -v n8n_data:/data -v "$HOME/n8n-backups/volume:/backup" alpine tar czf /backup/n8n-volume-backup.tar.gz -C /data .</pre>
+  <p style="font-size:15px">ترجمهٔ دستور: «یک کانتینر موقت (alpine) بساز، انبار n8n و پوشهٔ بکاپ من را به آن وصل کن، همه‌چیز را در فایل <code>n8n-volume-backup.tar.gz</code> فشرده کن، بعد خودت را حذف کن.»</p>
+
+  <h3>ج) بازگردانی (اگر روز مبادا رسید)</h3>
+<pre><span class="cmt"># ویندوز — پاورشل:</span>
+docker run --rm -v n8n_data:/data -v "${HOME}\n8n-backups\volume:/backup" alpine sh -c "cd /data &amp;&amp; tar xzf /backup/n8n-volume-backup.tar.gz"
+<span class="cmt"># مک — ترمینال:</span>
+docker run --rm -v n8n_data:/data -v "$HOME/n8n-backups/volume:/backup" alpine sh -c "cd /data &amp;&amp; tar xzf /backup/n8n-volume-backup.tar.gz"</pre>
+  <div class="box warn"><b class="ttl">⚠️ مواظب باش — کلید رمزنگاری</b> داخل Volume فایلی هست که «کلید رمزنگاری» اتصال‌های شما را نگه می‌دارد. اگر Volume را بدون بکاپ حذف کنید، حتی با داشتن فایل JSON اتصال‌ها، رمزهای ذخیره‌شده دیگر بازگشایی نمی‌شوند. پس <b>بکاپ کامل (بخش ب) را جدی بگیرید</b> — مخصوصاً قبل از هر آپدیت یا حذف.</div>
+  <div class="box check"><b class="ttl">✅ ایست بازرسی ۶</b> در پوشهٔ <code>n8n-backups/volume</code> باید فایل <code>n8n-volume-backup.tar.gz</code> با حجم غیر صفر باشد. در ویندوز: <code>dir $HOME\n8n-backups\volume</code> — در مک: <code>ls -lh $HOME/n8n-backups/volume</code></div>
+</section>
+
+<!-- ================= مرحله ۱۰ ================= -->
+<section class="card stage" id="s10">
+  <div class="stage-head">
+    <div class="stage-num">۱۰</div>
+    <h2>به‌روزرسانی و مدیریت روزمره <span class="os-tag os-both">هر دو</span></h2>
+    <span class="chip">⏱ ۵ دقیقه</span>
+  </div>
+  <h3>دستورهای روزمره (هر دو سیستم یکسان)</h3>
+<pre><span class="cmt"># وضعیت کانتینرها</span>
+docker ps
+<span class="cmt"># توقف / شروع n8n</span>
+docker stop n8n
+docker start n8n
+<span class="cmt"># دیدن گزارش‌ها (برای عیب‌یابی)</span>
+docker logs n8n --tail 50</pre>
+
+  <h3>آپدیت n8n به آخرین نسخه (بدون از دست دادن داده)</h3>
+<pre><span class="cmt"># 0) اول بکاپ کامل بگیرید (مرحله ۹ - بخش ب)!</span>
+docker pull docker.n8n.io/n8nio/n8n
+docker stop n8n
+docker rm n8n
+<span class="cmt"># حالا دوباره همان دستور اجرای مرحله ۷ را بزنید — چون Volume سر جایش است، همه‌چیز برمی‌گردد</span></pre>
+  <div class="box tip"><b class="ttl">💡 ترفند</b> حذف کانتینر (<code>docker rm</code>) داده‌ها را پاک نمی‌کند؛ داده‌ها در Volume هستند. فقط دستور <code>docker volume rm n8n_data</code> است که واقعاً داده‌ها را نابود می‌کند — آن را هرگز بدون بکاپ نزنید.</div>
+</section>
+
+<!-- ================= رفع اشکال ================= -->
+<section class="card stage" id="s11">
+  <div class="stage-head">
+    <div class="stage-num">🔧</div>
+    <h2>رفع اشکال — ۹ خطای رایج و راه‌حل دقیق</h2>
+  </div>
+
+  <details class="trouble"><summary>خطای ۱: <span dir="ltr">WSL 2 installation is incomplete</span> یا <span dir="ltr">WSL update needed</span> (ویندوز)</summary>
+    <div class="body"><b>نشانه:</b> داکر دسکتاپ باز می‌شود ولی پنجرهٔ خطای WSL می‌دهد.<br>
+    <b>علت:</b> WSL نصب نشده، قدیمی است، یا بعد از نصب ری‌استارت نکرده‌اید.<br>
+    <b>درمان:</b> پاورشل ادمین → <code>wsl --update</code> → ری‌استارت کامپیوتر → باز کردن دوبارهٔ Docker Desktop. اگر باز هم نشد: <code>wsl --install --no-distribution</code> و دوباره ری‌استارت.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۲: <span dir="ltr">Virtualization support is disabled</span> / کد <span dir="ltr">0x80370102</span> (ویندوز)</summary>
+    <div class="body"><b>نشانه:</b> داکر یا WSL می‌گوید مجازی‌سازی خاموش است.<br>
+    <b>علت:</b> قابلیت VT-x/AMD-V در BIOS/UEFI سیستم غیرفعال است.<br>
+    <b>درمان:</b> کامپیوتر را ری‌استارت کنید و هنگام روشن‌شدن، کلید ورود به BIOS را بزنید (بسته به برند: معمولاً <code>F2</code>، <code>F10</code>، <code>Del</code> یا <code>Esc</code> — ممکن است در دستگاه شما فرق کند). دنبال گزینه‌ای شبیه <b>Intel Virtualization Technology</b>، <b>VT-x</b> یا <b>SVM Mode</b> بگردید (اغلب در تب Advanced یا CPU Configuration)، آن را <b>Enabled</b> کنید، ذخیره کنید (<code>F10</code>) و بیرون بیایید.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۳: <span dir="ltr">error during connect / cannot connect to the Docker daemon</span> (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> هر دستور docker این خطا را می‌دهد.<br>
+    <b>علت:</b> موتور داکر روشن نیست — برنامهٔ Docker Desktop باز نیست یا هنوز کامل بالا نیامده.<br>
+    <b>درمان:</b> Docker Desktop را باز کنید و صبر کنید آیکون نهنگ ثابت شود؛ بعد دستور را دوباره بزنید. در ویندوز اگر همیشه تکرار می‌شود، از تنظیمات داکر گزینهٔ <b>Start Docker Desktop when you sign in</b> را فعال کنید. در مک اگر تازه با brew نصب کرده‌اید، یادتان باشد برنامه باید حداقل یک‌بار به‌صورت گرافیکی باز شده و توافق‌نامه تأیید شده باشد.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۴: گیر کردن دانلود ایمیج / <span dir="ltr">timeout</span> / <span dir="ltr">403 Forbidden</span> هنگام <span dir="ltr">docker pull</span> (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> <code>docker run hello-world</code> یا <code>docker pull</code> در دانلود گیر می‌کند یا خطای دسترسی می‌دهد.<br>
+    <b>علت:</b> برای کاربران داخل ایران، دسترسی مستقیم به Docker Hub معمولاً محدود است.<br>
+    <b>درمان:</b> از یک «آینهٔ رجیستری» داخلی استفاده کنید. در Docker Desktop: آیکون چرخ‌دنده → <b>Docker Engine</b> → در متن JSON این بخش را اضافه کنید و <b>Apply &amp; restart</b> بزنید:
+<pre>{
+  "registry-mirrors": ["https://docker.arvancloud.ir"]
+}</pre>
+    (این فقط یک نمونهٔ شناخته‌شده است؛ سرویس‌های آینهٔ دیگری هم وجود دارند و آدرس‌ها ممکن است در طول زمان تغییر کنند — اگر کار نکرد، عبارت «docker registry mirror ایران» را جست‌وجو کنید.) توجه: ایمیج n8n از دامنهٔ خود n8n یعنی <code>docker.n8n.io</code> گرفته می‌شود که معمولاً بدون مشکل در دسترس است.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۵: <span dir="ltr">winget is not recognized</span> (ویندوز)</summary>
+    <div class="body"><b>نشانه:</b> پاورشل winget را نمی‌شناسد.<br>
+    <b>علت:</b> ویندوز شما قدیمی است یا بستهٔ «App Installer» ندارد.<br>
+    <b>درمان:</b> Microsoft Store را باز کنید، عبارت <b>App Installer</b> را جست‌وجو و نصب/آپدیت کنید؛ سپس پاورشل را ببندید و دوباره باز کنید. اگر Store ندارید، ویندوز را از Settings → Windows Update به‌روز کنید.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۶: <span dir="ltr">port is already allocated</span> / <span dir="ltr">Bind for 0.0.0.0:5678 failed</span> (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> هنگام <code>docker run</code> می‌گوید پورت 5678 اشغال است.<br>
+    <b>علت:</b> یا یک n8n قبلی در حال اجراست، یا برنامهٔ دیگری این پورت را گرفته.<br>
+    <b>درمان:</b> اول ببینید کانتینر قبلی هست یا نه: <code>docker ps -a</code>. اگر کانتینری به نام n8n بود: <code>docker start n8n</code> (لازم نیست دوباره بسازید!). اگر می‌خواهید از نو بسازید: <code>docker rm -f n8n</code> و بعد دستور اجرای مرحلهٔ ۷. اگر برنامهٔ دیگری پورت را گرفته، در دستور اجرا به‌جای <code>-p 5678:5678</code> بنویسید <code>-p 5679:5678</code> و در مرورگر به <code>http://localhost:5679</code> بروید.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۷: <span dir="ltr">docker: invalid reference format</span> یا <span dir="ltr">unknown flag</span> (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> دستور چندخطی خطای عجیب نحوی می‌دهد.<br>
+    <b>علت:</b> علامت ادامهٔ خطِ اشتباه — دستور مک (<code>\</code>) در پاورشل یا برعکس؛ یا کپی‌شدن کاراکترهای نامرئی.<br>
+    <b>درمان:</b> از نسخهٔ <b>تک‌خطی</b> دستور در مرحلهٔ ۷ استفاده کنید — در هر دو سیستم بدون تغییر کار می‌کند.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۸: <span dir="ltr">Conflict. The container name "/n8n" is already in use</span> (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> می‌گوید کانتینری با نام n8n از قبل وجود دارد.<br>
+    <b>علت:</b> قبلاً یک‌بار دستور اجرا را زده‌اید (حتی اگر شکست خورده باشد، اسم رزرو شده).<br>
+    <b>درمان:</b> اگر می‌خواهید همان قبلی روشن شود: <code>docker start n8n</code>. اگر می‌خواهید از نو: <code>docker rm -f n8n</code> و اجرای دوبارهٔ دستور. داده‌ها در Volume محفوظ‌اند.</div>
+  </details>
+
+  <details class="trouble"><summary>خطای ۹: بعد از آپدیت، اتصال‌ها (Credentials) خطای رمزگشایی می‌دهند (هر دو)</summary>
+    <div class="body"><b>نشانه:</b> پیام‌هایی دربارهٔ <span dir="ltr">encryption key</span> یا باز نشدن اتصال‌های ذخیره‌شده.<br>
+    <b>علت:</b> کانتینر جدید بدون اتصال به Volume قبلی ساخته شده و n8n کلید رمزنگاری تازه‌ای ساخته است.<br>
+    <b>درمان:</b> کانتینر جدید را حذف کنید (<code>docker rm -f n8n</code>) و دستور اجرای مرحلهٔ ۷ را دقیقاً با همان <code>-v n8n_data:/home/node/.n8n</code> بزنید. اگر Volume را از دست داده‌اید، از بکاپ کامل (مرحلهٔ ۹ - بخش ج) بازگردانی کنید.</div>
+  </details>
+</section>
+
+<!-- ================= پایان ================= -->
+<section class="card finish">
+  <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+  <ul>
+    <li>✅ داکر را فقط با خط فرمان نصب و راستی‌آزمایی کنی (ویندوز و مک)</li>
+    <li>✅ n8n را با دستور رسمی، ماندگار و با ساعت ایران اجرا کنی</li>
+    <li>✅ برای داده‌هایت Volume و پوشه‌های پشتیبان بسازی و بکاپ کامل بگیری</li>
+    <li>✅ ۹ خطای رایج را خودت تشخیص بدهی و درمان کنی</li>
+  </ul>
+  <p style="margin-top:14px;opacity:.9">🏔️ سنگ‌ریزهٔ بعدی در مسیر: ساخت اولین ورک‌فلو در n8n — مثلاً اتصال تلگرام به هوش مصنوعی. سراغ آموزش‌های اتوماسیون گراول برو!</p>
+</section>
+
+<div class="gravel-footer" dir="rtl" style="text-align:center;font-family:Vazirmatn,Tahoma,sans-serif;font-size:13px;opacity:.85;padding:20px 12px;border-top:1px solid rgba(0,0,0,.08)">
+🏔️ بخشی از <a href="../index.html" style="color:inherit;font-weight:bold">گراول — کتابخانهٔ آموزش گام‌به‌گام</a>
+ &nbsp;|&nbsp; © <span dir="ltr">2026 Mehdi Rezghi</span> —
+<a href="https://t.me/Mehdirezghi" target="_blank" rel="noopener" style="color:inherit" dir="ltr">@Mehdirezghi</a>
+<div style="font-size:11.5px;opacity:.75;margin-top:6px">✍️ طراحی و تدوین: <span dir="ltr">Mehdi Rezghi</span> — مهدی رزقی</div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// © Mehdi Rezghi — نوار پیشرفت مطالعه
+(function(){
+  var bar = document.getElementById('progressbar');
+  function update(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max * 100 : 0;
+    bar.style.width = p + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>
