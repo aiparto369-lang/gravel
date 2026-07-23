@@ -2,11 +2,11 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-23T16:27:12+00:00",
+  "generated": "2026-07-23T16:27:35+00:00",
   "tracks": {
     "شروع هوشمند": 1,
     "ساخت و اتوماسیون": 6,
-    "OpenClaw": 2,
+    "OpenClaw": 3,
     "ابزارهای حرفه‌ای": 4,
     "آموزش‌های مستقل": 2
   },
@@ -256,6 +256,25 @@
       "featured": false,
       "added": "2026-07-16",
       "keywords": "داکر, نصب داکر, docker, docker desktop, n8n, نصب n8n, کانتینر, container, پاورشل, powershell, WSL 2, ولوم, volume, ذخیره سازی دائمی, اتوماسیون, ویندوز, self-host n8n, docker volume, localhost 5678",
+      "prerequisites": ""
+    },
+    {
+      "id": "obsidian-ai-connection",
+      "file": "tutorials/obsidian-ai-connection-tutorial.html",
+      "emoji": "🧠",
+      "title": "اتصال والت Obsidian به هوش مصنوعی — آموزش جامع سه دروازه",
+      "desc": "اتصال ابرمغز Obsidian به هوش مصنوعی از سه مسیر: پلاگین Copilot با OpenRouter، مدل کاملاً آفلاین با Ollama، و اتصال عامل‌محور Claude با MCP — همراه قوانین حریم خصوصی و حکمرانی",
+      "time": "حدود ۱۲۰ دقیقه",
+      "level": "متوسط",
+      "audience": "توسعه مهارت",
+      "category": "ابزارهای هوش مصنوعی",
+      "track": "OpenClaw",
+      "sequence": null,
+      "priority": 50,
+      "rank": 52,
+      "featured": false,
+      "added": "2026-07-23",
+      "keywords": "Obsidian AI, ابسیدین هوش مصنوعی, اتصال Obsidian به هوش مصنوعی, Copilot for Obsidian, Smart Connections, Ollama, مدل محلی, local LLM, RAG, چت با یادداشت ها, MCP, Claude Desktop, mcp-obsidian, Local REST API, OpenRouter, مغز دوم و هوش مصنوعی, second brain AI",
       "prerequisites": ""
     },
     {
