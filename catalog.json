@@ -2,13 +2,13 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-16T15:34:04+00:00",
+  "generated": "2026-07-23T16:27:12+00:00",
   "tracks": {
     "شروع هوشمند": 1,
     "ساخت و اتوماسیون": 6,
     "OpenClaw": 2,
     "ابزارهای حرفه‌ای": 4,
-    "آموزش‌های مستقل": 1
+    "آموزش‌های مستقل": 2
   },
   "tutorials": [
     {
@@ -256,6 +256,25 @@
       "featured": false,
       "added": "2026-07-16",
       "keywords": "داکر, نصب داکر, docker, docker desktop, n8n, نصب n8n, کانتینر, container, پاورشل, powershell, WSL 2, ولوم, volume, ذخیره سازی دائمی, اتوماسیون, ویندوز, self-host n8n, docker volume, localhost 5678",
+      "prerequisites": ""
+    },
+    {
+      "id": "obsidian-second-brain",
+      "file": "tutorials/obsidian-second-brain-tutorial.html",
+      "emoji": "🧠",
+      "title": "ساخت ابرمغز با Obsidian — آموزش جامع و ریشه‌ای",
+      "desc": "ساخت مغز دوم (Second Brain) با Obsidian از صفرِ صفر تا سطح حرفه‌ای: یادداشت اتمیک، زتل‌کاستن، MOC، Properties، Bases، پلاگین‌ها و سیستم نگهداری دانش",
+      "time": "حدود ۱۸۰ دقیقه",
+      "level": "حرفه‌ای",
+      "audience": "حرفه‌ای",
+      "category": "سایر",
+      "track": "آموزش‌های مستقل",
+      "sequence": null,
+      "priority": 50,
+      "rank": 52,
+      "featured": false,
+      "added": "2026-07-23",
+      "keywords": "Obsidian, ابسیدین, آموزش ابسیدین, مغز دوم, second brain, ابرمغز, مدیریت دانش شخصی, PKM, Zettelkasten, زتل کاستن, PARA, MOC, Bases, Dataview, Templater, یادداشت برداری, note taking, مارک داون, Markdown, بک لینک, backlink, graph view, کانواس, Canvas",
       "prerequisites": ""
     },
     {
