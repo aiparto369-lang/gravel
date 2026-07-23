@@ -2,10 +2,10 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-07-23T16:27:35+00:00",
+  "generated": "2026-07-23T16:49:33+00:00",
   "tracks": {
     "شروع هوشمند": 1,
-    "ساخت و اتوماسیون": 6,
+    "ساخت و اتوماسیون": 5,
     "OpenClaw": 3,
     "ابزارهای حرفه‌ای": 4,
     "آموزش‌های مستقل": 2
@@ -237,25 +237,6 @@
       "featured": false,
       "added": "2026-07-13",
       "keywords": "هوش مصنوعی چطور کار می‌کند, مدل زبانی, توکن, token, context window, توهم هوش مصنوعی, hallucination, دما, temperature, چرا هوش مصنوعی اشتباه می‌کند, LLM, ChatGPT چطور فکر می‌کند, حافظهٔ هوش مصنوعی, سواد هوش مصنوعی",
-      "prerequisites": ""
-    },
-    {
-      "id": "docker-n8n-powershell-setup",
-      "file": "tutorials/docker-n8n-powershell-setup-tutorial.html",
-      "emoji": "🐳",
-      "title": "نصب داکر و راه‌اندازی کامل n8n با پاورشل",
-      "desc": "از صفرِ صفر: نصب Docker Desktop روی ویندوز با پاورشل، ساخت Volume برای ذخیره‌سازی دائمی، و راه‌اندازی کامل کانتینر n8n به‌همراه پشتیبان‌گیری.",
-      "time": "حدود ۵۰ دقیقه",
-      "level": "مبتدی",
-      "audience": "شروع از صفر",
-      "category": "اتوماسیون",
-      "track": "ساخت و اتوماسیون",
-      "sequence": null,
-      "priority": 50,
-      "rank": 54,
-      "featured": false,
-      "added": "2026-07-16",
-      "keywords": "داکر, نصب داکر, docker, docker desktop, n8n, نصب n8n, کانتینر, container, پاورشل, powershell, WSL 2, ولوم, volume, ذخیره سازی دائمی, اتوماسیون, ویندوز, self-host n8n, docker volume, localhost 5678",
       "prerequisites": ""
     },
     {
