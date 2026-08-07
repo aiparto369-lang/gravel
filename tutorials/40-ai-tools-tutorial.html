@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای کامل ۴۰ ابزار برتر هوش مصنوعی — کدام ابزار مال توست؟</title>
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<meta name="description" content="آموزش صفر تا صد ۴۰ ابزار برتر هوش مصنوعی، به‌روزشده تا مرداد ۱۴۰۵، با راهنمای انتخاب بر اساس شغل و نیاز.">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16223a; --ink-soft:#41506e; --muted:#6b7a99;
+  --bg:#f4f7fd; --card:#ffffff; --line:#dfe7f5;
+  --blue:#1d4ed8; --blue-d:#12307f; --sky:#e8f0ff;
+  --amber:#b45309; --amber-bg:#fff6e5;
+  --green:#15803d; --green-bg:#e9f9ef;
+  --red:#b91c1c; --red-bg:#fdecec;
+  --purple:#6d28d9; --purple-bg:#f3ecff;
+  --teal:#0f766e; --teal-bg:#e6f7f5;
+  --radius:20px;
+  --ca:#1d4ed8; --cb:#0f766e; --cc:#b45309; --cd:#be185d;
+  --ce:#6d28d9; --cf:#0e7490; --cg:#15803d; --ch:#9a3412;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  direction:rtl; text-align:right; font-size:17.5px; line-height:1.95;
+}
+#bar{position:fixed; inset-block-start:0; inset-inline-start:0; height:5px; width:0;
+  background:linear-gradient(90deg,#1d4ed8,#6d28d9,#be185d); z-index:99; transition:width .1s linear}
+.wrap{max-width:1000px; margin-inline:auto; padding:0 18px 70px}
+h1,h2,h3{line-height:1.6; margin:0}
+code,.ltr{direction:ltr; unicode-bidi:isolate; display:inline-block}
+code{font-family:'Consolas','Courier New',monospace; background:#eef3fd; color:#12307f;
+  padding:1px 7px; border-radius:7px; font-size:.9em}
+
+/* HERO */
+.hero{background:linear-gradient(140deg,#12307f 0%,#1d4ed8 45%,#6d28d9 100%);
+  color:#fff; border-radius:0 0 34px 34px; padding:44px 26px 38px; margin-bottom:26px;
+  box-shadow:0 18px 46px rgba(18,48,127,.28); position:relative; overflow:hidden}
+.hero::after{content:""; position:absolute; inset-block-start:-90px; inset-inline-start:-70px;
+  width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,.09)}
+.hero .inner{max-width:1000px; margin-inline:auto; position:relative; z-index:2}
+.kicker{display:inline-block; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3);
+  padding:5px 14px; border-radius:999px; font-size:.8em; margin-bottom:14px}
+.hero h1{font-size:2.15em; font-weight:900; margin-bottom:10px}
+.hero p{font-size:1.06em; opacity:.95; margin:0 0 8px}
+.promise{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+  border-radius:16px; padding:14px 18px; margin-top:18px}
+.hero .emo{font-size:2.4em; letter-spacing:6px; margin-bottom:6px}
+
+/* CARDS */
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px 22px; margin:18px 0; box-shadow:0 5px 18px rgba(22,34,58,.05)}
+.stage{border-inline-start:9px solid var(--blue)}
+.stage.a{border-color:var(--ca)} .stage.b{border-color:var(--cb)} .stage.c{border-color:var(--cc)}
+.stage.d{border-color:var(--cd)} .stage.e{border-color:var(--ce)} .stage.f{border-color:var(--cf)}
+.stage.g{border-color:var(--cg)} .stage.h{border-color:var(--ch)}
+.chip{display:inline-block; background:var(--sky); color:var(--blue-d); font-weight:700;
+  font-size:.78em; padding:4px 12px; border-radius:999px; margin-bottom:10px}
+.stage h2{font-size:1.4em; font-weight:900; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.lead{color:var(--ink-soft); margin-top:10px}
+
+/* BOXES */
+.box{border-radius:16px; padding:14px 18px; margin:14px 0; border:1px solid}
+.tip{background:var(--sky); border-color:#c7d9fb}
+.warn{background:var(--amber-bg); border-color:#f6d9a4; color:#6b3d05}
+.check{background:var(--green-bg); border-color:#b9ebcb}
+.note{background:var(--purple-bg); border-color:#dcc8ff}
+.fix{background:var(--red-bg); border-color:#f6c9c9}
+.box b{display:block; margin-bottom:4px}
+
+/* TOOL CARD */
+.tools{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+.tool{background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px 16px 14px;
+  position:relative; box-shadow:0 3px 12px rgba(22,34,58,.05)}
+.tool .head{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+.num{flex:0 0 auto; width:38px; height:38px; border-radius:12px; color:#fff; font-weight:900;
+  display:flex; align-items:center; justify-content:center; font-size:1em}
+.a .num{background:var(--ca)} .b .num{background:var(--cb)} .c .num{background:var(--cc)}
+.d .num{background:var(--cd)} .e .num{background:var(--ce)} .f .num{background:var(--cf)}
+.g .num{background:var(--cg)} .h .num{background:var(--ch)}
+.tool h3{font-size:1.08em; font-weight:900}
+.tool .by{font-size:.76em; color:var(--muted)}
+.tool .tag{font-weight:700; color:var(--ink-soft); font-size:.95em; margin:2px 0 8px}
+.row{font-size:.94em; margin:7px 0; color:var(--ink-soft)}
+.row span.lbl{font-weight:800; color:var(--ink)}
+.tool .url{display:inline-block; direction:ltr; font-size:.8em; color:var(--blue);
+  background:#eef3fd; padding:2px 9px; border-radius:8px; margin-top:8px; font-family:'Consolas',monospace}
+
+/* TABLE */
+.tbl{width:100%; border-collapse:collapse; margin-top:14px; font-size:.95em; overflow:hidden;
+  border-radius:14px; border:1px solid var(--line)}
+.tbl th{background:#eaf0fd; color:var(--blue-d); font-weight:800; padding:11px 12px; text-align:right}
+.tbl td{padding:11px 12px; border-top:1px solid var(--line); vertical-align:top}
+.tbl tr:nth-child(even) td{background:#fafcff}
+.pill{display:inline-block; background:#eef3fd; color:var(--blue-d); border-radius:8px;
+  padding:2px 9px; font-weight:800; font-size:.92em; direction:rtl}
+
+/* TOC */
+.toc{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:12px}
+.toc a{display:block; background:#f2f6fe; border:1px solid var(--line); border-radius:12px;
+  padding:9px 12px; color:var(--ink); text-decoration:none; font-size:.92em; font-weight:700}
+.toc a:hover{background:#e2ecff; border-color:#bdd2fa}
+
+/* FLOW */
+.flow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;
+  background:#f2f6fe; border:1px dashed #bdd2fa; border-radius:16px; padding:16px; margin-top:14px}
+.flow .b{background:#fff; border:1px solid var(--line); border-radius:12px; padding:8px 13px; font-weight:700; font-size:.92em}
+.flow .ar{color:var(--blue); font-weight:900; font-size:1.2em}
+
+/* PERSONA */
+.pers{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px}
+.p{background:#fff; border:1px solid var(--line); border-radius:16px; padding:13px 15px}
+.p .t{font-weight:900; display:flex; gap:8px; align-items:center}
+.p .d{font-size:.9em; color:var(--muted); margin:3px 0 7px}
+.p .n{background:#eef7f1; color:#14532d; border:1px solid #bfe6cd; border-radius:10px;
+  padding:5px 10px; font-weight:800; font-size:.92em; display:inline-block}
+
+/* FOOT */
+.end{background:linear-gradient(135deg,#15803d,#0f766e); color:#fff; border-radius:24px;
+  padding:26px; margin-top:26px}
+.end h2{font-size:1.5em; font-weight:900; margin-bottom:8px}
+.end ul{margin:10px 0 0; padding-inline-start:20px}
+footer{text-align:center; color:var(--muted); font-size:.85em; margin-top:26px; line-height:2}
+.sig{opacity:.62; font-size:.86em; margin-top:6px}
+
+@media (max-width:760px){
+  body{font-size:16.5px}
+  .tools,.pers{grid-template-columns:1fr}
+  .toc{grid-template-columns:1fr}
+  .hero h1{font-size:1.6em}
+  .wrap{padding:0 13px 50px}
+}
+</style>
+</head>
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<body>
+<div id="bar"></div>
+
+<header class="hero">
+  <div class="inner">
+    <div class="emo">🤖 🎨 🎬 🔊 💻</div>
+    <span class="kicker">به‌روزشده تا جمعه ۱۶ مرداد ۱۴۰۵ (۷ اوت ۲۰۲۶)</span>
+    <h1>۴۰ ابزار برتر هوش مصنوعی — و اینکه کدامشان مال <em>توست</em></h1>
+    <p>یک راهنمای کامل، ساده و بدون کلمهٔ قلمبه. طوری نوشته شده که اگر تا حالا حتی یک بار هم با هوش مصنوعی کار نکرده باشی، تا آخرش گم نشوی.</p>
+    <div class="promise">
+      <b>قراره چی یاد بگیریم؟</b><br>
+      ۱) هوش مصنوعی دقیقاً چه کاری برایت انجام می‌دهد &nbsp;•&nbsp;
+      ۲) پیدا کردن ابزار مخصوص <b>شغل و نیاز خودت</b> &nbsp;•&nbsp;
+      ۳) معرفی کاربردی ۴۰ ابزار در ۸ خانواده &nbsp;•&nbsp;
+      ۴) چطور در ۱۰ دقیقه یک ابزار را تست کنی &nbsp;•&nbsp;
+      ۵) اشتباه‌های رایجی که وقت و پولت را می‌سوزاند
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="card">
+    <span class="chip">فهرست مراحل</span>
+    <h2>🗺 نقشهٔ راه — کجا هستیم و کجا می‌رویم</h2>
+    <div class="toc">
+      <a href="#g0">۱ · پیش‌نیازها (از صفر)</a>
+      <a href="#gp">۲ · پرسونا‌یاب: ابزار من کدام است؟</a>
+      <a href="#g1">۳ · دستیارهای همه‌کاره</a>
+      <a href="#g2">۴ · جست‌وجو، تحقیق و درس</a>
+      <a href="#g3">۵ · نوشتن، ترجمه، ویرایش</a>
+      <a href="#g4">۶ · ساخت و ویرایش تصویر</a>
+      <a href="#g5">۷ · ساخت و تدوین ویدیو</a>
+      <a href="#g6">۸ · صدا، گفتار و موسیقی</a>
+      <a href="#g7">۹ · برنامه‌نویسی و ساخت اپ</a>
+      <a href="#g8">۱۰ · کار اداری و اتوماسیون</a>
+      <a href="#first10">۱۱ · اولین ۱۰ دقیقه با هر ابزار</a>
+      <a href="#prompt">۱۲ · قانون طلایی پرامپت‌نویسی</a>
+      <a href="#news">📰 چه چیزهایی تازه عوض شده؟</a>
+      <a href="#words">📖 واژه‌نامهٔ ساده</a>
+      <a href="#fix">🔧 رفع اشکال و اشتباهات رایج</a>
+    </div>
+    <div class="box warn"><b>⚠️ مواظب باش — سه فرض این آموزش</b>
+      ۱) فرض شده تو فقط بلدی کامپیوتر یا موبایل را روشن کنی، کلیک کنی و تایپ کنی. هیچ دانش دیگری لازم نیست.<br>
+      ۲) <b>قیمت‌ها تقریبی‌اند.</b> این بازار خیلی سریع عوض می‌شود؛ قبل از پرداخت، حتماً قیمت را در سایت خودِ ابزار ببین.<br>
+      ۳) بعضی از این سرویس‌ها برای کاربران ایران محدودیت دسترسی یا پرداخت دارند و وضعیتشان مرتب تغییر می‌کند. قبل از خرید، خودت وضعیت روز را بررسی کن.</div>
+  </section>
+
+  <section class="card stage a" id="g0">
+    <span class="chip">مرحله ۱ از ۱۲</span>
+    <h2>🧱 پیش‌نیازها — قبل از هر چیز</h2>
+    <p class="lead">مثل آشپزی: قبل از اینکه اجاق را روشن کنی، باید مواد اولیه روی میز باشد. برای کار با تقریباً همهٔ این ۴۰ ابزار، فقط همین چهار چیز لازم است.</p>
+
+    <table class="tbl">
+      <tr><th>چه چیزی لازم دارم؟</th><th>چرا؟</th><th>چطور مطمئن شوم دارمش؟</th></tr>
+      <tr><td><span class="pill">۱</span> یک گوشی یا کامپیوتر با مرورگر</td><td>تقریباً همهٔ این ابزارها داخل مرورگر کار می‌کنند و نیازی به نصب ندارند.</td><td>اگر همین صفحه را می‌بینی، یعنی داری. ✅</td></tr>
+      <tr><td><span class="pill">۲</span> یک آدرس ایمیل</td><td>برای ساختن حساب کاربری در هر سرویس.</td><td>ایمیلت را باز کن؛ اگر باز شد، آماده‌ای.</td></tr>
+      <tr><td><span class="pill">۳</span> اینترنت پایدار</td><td>این ابزارها روی کامپیوتر تو اجرا نمی‌شوند؛ روی سرورهای اینترنتی اجرا می‌شوند.</td><td>یک ویدیوی یوتیوب یا آپارات باز کن؛ اگر بدون قطعی پخش شد، خوب است.</td></tr>
+      <tr><td><span class="pill">۴</span> صبر برای «امتحان کردن»</td><td>هیچ‌کس با اولین دستور، جواب عالی نمی‌گیرد. مثل دوچرخه‌سواری، چند بار می‌افتی.</td><td>تصمیم بگیر امروز حداقل ۱۰ دقیقه با یک ابزار ور بروی.</td></tr>
+    </table>
+
+    <div class="box note"><b>📖 اول از همه: هوش مصنوعی اصلاً چیست؟</b>
+      تصور کن یک <b>کارآموز خیلی باهوش</b> استخدام کرده‌ای که تمام کتاب‌ها و سایت‌های دنیا را خوانده،
+      خیلی سریع کار می‌کند و هیچ‌وقت خسته نمی‌شود — ولی <b>گاهی با اعتماد به نفس کامل، اشتباه می‌گوید</b>
+      و از اتفاقات <b>خیلی جدید</b> هم ممکن است خبر نداشته باشد.<br>
+      تمام رابطهٔ درست با این ابزارها از همین جمله شروع می‌شود: <b>کارش را تحویل بگیر، ولی چشم‌بسته باور نکن.</b></div>
+
+    <div class="box check"><b>✅ خودت را امتحان کن</b>
+      الان باید بتوانی این جمله را کامل کنی: «هوش مصنوعی برای من مثل یک ……… است که ……… .»
+      اگر نتوانستی، پاراگراف بالا را یک بار دیگر بخوان.</div>
+  </section>
+
+  <section class="card stage b" id="gp">
+    <span class="chip">مرحله ۲ از ۱۲</span>
+    <h2>🧭 پرسونا‌یاب — کدام ابزار مال توست؟</h2>
+    <p class="lead">بزرگ‌ترین اشتباه تازه‌کارها این است که ۲۰ ابزار را نصب می‌کنند و هیچ‌کدام را استفاده نمی‌کنند.
+    راه درست برعکس است: <b>اول بگو کارت چیست، بعد ابزارش را بردار.</b> خودت را در جدول زیر پیدا کن و شماره‌ها را یادداشت کن.</p>
+
+    <div class="flow">
+      <div class="b">۱. کارم چیست؟</div><div class="ar">←</div>
+      <div class="b">۲. خروجی‌ام متن است یا عکس یا صدا یا کد؟</div><div class="ar">←</div>
+      <div class="b">۳. یک ابزار انتخاب کن</div><div class="ar">←</div>
+      <div class="b">۴. یک هفته فقط با همان کار کن</div>
+    </div>
+
+    <div class="pers">
+      <div class="p">
+        <div class="t">🎒 دانش‌آموز / دانشجو</div>
+        <div class="d">خلاصهٔ جزوه، حل تمرین، ارائهٔ کلاسی</div>
+        <div class="n">ابزارهای پیشنهادی: ۸ · ۱ · ۳۶ · ۶</div>
+      </div>
+      <div class="p">
+        <div class="t">🧑‍🏫 معلم و مدرس</div>
+        <div class="d">طرح درس، آزمون، ویدیوی آموزشی</div>
+        <div class="n">ابزارهای پیشنهادی: ۱ · ۸ · ۲۵ · ۳۷</div>
+      </div>
+      <div class="p">
+        <div class="t">🧑‍💻 برنامه‌نویس</div>
+        <div class="d">نوشتن، دیباگ و بازبینی کد</div>
+        <div class="n">ابزارهای پیشنهادی: ۳۱ · ۳۲ · ۳۳ · ۲</div>
+      </div>
+      <div class="p">
+        <div class="t">🎨 طراح گرافیک</div>
+        <div class="d">لوگو، آیکون، تصویرسازی</div>
+        <div class="n">ابزارهای پیشنهادی: ۱۸ · ۲۰ · ۱۹ · ۲۱</div>
+      </div>
+      <div class="p">
+        <div class="t">📹 یوتیوبر و سازندهٔ محتوا</div>
+        <div class="d">کلیپ، صداگذاری، زیرنویس</div>
+        <div class="n">ابزارهای پیشنهادی: ۲۳ · ۲۷ · ۲۶ · ۲۸</div>
+      </div>
+      <div class="p">
+        <div class="t">📈 بازاریاب و تبلیغات</div>
+        <div class="d">بنر، کپشن، تیزر، ایده</div>
+        <div class="n">ابزارهای پیشنهادی: ۱۶ · ۳۷ · ۲۲ · ۱</div>
+      </div>
+      <div class="p">
+        <div class="t">🛍 فروشندهٔ اینستاگرام / فروشگاه</div>
+        <div class="d">عکس محصول، پست، پاسخ مشتری</div>
+        <div class="n">ابزارهای پیشنهادی: ۱۷ · ۳۷ · ۲۶ · ۳۹</div>
+      </div>
+      <div class="p">
+        <div class="t">🏢 کارمند و مدیر اداری</div>
+        <div class="d">ایمیل، اکسل، جلسه، گزارش</div>
+        <div class="n">ابزارهای پیشنهادی: ۴ · ۳۸ · ۳۶ · ۲</div>
+      </div>
+      <div class="p">
+        <div class="t">🔬 پژوهشگر</div>
+        <div class="d">مرور مقاله، منبع‌دهی، تحلیل</div>
+        <div class="n">ابزارهای پیشنهادی: ۹ · ۱۰ · ۷ · ۸</div>
+      </div>
+      <div class="p">
+        <div class="t">⚖️ وکیل و کارشناس حقوقی</div>
+        <div class="d">خواندن پروندهٔ حجیم، تحلیل بند</div>
+        <div class="n">ابزارهای پیشنهادی: ۲ · ۸ · ۷ · ۱۲</div>
+      </div>
+      <div class="p">
+        <div class="t">🌐 مترجم و کارشناس زبان</div>
+        <div class="d">ترجمه، ویرایش، لحن</div>
+        <div class="n">ابزارهای پیشنهادی: ۱۲ · ۱۳ · ۱۴ · ۲</div>
+      </div>
+      <div class="p">
+        <div class="t">🎼 موزیسین و پادکستر</div>
+        <div class="d">آهنگ، گویندگی، تدوین صوت</div>
+        <div class="n">ابزارهای پیشنهادی: ۲۸ · ۲۹ · ۲۷ · ۳۰</div>
+      </div>
+      <div class="p">
+        <div class="t">🚀 کارآفرین و استارتاپ</div>
+        <div class="d">نمونهٔ اولیه، پیچ‌دک، تحقیق بازار</div>
+        <div class="n">ابزارهای پیشنهادی: ۳۴ · ۳۶ · ۴۰ · ۷</div>
+      </div>
+      <div class="p">
+        <div class="t">👨‍👩‍👧 والدین و کاربر عادی</div>
+        <div class="d">کمک درسی بچه، کارهای روزمره</div>
+        <div class="n">ابزارهای پیشنهادی: ۳ · ۱ · ۳۷ · ۲۶</div>
+      </div>
+    </div>
+
+    <div class="box tip"><b>💡 نکته</b>
+      شماره‌های داخل جدول، همان شماره‌های کارت ابزارها در ادامهٔ همین صفحه است.
+      لازم نیست همهٔ ۴۰ تا را بخوانی — می‌توانی مستقیم سراغ شماره‌های خودت بروی.</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید یک کاغذ (یا یادداشت گوشی) داشته باشی که رویش ۳ تا ۴ عدد نوشته شده. آن عددها نقشهٔ راه شخصی تو هستند.</div>
+  </section>
+
+  <section class="card stage a" id="g1">
+    <span class="chip">مرحله ۳ از ۱۲</span>
+    <h2>🤖 خانواده ۱ — دستیارهای همه‌کاره (چت‌بات‌ها)</h2>
+    <p class="lead">این‌ها مثل یک «همکار خیلی باسواد» هستند که هر سؤالی بپرسی جواب می‌دهد، متن می‌نویسد، فایل می‌خواند و خلاصه می‌کند. اگر تازه‌کاری، <b>فقط یکی</b> از این شش‌تا را انتخاب کن و بقیه را فعلاً بی‌خیال شو.</p>
+    <div class="tools">
+      <div class="tool a">
+        <div class="head">
+          <div class="num">1</div>
+          <div>
+            <h3>💬 <span dir="ltr">ChatGPT</span></h3>
+            <div class="by">سازنده: <span dir="ltr">OpenAI</span></div>
+          </div>
+        </div>
+        <div class="tag">همه‌کاره‌ترین و پرکاربرترین دستیار دنیا</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> متن می‌نویسد، ترجمه می‌کند، فایل PDF و اکسل می‌خواند و خلاصه می‌کند، تصویر می‌سازد، در وب جست‌وجو می‌کند و حتی کد می‌نویسد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> اگر نمی‌دانی از کدام ابزار شروع کنی، از همین شروع کن. مناسب دانش‌آموز، کارمند، فروشنده، معلم — یعنی تقریباً همه.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این قرارداد ۲۰ صفحه‌ای را بخوان، خلاصه کن، و بگو کدام بندش به ضرر من است.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان دارد. پلن‌های پولی تقریباً از ۸ دلار (Go) و ۲۰ دلار (Plus) شروع می‌شود و تا پلن‌های حرفه‌ای ۱۰۰ و ۲۰۰ دلاری بالا می‌رود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> از ۱۸ تیر ۱۴۰۵ مدل پیش‌فرضش <span dir="ltr">GPT-5.6</span> است. اگر جواب سطحی گرفتی، در تنظیمات گفت‌وگو مدل قوی‌ترش را انتخاب کن.</div>
+        <span class="url">chatgpt.com</span>
+      </div>
+      <div class="tool a">
+        <div class="head">
+          <div class="num">2</div>
+          <div>
+            <h3>🧠 <span dir="ltr">Claude</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Anthropic</span></div>
+          </div>
+        </div>
+        <div class="tag">قهرمان متن‌های بلند، تحلیل دقیق و کدنویسی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> متن‌های طولانی و سندهای سنگین را دقیق می‌خواند، مقاله و گزارش ساختارمند می‌نویسد و در برنامه‌نویسی جزو بهترین‌هاست.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> نویسنده، پژوهشگر، وکیل، تحلیل‌گر و برنامه‌نویس. هر کسی که خروجی‌اش «متن جدی» است.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این ۵ فایل گزارش را با هم مقایسه کن و تناقض‌هایشان را در یک جدول بنویس.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان دارد؛ پلن Pro حدود ۲۰ دلار در ماه و پلن‌های Max برای مصرف سنگین گران‌تر است.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> قوی‌ترین مدلش <span dir="ltr">Claude Opus 5</span> است که ۲ مرداد ۱۴۰۵ منتشر شد. برای کارهای سبک‌تر و سریع‌تر <span dir="ltr">Sonnet 5</span> کافی است.</div>
+        <span class="url">claude.ai</span>
+      </div>
+      <div class="tool a">
+        <div class="head">
+          <div class="num">3</div>
+          <div>
+            <h3>💎 <span dir="ltr">Gemini</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Google</span></div>
+          </div>
+        </div>
+        <div class="tag">دستیاری که داخل خود گوگل زندگی می‌کند</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> داخل جیمیل، گوگل‌داکس، اندروید، یوتیوب و جست‌وجوی گوگل کار می‌کند. تصویر هم می‌سازد و ویدیوهای طولانی را خلاصه می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> هر کسی که کارهایش در حساب گوگل است: ایمیل، فایل، تقویم، درایو.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «ایمیل‌های این هفته‌ام را بخوان و بگو به کدام‌ها هنوز جواب نداده‌ام.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگانش سخاوتمند است. پلن پایه <span dir="ltr">Google AI Plus</span> حدود ۵ دلار، پلن Pro حدود ۲۰ دلار و پلن Ultra حدود ۱۰۰ دلار در ماه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> مدل دقیقش <span dir="ltr">Gemini 3.1 Pro</span> و مدل سریع و ارزانش <span dir="ltr">Gemini 3.6 Flash</span> است.</div>
+        <span class="url">gemini.google.com</span>
+      </div>
+      <div class="tool a">
+        <div class="head">
+          <div class="num">4</div>
+          <div>
+            <h3>🪟 <span dir="ltr">Microsoft Copilot</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Microsoft</span></div>
+          </div>
+        </div>
+        <div class="tag">دستیار رایگانی که داخل ویندوز و آفیس نشسته</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> در Word متن می‌نویسد، در Excel فرمول می‌سازد، در PowerPoint اسلاید می‌چیند و در Outlook ایمیل جواب می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> کارمند اداری، حسابدار، مدیر دفتر — هر کسی که روزش با آفیس می‌گذرد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «از این جدول فروش، نمودار ماهانه بساز و سه نکتهٔ مهمش را زیرش بنویس.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ پایه رایگان است؛ امکانات کامل داخل آفیس با اشتراک مایکروسافت ۳۶۵ فعال می‌شود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> اگر ویندوز ۱۱ داری، احتمالاً همین حالا روی نوار وظیفه‌ات نصب است و خبر نداری.</div>
+        <span class="url">copilot.microsoft.com</span>
+      </div>
+      <div class="tool a">
+        <div class="head">
+          <div class="num">5</div>
+          <div>
+            <h3>⚡ <span dir="ltr">Grok</span></h3>
+            <div class="by">سازنده: <span dir="ltr">xAI</span></div>
+          </div>
+        </div>
+        <div class="tag">برای فهمیدن «همین الان چه خبر است»</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> به داده‌های لحظه‌ای شبکهٔ اجتماعی X وصل است، پس در اخبار داغ و واکنش‌های مردم از بقیه به‌روزتر است. تصویر و ویدیو هم می‌سازد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> خبرنگار، تحلیل‌گر بازار، مدیر شبکه‌های اجتماعی.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «در ۲۴ ساعت گذشته دربارهٔ این محصول چه واکنش‌هایی منتشر شده؟»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان محدود دارد؛ پلن‌های پولی از حدود ۳۰ دلار در ماه شروع می‌شود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> چون از شبکهٔ اجتماعی تغذیه می‌شود، شایعه هم می‌بیند. هر عدد و خبری را از منبع اصلی چک کن.</div>
+        <span class="url">grok.com</span>
+      </div>
+      <div class="tool a">
+        <div class="head">
+          <div class="num">6</div>
+          <div>
+            <h3>🐳 <span dir="ltr">DeepSeek</span></h3>
+            <div class="by">سازنده: <span dir="ltr">DeepSeek</span></div>
+          </div>
+        </div>
+        <div class="tag">ارزان‌ترین گزینهٔ باکیفیت بازار</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> در ریاضی، منطق و کدنویسی خیلی خوب است و هزینهٔ استفاده از آن برای برنامه‌نویس‌ها به‌طرز عجیبی کم است.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانشجو، برنامه‌نویس، و هر کسی که بودجه‌اش محدود است.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این مسئلهٔ فیزیک را قدم‌به‌قدم حل کن و بگو کجای راه‌حل من اشتباه است.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> چت‌ آن رایگان است؛ استفادهٔ برنامه‌نویسی‌اش (API) از ارزان‌ترین‌های بازار است.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> نسخهٔ فعلی <span dir="ltr">DeepSeek V4</span> است. برای کار محرمانه، حواست باشد که این سرویس چینی است و داده‌ات روی سرورهای آن‌ها می‌رود.</div>
+        <span class="url">chat.deepseek.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 6 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage b" id="g2">
+    <span class="chip">مرحله ۴ از ۱۲</span>
+    <h2>🔎 خانواده ۲ — جست‌وجو، تحقیق و درس خواندن</h2>
+    <p class="lead">فرق این‌ها با چت‌بات ساده این است که <b>منبع نشان می‌دهند</b>. یعنی می‌گویند این حرف را از کجا آورده‌اند. برای مشق، پایان‌نامه، مقاله و هر چیزی که باید «قابل اثبات» باشد، این خانواده را انتخاب کن.</p>
+    <div class="tools">
+      <div class="tool b">
+        <div class="head">
+          <div class="num">7</div>
+          <div>
+            <h3>🔍 <span dir="ltr">Perplexity</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Perplexity AI</span></div>
+          </div>
+        </div>
+        <div class="tag">موتور جست‌وجویی که جواب می‌دهد، نه لینک</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> سؤالت را در وب می‌گردد، جواب را می‌نویسد و کنار هر جمله شمارهٔ منبعش را می‌گذارد تا خودت چک کنی.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> پژوهشگر، خبرنگار، دانشجو، و هر کسی که از «شاید اشتباه بگوید» می‌ترسد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «آخرین قیمت جهانی مس در سه ماه گذشته چقدر تغییر کرده؟ با منبع.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان دارد؛ پلن Pro حدود ۲۰ دلار در ماه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> مرورگر خودش به نام <span dir="ltr">Comet</span> هم رایگان شده؛ می‌تواند در صفحهٔ باز، خودش کلیک کند و فرم پر کند.</div>
+        <span class="url">perplexity.ai</span>
+      </div>
+      <div class="tool b">
+        <div class="head">
+          <div class="num">8</div>
+          <div>
+            <h3>📚 <span dir="ltr">Gemini Notebook</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Google (نام قبلی: NotebookLM)</span></div>
+          </div>
+        </div>
+        <div class="tag">فقط از روی فایل‌های خودت جواب می‌دهد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> چند PDF، جزوه، لینک یا ویدیوی یوتیوب را آپلود می‌کنی؛ بعد فقط و فقط از همان‌ها به تو جواب می‌دهد و شمارهٔ صفحه را نشان می‌دهد. از جزوه‌ات پادکست صوتی دو نفره هم می‌سازد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانش‌آموز و دانشجو برای امتحان، وکیل برای پروندهٔ چندصد صفحه‌ای، مدیر برای گزارش‌های انباشته.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «از این ۵ جزوهٔ درسی یک برگهٔ مرور امتحان با ۲۰ سؤال تستی بساز.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگانش واقعاً کارآمد است. پلن‌های Google AI سقف‌ها را بالا می‌برند.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ اسمش عوض شده! از ۲۵ تیر ۱۴۰۵ نامش از <span dir="ltr">NotebookLM</span> به <span dir="ltr">Gemini Notebook</span> تغییر کرد. همان محصول است و لینک‌های قدیمی هم کار می‌کنند.</div>
+        <span class="url">notebooklm.google</span>
+      </div>
+      <div class="tool b">
+        <div class="head">
+          <div class="num">9</div>
+          <div>
+            <h3>🔬 <span dir="ltr">Elicit</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Elicit</span></div>
+          </div>
+        </div>
+        <div class="tag">دستیار مرور مقالات علمی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> سؤال پژوهشی‌ات را می‌گیرد، ده‌ها مقالهٔ علمی را می‌گردد و یافته‌های هرکدام را در یک جدول کنار هم می‌چیند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانشجوی ارشد و دکتری، پژوهشگر، پزشک.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «اثر ورزش هوازی بر کیفیت خواب در مقالات ۵ سال اخیر چه بوده؟»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سقف رایگان ماهانه دارد؛ پلن‌های پولی برای مرور سیستماتیک.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> جای مقاله‌خواندن را نمی‌گیرد؛ فقط سریع‌تر پیدا می‌کند که کدام مقاله ارزش خواندن دارد.</div>
+        <span class="url">elicit.com</span>
+      </div>
+      <div class="tool b">
+        <div class="head">
+          <div class="num">10</div>
+          <div>
+            <h3>✅ <span dir="ltr">Consensus</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Consensus</span></div>
+          </div>
+        </div>
+        <div class="tag">می‌گوید علم دربارهٔ یک ادعا چه نظری دارد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> وقتی می‌پرسی «آیا فلان چیز مفید است؟»، نتیجهٔ ده‌ها پژوهش را جمع می‌کند و نشان می‌دهد چند درصدشان موافق‌اند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> هر کسی که می‌خواهد ادعاهای سلامتی و تغذیه‌ای اینترنت را راستی‌آزمایی کند.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «آیا مکمل ویتامین D واقعاً از سرماخوردگی جلوگیری می‌کند؟»</div>
+        <div class="row"><span class="lbl">هزینه:</span> جست‌وجوی پایه رایگان است؛ امکانات بیشتر پولی.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> این ابزار جای پزشک را نمی‌گیرد. برای تصمیم درمانی حتماً با پزشک مشورت کن.</div>
+        <span class="url">consensus.app</span>
+      </div>
+      <div class="tool b">
+        <div class="head">
+          <div class="num">11</div>
+          <div>
+            <h3>🧪 <span dir="ltr">Google AI Studio</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Google</span></div>
+          </div>
+        </div>
+        <div class="tag">آزمایشگاه رایگان برای تست کردن مدل‌ها</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> می‌توانی رایگان با مدل‌های گوگل ور بروی، پرامپت‌هایت را تنظیم کنی و اگر خواستی، کلید برنامه‌نویسی (API) بگیری.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> کنجکاوها، دانشجوی کامپیوتر، و کسی که می‌خواهد هوش مصنوعی را داخل برنامهٔ خودش بگذارد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این پرامپت را روی سه مدل مختلف امتحان کن و ببین کدام جواب بهتری می‌دهد.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> برای تست و کار سبک رایگان است.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> بهترین جا برای یاد گرفتن «پرامپت‌نویسی» بدون خرج کردن پول.</div>
+        <span class="url">aistudio.google.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 5 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage c" id="g3">
+    <span class="chip">مرحله ۵ از ۱۲</span>
+    <h2>✍️ خانواده ۳ — نوشتن، ترجمه و ویرایش متن</h2>
+    <p class="lead">چت‌بات‌های خانوادهٔ ۱ هم می‌نویسند، اما این‌ها <b>تخصصی</b>اند: یا ترجمه‌شان دقیق‌تر است، یا داخل همان جایی که می‌نویسی زندگی می‌کنند.</p>
+    <div class="tools">
+      <div class="tool c">
+        <div class="head">
+          <div class="num">12</div>
+          <div>
+            <h3>🌍 <span dir="ltr">DeepL</span></h3>
+            <div class="by">سازنده: <span dir="ltr">DeepL</span></div>
+          </div>
+        </div>
+        <div class="tag">دقیق‌ترین مترجم ماشینی برای متن رسمی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> متن و فایل کامل (Word و PDF) را ترجمه می‌کند و لحن رسمی یا دوستانه را هم می‌شود انتخاب کرد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> مترجم، دانشجو برای مقالهٔ انگلیسی، صادرکننده برای مکاتبات کاری.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> فایل قرارداد انگلیسی را آپلود کن و ترجمهٔ فارسی با همان قالب‌بندی تحویل بگیر.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان با محدودیت کاراکتر؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> برای متن‌های فنی، ترجمهٔ DeepL را با ترجمهٔ یک چت‌بات مقایسه کن و بهترین را بردار.</div>
+        <span class="url">deepl.com</span>
+      </div>
+      <div class="tool c">
+        <div class="head">
+          <div class="num">13</div>
+          <div>
+            <h3>🖊 <span dir="ltr">Grammarly</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Grammarly</span></div>
+          </div>
+        </div>
+        <div class="tag">معلم انگلیسی که روی شانه‌ات نشسته</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> همان لحظه که انگلیسی می‌نویسی، غلط گرامری و املایی را می‌گیرد و جملهٔ روان‌تر پیشنهاد می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> هر ایرانی‌ای که باید ایمیل، رزومه یا مقالهٔ انگلیسی بفرستد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> ایمیل انگلیسی‌ات را بنویس و بگذار قبل از ارسال، لحنش را «حرفه‌ای» کند.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگانش غلط‌های اصلی را می‌گیرد؛ نسخهٔ پولی پیشنهاد سبک و لحن می‌دهد.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> به‌شکل افزونهٔ مرورگر نصبش کن تا در جیمیل و لینکدین هم فعال باشد.</div>
+        <span class="url">grammarly.com</span>
+      </div>
+      <div class="tool c">
+        <div class="head">
+          <div class="num">14</div>
+          <div>
+            <h3>🔁 <span dir="ltr">QuillBot</span></h3>
+            <div class="by">سازنده: <span dir="ltr">QuillBot</span></div>
+          </div>
+        </div>
+        <div class="tag">بازنویسی و خلاصه‌سازی سریع متن</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> یک پاراگراف را با کلمات دیگر بازنویسی می‌کند، خلاصه می‌کند و منبع‌نویسی هم دارد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانشجو، تولیدکنندهٔ محتوا، کسی که متنش تکراری شده.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این پاراگراف را ساده‌تر بنویس تا برای مخاطب عمومی قابل‌فهم شود.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان محدود؛ پلن Premium ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ بازنویسیِ متنِ دیگران، آن را «مال تو» نمی‌کند. سرقت ادبی همچنان سرقت ادبی است.</div>
+        <span class="url">quillbot.com</span>
+      </div>
+      <div class="tool c">
+        <div class="head">
+          <div class="num">15</div>
+          <div>
+            <h3>🗂 <span dir="ltr">Notion AI</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Notion</span></div>
+          </div>
+        </div>
+        <div class="tag">دستیار نوشتن داخل فضای کاری تیمی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> داخل همان صفحه‌ای که یادداشت و تسک‌هایت را نگه می‌داری، خلاصه می‌نویسد، جدول می‌سازد و در بین صفحاتت جست‌وجو می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> تیم‌های کوچک، استارتاپ‌ها، مدیران پروژه.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «از یادداشت‌های این هفتهٔ تیم، لیست کارهای باقی‌مانده را دربیاور.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نوشن نسخهٔ رایگان دارد؛ امکانات هوش مصنوعی در پلن‌های پولی.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> اگر تیمت اهل نوشن نیست، این ابزار به دردت نمی‌خورد. ابزار باید <b>جایی که هستی</b> باشد.</div>
+        <span class="url">notion.so</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 4 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage d" id="g4">
+    <span class="chip">مرحله ۶ از ۱۲</span>
+    <h2>🎨 خانواده ۴ — ساخت و ویرایش تصویر</h2>
+    <p class="lead">همه‌شان «از روی متن، عکس می‌سازند»؛ ولی هرکدام یک تخصص دارد. مثل مغازه‌های یک بازار: یکی نانوایی است، یکی قنادی. اشتباه رفتن، وقت تلف کردن است.</p>
+    <div class="tools">
+      <div class="tool d">
+        <div class="head">
+          <div class="num">16</div>
+          <div>
+            <h3>🖼 <span dir="ltr">GPT Image (در ChatGPT)</span></h3>
+            <div class="by">سازنده: <span dir="ltr">OpenAI</span></div>
+          </div>
+        </div>
+        <div class="tag">بهترین در «دقیقاً همان چیزی که خواستم»</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> دستور پیچیده را درست اجرا می‌کند و مهم‌تر از همه، <b>متن داخل تصویر</b> را تقریباً بدون غلط می‌نویسد. عکس موجود را هم ویرایش می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> بازاریاب، فروشندهٔ اینستاگرام، طراح پوستر و بنر.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک بنر تخفیف بساز که وسطش با فونت درشت بنویسد ۵۰٪ OFF.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> با همان اشتراک ChatGPT؛ نسخهٔ رایگان سقف روزانه دارد.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> نسل جدیدش (<span dir="ltr">GPT Image 2</span>) از فروردین ۱۴۰۵ صدرنشین رتبه‌بندی‌های مستقل تصویر است.</div>
+        <span class="url">chatgpt.com</span>
+      </div>
+      <div class="tool d">
+        <div class="head">
+          <div class="num">17</div>
+          <div>
+            <h3>🍌 <span dir="ltr">Nano Banana (در Gemini)</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Google</span></div>
+          </div>
+        </div>
+        <div class="tag">بهترین گزینهٔ رایگان برای عکس</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> مدل تصویرسازی گوگل که داخل اپ Gemini است. می‌توانی مثل چت با آن حرف بزنی: «همین عکس، ولی پس‌زمینه‌اش شب باشد.»</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> هر کسی که بودجه ندارد ولی کیفیت خوب می‌خواهد؛ عکس محصول برای فروشگاه اینترنتی.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «عکس این کفش را روی یک میز چوبی با نور طبیعی بگذار.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سهمیهٔ رایگان روزانه دارد؛ با پلن‌های Google AI بیشتر می‌شود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> برای «ویرایش عکسِ موجود» معمولاً از رقبایش راحت‌تر است، چون با زبان ساده دستور می‌گیری.</div>
+        <span class="url">gemini.google.com</span>
+      </div>
+      <div class="tool d">
+        <div class="head">
+          <div class="num">18</div>
+          <div>
+            <h3>🎭 <span dir="ltr">Midjourney</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Midjourney</span></div>
+          </div>
+        </div>
+        <div class="tag">زیباترین و هنری‌ترین خروجی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> تصویرهایی می‌سازد که حس «کار یک هنرمند» را دارند: کانسپت‌آرت، مود‌بورد، تصویرسازی کتاب.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> طراح، هنرمند، کارگردان هنری، ناشر.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک شهر ایرانی در آینده، سبک نقاشی رنگ‌روغن، نور غروب.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> فقط اشتراکی — نسخهٔ رایگان ندارد. پلن‌ها ماهانه از حدود ۱۰ دلار.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> نسخهٔ فعلی از خانوادهٔ <span dir="ltr">V8</span> است. اگر کارت «متن روی تصویر» است، این ابزار انتخاب اول نیست.</div>
+        <span class="url">midjourney.com</span>
+      </div>
+      <div class="tool d">
+        <div class="head">
+          <div class="num">19</div>
+          <div>
+            <h3>🔤 <span dir="ltr">Ideogram</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Ideogram</span></div>
+          </div>
+        </div>
+        <div class="tag">تخصصش نوشتن متن داخل تصویر است</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> لوگو، تایپوگرافی، پوستر و هر چیزی که «کلمه» بخش اصلی تصویر است.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> طراح لوگو، مدیر برند، تولیدکنندهٔ محتوای تبلیغاتی.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «لوگوی یک کافه با اسم Mehr، سبک مینیمال، خط ضخیم.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سهمیهٔ رایگان روزانه دارد؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> در نوشتن حروف فارسی هنوز ضعیف است؛ برای متن فارسی، تصویر را خالی بساز و نوشته را خودت با کنوا اضافه کن.</div>
+        <span class="url">ideogram.ai</span>
+      </div>
+      <div class="tool d">
+        <div class="head">
+          <div class="num">20</div>
+          <div>
+            <h3>📐 <span dir="ltr">Recraft</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Recraft</span></div>
+          </div>
+        </div>
+        <div class="tag">تنها ابزاری که خروجی وکتور می‌دهد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> به‌جای عکس معمولی، فایل <span dir="ltr">SVG</span> می‌سازد؛ یعنی هرچقدر بزرگش کنی بی‌کیفیت نمی‌شود. برای آیکون و لوگو حیاتی است.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> طراح گرافیک، تیم برندینگ، چاپخانه.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک ست ۶تایی آیکون خطی برای بخش خدمات سایت بساز.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سهمیهٔ رایگان روزانه؛ پلن‌های پولی برای خروجی وکتور نامحدودتر.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> وکتور یعنی «نقشهٔ خطوط» به‌جای «شبکهٔ نقطه‌ها» — برای بیلبورد و چاپ بزرگ همیشه وکتور بخواه.</div>
+        <span class="url">recraft.ai</span>
+      </div>
+      <div class="tool d">
+        <div class="head">
+          <div class="num">21</div>
+          <div>
+            <h3>🅰️ <span dir="ltr">Adobe Firefly</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Adobe</span></div>
+          </div>
+        </div>
+        <div class="tag">امن‌ترین گزینه از نظر حقوقی برای کار تجاری</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> روی تصاویری آموزش دیده که ادوبی حق استفاده‌شان را دارد، پس ریسک شکایت کپی‌رایت کمتر است. داخل فتوشاپ هم هست.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> آژانس تبلیغاتی، برند بزرگ، هر کسی که کارش قرارداد رسمی دارد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این عکس محصول را گسترش بده تا برای بنر افقی سایت جا بشود.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سهمیهٔ رایگان ماهانه؛ در اشتراک‌های ادوبی گنجانده شده.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> اگر خروجی‌ات قرار است روی محصول فروشی چاپ شود، این نکتهٔ حقوقی را جدی بگیر.</div>
+        <span class="url">firefly.adobe.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 6 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage e" id="g5">
+    <span class="chip">مرحله ۷ از ۱۲</span>
+    <h2>🎬 خانواده ۵ — ساخت و تدوین ویدیو</h2>
+    <p class="lead">در یک سال گذشته این حوزه بیشتر از همه تکان خورد. نکتهٔ مهم: <b>ابزار Sora شرکت OpenAI تعطیل شد</b> — اپ و سایتش از اردیبهشت ۱۴۰۵ خاموش شده. اگر جایی آموزشش را دیدی، آن مطلب قدیمی است.</p>
+    <div class="tools">
+      <div class="tool e">
+        <div class="head">
+          <div class="num">22</div>
+          <div>
+            <h3>🎥 <span dir="ltr">Veo (در Flow و Gemini)</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Google</span></div>
+          </div>
+        </div>
+        <div class="tag">سینمایی‌ترین کیفیت، با صدای همزمان</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> از یک جملهٔ توصیفی، کلیپ کوتاه با کیفیت بالا می‌سازد و برخلاف اکثر رقبا، صدا و دیالوگ هماهنگ هم تولید می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> فیلم‌ساز، تبلیغات‌چی، کسی که تیزر می‌خواهد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «نمای هوایی از یک جادهٔ کوهستانی در مه، دوربین آرام جلو می‌رود.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> از طریق پلن‌های Google AI (تقریباً از ۲۰ دلار در ماه) در دسترس است.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> محیط <span dir="ltr">Flow</span> برای چیدن چند نما پشت سر هم ساخته شده؛ برای ساخت یک ویدیوی داستانی از همان‌جا شروع کن.</div>
+        <span class="url">labs.google/flow</span>
+      </div>
+      <div class="tool e">
+        <div class="head">
+          <div class="num">23</div>
+          <div>
+            <h3>🐉 <span dir="ltr">Kling AI</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Kuaishou</span></div>
+          </div>
+        </div>
+        <div class="tag">واقعی‌ترین حرکت انسان، با قیمت کمتر</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> در صحنه‌هایی که آدم راه می‌رود، حرف می‌زند یا چیزی برمی‌دارد، طبیعی‌تر از خیلی از رقباست و لیپ‌سینک چندزبانه دارد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> سازندهٔ محتوای تیک‌تاک و ریلز، تبلیغات محصول.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک نفر لیوان قهوه را برمی‌دارد و به دوربین لبخند می‌زند، ۵ ثانیه.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> اعتبار رایگان روزانه دارد؛ پلن‌های پولی بر اساس اعتبار.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> نسخهٔ <span dir="ltr">Kling 3.0</span> از بهمن ۱۴۰۴ در دسترس است و کلیپ‌های بلندتر و ۴K می‌سازد.</div>
+        <span class="url">klingai.com</span>
+      </div>
+      <div class="tool e">
+        <div class="head">
+          <div class="num">24</div>
+          <div>
+            <h3>🎛 <span dir="ltr">Runway</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Runway</span></div>
+          </div>
+        </div>
+        <div class="tag">بیشترین کنترل روی دوربین و ادیت</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> فقط ویدیو نمی‌سازد؛ یک کارگاه کامل است: حرکت دوربین، ثابت نگه‌داشتن شخصیت، پاک‌کردن اجسام از فیلم.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> تدوین‌گر حرفه‌ای، تیم تولید محتوای برند.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این شخصیت را در ۴ نمای مختلف نگه دار تا صحنه یکدست بماند.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> پلن‌ها از حدود ۱۲ تا ۱۵ دلار در ماه شروع می‌شود و برای مصرف سنگین بالاتر می‌رود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> یادگیری‌اش از بقیه سخت‌تر است. اگر تازه‌کاری، اول با Kling یا Veo گرم کن.</div>
+        <span class="url">runwayml.com</span>
+      </div>
+      <div class="tool e">
+        <div class="head">
+          <div class="num">25</div>
+          <div>
+            <h3>🧍 <span dir="ltr">HeyGen</span></h3>
+            <div class="by">سازنده: <span dir="ltr">HeyGen</span></div>
+          </div>
+        </div>
+        <div class="tag">آواتار سخنگو از روی متن + دوبلهٔ چندزبانه</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> متن می‌دهی، یک آدم (واقعی‌نما یا کلون خودت) آن را با لب‌های هماهنگ می‌گوید. ویدیوی موجود را هم به زبان دیگر دوبله می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> مدرس آنلاین، تیم فروش، تولیدکنندهٔ محتوای انبوه، صادرکننده.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> ویدیوی فارسی محصولت را بده تا با صدای خودت به انگلیسی دوبله شود.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان با ویدیوی کوتاه؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ کلون‌کردن صدا یا چهرهٔ <b>دیگران</b> بدون اجازه، هم غیراخلاقی است هم می‌تواند جرم باشد. رقیب اصلی‌اش <span dir="ltr">Synthesia</span> است که برای ویدیوهای آموزشی شرکتی محبوب‌تر است.</div>
+        <span class="url">heygen.com</span>
+      </div>
+      <div class="tool e">
+        <div class="head">
+          <div class="num">26</div>
+          <div>
+            <h3>✂️ <span dir="ltr">CapCut</span></h3>
+            <div class="by">سازنده: <span dir="ltr">ByteDance</span></div>
+          </div>
+        </div>
+        <div class="tag">تدوین ساده با زیرنویس خودکار</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> روی موبایل و کامپیوتر کار می‌کند، خودش زیرنویس می‌سازد، پس‌زمینه را حذف می‌کند و سکوت‌ها را می‌برد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> همه — از دانش‌آموزی که کلیپ درسی می‌سازد تا فروشندهٔ اینستاگرام.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> ویدیوی ۳ دقیقه‌ای بگیر و بگذار خودش زیرنویس بچسباند و تند‌تندش کند.</div>
+        <div class="row"><span class="lbl">هزینه:</span> بخش عمده‌اش رایگان است؛ امکانات پیشرفته در نسخهٔ Pro.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> زیرنویس خودکارش برای فارسی خطا دارد؛ حتماً قبل از انتشار یک بار بخوانش.</div>
+        <span class="url">capcut.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 5 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage f" id="g6">
+    <span class="chip">مرحله ۸ از ۱۲</span>
+    <h2>🔊 خانواده ۶ — صدا، گفتار و موسیقی</h2>
+    <p class="lead">اینجا دو کار جدا انجام می‌شود: <b>ساختن صدا</b> (گویندگی و آهنگ) و <b>تبدیل صدا به متن</b> (پیاده‌سازی جلسه و مصاحبه). قبل از انتخاب، مشخص کن کدام را می‌خواهی.</p>
+    <div class="tools">
+      <div class="tool f">
+        <div class="head">
+          <div class="num">27</div>
+          <div>
+            <h3>🎙 <span dir="ltr">ElevenLabs</span></h3>
+            <div class="by">سازنده: <span dir="ltr">ElevenLabs</span></div>
+          </div>
+        </div>
+        <div class="tag">کامل‌ترین جعبه‌ابزار صوتی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> چهار کار در یک جا: گویندگی از روی متن، کلون‌کردن صدای خودت، تبدیل صوت به متن با دقت بالا، و ساخت موسیقی.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> پادکستر، سازندهٔ ویدیوی آموزشی، ناشر کتاب صوتی، تیم پشتیبانی تلفنی.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> متن مقاله‌ات را بده و فایل صوتی گویندگی‌شده تحویل بگیر.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان ماهانه (حدود ۱۰ دقیقه صدا)؛ پلن‌های پولی از حدود ۵ تا ۶ دلار شروع می‌شود.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> برای کلون صدا فقط چند ثانیه نمونه لازم دارد — که دقیقاً به همین دلیل باید فقط صدای خودت را کلون کنی.</div>
+        <span class="url">elevenlabs.io</span>
+      </div>
+      <div class="tool f">
+        <div class="head">
+          <div class="num">28</div>
+          <div>
+            <h3>🎵 <span dir="ltr">Suno</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Suno</span></div>
+          </div>
+        </div>
+        <div class="tag">از یک جمله، یک آهنگ کامل با آواز</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> سبک و حال‌وهوا را توصیف می‌کنی (یا شعر خودت را می‌دهی) و یک آهنگ کامل با خواننده تحویل می‌گیری.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> سازندهٔ ویدیو که موسیقی متن می‌خواهد، معلمی که ترانهٔ آموزشی می‌سازد، هرکسی که برای تولد دوستش آهنگ می‌خواهد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک آهنگ شاد پاپ دربارهٔ اولین روز مدرسه، با صدای زن.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان با اعتبار روزانه؛ پلن‌های پولی از حدود ۱۰ دلار در ماه (حق استفادهٔ تجاری معمولاً فقط در پلن پولی است).</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ قبل از استفادهٔ تجاری، شرایط مالکیت اثر را بخوان؛ این موضوع در ۲۰۲۶ هنوز محل دعوای حقوقی است.</div>
+        <span class="url">suno.com</span>
+      </div>
+      <div class="tool f">
+        <div class="head">
+          <div class="num">29</div>
+          <div>
+            <h3>🎚 <span dir="ltr">Udio</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Udio</span></div>
+          </div>
+        </div>
+        <div class="tag">کنترل ریزتر روی ساختار موسیقی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> می‌گذارد قطعه را ادامه بدهی، یک بخش را عوض کنی و تکه‌ها را به هم بچسبانی. کیفیت سازها تمیزتر است.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> موزیسین و تدوین‌گر صدا که فقط «یک آهنگ سریع» نمی‌خواهد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «همین قطعه را ۳۰ ثانیه ادامه بده ولی درام را حذف کن.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان محدود؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> یک مقایسهٔ رایج: Suno مثل «کنوا»ی موسیقی است و Udio مثل «فتوشاپ»ش.</div>
+        <span class="url">udio.com</span>
+      </div>
+      <div class="tool f">
+        <div class="head">
+          <div class="num">30</div>
+          <div>
+            <h3>📝 <span dir="ltr">Descript</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Descript</span></div>
+          </div>
+        </div>
+        <div class="tag">ویدیو و پادکست را مثل فایل Word ادیت کن</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> صدا را به متن تبدیل می‌کند؛ بعد اگر یک جمله را از متن پاک کنی، همان تکه از ویدیو هم پاک می‌شود. «اِ‌اِ‌اِ» گفتن‌ها را هم خودکار حذف می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> پادکستر، مدرس، هر کسی که از تایم‌لاین تدوین می‌ترسد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> مصاحبهٔ یک‌ساعته را ضبط کن و با پاک کردن جملات اضافی، به ۱۵ دقیقه برسان.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان با سقف ساعت؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> پشتیبانی‌اش از فارسی محدود است؛ برای محتوای انگلیسی عالی است.</div>
+        <span class="url">descript.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 4 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage g" id="g7">
+    <span class="chip">مرحله ۹ از ۱۲</span>
+    <h2>💻 خانواده ۷ — برنامه‌نویسی و ساخت نرم‌افزار</h2>
+    <p class="lead">دو دستهٔ کاملاً متفاوت اینجاست: ابزارهایی که <b>به برنامه‌نویس کمک می‌کنند</b> (شمارهٔ ۳۱ تا ۳۳) و ابزارهایی که <b>برای آدم غیربرنامه‌نویس، خودشان اپ می‌سازند</b> (۳۴ و ۳۵).</p>
+    <div class="tools">
+      <div class="tool g">
+        <div class="head">
+          <div class="num">31</div>
+          <div>
+            <h3>⌨️ <span dir="ltr">Claude Code</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Anthropic</span></div>
+          </div>
+        </div>
+        <div class="tag">دستیاری که خودش در پروژه‌ات کار می‌کند</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> در خط فرمان یا داخل ادیتور اجرا می‌شود، کل پروژه را می‌خواند، چند فایل را با هم تغییر می‌دهد و تست می‌گیرد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> برنامه‌نویس حرفه‌ای و تیم‌های نرم‌افزاری.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این باگ را پیدا کن، درستش کن و برایش تست بنویس.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> با اشتراک Claude (از حدود ۲۰ دلار) یا پرداخت به‌ازای مصرف.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> چون خودش دستور اجرا می‌کند، همیشه روی پروژه‌ای کار کن که نسخهٔ پشتیبان یا <span dir="ltr">Git</span> دارد.</div>
+        <span class="url">claude.com/product/claude-code</span>
+      </div>
+      <div class="tool g">
+        <div class="head">
+          <div class="num">32</div>
+          <div>
+            <h3>🖱 <span dir="ltr">Cursor</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Anysphere</span></div>
+          </div>
+        </div>
+        <div class="tag">محبوب‌ترین ادیتور کد هوشمند</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> شبیه <span dir="ltr">VS Code</span> است ولی هوش مصنوعی در قلبش تنیده؛ در چند فایل هم‌زمان تغییر می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> برنامه‌نویسی که می‌خواهد سرعتش چند برابر شود.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «این کامپوننت را به تایپ‌اسکریپت تبدیل کن و همه‌جای پروژه به‌روزش کن.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان محدود؛ پلن Pro حدود ۲۰ دلار در ماه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> اگر تازه برنامه‌نویسی یاد می‌گیری، مواظب باش: پذیرفتن کورکورانهٔ کد، یادگیری‌ات را متوقف می‌کند.</div>
+        <span class="url">cursor.com</span>
+      </div>
+      <div class="tool g">
+        <div class="head">
+          <div class="num">33</div>
+          <div>
+            <h3>🐙 <span dir="ltr">GitHub Copilot</span></h3>
+            <div class="by">سازنده: <span dir="ltr">GitHub / Microsoft</span></div>
+          </div>
+        </div>
+        <div class="tag">ارزان‌ترین و رایج‌ترین دستیار کد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> داخل ادیتور فعلی‌ات (VS Code، JetBrains و…) خط بعدی کد را پیشنهاد می‌دهد و کد را بازبینی می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانشجوی برنامه‌نویسی و تیم‌هایی که روی گیت‌هاب کار می‌کنند.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> شروع کن یک تابع بنویس؛ خودش بقیه‌اش را پیشنهاد می‌دهد.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان محدود دارد؛ پلن فردی از حدود ۱۰ دلار در ماه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> برای دانشجویان تأییدشده معمولاً رایگان است — ارزش دارد شرایطش را چک کنی.</div>
+        <span class="url">github.com/features/copilot</span>
+      </div>
+      <div class="tool g">
+        <div class="head">
+          <div class="num">34</div>
+          <div>
+            <h3>🏗 <span dir="ltr">Lovable</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Lovable</span></div>
+          </div>
+        </div>
+        <div class="tag">از یک جملهٔ فارسی، یک وب‌سایت واقعی</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> توصیف می‌کنی چه اپلیکیشنی می‌خواهی و خودش کد، صفحه و دیتابیس را می‌سازد و آنلاین منتشر می‌کند.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> کارآفرین بدون تیم فنی، کسی که می‌خواهد ایده‌اش را سریع تست کند.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک سایت رزرو نوبت برای آرایشگاه با فرم ثبت‌نام بساز.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> سهمیهٔ رایگان روزانه؛ پلن‌های پولی از حدود ۲۰ دلار.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> برای «نمونهٔ اولیه» عالی است؛ برای محصول جدی، بعداً باید یک برنامه‌نویس بازبینی‌اش کند.</div>
+        <span class="url">lovable.dev</span>
+      </div>
+      <div class="tool g">
+        <div class="head">
+          <div class="num">35</div>
+          <div>
+            <h3>☁️ <span dir="ltr">Replit</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Replit</span></div>
+          </div>
+        </div>
+        <div class="tag">کدنویسی و انتشار، فقط داخل مرورگر</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> بدون نصب هیچ چیزی روی کامپیوترت، کد می‌نویسی، اجرا می‌کنی و روی اینترنت منتشر می‌کنی. ایجنت آن هم می‌تواند اپ را از صفر بسازد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانش‌آموز و دانشجویی که کامپیوتر قوی ندارد؛ مدرس برنامه‌نویسی.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک بازی حدس عدد بساز و لینکش را بده تا برای دوستم بفرستم.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان دارد؛ پلن‌های پولی برای منابع بیشتر.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> بهترین جا برای اولین تجربهٔ برنامه‌نویسی، چون هیچ نصبی لازم ندارد.</div>
+        <span class="url">replit.com</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 5 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+  <section class="card stage h" id="g8">
+    <span class="chip">مرحله ۱۰ از ۱۲</span>
+    <h2>⚙️ خانواده ۸ — کار اداری، ارائه و اتوماسیون</h2>
+    <p class="lead">این خانواده وقتت را پس می‌دهد: به‌جای اینکه <b>خودت</b> کار را انجام دهی، ابزار کار را انجام می‌دهد یا آن را خودکار می‌کند.</p>
+    <div class="tools">
+      <div class="tool h">
+        <div class="head">
+          <div class="num">36</div>
+          <div>
+            <h3>📊 <span dir="ltr">Gamma</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Gamma</span></div>
+          </div>
+        </div>
+        <div class="tag">از یک پرامپت، یک ارائهٔ آمادهٔ کامل</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> موضوع را می‌دهی و در کمتر از یک دقیقه، اسلایدهای مرتب با متن و تصویر تحویل می‌گیری. خروجی PowerPoint و PDF هم می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> دانش‌آموز برای کنفرانس کلاسی، کارمند برای جلسه، استارتاپ برای پیچ‌دک.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک ارائهٔ ۱۰ اسلایدی دربارهٔ بازیافت پلاستیک برای کلاس هشتم بساز.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> اعتبار رایگان اولیه؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ ابزار مشابهش <span dir="ltr">Tome</span> تعطیل شده — اگر آموزشی از آن دیدی، قدیمی است.</div>
+        <span class="url">gamma.app</span>
+      </div>
+      <div class="tool h">
+        <div class="head">
+          <div class="num">37</div>
+          <div>
+            <h3>🪄 <span dir="ltr">Canva (Magic Studio)</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Canva</span></div>
+          </div>
+        </div>
+        <div class="tag">ساده‌ترین ابزار طراحی برای غیرطراح‌ها</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> پست اینستاگرام، بنر، رزومه، کارت‌ویزیت و ویدیوی کوتاه؛ با ابزارهای هوشمند حذف پس‌زمینه، پاک‌کردن اجسام و نوشتن متن.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> واقعاً همه: مغازه‌دار، معلم، مدیر شبکه‌های اجتماعی، دانش‌آموز.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «یک پست اینستاگرام برای تخفیف آخر هفته با رنگ‌های برند من بساز.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگان بسیار کاربردی؛ پلن Pro ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> بهترین ابزار برای <b>متن فارسی روی تصویر</b>، چون خودت فونت فارسی را انتخاب و تایپ می‌کنی.</div>
+        <span class="url">canva.com</span>
+      </div>
+      <div class="tool h">
+        <div class="head">
+          <div class="num">38</div>
+          <div>
+            <h3>🗒 <span dir="ltr">Fathom</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Fathom</span></div>
+          </div>
+        </div>
+        <div class="tag">منشی جلسه که خلاصه و مصوبات را می‌نویسد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> وارد جلسهٔ آنلاینت می‌شود، ضبط و پیاده می‌کند و در پایان خلاصه و «کارهایی که باید انجام شود» را می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> مدیر، فروشنده، مشاور، هر کسی که روزش پر از جلسه است.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> بعد از جلسه، خلاصهٔ مصوبات را مستقیم برای تیم بفرست.</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ رایگانش برای ضبط و خلاصه سخاوتمند است؛ امکانات تیمی پولی.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> ⚠️ قبل از ضبط، از همهٔ حاضران اجازه بگیر. رقیب‌های رایجش <span dir="ltr">Otter</span> و <span dir="ltr">Fireflies</span> هستند.</div>
+        <span class="url">fathom.video</span>
+      </div>
+      <div class="tool h">
+        <div class="head">
+          <div class="num">39</div>
+          <div>
+            <h3>🔗 <span dir="ltr">n8n</span></h3>
+            <div class="by">سازنده: <span dir="ltr">n8n</span></div>
+          </div>
+        </div>
+        <div class="tag">کارهای تکراری‌ات را برای همیشه خودکار کن</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> مثل قطعات لِگو، سرویس‌ها را به هم وصل می‌کنی: «هر ایمیل جدید → خلاصه با هوش مصنوعی → ارسال در تلگرام». می‌شود روی سرور خودت هم نصبش کرد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> صاحب کسب‌وکار، تیم پشتیبانی، هر کسی که یک کار را روزی ده بار تکرار می‌کند.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «هر سفارش جدید سایت را در یک شیت ثبت کن و به مشتری پیام خوش‌آمد بفرست.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> نسخهٔ متن‌باز برای نصب روی سرور خودت رایگان است؛ نسخهٔ ابری پلن ماهانه دارد.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> چون قابل نصب روی سرور خودی است، برای داده‌های حساس گزینهٔ امن‌تری از سرویس‌های ابری است.</div>
+        <span class="url">n8n.io</span>
+      </div>
+      <div class="tool h">
+        <div class="head">
+          <div class="num">40</div>
+          <div>
+            <h3>🧑‍✈️ <span dir="ltr">Manus</span></h3>
+            <div class="by">سازنده: <span dir="ltr">Manus</span></div>
+          </div>
+        </div>
+        <div class="tag">ایجنتی که کار چندمرحله‌ای را تا آخر می‌برد</div>
+        <div class="row"><span class="lbl">چه کار می‌کند؟</span> به‌جای یک جواب، یک <b>کار</b> را تحویل می‌گیرد: می‌گردد، مقایسه می‌کند، فایل می‌سازد و نتیجهٔ نهایی را می‌دهد.</div>
+        <div class="row"><span class="lbl">به درد چه کسی می‌خورد؟</span> پژوهشگر بازار، تحلیل‌گر، مدیری که وقت جست‌وجو ندارد.</div>
+        <div class="row"><span class="lbl">یک نمونهٔ واقعی:</span> «۲۰ تأمین‌کنندهٔ این قطعه را پیدا کن، قیمت‌ها را در یک جدول بگذار و به من بده.»</div>
+        <div class="row"><span class="lbl">هزینه:</span> اعتبار رایگان روزانه؛ پلن‌های پولی ماهانه.</div>
+        <div class="row"><span class="lbl">💡 نکته:</span> گزینه‌های مشابه: <span dir="ltr">ChatGPT Agent</span>، <span dir="ltr">Claude Cowork</span> (روی فایل‌های خودِ کامپیوترت کار می‌کند) و مرورگر <span dir="ltr">Comet</span>.</div>
+        <span class="url">manus.im</span>
+      </div>
+    </div>
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      الان باید بتوانی از این 5 ابزار، <b>فقط یکی</b> را انتخاب کنی که به کار امروزت می‌خورد.
+      اگر نتوانستی انتخاب کنی، یعنی هنوز نمی‌دانی «کارت چیست» — برگرد به مرحلهٔ ۲ و پرسونای خودت را پیدا کن.</div>
+  </section>
+
+  <section class="card stage a" id="first10">
+    <span class="chip">مرحله ۱۱ از ۱۲</span>
+    <h2>⏱ اولین ۱۰ دقیقه با هر ابزار — دقیقاً چه کار کنم؟</h2>
+    <p class="lead">این پنج قدم برای <b>هر</b> ابزاری در این صفحه جواب می‌دهد. هر قدم فقط <b>یک</b> کار دارد.</p>
+
+    <table class="tbl">
+      <tr><th>قدم</th><th>کاری که انجام می‌دهی</th><th>چرا اینطوری؟</th></tr>
+      <tr><td><span class="pill">۱</span></td><td>آدرس ابزار را در مرورگر باز کن (آدرس‌ها پایین هر کارت نوشته شده).</td><td>اپ نصب نکن؛ نسخهٔ وب برای امتحان کردن کافی است.</td></tr>
+      <tr><td><span class="pill">۲</span></td><td>با ایمیلت ثبت‌نام کن و فقط از <b>نسخهٔ رایگان</b> استفاده کن.</td><td>هیچ‌وقت روز اول پول نده. اول ببین اصلاً به کارت می‌آید.</td></tr>
+      <tr><td><span class="pill">۳</span></td><td>یک کار <b>واقعی و کوچک</b> از کار امروزت به آن بده — نه یک سؤال الکی.</td><td>«یک شعر بگو» چیزی به تو یاد نمی‌دهد؛ «این ایمیل را مؤدبانه‌تر بنویس» یاد می‌دهد.</td></tr>
+      <tr><td><span class="pill">۴</span></td><td>جواب اول را قبول نکن. بنویس «کوتاه‌ترش کن» یا «رسمی‌ترش کن» و دوباره بگیر.</td><td>قدرت اصلی این ابزارها در <b>گفت‌وگوی رفت‌وبرگشتی</b> است، نه در یک دستور.</td></tr>
+      <tr><td><span class="pill">۵</span></td><td>خروجی را با چشم خودت چک کن؛ عدد و اسم و تاریخ را جداگانه راستی‌آزمایی کن.</td><td>چون ممکن است با اطمینان کامل، چیزی از خودش ساخته باشد.</td></tr>
+    </table>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      اگر این پنج قدم را با یکی از ابزارها انجام دادی، الان باید یک خروجی داشته باشی که <b>واقعاً</b> به کار امروزت می‌آید.
+      اگر نداری، احتمالاً قدم ۳ را رعایت نکرده‌ای و یک سؤال تفریحی پرسیده‌ای.</div>
+  </section>
+
+  <section class="card stage c" id="prompt">
+    <span class="chip">مرحله ۱۲ از ۱۲</span>
+    <h2>🗝 قانون طلایی پرامپت‌نویسی — ۴ ماده برای یک دستور خوب</h2>
+    <p class="lead"><b>پرامپت</b> یعنی همان چیزی که تو تایپ می‌کنی. مثل سفارش دادن به یک آشپز:
+    «یه چیزی درست کن» نتیجهٔ بدی می‌دهد؛ «املت دو تخم‌مرغی، کم‌نمک، بدون گوجه» نتیجهٔ دقیق.</p>
+
+    <table class="tbl">
+      <tr><th>ماده</th><th>یعنی چه؟</th><th>مثال</th></tr>
+      <tr><td><span class="pill">۱</span> نقش</td><td>بگو چه کسی باشد.</td><td>«تو یک معلم علوم پایهٔ هشتم هستی.»</td></tr>
+      <tr><td><span class="pill">۲</span> کار</td><td>دقیقاً بگو چه کاری انجام دهد.</td><td>«این متن را برای دانش‌آموز ساده کن.»</td></tr>
+      <tr><td><span class="pill">۳</span> قالب</td><td>بگو خروجی چه شکلی باشد.</td><td>«در ۵ بند، هر بند حداکثر دو خط.»</td></tr>
+      <tr><td><span class="pill">۴</span> محدودیت</td><td>بگو چه چیزی نباشد.</td><td>«از کلمهٔ تخصصی استفاده نکن. عدد از خودت نساز.»</td></tr>
+    </table>
+
+    <div class="box tip"><b>💡 مقایسه کن</b>
+      ❌ ضعیف: «دربارهٔ بازیافت بنویس.»<br>
+      ✅ قوی: «تو یک معلم علوم پایهٔ هشتم هستی. یک متن ۲۰۰ کلمه‌ای دربارهٔ بازیافت پلاستیک بنویس،
+      در ۴ بند، با یک مثال از زندگی روزمره، بدون کلمهٔ تخصصی و بدون آمار عددی.»</div>
+
+    <div class="box check"><b>✅ ایست بازرسی</b>
+      یک پرامپت بنویس که هر چهار ماده را داشته باشد و امتحانش کن. اگر خروجی هنوز خوب نبود، معمولاً «قالب» را جا انداخته‌ای.</div>
+  </section>
+
+  <section class="card stage e" id="news">
+    <span class="chip">به‌روزرسانی</span>
+    <h2>📰 چه چیزهایی تازه عوض شده؟ (تا مرداد ۱۴۰۵)</h2>
+    <p class="lead">این بخش را جدی بگیر: بسیاری از آموزش‌های فارسی موجود در اینترنت، ابزارهایی را معرفی می‌کنند که <b>دیگر وجود ندارند</b>.</p>
+    <table class="tbl">
+      <tr><th>تغییر</th><th>چه اتفاقی افتاد؟</th><th>یعنی چه برای تو؟</th></tr>
+      <tr><td>❌ <span dir="ltr">Sora</span> تعطیل شد</td>
+          <td>اپ و سایت ویدیوسازی <span dir="ltr">Sora</span> شرکت <span dir="ltr">OpenAI</span> در ۶ اردیبهشت ۱۴۰۵ خاموش شد و سرویس برنامه‌نویسی‌اش هم تا مهر تعطیل می‌شود.</td>
+          <td>دنبالش نگرد. جایگزین‌ها: شمارهٔ ۲۲ (<span dir="ltr">Veo</span>)، ۲۳ (<span dir="ltr">Kling</span>) و ۲۴ (<span dir="ltr">Runway</span>).</td></tr>
+      <tr><td>🔄 <span dir="ltr">NotebookLM</span> اسمش عوض شد</td>
+          <td>در ۲۵ تیر ۱۴۰۵ گوگل نامش را به <span dir="ltr">Gemini Notebook</span> تغییر داد.</td>
+          <td>همان محصول است؛ لینک‌ها و یادداشت‌های قبلی‌ات سر جایشان هستند.</td></tr>
+      <tr><td>❌ <span dir="ltr">Tome</span> تعطیل شد</td>
+          <td>ابزار ساخت ارائه به نام <span dir="ltr">Tome</span> دیگر در دسترس نیست.</td>
+          <td>برای ارائه سراغ شمارهٔ ۳۶ (<span dir="ltr">Gamma</span>) یا ۳۷ (<span dir="ltr">Canva</span>) برو.</td></tr>
+      <tr><td>🖼 تصویرسازی جهش کرد</td>
+          <td>مدل‌های تصویری تازه (مثل <span dir="ltr">GPT Image 2</span> و <span dir="ltr">Nano Banana</span>) حالا متن داخل تصویر را درست می‌نویسند.</td>
+          <td>دیگر لازم نیست برای بنر و پوستر، ابزار جدا بخری. شمارهٔ ۱۶ و ۱۷.</td></tr>
+      <tr><td>🧑‍✈️ دوران «ایجنت‌ها»</td>
+          <td>ابزارها از «جواب دادن» به «انجام دادن» رسیده‌اند: خودشان در مرورگر کلیک می‌کنند و فایل می‌سازند.</td>
+          <td>اگر کارت چندمرحله‌ای است، به‌جای چت ساده سراغ شمارهٔ ۴۰ برو.</td></tr>
+    </table>
+    <div class="box warn"><b>⚠️ مواظب باش</b>
+      هر مطلبی که دربارهٔ این ابزارها می‌خوانی (از جمله همین صفحه) بعد از چند ماه کهنه می‌شود.
+      قانون ساده: <b>قبل از پرداخت پول، یک بار سایت رسمی خود ابزار را باز کن.</b></div>
+  </section>
+
+  <section class="card stage f" id="words">
+    <span class="chip">پاورقی</span>
+    <h2>📖 واژه‌نامهٔ ساده — کلمه‌های سختی که در این صفحه دیدی</h2>
+    <table class="tbl">
+      <tr><th>کلمه</th><th>یعنی چه؟ (به زبان آدمیزاد)</th></tr>
+      <tr><td><b>پرامپت</b> <span class="ltr">(prompt)</span></td><td>همان متنی که تو تایپ می‌کنی و از ابزار می‌خواهی انجامش دهد. یعنی «سفارش».</td></tr>
+      <tr><td><b>مدل</b> <span class="ltr">(model)</span></td><td>مغز ابزار. یک ابزار می‌تواند چند مغز داشته باشد: یکی سریع و ارزان، یکی کند و باهوش.</td></tr>
+      <tr><td><b>توهم</b> <span class="ltr">(hallucination)</span></td><td>وقتی ابزار چیزی را با اطمینان کامل می‌گوید که اصلاً واقعیت ندارد. مثل بچه‌ای که برای اینکه ساکت نماند، جواب می‌سازد.</td></tr>
+      <tr><td><b>ایجنت</b> <span class="ltr">(agent)</span></td><td>ابزاری که فقط جواب نمی‌دهد؛ خودش قدم‌به‌قدم کار را انجام می‌دهد (کلیک می‌کند، جست‌وجو می‌کند، فایل می‌سازد).</td></tr>
+      <tr><td><b>ای‌پی‌آی</b> <span class="ltr">(API)</span></td><td>درِ پشتی برای برنامه‌نویس‌ها؛ یعنی وصل‌کردن هوش مصنوعی به برنامهٔ خودت، به‌جای استفاده از سایتش.</td></tr>
+      <tr><td><b>متن‌باز</b> <span class="ltr">(open source)</span></td><td>یعنی کدش در دسترس همه است و می‌توانی روی سرور خودت نصبش کنی. برای داده‌های محرمانه مهم است.</td></tr>
+      <tr><td><b>کلون صدا</b> <span class="ltr">(voice cloning)</span></td><td>ساختن یک نسخهٔ مصنوعی از صدای یک نفر، از روی چند ثانیه نمونه.</td></tr>
+      <tr><td><b>وکتور</b> <span class="ltr">(vector / SVG)</span></td><td>تصویری که به‌جای نقطه‌نقطه، از خطوط ریاضی ساخته شده؛ هرچقدر بزرگش کنی بی‌کیفیت نمی‌شود.</td></tr>
+      <tr><td><b>اعتبار</b> <span class="ltr">(credit)</span></td><td>واحد شمارش مصرف در ابزارهای تصویر و ویدیو. مثل شارژ سیم‌کارت: تمام که شد، باید صبر کنی یا بخری.</td></tr>
+    </table>
+  </section>
+
+  <section class="card stage h" id="fix">
+    <span class="chip">رفع اشکال</span>
+    <h2>🔧 هفت اشتباه رایج — نشانه، علت، درمان</h2>
+
+    <div class="box fix"><b>۱) جواب‌ها کلی و بی‌مصرف‌اند</b>
+      <b>نشانه:</b> هر چه می‌پرسی، یک متن عمومی و بی‌روح می‌گیری.
+      <b>علت:</b> پرامپتت کوتاه و مبهم است.
+      <b>درمان:</b> برو به مرحلهٔ ۱۲ و چهار مادهٔ نقش/کار/قالب/محدودیت را اضافه کن.</div>
+
+    <div class="box fix"><b>۲) عدد یا منبعی گفته که وجود ندارد</b>
+      <b>نشانه:</b> آمار قشنگی می‌دهد ولی وقتی جست‌وجو می‌کنی، پیدا نمی‌شود.
+      <b>علت:</b> «توهم» — ابزار خلأ اطلاعاتی را با حدس پر کرده.
+      <b>درمان:</b> برای هر چیزی که باید <b>اثبات‌پذیر</b> باشد، از شمارهٔ ۷ یا ۸ استفاده کن که منبع نشان می‌دهند.</div>
+
+    <div class="box fix"><b>۳) از اتفاقات جدید خبر ندارد</b>
+      <b>نشانه:</b> دربارهٔ خبر این هفته چیزی نمی‌داند یا اشتباه می‌گوید.
+      <b>علت:</b> دانش مدل تا یک تاریخ مشخص است.
+      <b>درمان:</b> در همان ابزار، حالت جست‌وجوی وب را روشن کن یا از شمارهٔ ۷ استفاده کن.</div>
+
+    <div class="box fix"><b>۴) فارسی‌اش خراب یا شکسته است</b>
+      <b>نشانه:</b> در تصویر، حروف فارسی جدا جدا و برعکس می‌آید؛ یا زیرنویس فارسی غلط است.
+      <b>علت:</b> بیشتر این ابزارها اول برای انگلیسی ساخته شده‌اند.
+      <b>درمان:</b> تصویر را <b>بدون متن</b> بساز و نوشتهٔ فارسی را با شمارهٔ ۳۷ (<span dir="ltr">Canva</span>) رویش بگذار.</div>
+
+    <div class="box fix"><b>۵) اعتبار رایگانم خیلی زود تمام شد</b>
+      <b>نشانه:</b> بعد از چند تصویر یا ویدیو، پیام «سهمیه تمام شد» می‌گیری.
+      <b>علت:</b> ویدیو و تصویر خیلی سنگین‌تر از متن‌اند.
+      <b>درمان:</b> پرامپت را اول با یک نسخهٔ ارزان یا کوچک تست کن، بعد نسخهٔ نهایی را بساز. اعتبار را با آزمون‌وخطای بی‌هدف نسوزان.</div>
+
+    <div class="box fix"><b>۶) نگران اطلاعات محرمانه‌ام هستم</b>
+      <b>نشانه:</b> می‌خواهی قرارداد یا داده‌های مشتری را آپلود کنی و مردد هستی.
+      <b>علت:</b> هر چه آپلود کنی روی سرور یک شرکت خارجی می‌رود.
+      <b>درمان:</b> اسم، شمارهٔ تماس و کد ملی را قبل از آپلود پاک کن؛ برای کار حساس سراغ گزینه‌های قابل نصب روی سرور خودی مثل شمارهٔ ۳۹ برو.</div>
+
+    <div class="box fix"><b>۷) ۱۵ ابزار باز کرده‌ام و هیچ‌کاری پیش نمی‌رود</b>
+      <b>نشانه:</b> احساس خستگی و سردرگمی از زیادی انتخاب.
+      <b>علت:</b> از «ابزار» شروع کرده‌ای، نه از «کار».
+      <b>درمان:</b> همه را ببند. برگرد به مرحلهٔ ۲، یک پرسونا انتخاب کن و <b>یک هفته فقط با یک ابزار</b> کار کن.</div>
+  </section>
+
+  <section class="end">
+    <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+    <ul>
+      <li>بدانی هوش مصنوعی چیست و چرا نباید چشم‌بسته باورش کنی.</li>
+      <li>از روی <b>شغل و نیازت</b>، بین ۴۰ ابزار، ابزار خودت را پیدا کنی.</li>
+      <li>هشت خانوادهٔ اصلی ابزارها را از هم تشخیص بدهی: چت، تحقیق، متن، تصویر، ویدیو، صدا، کد، اتوماسیون.</li>
+      <li>در ۱۰ دقیقه و بدون پرداخت پول، یک ابزار تازه را امتحان کنی.</li>
+      <li>پرامپت درست بنویسی: نقش، کار، قالب، محدودیت.</li>
+      <li>اشتباه‌های رایج را بشناسی و خودت رفعشان کنی.</li>
+    </ul>
+    <p style="margin-top:14px"><b>قدم بعدی همین امروز:</b> سه عددی که در مرحلهٔ ۲ یادداشت کردی را بردار،
+    اولی را باز کن، و یک کار <b>واقعی</b> از کارهای امروزت را به آن بسپار. همین. 🚀</p>
+  </section>
+
+  <footer>
+    این صفحه یک راهنمای آموزشی است، نه تبلیغ هیچ محصولی. قیمت‌ها و امکانات تقریبی‌اند و سریع تغییر می‌کنند؛
+    قبل از هر پرداختی، سایت رسمی همان ابزار را بررسی کن.<br>
+    آخرین بازبینی محتوا: جمعه ۱۶ مرداد ۱۴۰۵ برابر با ۷ اوت ۲۰۲۶.
+    <div class="sig">✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی</div>
+  </footer>
+</div>
+
+<script>
+var b=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  b.style.width=(p>100?100:p)+'%';
+});
+</script>
+</body>
+</html>
