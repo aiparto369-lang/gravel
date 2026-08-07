@@ -2,11 +2,11 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-08-07T05:56:13+00:00",
+  "generated": "2026-08-07T10:10:59+00:00",
   "tracks": {
     "شروع هوشمند": 1,
     "ساخت و اتوماسیون": 7,
-    "OpenClaw": 3,
+    "OpenClaw": 4,
     "ابزارهای حرفه‌ای": 4,
     "آموزش‌های مستقل": 2
   },
@@ -199,6 +199,25 @@
       "featured": false,
       "added": "2026-07-05",
       "keywords": "لیمیت کلود, Claude usage limit, افزایش استفاده از کلود, Claude Pro, Claude Max, usage credits, پنجره کانتکست, context window, بهینه‌سازی مصرف کلود, Claude Projects, RAG",
+      "prerequisites": ""
+    },
+    {
+      "id": "hermes-agent",
+      "file": "tutorials/hermes-agent-tutorial.html",
+      "emoji": "",
+      "title": "آموزش کامل هرمس ایجنت (Hermes Agent) — از صفر تا راه‌اندازی",
+      "desc": "آموزش گام‌به‌گام و ساده Hermes Agent: نصب، اتصال مدل، حافظه، مهارت‌ها، تلگرام، زمان‌بندی، امنیت و مقایسه با OpenClaw",
+      "time": "",
+      "level": "مبتدی",
+      "audience": "شروع از صفر",
+      "category": "برنامه‌نویسی",
+      "track": "OpenClaw",
+      "sequence": null,
+      "priority": 50,
+      "rank": 54,
+      "featured": false,
+      "added": "2026-08-07",
+      "keywords": "",
       "prerequisites": ""
     },
     {
