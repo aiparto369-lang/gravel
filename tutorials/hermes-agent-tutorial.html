@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آموزش کامل هرمس ایجنت (Hermes Agent) — از صفر تا راه‌اندازی</title>
+<meta name="description" content="آموزش گام‌به‌گام و ساده Hermes Agent: نصب، اتصال مدل، حافظه، مهارت‌ها، تلگرام، زمان‌بندی، امنیت و مقایسه با OpenClaw">
+<meta name="author" content="Mehdi Rezghi">
+<meta name="copyright" content="© Mehdi Rezghi">
+<!-- Author / امضا: Mehdi Rezghi — مهدی رزقی -->
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12203a;
+  --ink-soft:#3d4f6d;
+  --bg:#f4f7fc;
+  --card:#ffffff;
+  --brand:#1b4ed8;
+  --brand-deep:#0f2f8f;
+  --brand-soft:#e6edff;
+  --accent:#ff8a00;
+  --accent-soft:#fff3e2;
+  --green:#0f9d58;
+  --green-soft:#e4f7ec;
+  --red:#d93025;
+  --red-soft:#fdeceb;
+  --purple:#7b2ff7;
+  --purple-soft:#f1e9ff;
+  --line:#dce4f2;
+  --code-bg:#0e1729;
+  --code-ink:#d7e3ff;
+  --radius:18px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  direction:rtl;
+  text-align:right;
+  font-size:17.5px;
+  line-height:1.95;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px 70px;}
+
+/* ---------- HERO ---------- */
+.hero{
+  background:linear-gradient(135deg,var(--brand-deep) 0%,var(--brand) 55%,#3f7bff 100%);
+  color:#fff;
+  padding:52px 18px 62px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset-inline-end:-90px;top:-90px;
+  width:280px;height:280px;border-radius:50%;
+  background:rgba(255,255,255,.09);
+}
+.hero::before{
+  content:"";position:absolute;inset-inline-start:-70px;bottom:-110px;
+  width:230px;height:230px;border-radius:50%;
+  background:rgba(255,138,0,.22);
+}
+.hero-inner{max-width:980px;margin:0 auto;position:relative;z-index:2;}
+.hero .emoji{font-size:60px;line-height:1;display:block;margin-bottom:10px;}
+.hero h1{margin:0 0 10px;font-size:2.15rem;font-weight:900;line-height:1.5;}
+.hero .sub{font-size:1.12rem;opacity:.95;margin:0 0 20px;max-width:720px;}
+.promise{
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  max-width:760px;
+}
+.promise b{color:#ffd79a;}
+
+/* ---------- GENERIC ---------- */
+h2{
+  font-size:1.5rem;font-weight:900;margin:46px 0 14px;
+  padding-inline-start:14px;border-inline-start:7px solid var(--brand);
+  line-height:1.6;
+}
+h3{font-size:1.15rem;font-weight:700;margin:26px 0 8px;}
+p{margin:10px 0;}
+a{color:var(--brand);}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  margin:18px 0;
+  box-shadow:0 3px 14px rgba(18,32,58,.05);
+}
+
+/* ---------- TOC ---------- */
+.toc{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 24px;margin:-32px 0 10px;position:relative;z-index:5;
+  box-shadow:0 8px 26px rgba(18,32,58,.09);
+}
+.toc h3{margin:0 0 12px;}
+.toc ol{margin:0;padding-inline-start:22px;}
+.toc li{margin:5px 0;}
+.toc a{text-decoration:none;font-weight:700;}
+.toc a:hover{text-decoration:underline;}
+
+/* ---------- STEP CARD ---------- */
+.step{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;margin:22px 0;box-shadow:0 3px 14px rgba(18,32,58,.05);
+  position:relative;
+}
+.step-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
+.badge{
+  background:var(--brand);color:#fff;font-weight:900;
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex:none;
+}
+.step-title{font-size:1.28rem;font-weight:900;margin:0;flex:1;min-width:220px;line-height:1.5;}
+.chip{
+  background:var(--brand-soft);color:var(--brand-deep);
+  border-radius:999px;padding:3px 13px;font-size:.82rem;font-weight:700;
+}
+.bar{height:8px;background:#e8eefb;border-radius:99px;overflow:hidden;margin:12px 0 16px;}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--brand),#54a0ff);border-radius:99px;}
+
+/* ---------- BOXES ---------- */
+.box{border-radius:14px;padding:14px 18px;margin:14px 0;border:1px solid;}
+.tip{background:var(--brand-soft);border-color:#bccfff;}
+.warn{background:var(--red-soft);border-color:#f6c4c0;}
+.note{background:var(--accent-soft);border-color:#ffd8a8;}
+.check{background:var(--green-soft);border-color:#b6e6c9;}
+.foot{background:var(--purple-soft);border-color:#dcc8ff;}
+.box b.lbl{display:block;margin-bottom:4px;font-weight:900;}
+
+/* ---------- CODE ---------- */
+code, .cmd{
+  direction:ltr;text-align:left;
+  font-family:'Consolas','Courier New',monospace;
+  unicode-bidi:isolate;
+}
+code.inline{
+  background:#eef2fb;color:#123;border:1px solid #d8e1f4;
+  border-radius:6px;padding:1px 7px;font-size:.92em;display:inline-block;
+}
+pre{
+  background:var(--code-bg);color:var(--code-ink);
+  direction:ltr;text-align:left;
+  padding:15px 17px;border-radius:12px;overflow-x:auto;
+  font-family:'Consolas','Courier New',monospace;
+  font-size:.94rem;line-height:1.8;margin:12px 0;
+  unicode-bidi:isolate;
+}
+pre .c{color:#7f9ac4;}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:14px;border:1px solid var(--line);}
+table{border-collapse:collapse;width:100%;background:#fff;min-width:640px;}
+th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top;font-size:.97rem;line-height:1.75;}
+th{background:var(--brand-deep);color:#fff;font-weight:700;white-space:nowrap;}
+tbody tr:nth-child(even){background:#f8fafe;}
+td:first-child{font-weight:700;}
+.tbl-wrap.cmp th:nth-child(2){background:#154bb8;}
+.tbl-wrap.cmp th:nth-child(3){background:#a33d00;}
+
+/* ---------- MISC ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0;}
+.mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.mini .ico{font-size:26px;display:block;margin-bottom:6px;}
+.mini h4{margin:0 0 6px;font-size:1.03rem;font-weight:900;}
+.mini p{margin:0;font-size:.95rem;color:var(--ink-soft);}
+
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:18px 0;}
+.flow .node{
+  flex:1;min-width:130px;background:#fff;border:2px solid var(--brand);
+  border-radius:14px;padding:12px;text-align:center;font-weight:700;font-size:.93rem;
+}
+.flow .node small{display:block;font-weight:400;color:var(--ink-soft);font-size:.82rem;}
+.flow .arw{display:flex;align-items:center;color:var(--brand);font-size:1.5rem;font-weight:900;}
+
+.finale{
+  background:linear-gradient(135deg,#0f9d58,#28c76f);color:#fff;
+  border-radius:var(--radius);padding:28px 26px;margin:34px 0 10px;
+}
+.finale h2{color:#fff;border:none;padding:0;margin:0 0 10px;}
+.finale ul{margin:8px 0 0;padding-inline-start:22px;}
+
+footer.sig{
+  text-align:center;color:var(--ink-soft);font-size:.85rem;
+  opacity:.72;padding:26px 10px 10px;border-top:1px solid var(--line);margin-top:34px;
+}
+
+@media (max-width:700px){
+  body{font-size:16.5px;}
+  .hero h1{font-size:1.6rem;}
+  .step{padding:18px 16px;}
+  .card,.toc{padding:16px;}
+  h2{font-size:1.28rem;}
+  .flow .arw{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="emoji">🪽🤖</span>
+    <h1>هرمس ایجنت (Hermes Agent) — آموزش کاربردی از صفر تا راه‌اندازی</h1>
+    <p class="sub">یک دستیار هوش مصنوعی که روی کامپیوتر یا سرور <b>خودت</b> زندگی می‌کند، حافظه‌اش پاک نمی‌شود، خودش مهارت یاد می‌گیرد و از تلگرام هم جواب می‌دهد.</p>
+    <div class="promise">
+      <b>قراره چی یاد بگیریم؟</b><br>
+      اینکه هرمس دقیقاً چیست، چطور نصبش کنیم، چطور به یک مدل هوش مصنوعی وصلش کنیم، چطور حافظه و مهارت‌هایش را کنترل کنیم، چطور از تلگرام باهاش حرف بزنیم، چطور کارهای تکراری را برایش زمان‌بندی کنیم، و آخر سر یک <b>جدول مقایسه کامل با OpenClaw</b>.
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="toc">
+    <h3>📋 فهرست مراحل</h3>
+    <ol>
+      <li><a href="#s0">هرمس اصلاً چیست؟ (با یک مثال ساده)</a></li>
+      <li><a href="#s1">مرحله ۱ — تصمیم بگیر کجا نصبش کنی</a></li>
+      <li><a href="#s2">مرحله ۲ — پیش‌نیازها را چک کن</a></li>
+      <li><a href="#s3">مرحله ۳ — نصب هرمس</a></li>
+      <li><a href="#s4">مرحله ۴ — وصل کردن مغز (مدل هوش مصنوعی)</a></li>
+      <li><a href="#s5">مرحله ۵ — اولین گفتگو و دستورهای پایه</a></li>
+      <li><a href="#s6">مرحله ۶ — حافظه‌ی همیشگی</a></li>
+      <li><a href="#s7">مرحله ۷ — مهارت‌ها (قدرت اصلی هرمس)</a></li>
+      <li><a href="#s8">مرحله ۸ — اتصال به تلگرام</a></li>
+      <li><a href="#s9">مرحله ۹ — کارهای زمان‌بندی‌شده (Cron)</a></li>
+      <li><a href="#s10">مرحله ۱۰ — امنیت و ترمز دستی</a></li>
+      <li><a href="#uses">۱۰ کار واقعی که می‌توانی همین امروز انجام بدهی</a></li>
+      <li><a href="#cheat">جدول دستورهای پرکاربرد</a></li>
+      <li><a href="#trouble">رفع اشکال</a></li>
+      <li><a href="#compare">🆚 جدول مقایسه: هرمس ایجنت در برابر OpenClaw</a></li>
+    </ol>
+  </div>
+
+  <div class="box note">
+    <b class="lbl">📌 فرض‌های این آموزش (لطفاً یک بار بخوان)</b>
+    فرض کرده‌ام تو یک کاربر معمولی هستی که فقط بلد است کامپیوتر را روشن کند، کلیک کند و تایپ کند. هیچ دانش برنامه‌نویسی لازم نیست.<br>
+    محتوا بر پایه‌ی مستندات رسمی هرمس (<span dir="ltr">hermes-agent.nousresearch.com/docs</span>) نوشته شده است. چون این نرم‌افزار خیلی سریع به‌روز می‌شود، اسم دقیق بعضی دکمه‌ها یا گزینه‌ها ممکن است کمی فرق کند — هر جا این احتمال بود، جمله را «انعطاف‌پذیر» نوشته‌ام و مسیر بررسی را گفته‌ام.
+  </div>
+
+  <!-- ================= s0 ================= -->
+  <h2 id="s0">🧠 هرمس اصلاً چیست؟</h2>
+
+  <div class="card">
+    <p><b>تشبیه ساده:</b> یک ربات چت معمولی مثل کارمندی است که هر روز صبح حافظه‌اش پاک می‌شود؛ باید از اول همه‌چیز را برایش توضیح بدهی و او فقط <i>حرف می‌زند</i>.</p>
+    <p><b>هرمس</b> مثل کارمندی است که: (۱) یادش می‌ماند دیروز چه کار کردید، (۲) دست دارد و واقعاً کار انجام می‌دهد — فایل می‌سازد، در اینترنت جستجو می‌کند، برنامه اجرا می‌کند — و (۳) وقتی یک کار سخت را یاد گرفت، برای خودش یک «دستورالعمل» می‌نویسد تا دفعه‌ی بعد سریع‌تر انجامش بدهد.</p>
+
+    <div class="flow">
+      <div class="node">🗣️ تو<small>از ترمینال یا تلگرام</small></div>
+      <div class="arw">←</div>
+      <div class="node">🧠 مدل هوش مصنوعی<small>فکر کردن</small></div>
+      <div class="arw">←</div>
+      <div class="node">🛠️ ابزارها<small>جستجو، فایل، مرورگر</small></div>
+      <div class="arw">←</div>
+      <div class="node">💾 حافظه و مهارت<small>یاد می‌گیرد</small></div>
+    </div>
+
+    <div class="grid">
+      <div class="mini"><span class="ico">🧩</span><h4>متن‌باز و مال خودت</h4><p>ساخته‌ی آزمایشگاه Nous Research با مجوز MIT. روی سرور یا لپ‌تاپ خودت اجرا می‌شود.</p></div>
+      <div class="mini"><span class="ico">💭</span><h4>حافظه‌ی پایدار</h4><p>بین نشست‌ها یادش می‌ماند تو کی هستی و پروژه‌ات چیست.</p></div>
+      <div class="mini"><span class="ico">📚</span><h4>مهارت‌سازی خودکار</h4><p>یک روش کاری را یک بار یادش بده، خودش تبدیلش می‌کند به مهارت قابل‌استفاده‌ی مجدد.</p></div>
+      <div class="mini"><span class="ico">💬</span><h4>هر جا که تو هستی</h4><p>ترمینال، تلگرام، دیسکورد، اسلک، واتساپ، سیگنال، ایمیل و بیش از ۲۰ پلتفرم دیگر.</p></div>
+      <div class="mini"><span class="ico">⏰</span><h4>زمان‌بندی خودکار</h4><p>«هر روز ساعت ۸ صبح خلاصه‌ی خبرها را برایم بفرست» — و انجام می‌شود.</p></div>
+      <div class="mini"><span class="ico">🖥️</span><h4>چند چهره</h4><p>خط فرمان، رابط ترمینالی (TUI)، داشبورد وب و اپلیکیشن دسکتاپ.</p></div>
+    </div>
+  </div>
+
+  <div class="box foot">
+    <b class="lbl">📖 پاورقی — چند واژه‌ی سخت که از این به بعد می‌بینی</b>
+    <b>ایجنت (Agent):</b> برنامه‌ای که فقط جواب نمی‌دهد، بلکه خودش قدم‌به‌قدم کار انجام می‌دهد.<br>
+    <b>ترمینال / خط فرمان:</b> پنجره‌ی سیاهی که در آن به‌جای کلیک، دستور تایپ می‌کنی. در ویندوز اسمش <span dir="ltr">PowerShell</span> است.<br>
+    <b>CLI:</b> همان ابزار خط فرمان.<br>
+    <b>مدل (Model):</b> «مغز» هوش مصنوعی، مثل Claude یا GPT. هرمس خودش مغز ندارد؛ به یک مغز وصل می‌شود.<br>
+    <b>API Key:</b> یک رشته‌ی رمز طولانی که مثل کارت عضویت است و به هرمس اجازه می‌دهد از آن مغز استفاده کند.<br>
+    <b>گیت‌وی (Gateway):</b> برنامه‌ای که پیام‌های تلگرام/دیسکورد و... را می‌گیرد و به هرمس می‌رساند.<br>
+    <b>VPS / سرور:</b> یک کامپیوتر اجاره‌ای در اینترنت که ۲۴ ساعته روشن است.
+  </div>
+
+  <!-- ================= s1 ================= -->
+  <div class="step" id="s1">
+    <div class="step-head">
+      <div class="badge">۱</div>
+      <h3 class="step-title">تصمیم بگیر هرمس را کجا نصب کنی</h3>
+      <span class="chip">مرحله ۱ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:10%"></span></div>
+
+    <p>قبل از هر کاری فقط یک تصمیم بگیر. فقط همین یک تصمیم.</p>
+
+    <div class="grid">
+      <div class="mini"><span class="ico">💻</span><h4>الف) روی کامپیوتر خودم</h4><p>ساده‌ترین راه برای شروع و یادگیری. عیبش: وقتی کامپیوتر خاموش شود، هرمس هم می‌خوابد.</p></div>
+      <div class="mini"><span class="ico">☁️</span><h4>ب) روی یک سرور (VPS)</h4><p>۲۴ ساعته روشن می‌ماند و کارهای زمان‌بندی‌شده واقعاً اجرا می‌شوند. کمی سخت‌تر، ولی حالت واقعی استفاده همین است.</p></div>
+    </div>
+
+    <div class="box tip">
+      <b class="lbl">💡 نکته</b>
+      برای بار اول <b>گزینه‌ی الف</b> را انتخاب کن. وقتی همه‌چیز کار کرد و فهمیدی چه خبر است، همان تنظیمات را روی سرور تکرار کن. یاد گرفتن روی سرور از راه دور، اشتباه رایج مبتدی‌هاست.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      الان باید یک جمله در ذهنت داشته باشی: «من هرمس را روی ______ نصب می‌کنم.» اگر نداری، بنویس «کامپیوتر خودم» و برو مرحله‌ی بعد.
+    </div>
+  </div>
+
+  <!-- ================= s2 ================= -->
+  <div class="step" id="s2">
+    <div class="step-head">
+      <div class="badge">۲</div>
+      <h3 class="step-title">پیش‌نیازها را چک کن</h3>
+      <span class="chip">مرحله ۲ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:20%"></span></div>
+
+    <p>خبر خوب: نصب‌کننده‌ی هرمس تقریباً <b>همه‌چیز را خودش نصب می‌کند</b> — پایتون، نودجی‌اس، ابزار جستجوی فایل و مبدل صوت. تو فقط دو تا چیز لازم داری:</p>
+
+    <h3>۱) یک برنامه به اسم Git</h3>
+    <p>در ویندوز و مک، اگر از نصب‌کننده‌ی دسکتاپ استفاده کنی معمولاً درگیرش نمی‌شوی. در لینوکس/مک از راه ترمینال، Git تنها پیش‌نیاز واقعی است. برای بررسی، ترمینال را باز کن و این را تایپ کن:</p>
+    <pre>git --version</pre>
+    <p>اگر یک شماره‌ی نسخه دیدی، یعنی داری‌اش. اگر پیام خطا دیدی، از <span dir="ltr">git-scm.com</span> نصبش کن.</p>
+
+    <h3>۲) یک راه برای دسترسی به مغز هوش مصنوعی</h3>
+    <p>یکی از این‌ها کافی است: حساب <span dir="ltr">Nous Portal</span>، یا <span dir="ltr">OpenRouter</span>، یا کلید مستقیم <span dir="ltr">OpenAI</span> / <span dir="ltr">Anthropic</span> / <span dir="ltr">Google</span>، یا حتی یک مدل محلی روی کامپیوتر خودت.</p>
+
+    <div class="box note">
+      <b class="lbl">⚠️ مواظب باش — کاربران داخل ایران</b>
+      دسترسی به سرویس‌های مدل و حتی به <span dir="ltr">api.telegram.org</span> ممکن است مسدود باشد. هرمس برای همین حالت‌ها پشتیبانی از <b>پروکسی</b> دارد و در مرحله‌ی ۸ نشانت می‌دهم چطور تنظیمش کنی. فعلاً فقط بدان که این مشکل راه‌حل دارد.
+    </div>
+
+    <div class="box warn">
+      <b class="lbl">⚠️ مواظب باش — کاربران ویندوز</b>
+      روان‌ترین مسیر در ویندوز، نصب‌کننده‌ی <b>Hermes Desktop</b> است. نصب مستقیم روی ویندوز از راه PowerShell هم پشتیبانی می‌شود، ولی اگر به مشکل خوردی، گزینه‌ی مطمئن‌تر نصب داخل <span dir="ltr">WSL2</span> (لینوکس داخل ویندوز) است.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      الان باید بدانی: (الف) Git داری یا نه، و (ب) قرار است از کدام سرویس مدل استفاده کنی.
+    </div>
+  </div>
+
+  <!-- ================= s3 ================= -->
+  <div class="step" id="s3">
+    <div class="step-head">
+      <div class="badge">۳</div>
+      <h3 class="step-title">نصب هرمس</h3>
+      <span class="chip">مرحله ۳ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:30%"></span></div>
+
+    <p>سه راه وجود دارد. فقط <b>یکی</b> را انتخاب کن.</p>
+
+    <h3>راه A — ویندوز یا مک، با برنامه‌ی گرافیکی (ساده‌ترین)</h3>
+    <p>به سایت رسمی <span dir="ltr">hermes-agent.nousresearch.com</span> برو، فایل نصب Hermes Desktop را دانلود کن و اجرایش کن. این روش هم برنامه‌ی گرافیکی و هم ابزار خط فرمان را با هم نصب می‌کند.</p>
+
+    <h3>راه B — لینوکس، مک، WSL2 یا اندروید (Termux)</h3>
+    <p>ترمینال را باز کن و این یک خط را کپی کن، بچسبان، و کلید Enter را بزن:</p>
+    <pre>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</pre>
+
+    <h3>راه C — ویندوز، بدون برنامه‌ی گرافیکی</h3>
+    <p>در منوی استارت بنویس <span dir="ltr">PowerShell</span>، بازش کن و این خط را اجرا کن:</p>
+    <pre>iex (irm https://hermes-agent.nousresearch.com/install.ps1)</pre>
+
+    <div class="box tip">
+      <b class="lbl">💡 نکته</b>
+      نصب چند دقیقه طول می‌کشد و متن‌های زیادی روی صفحه می‌آید. این طبیعی است — دارد پایتون، نودجی‌اس و بقیه‌ی ابزارها را دانلود می‌کند. صبور باش و پنجره را نبند.
+    </div>
+
+    <p>بعد از پایان نصب، این دستور را بزن تا ترمینال تنظیمات جدید را بخواند:</p>
+    <pre>source ~/.bashrc   <span class="c"># اگر از zsh استفاده می‌کنی: source ~/.zshrc</span></pre>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      این را تایپ کن: <code class="inline">hermes doctor</code><br>
+      باید یک گزارش وضعیت ببینی که می‌گوید چه چیزی سالم است و چه چیزی کم است. اگر پیام <span dir="ltr">command not found</span> دیدی، برو به بخش «رفع اشکال» در پایین صفحه.
+    </div>
+  </div>
+
+  <!-- ================= s4 ================= -->
+  <div class="step" id="s4">
+    <div class="step-head">
+      <div class="badge">۴</div>
+      <h3 class="step-title">وصل کردن مغز (مدل هوش مصنوعی)</h3>
+      <span class="chip">مرحله ۴ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:40%"></span></div>
+
+    <p>هرمس بدون مدل، مثل ماشین بدون بنزین است. دو راه داری:</p>
+
+    <h3>راه سریع — Nous Portal</h3>
+    <p>مستندات رسمی این را «سریع‌ترین مسیر تا یک ایجنت کارکن» می‌داند، چون با یک بار ورود، هم مدل و هم چهار ابزار مهم (جستجوی وب، تولید تصویر، تبدیل متن به گفتار، مرورگر ابری) با هم فعال می‌شوند:</p>
+    <pre>hermes setup --portal</pre>
+
+    <h3>راه دستی — انتخاب هر سرویسی که خودت داری</h3>
+    <pre>hermes model</pre>
+    <p>یک منوی انتخابی باز می‌شود: سرویس‌دهنده را انتخاب کن (مثلاً OpenRouter یا OpenAI)، کلید API خودت را بچسبان، و مدل موردنظر را انتخاب کن.</p>
+
+    <div class="box note">
+      <b class="lbl">📖 توضیح — کلید API را از کجا بیاورم؟</b>
+      از سایت همان سرویس. مثلاً برای OpenRouter وارد حسابت می‌شوی و در بخش کلیدها یک کلید جدید می‌سازی. کلید یک رشته‌ی طولانی است. آن را <b>مثل رمز عبور</b> نگه دار و هرگز در جای عمومی نگذار.
+    </div>
+
+    <p>دستورهای مفید دیگر برای بعدها:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>دستور</th><th>کارش چیست</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">hermes setup</code></td><td>جادوگر کامل تنظیمات؛ همه‌چیز را یکجا می‌پرسد</td></tr>
+          <tr><td><code class="inline">hermes tools</code></td><td>انتخاب اینکه کدام ابزارها روشن باشند</td></tr>
+          <tr><td><code class="inline">hermes config get</code></td><td>دیدن یک تنظیم</td></tr>
+          <tr><td><code class="inline">hermes config set</code></td><td>تغییر یک تنظیم</td></tr>
+          <tr><td><code class="inline">hermes update</code></td><td>به‌روزرسانی هرمس به آخرین نسخه</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      اگر پیام خطای <span dir="ltr">API key not set</span> ندیدی، یعنی مغز وصل شده است. برو مرحله‌ی بعد.
+    </div>
+  </div>
+
+  <!-- ================= s5 ================= -->
+  <div class="step" id="s5">
+    <div class="step-head">
+      <div class="badge">۵</div>
+      <h3 class="step-title">اولین گفتگو و دستورهای پایه</h3>
+      <span class="chip">مرحله ۵ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:50%"></span></div>
+
+    <p>فقط این یک کلمه را تایپ کن و Enter بزن:</p>
+    <pre>hermes</pre>
+    <p>حالا در محیط گفتگو هستی. مثل چت معمولی فارسی یا انگلیسی تایپ کن. مثلاً بنویس: «سلام، خودت را معرفی کن و بگو الان چه ابزارهایی داری.»</p>
+
+    <h3>دستورهای اسلش (Slash Commands)</h3>
+    <p>هر وقت داخل گفتگو کاراکتر <code class="inline">/</code> را تایپ کنی، یک منوی خودکار باز می‌شود. این‌ها دستورهای خود هرمس هستند، نه پیام به مدل.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>دستور</th><th>کارش چیست</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">/help</code></td><td>نمایش راهنما</td></tr>
+          <tr><td><code class="inline">/status</code></td><td>وضعیت نشست: مدل، پروفایل، پوشه‌ی کاری، مصرف توکن</td></tr>
+          <tr><td><code class="inline">/new</code></td><td>شروع یک گفتگوی تازه (تاریخچه پاک می‌شود)</td></tr>
+          <tr><td><code class="inline">/resume</code></td><td>برگشتن به یک گفتگوی قبلی</td></tr>
+          <tr><td><code class="inline">/model</code></td><td>عوض کردن مدل وسط کار</td></tr>
+          <tr><td><code class="inline">/context</code></td><td>نمایش تصویری اینکه چقدر از حافظه‌ی گفتگو پر شده</td></tr>
+          <tr><td><code class="inline">/usage</code></td><td>مصرف توکن و هزینه</td></tr>
+          <tr><td><code class="inline">/stop</code></td><td>متوقف کردن کاری که در حال اجراست</td></tr>
+          <tr><td><code class="inline">/quit</code></td><td>خروج</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box tip">
+      <b class="lbl">💡 نکته‌ی طلایی</b>
+      لازم نیست همه را حفظ کنی. فقط <code class="inline">/help</code> و <code class="inline">/status</code> را یاد بگیر؛ بقیه را با تایپ <code class="inline">/</code> از منو پیدا می‌کنی.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      یک سؤال ساده بپرس و جواب بگیر. بعد <code class="inline">/status</code> بزن و ببین اسم مدل و شماره‌ی نشست نمایش داده می‌شود. اگر بله — تبریک، هرمس زنده است! 🎉
+    </div>
+  </div>
+
+  <!-- ================= s6 ================= -->
+  <div class="step" id="s6">
+    <div class="step-head">
+      <div class="badge">۶</div>
+      <h3 class="step-title">حافظه‌ی همیشگی — تفاوت اصلی هرمس</h3>
+      <span class="chip">مرحله ۶ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:60%"></span></div>
+
+    <p><b>تشبیه:</b> حافظه‌ی هرمس مثل یک دفترچه‌ی جیبی کوچک است، نه یک انبار. عمداً کوچک است تا فقط چیزهای واقعاً مهم داخلش بماند.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>فایل</th><th>داخلش چه می‌نویسد</th><th>سقف اندازه</th></tr></thead>
+        <tbody>
+          <tr><td><span dir="ltr">MEMORY.md</span></td><td>یادداشت‌های خود ایجنت: مشخصات سیستم، قواعد پروژه، درس‌هایی که یاد گرفته</td><td>۲۲۰۰ کاراکتر</td></tr>
+          <tr><td><span dir="ltr">USER.md</span></td><td>پروفایل تو: اسم، سلیقه، سبک ارتباطی، چیزهایی که دوست نداری</td><td>۱۳۷۵ کاراکتر</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>این دو فایل در پوشه‌ی <span dir="ltr">~/.hermes/memories/</span> ذخیره می‌شوند و در شروع هر گفتگو به‌صورت خودکار جلوی چشم ایجنت گذاشته می‌شوند.</p>
+
+    <h3>یک چیز مهم که باید بدانی</h3>
+    <p>هرمس <b>خودش</b> تصمیم می‌گیرد چه چیزی را ذخیره کند — لازم نیست بگویی «این را یادت باشه». ولی می‌توانی صریح هم بگویی، مثلاً: «یادت باشه من همیشه جواب کوتاه و فارسی می‌خوام.»</p>
+
+    <div class="box note">
+      <b class="lbl">📖 توضیح — چرا حافظه محدود است؟</b>
+      چون هر چیزی که در حافظه باشد، در <b>هر پیام</b> دوباره برای مدل فرستاده می‌شود و هزینه دارد. وقتی حافظه پر شود، هرمس خطا می‌گیرد و مجبور می‌شود یادداشت‌های قدیمی را خلاصه یا حذف کند. این عمدی است.
+    </div>
+
+    <h3>ولی گفتگوهای قدیمی چه می‌شوند؟</h3>
+    <p>هیچ‌کدام پاک نمی‌شوند. همه‌ی نشست‌ها در یک پایگاه‌داده‌ی محلی ذخیره می‌شوند و ایجنت می‌تواند داخلشان جستجو کند. یعنی می‌توانی بپرسی «هفته‌ی پیش درباره‌ی فلان موضوع چی گفتیم؟» و پیدایش می‌کند.</p>
+    <pre>hermes sessions list   <span class="c"># فهرست گفتگوهای قبلی</span></pre>
+
+    <h3>دیدن و پاک کردن چیزهایی که یاد گرفته</h3>
+    <p>داخل گفتگو بنویس:</p>
+    <pre>/journey</pre>
+    <p>یک خط زمانی از همه‌ی مهارت‌ها و خاطره‌هایی که جمع کرده نشان می‌دهد — و می‌توانی همان‌جا موردی را ویرایش یا حذف کنی.</p>
+
+    <div class="box tip">
+      <b class="lbl">💡 اگر چیز اشتباهی درباره‌ات یاد گرفت</b>
+      دو راه داری: با <code class="inline">/journey</code> حذفش کن، یا جلوی ذخیره‌ی خودکار را بگیر. برای دومی، در فایل <span dir="ltr">~/.hermes/config.yaml</span> این را بنویس:
+      <pre>memory:
+  write_approval: true</pre>
+      از آن به بعد هر ذخیره‌سازی منتظر تأیید تو می‌ماند و با <code class="inline">/memory pending</code> می‌توانی ببینی چه چیزی در صف است.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      بگو «اسم من ______ است و ترجیح می‌دهم جواب‌ها کوتاه باشند.» بعد <code class="inline">/quit</code> بزن، دوباره <code class="inline">hermes</code> را اجرا کن و بپرس «اسم من چیست؟» — اگر یادش بود، حافظه کار می‌کند.
+    </div>
+  </div>
+
+  <!-- ================= s7 ================= -->
+  <div class="step" id="s7">
+    <div class="step-head">
+      <div class="badge">۷</div>
+      <h3 class="step-title">مهارت‌ها — قدرت اصلی هرمس</h3>
+      <span class="chip">مرحله ۷ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:70%"></span></div>
+
+    <p><b>تشبیه:</b> مهارت مثل دستور پخت آشپزی است. تو یک بار به آشپز یاد می‌دهی کیک چطور درست می‌شود؛ او آن را می‌نویسد و می‌چسباند روی یخچال. دفعه‌ی بعد فقط نگاه می‌کند و می‌پزد.</p>
+
+    <p>مهارت در هرمس یک فایل متنی ساده به اسم <span dir="ltr">SKILL.md</span> است که فقط <b>هنگام نیاز</b> خوانده می‌شود — یعنی وقتی لازم نیست، هزینه‌ای هم ندارد.</p>
+
+    <h3>سه راه برای داشتن مهارت</h3>
+
+    <div class="grid">
+      <div class="mini"><span class="ico">📦</span><h4>۱) آماده و همراه نصب</h4><p>حدود ۹۰ مهارت از قبل همراه هرمس نصب می‌شود، به‌علاوه‌ی حدود ۶۰ مهارت اختیاری قابل‌نصب.</p></div>
+      <div class="mini"><span class="ico">🛒</span><h4>۲) از فروشگاه مهارت</h4><p>با <code>/skills</code> می‌توانی در مخازن آنلاین جستجو و نصب کنی. استاندارد باز آن <span dir="ltr">agentskills.io</span> است.</p></div>
+      <div class="mini"><span class="ico">🎓</span><h4>۳) خودش می‌سازد</h4><p>مهم‌ترین قابلیت هرمس. با <code>/learn</code> از یک پوشه، یک لینک، یا کاری که همین الان با هم انجام دادید، یک مهارت جدید می‌نویسد.</p></div>
+    </div>
+
+    <h3>مثال عملی — یاد دادن یک روش کاری</h3>
+    <p>فرض کن با هرمس یک کار چندمرحله‌ای انجام دادی و خوب جواب داد. کافی است بنویسی:</p>
+    <pre>/learn روشی که همین الان برای تهیه گزارش هفتگی انجام دادیم</pre>
+    <p>هرمس همان روش را به یک مهارت قابل‌استفاده‌ی مجدد تبدیل می‌کند. دفعه‌ی بعد کافی است نامش را با اسلش صدا بزنی.</p>
+
+    <h3>دستورهای مهارت</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>دستور</th><th>کارش چیست</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">/skills</code></td><td>جستجو، نصب، بررسی و مدیریت مهارت‌ها</td></tr>
+          <tr><td><code class="inline">/learn &lt;موضوع&gt;</code></td><td>ساختن یک مهارت جدید از تجربه، پوشه یا لینک</td></tr>
+          <tr><td><code class="inline">/reload-skills</code></td><td>خواندن دوباره‌ی پوشه‌ی مهارت‌ها بعد از افزودن دستی</td></tr>
+          <tr><td><code class="inline">/curator</code></td><td>نگهداری خودکار مهارت‌ها: بایگانی موارد قدیمی و بی‌استفاده</td></tr>
+          <tr><td><code class="inline">/&lt;نام-مهارت&gt;</code></td><td>اجرای مستقیم یک مهارت نصب‌شده</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="box warn">
+      <b class="lbl">⚠️ مواظب باش</b>
+      مهارت‌هایی که از اینترنت نصب می‌کنی، در عمل «کد قابل‌اجرا» هستند و ایجنت طبق آن‌ها عمل می‌کند. فقط از منابعی نصب کن که به آن‌ها اعتماد داری، و اگر بلدی، محتوای فایل را قبل از استفاده یک نگاه بینداز.
+    </div>
+
+    <div class="box tip">
+      <b class="lbl">💡 اگر می‌خواهی هر تغییر مهارت را خودت تأیید کنی</b>
+      در <span dir="ltr">~/.hermes/config.yaml</span>:
+      <pre>skills:
+  write_approval: true</pre>
+      بعد با <code class="inline">/skills pending</code> و <code class="inline">/skills approve</code> کنترل کامل داری.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      <code class="inline">/skills</code> را بزن. باید فهرستی از مهارت‌ها را ببینی. اگر خالی بود، یک بار <code class="inline">/reload-skills</code> بزن.
+    </div>
+  </div>
+
+  <!-- ================= s8 ================= -->
+  <div class="step" id="s8">
+    <div class="step-head">
+      <div class="badge">۸</div>
+      <h3 class="step-title">اتصال به تلگرام — با هرمس از موبایل حرف بزن</h3>
+      <span class="chip">مرحله ۸ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:80%"></span></div>
+
+    <p>این جایی است که هرمس واقعاً مفید می‌شود: کامپیوتر یا سرورت کار می‌کند، تو از موبایل دستور می‌دهی.</p>
+
+    <h3>گام ۸.۱ — ساختن ربات تلگرام</h3>
+    <ol>
+      <li>در تلگرام بگرد دنبال <span dir="ltr">@BotFather</span> (ربات رسمی خود تلگرام).</li>
+      <li>برایش بفرست: <code class="inline">/newbot</code></li>
+      <li>یک <b>نام نمایشی</b> انتخاب کن (هر چیزی، مثلاً «دستیار من»).</li>
+      <li>یک <b>نام کاربری</b> انتخاب کن که یکتا باشد و به <span dir="ltr">bot</span> ختم شود (مثلاً <span dir="ltr">my_hermes_bot</span>).</li>
+      <li>BotFather یک <b>توکن</b> می‌دهد؛ چیزی شبیه <span dir="ltr">123456789:ABCdef...</span> — کپی‌اش کن.</li>
+    </ol>
+
+    <div class="box warn">
+      <b class="lbl">⚠️ مواظب باش</b>
+      این توکن دقیقاً مثل رمز عبور ربات توست. هر کسی آن را داشته باشد می‌تواند رباتت را کنترل کند. اگر لو رفت، فوراً در BotFather دستور <code class="inline">/revoke</code> را بزن.
+    </div>
+
+    <h3>گام ۸.۲ — پیدا کردن شماره‌ی کاربری خودت</h3>
+    <p>هرمس برای اینکه بفهمد فقط <b>تو</b> اجازه داری با ربات حرف بزنی، به عدد شناسه‌ی تلگرامت نیاز دارد (نه نام کاربری). به ربات <span dir="ltr">@userinfobot</span> پیام بده؛ فوراً یک عدد مثل <span dir="ltr">123456789</span> برایت می‌فرستد. یادداشتش کن.</p>
+
+    <h3>گام ۸.۳ — تنظیم در هرمس</h3>
+    <p>ساده‌ترین راه، جادوگر خودکار است. در ترمینال:</p>
+    <pre>hermes gateway setup</pre>
+    <p>گزینه‌ی <b>Telegram</b> را انتخاب کن، توکن را بچسبان و شناسه‌ی کاربری‌ات را وارد کن. تمام.</p>
+
+    <p>اگر ترجیح می‌دهی دستی انجام بدهی، فایل <span dir="ltr">~/.hermes/.env</span> را باز کن و این دو خط را اضافه کن:</p>
+    <pre>TELEGRAM_BOT_TOKEN=123456789:ABCdefGHIjkl...
+TELEGRAM_ALLOWED_USERS=123456789</pre>
+
+    <h3>گام ۸.۴ — روشن کردن گیت‌وی</h3>
+    <pre>hermes gateway</pre>
+    <p>چند ثانیه بعد ربات آنلاین می‌شود. در تلگرام به رباتت پیام بده و ببین جواب می‌دهد.</p>
+
+    <div class="box note">
+      <b class="lbl">🌐 اگر تلگرام روی سرور/کامپیوترت مسدود است</b>
+      هرمس پروکسی اختصاصی تلگرام را پشتیبانی می‌کند. در فایل <span dir="ltr">~/.hermes/config.yaml</span>:
+      <pre>telegram:
+  proxy_url: "socks5://127.0.0.1:1080"</pre>
+      یا به‌جایش در <span dir="ltr">~/.hermes/.env</span>:
+      <pre>TELEGRAM_PROXY=socks5://127.0.0.1:1080</pre>
+      آدرس و پورت را با مقادیر پروکسی خودت عوض کن. حالت‌های <span dir="ltr">http://</span>، <span dir="ltr">https://</span> و <span dir="ltr">socks5://</span> پشتیبانی می‌شوند.
+    </div>
+
+    <div class="box tip">
+      <b class="lbl">💡 یک دستور که حتماً بزن</b>
+      در همان چت تلگرام بنویس <code class="inline">/sethome</code>. این یعنی «نتیجه‌ی کارهای زمان‌بندی‌شده را همین‌جا بفرست». در مرحله‌ی بعد لازمش داری.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      در تلگرام به رباتت بنویس «سلام» و جواب بگیر. اگر گفت «unauthorized»، یعنی شناسه‌ی کاربری‌ات درست وارد نشده. اگر اصلاً جواب نداد، توکن را دوباره چک کن و لاگ گیت‌وی را ببین.
+    </div>
+  </div>
+
+  <!-- ================= s9 ================= -->
+  <div class="step" id="s9">
+    <div class="step-head">
+      <div class="badge">۹</div>
+      <h3 class="step-title">کارهای زمان‌بندی‌شده — بگذار خودش کار کند</h3>
+      <span class="chip">مرحله ۹ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:90%"></span></div>
+
+    <p><b>تشبیه:</b> مثل زنگ ساعت، ولی به‌جای صدا دادن، یک کار کامل انجام می‌دهد و نتیجه را برایت می‌فرستد.</p>
+
+    <p>زیبایی ماجرا این است که لازم نیست فرمول عجیب زمان‌بندی بلد باشی — با زبان طبیعی می‌گویی. داخل گفتگو (چه در ترمینال، چه در تلگرام) بنویس:</p>
+
+    <pre>/cron</pre>
+    <p>یا مستقیم به خودش بگو، مثلاً:</p>
+    <div class="card" style="margin:10px 0;background:#f8fafe;">
+      «هر روز ساعت ۸ صبح، مهم‌ترین خبرهای حوزه‌ی هوش مصنوعی را جمع‌آوری کن، در سه بند فارسی خلاصه کن و برایم بفرست.»
+    </div>
+
+    <p>دستورهای مدیریت زمان‌بندی: افزودن، ویرایش، توقف موقت، ادامه، اجرای فوری و حذف — همه از طریق <code class="inline">/cron</code> در دسترس‌اند.</p>
+
+    <div class="box tip">
+      <b class="lbl">💡 چند ایده‌ی عملی</b>
+      • خلاصه‌ی روزانه‌ی ایمیل‌های مهم<br>
+      • گزارش هفتگی از تغییرات مخزن کد<br>
+      • پشتیبان‌گیری شبانه و ارسال پیام تأیید<br>
+      • رصد قیمت یا رصد سایت رقیب و اطلاع در صورت تغییر
+    </div>
+
+    <div class="box warn">
+      <b class="lbl">⚠️ مواظب باش</b>
+      اگر هرمس روی لپ‌تاپ خودت نصب است و لپ‌تاپ خاموش باشد، کار زمان‌بندی‌شده اجرا نمی‌شود. برای کارهای واقعاً همیشگی، سرور لازم است (همان گزینه‌ی «ب» در مرحله‌ی ۱).
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی</b>
+      یک کار آزمایشی بساز که «هر ۵ دقیقه یک بار فقط بنویسد سلام» و بعد از دیدن نتیجه حذفش کن. اگر پیام رسید، زمان‌بندی سالم است.
+    </div>
+  </div>
+
+  <!-- ================= s10 ================= -->
+  <div class="step" id="s10">
+    <div class="step-head">
+      <div class="badge">۱۰</div>
+      <h3 class="step-title">امنیت و ترمز دستی</h3>
+      <span class="chip">مرحله ۱۰ از ۱۰</span>
+    </div>
+    <div class="bar"><span style="width:100%"></span></div>
+
+    <p>این مهم‌ترین مرحله است و لطفاً از رویش رد نشو. هرمس یک چت‌بات نیست؛ برنامه‌ای است که <b>روی کامپیوتر تو دستور اجرا می‌کند</b>.</p>
+
+    <div class="grid">
+      <div class="mini"><span class="ico">🔐</span><h4>همیشه لیست مجاز بگذار</h4><p>حتماً <span dir="ltr">TELEGRAM_ALLOWED_USERS</span> را تنظیم کن تا فقط تو بتوانی دستور بدهی.</p></div>
+      <div class="mini"><span class="ico">🛑</span><h4>تأیید دستورهای خطرناک</h4><p>وقتی ایجنت بخواهد کار پرریسکی انجام دهد، از تو اجازه می‌گیرد. با <code>/approvals</code> رفتارش را تنظیم کن.</p></div>
+      <div class="mini"><span class="ico">↩️</span><h4>برگشت به عقب</h4><p>با <code>/rollback</code> می‌توانی تغییرات فایلی را برگردانی و با <code>/diff</code> ببینی چه چیزی عوض شده.</p></div>
+      <div class="mini"><span class="ico">📦</span><h4>جداسازی</h4><p>هرمس می‌تواند داخل Docker یا روی یک سرور جداگانه اجرا شود تا به فایل‌های شخصی‌ات دسترسی نداشته باشد.</p></div>
+    </div>
+
+    <div class="box warn">
+      <b class="lbl">⚠️ درباره‌ی حالت YOLO</b>
+      دستوری به اسم <code class="inline">/yolo</code> وجود دارد که همه‌ی تأییدهای امنیتی را خاموش می‌کند. <b>روشنش نکن</b> — مخصوصاً وقتی تازه‌کاری یا هرمس به فایل‌های مهمت دسترسی دارد.
+    </div>
+
+    <div class="box tip">
+      <b class="lbl">💡 توصیه‌ی عملی برای شروع امن</b>
+      یک پوشه‌ی جداگانه بساز (مثلاً <span dir="ltr">~/hermes-workspace</span>)، هرمس را از داخل همان پوشه اجرا کن، و اول فقط کارهای بی‌خطر بهش بده. وقتی به رفتارش اعتماد کردی، دامنه را گسترش بده.
+    </div>
+
+    <div class="box check">
+      <b class="lbl">✅ ایست بازرسی نهایی</b>
+      • لیست کاربران مجاز تلگرام تنظیم شده؟ ✔<br>
+      • حالت YOLO خاموش است؟ ✔<br>
+      • می‌دانی <code class="inline">/stop</code> کار در حال اجرا را متوقف می‌کند؟ ✔
+    </div>
+  </div>
+
+  <!-- ================= USES ================= -->
+  <h2 id="uses">🎯 ده کار واقعی که می‌توانی همین امروز انجام بدهی</h2>
+  <div class="card">
+    <div class="grid">
+      <div class="mini"><h4>۱. دستیار پژوهش صبحگاهی</h4><p>هر روز موضوعات موردعلاقه‌ات را جستجو و خلاصه کند و در تلگرام بفرستد.</p></div>
+      <div class="mini"><h4>۲. مرتب‌کننده‌ی فایل‌ها</h4><p>پوشه‌ی دانلودها را بررسی و بر اساس نوع و تاریخ دسته‌بندی کند.</p></div>
+      <div class="mini"><h4>۳. بازبین کد</h4><p>تغییرات مخزن را بخواند و ایرادهای احتمالی را با دلیل گزارش کند.</p></div>
+      <div class="mini"><h4>۴. ردیاب باگ</h4><p>از پیام خطا شروع کند، لاگ‌ها را بگردد و محل احتمالی مشکل را پیشنهاد بدهد.</p></div>
+      <div class="mini"><h4>۵. دستیار ایمیل</h4><p>ایمیل‌های مهم را از بقیه جدا کند و خلاصه‌ی روزانه بدهد.</p></div>
+      <div class="mini"><h4>۶. رصد رقبا</h4><p>سایت یا صفحه‌ای را مرتب چک کند و فقط وقتی چیزی عوض شد خبر بدهد.</p></div>
+      <div class="mini"><h4>۷. تبدیل صوت به متن</h4><p>ویس تلگرام بفرست؛ خودش پیاده می‌کند و خلاصه می‌دهد.</p></div>
+      <div class="mini"><h4>۸. دستیار تیمی</h4><p>در یک گروه تلگرام یا اسلک بنشیند و به سؤال‌های تیم جواب بدهد.</p></div>
+      <div class="mini"><h4>۹. پشتیبان‌گیری شبانه</h4><p>هر شب اسکریپت پشتیبان‌گیری را اجرا و نتیجه را گزارش کند.</p></div>
+      <div class="mini"><h4>۱۰. کارگر موازی</h4><p>با تفویض کار به زیرایجنت‌ها، چند کار سنگین را هم‌زمان جلو ببرد.</p></div>
+    </div>
+  </div>
+
+  <!-- ================= CHEATSHEET ================= -->
+  <h2 id="cheat">⌨️ جدول دستورهای پرکاربرد</h2>
+
+  <h3>دستورهای ترمینال (بیرون از گفتگو)</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>دستور</th><th>کارش چیست</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">hermes</code></td><td>شروع گفتگو</td></tr>
+        <tr><td><code class="inline">hermes setup --portal</code></td><td>سریع‌ترین راه راه‌اندازی مدل و ابزارها</td></tr>
+        <tr><td><code class="inline">hermes model</code></td><td>انتخاب یا تغییر سرویس‌دهنده و مدل</td></tr>
+        <tr><td><code class="inline">hermes tools</code></td><td>روشن و خاموش کردن ابزارها</td></tr>
+        <tr><td><code class="inline">hermes gateway setup</code></td><td>تنظیم پیام‌رسان‌ها (تلگرام، دیسکورد و…)</td></tr>
+        <tr><td><code class="inline">hermes gateway</code></td><td>اجرای گیت‌وی پیام‌رسان‌ها</td></tr>
+        <tr><td><code class="inline">hermes doctor</code></td><td>عیب‌یابی: چه چیزی کم است و چطور درست شود</td></tr>
+        <tr><td><code class="inline">hermes sessions list</code></td><td>فهرست گفتگوهای قبلی</td></tr>
+        <tr><td><code class="inline">hermes journey</code></td><td>خط زمانی چیزهایی که یاد گرفته</td></tr>
+        <tr><td><code class="inline">hermes update</code></td><td>به‌روزرسانی</td></tr>
+        <tr><td><code class="inline">hermes desktop</code></td><td>نصب و اجرای برنامه‌ی دسکتاپ</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>مسیر فایل‌های مهم</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>مسیر</th><th>داخلش چیست</th></tr></thead>
+      <tbody>
+        <tr><td><span dir="ltr">~/.hermes/config.yaml</span></td><td>تنظیمات اصلی</td></tr>
+        <tr><td><span dir="ltr">~/.hermes/.env</span></td><td>کلیدها و توکن‌های محرمانه</td></tr>
+        <tr><td><span dir="ltr">~/.hermes/memories/</span></td><td>فایل‌های حافظه</td></tr>
+        <tr><td><span dir="ltr">~/.hermes/skills/</span></td><td>مهارت‌ها</td></tr>
+        <tr><td><span dir="ltr">~/.hermes/logs/</span></td><td>گزارش‌های اجرا (برای عیب‌یابی)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= TROUBLE ================= -->
+  <h2 id="trouble">🔧 رفع اشکال</h2>
+
+  <div class="card">
+    <h3>۱) می‌نویسم <span dir="ltr">hermes</span> ولی می‌گوید <span dir="ltr">command not found</span></h3>
+    <p><b>علت:</b> ترمینال هنوز نمی‌داند برنامه‌ی جدید کجاست.<br>
+    <b>درمان:</b> این را بزن: <code class="inline">source ~/.bashrc</code> (یا <code class="inline">source ~/.zshrc</code>). اگر باز هم نشد، ترمینال را کامل ببند و دوباره باز کن.</p>
+
+    <h3>۲) خطای <span dir="ltr">API key not set</span></h3>
+    <p><b>علت:</b> هنوز مغزی وصل نشده.<br>
+    <b>درمان:</b> <code class="inline">hermes model</code> را اجرا کن و سرویس‌دهنده و کلیدت را وارد کن.</p>
+
+    <h3>۳) بعد از به‌روزرسانی، تنظیماتم گم شد</h3>
+    <p><b>درمان:</b> به‌ترتیب این دو را بزن: <code class="inline">hermes config check</code> و سپس <code class="inline">hermes config migrate</code>.</p>
+
+    <h3>۴) ربات تلگرام اصلاً جواب نمی‌دهد</h3>
+    <p><b>بررسی کن:</b> توکن درست است؟ گیت‌وی روشن است؟ لاگ را در <span dir="ltr">~/.hermes/logs/</span> نگاه کن. اگر شبکه‌ات تلگرام را مسدود می‌کند، پروکسی را طبق مرحله‌ی ۸ تنظیم کن.</p>
+
+    <h3>۵) ربات می‌گوید «unauthorized»</h3>
+    <p><b>علت:</b> شناسه‌ی عددی تو در لیست مجاز نیست.<br>
+    <b>درمان:</b> با <span dir="ltr">@userinfobot</span> دوباره شناسه‌ات را بگیر و مقدار <span dir="ltr">TELEGRAM_ALLOWED_USERS</span> را اصلاح کن. دقت کن این عدد است، نه نام کاربری.</p>
+
+    <h3>۶) در چت خصوصی جواب می‌دهد ولی در گروه نه</h3>
+    <p><b>علت:</b> حالت حریم خصوصی ربات‌های تلگرام به‌صورت پیش‌فرض روشن است و ربات پیام‌های عادی گروه را نمی‌بیند.<br>
+    <b>درمان:</b> در BotFather مسیر <span dir="ltr">/mybots → Bot Settings → Group Privacy</span> را خاموش کن، <b>یا</b> ربات را ادمین گروه کن. نکته‌ی حیاتی: بعد از تغییر این تنظیم، باید ربات را از گروه حذف و دوباره اضافه کنی.</p>
+
+    <h3>۷) هر چیز دیگری</h3>
+    <p>اولین کاری که باید بکنی همیشه یکی است:</p>
+    <pre>hermes doctor</pre>
+    <p>این دستور دقیقاً می‌گوید چه چیزی مشکل دارد و راه‌حلش چیست.</p>
+  </div>
+
+  <!-- ================= COMPARE ================= -->
+  <h2 id="compare">🆚 جدول مقایسه: هرمس ایجنت در برابر OpenClaw</h2>
+
+  <div class="box note">
+    <b class="lbl">📖 اول یک توضیح کوتاه</b>
+    <b>OpenClaw</b> پروژه‌ی متن‌باز دیگری در همین حوزه است که ابتدا با نام Clawdbot و بعد Moltbot منتشر شد و به OpenClaw تغییر نام داد. ساخته‌ی Peter Steinberger است و در اوایل سال ۲۰۲۶ به یکی از پرستاره‌ترین پروژه‌های تاریخ گیت‌هاب تبدیل شد. کار هر دو یک چیز است: «یک دستیار هوش مصنوعی همیشه‌روشن روی سرور خودت که از پیام‌رسان‌ها در دسترس است». تفاوت‌ها در فلسفه و جزئیات است.
+  </div>
+
+  <div class="tbl-wrap cmp">
+    <table>
+      <thead>
+        <tr><th>معیار</th><th>🪽 Hermes Agent</th><th>🦞 OpenClaw</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>سازنده</td>
+          <td>آزمایشگاه Nous Research (سازنده‌ی مدل‌های Hermes)</td>
+          <td>Peter Steinberger؛ اکنون زیر نظر یک بنیاد متن‌باز مستقل</td>
+        </tr>
+        <tr>
+          <td>ایده‌ی محوری</td>
+          <td>ایجنتی که <b>خودش را بهبود می‌دهد</b> — حلقه‌ی یادگیری بسته</td>
+          <td>دستیار شخصی <b>همیشه‌روشن</b> با اکوسیستم مهارت بسیار بزرگ</td>
+        </tr>
+        <tr>
+          <td>زبان و رانتایم</td>
+          <td>پایتون (نصب‌کننده خودش Python و Node را نصب می‌کند)</td>
+          <td>Node.js — باید نسخه‌ی مناسب Node را از قبل داشته باشی</td>
+        </tr>
+        <tr>
+          <td>مجوز</td>
+          <td>MIT (به‌صراحت در مستندات رسمی)</td>
+          <td>متن‌باز؛ برای جزئیات مجوز به مخزن رسمی مراجعه کن</td>
+        </tr>
+        <tr>
+          <td>نصب</td>
+          <td><span dir="ltr">curl … | bash</span> یا PowerShell، یا نصب‌کننده‌ی دسکتاپ</td>
+          <td><span dir="ltr">npm install -g openclaw</span> یا اسکریپت نصب، سپس <span dir="ltr">openclaw onboard</span></td>
+        </tr>
+        <tr>
+          <td>پیش‌نیاز عملی</td>
+          <td>فقط Git؛ بقیه خودکار نصب می‌شود</td>
+          <td>Node.js با نسخه‌ی مشخص، به‌علاوه‌ی کلید مدل</td>
+        </tr>
+        <tr>
+          <td>ویندوز</td>
+          <td>نصب‌کننده‌ی دسکتاپ + مسیر PowerShell + WSL2</td>
+          <td>اپلیکیشن Windows Hub + نصب‌کننده‌ی PowerShell + WSL2</td>
+        </tr>
+        <tr>
+          <td>حافظه</td>
+          <td>دو فایل کوچک و سقف‌دار (<span dir="ltr">MEMORY.md</span> و <span dir="ltr">USER.md</span>) + جستجوی متن کامل در تمام نشست‌های قبلی + ۸ ارائه‌دهنده‌ی حافظه‌ی خارجی</td>
+          <td>حافظه‌ی پایدار بین نشست‌ها + افزونه‌های حافظه‌ی جامعه‌محور</td>
+        </tr>
+        <tr>
+          <td>مهارت‌ها</td>
+          <td>حدود ۹۰ مهارت همراه + حدود ۶۰ اختیاری؛ سازگار با استاندارد باز <span dir="ltr">agentskills.io</span></td>
+          <td>فروشگاه مهارت <span dir="ltr">ClawHub</span> با بیش از ۵۰۰ مهارت جامعه‌محور</td>
+        </tr>
+        <tr>
+          <td>یادگیری خودکار مهارت</td>
+          <td>✅ نقطه‌ی قوت اصلی — با <span dir="ltr">/learn</span> از تجربه مهارت می‌سازد و در حین استفاده بهبودش می‌دهد</td>
+          <td>عمدتاً نصب مهارت آماده؛ تمرکز روی اکوسیستم است نه خودآموزی</td>
+        </tr>
+        <tr>
+          <td>پیام‌رسان‌ها</td>
+          <td>۲۰+ پلتفرم از یک گیت‌وی: تلگرام، دیسکورد، اسلک، واتساپ، سیگنال، ماتریکس، ایمیل، SMS، Teams، Google Chat و…</td>
+          <td>واتساپ، تلگرام، اسلک، دیسکورد، iMessage، سیگنال، ماتریکس، Teams، Feishu، Zalo و…</td>
+        </tr>
+        <tr>
+          <td>رابط کاربری</td>
+          <td>خط فرمان، رابط ترمینالی (TUI)، داشبورد وب، اپلیکیشن دسکتاپ</td>
+          <td>خط فرمان، داشبورد و Control UI روی مرورگر (پورت پیش‌فرض <span dir="ltr">18789</span>)</td>
+        </tr>
+        <tr>
+          <td>زمان‌بندی</td>
+          <td>Cron داخلی با زبان طبیعی و تحویل نتیجه به هر پلتفرم</td>
+          <td>اجرای دائمی به‌صورت daemon با چرخه‌ی heartbeat</td>
+        </tr>
+        <tr>
+          <td>محل اجرای فرمان‌ها</td>
+          <td>۶ بک‌اند: محلی، Docker، SSH، Daytona، Singularity، Modal — از جمله گزینه‌های سرورلس</td>
+          <td>محلی، Docker، Kubernetes، انواع VPS و Raspberry Pi</td>
+        </tr>
+        <tr>
+          <td>کار موازی</td>
+          <td>زیرایجنت‌های ایزوله + اجرای کد پایتونی برای فشرده‌سازی چند مرحله در یک نوبت</td>
+          <td>پیکربندی چند ایجنت با فضای کاری جدا و مسیریابی بین کانال‌ها</td>
+        </tr>
+        <tr>
+          <td>بلوغ جامعه</td>
+          <td>جوان‌تر، ولی پشتوانه‌ی یک آزمایشگاه مدل‌سازی و مستندات بسیار منظم</td>
+          <td>بسیار بزرگ‌تر؛ طبق سایت رسمی بیش از ۳۴۶ هزار ستاره در گیت‌هاب</td>
+        </tr>
+        <tr>
+          <td>نکته‌ی امنیتی</td>
+          <td>تأیید فرمان‌های خطرناک، دروازه‌ی تأیید برای نوشتن حافظه و مهارت، اسکن ورودی‌های حافظه، جداسازی با کانتینر</td>
+          <td>هشدارهای جدی پژوهشگران امنیتی؛ توصیه‌ی اکید به عدم قرار دادن پورت گیت‌وی روی اینترنت عمومی و بررسی مهارت‌های نصب‌شده</td>
+        </tr>
+        <tr>
+          <td>مناسب چه کسی؟</td>
+          <td>کسی که می‌خواهد ایجنتش با گذر زمان <b>بهتر و شخصی‌تر</b> شود و کنترل دقیق روی حافظه و مهارت داشته باشد</td>
+          <td>کسی که می‌خواهد <b>سریع</b> به یک اکوسیستم بزرگ مهارت و کانال وصل شود و جامعه‌ی پرجمعیت پشتش باشد</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box tip">
+    <b class="lbl">💡 جمع‌بندی بی‌طرفانه</b>
+    این‌ها رقیب مطلق هم نیستند و هر دو متن‌بازند — می‌توانی هر دو را روی یک ماشین (با پورت‌های جدا) امتحان کنی. اگر ارزش اصلی برایت <b>یادگیری تدریجی و حافظه‌ی قابل‌کنترل</b> است، هرمس گزینه‌ی طبیعی‌تری است. اگر <b>سرعت رسیدن به نتیجه و تنوع مهارت آماده</b> اولویت دارد، OpenClaw جلوتر است. در هر دو حالت، اصل «اول امن، بعد گسترده» را رعایت کن.
+  </div>
+
+  <!-- ================= FINALE ================= -->
+  <div class="finale">
+    <h2>🎉 تمام شد! حالا تو بلدی…</h2>
+    <ul>
+      <li>هرمس ایجنت چیست و چه فرقی با یک چت‌بات معمولی دارد</li>
+      <li>روی ویندوز، مک یا لینوکس نصبش کنی</li>
+      <li>یک مدل هوش مصنوعی را به آن وصل کنی</li>
+      <li>حافظه‌اش را ببینی، اصلاح کنی و کنترل کنی</li>
+      <li>با <span dir="ltr">/learn</span> بهش مهارت جدید یاد بدهی</li>
+      <li>از تلگرام و از روی موبایل باهاش کار کنی</li>
+      <li>کارهای تکراری را برایش زمان‌بندی کنی</li>
+      <li>جلوی کارهای خطرناک را بگیری و امن نگهش داری</li>
+      <li>بدانی نسبت به OpenClaw کجا ایستاده است</li>
+    </ul>
+    <p style="margin-top:14px;"><b>قدم بعدی پیشنهادی:</b> فقط یک کار واقعی از فهرست «ده کار» را انتخاب کن و تا آخر ببرش. یک کار کامل، از ده کار نیمه‌کاره ارزشمندتر است.</p>
+  </div>
+
+  <div class="box note">
+    <b class="lbl">🔗 منابع رسمی برای ادامه</b>
+    مستندات هرمس: <span dir="ltr">hermes-agent.nousresearch.com/docs</span><br>
+    مخزن کد: <span dir="ltr">github.com/NousResearch/hermes-agent</span><br>
+    مخزن مهارت‌ها: <span dir="ltr">agentskills.io</span><br>
+    مستندات OpenClaw: <span dir="ltr">docs.openclaw.ai</span>
+  </div>
+
+  <footer class="sig">
+    ✍️ طراحی و تدوین: Mehdi Rezghi — مهدی رزقی
+  </footer>
+
+</div>
+</body>
+</html>
