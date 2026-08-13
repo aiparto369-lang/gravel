@@ -2,10 +2,10 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-08-13T18:13:59+00:00",
+  "generated": "2026-08-13T18:14:19+00:00",
   "tracks": {
     "شروع هوشمند": 1,
-    "ساخت و اتوماسیون": 7,
+    "ساخت و اتوماسیون": 8,
     "OpenClaw": 4,
     "ابزارهای حرفه‌ای": 4,
     "آموزش‌های مستقل": 2
@@ -313,6 +313,25 @@
       "featured": false,
       "added": "2026-07-23",
       "keywords": "Obsidian AI, ابسیدین هوش مصنوعی, اتصال Obsidian به هوش مصنوعی, Copilot for Obsidian, Smart Connections, Ollama, مدل محلی, local LLM, RAG, چت با یادداشت ها, MCP, Claude Desktop, mcp-obsidian, Local REST API, OpenRouter, مغز دوم و هوش مصنوعی, second brain AI",
+      "prerequisites": ""
+    },
+    {
+      "id": "docker",
+      "file": "tutorials/docker-tutorial.html",
+      "emoji": "",
+      "title": "داکر از صفر تا حرفه‌ای — ساخت و اجرای یک برنامهٔ واقعی داخل کانتینر",
+      "desc": "آموزش گام‌به‌گام و کاملاً عملی داکر برای ویندوز: از نصب و عبور از محدودیت دسترسی تا ساخت ایمیج حرفه‌ای، ولوم، Docker Compose، انتشار و دیباگ.",
+      "time": "",
+      "level": "حرفه‌ای",
+      "audience": "حرفه‌ای",
+      "category": "برنامه‌نویسی",
+      "track": "ساخت و اتوماسیون",
+      "sequence": null,
+      "priority": 50,
+      "rank": 52,
+      "featured": false,
+      "added": "2026-08-13",
+      "keywords": "",
       "prerequisites": ""
     },
     {
