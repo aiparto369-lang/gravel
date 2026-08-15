@@ -4,10 +4,10 @@
    نسخه را ربات گراول خودکار جلو می‌برد؛ دستی دست نزن.
    ========================================================== */
 
-const VERSION = "20260813181419";
+const VERSION = "20260815164450";
 const CACHE = "gravel-" + VERSION;
 // GRAVEL_TUTORIALS: این خط را ربات گراول با هر آپلود تازه می‌کند.
-const TUTORIALS = ["./tutorials/ai-roadmap-getting-started-tutorial.html", "./tutorials/docker-n8n-antigravity-tutorial.html", "./tutorials/install-python-node-vscode-tutorial(1).html", "./tutorials/python-1hour-vibe-coding-tutorial.html", "./tutorials/openclaw-tutorial.html", "./tutorials/openclaw-pro-tutorial.html", "./tutorials/claude-cowork-tutorial.html", "./tutorials/powershell-tutorial.html", "./tutorials/openrouter-crypto-wallet-tutorial.html", "./tutorials/claude-usage-limit-tutorial.html", "./tutorials/hermes-agent-tutorial.html", "./tutorials/ngrok-docker-n8n-tutorial.html", "./tutorials/how-ai-thinks-tutorial.html", "./tutorials/40-ai-tools-tutorial.html", "./tutorials/docker-n8n-powershell-setup-tutorial.html", "./tutorials/obsidian-ai-connection-tutorial.html", "./tutorials/docker-tutorial.html", "./tutorials/obsidian-second-brain-tutorial.html", "./tutorials/google-custom-search-engine-tutorial.html"];
+const TUTORIALS = ["./tutorials/ai-roadmap-getting-started-tutorial.html", "./tutorials/docker-n8n-antigravity-tutorial.html", "./tutorials/install-python-node-vscode-tutorial(1).html", "./tutorials/python-1hour-vibe-coding-tutorial.html", "./tutorials/openclaw-tutorial.html", "./tutorials/openclaw-pro-tutorial.html", "./tutorials/claude-cowork-tutorial.html", "./tutorials/powershell-tutorial.html", "./tutorials/openrouter-crypto-wallet-tutorial.html", "./tutorials/claude-usage-limit-tutorial.html", "./tutorials/hermes-agent-tutorial.html", "./tutorials/ngrok-docker-n8n-tutorial.html", "./tutorials/how-ai-thinks-tutorial.html", "./tutorials/40-ai-tools-tutorial.html", "./tutorials/n8ndockerhttpstunneltutorial.html", "./tutorials/docker-n8n-powershell-setup-tutorial.html", "./tutorials/obsidian-ai-connection-tutorial.html", "./tutorials/docker-tutorial.html", "./tutorials/obsidian-second-brain-tutorial.html", "./tutorials/google-custom-search-engine-tutorial.html"];
 
 const PRECACHE = [
   "./",

@@ -2,10 +2,10 @@
   "name": "گراول",
   "site": "https://mygravel.ir",
   "copyright": "© Mehdi Rezghi — https://t.me/Mehdirezghi",
-  "generated": "2026-08-13T18:14:19+00:00",
+  "generated": "2026-08-15T16:44:50+00:00",
   "tracks": {
     "شروع هوشمند": 1,
-    "ساخت و اتوماسیون": 8,
+    "ساخت و اتوماسیون": 9,
     "OpenClaw": 4,
     "ابزارهای حرفه‌ای": 4,
     "آموزش‌های مستقل": 2
@@ -274,6 +274,25 @@
       "rank": 54,
       "featured": false,
       "added": "2026-08-07",
+      "keywords": "",
+      "prerequisites": ""
+    },
+    {
+      "id": "n8ndockerhttpstunneltutorial",
+      "file": "tutorials/n8ndockerhttpstunneltutorial.html",
+      "emoji": "",
+      "title": "راه‌اندازی n8n با Docker و HTTPS واقعی روی ویندوز (PowerShell)",
+      "desc": "آموزش گام‌به‌گام از صفر: نصب Docker روی ویندوز با PowerShell، اجرای n8n، و رساندنش به یک آدرس HTTPS واقعی با Cloudflare Tunnel — بدون باز کردن پورت روی روتر.",
+      "time": "",
+      "level": "مبتدی",
+      "audience": "شروع از صفر",
+      "category": "برنامه‌نویسی",
+      "track": "ساخت و اتوماسیون",
+      "sequence": null,
+      "priority": 50,
+      "rank": 54,
+      "featured": false,
+      "added": "2026-08-15",
       "keywords": "",
       "prerequisites": ""
     },
